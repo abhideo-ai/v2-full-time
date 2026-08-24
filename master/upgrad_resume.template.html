@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>upGrad resume — section template</title>
+  <link rel="icon" type="image/svg+xml" href="../static/favicon.svg" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<main class="page" id="main">
+
+  <!-- ============================================================
+       THE PARSER CONTRACT — automation/upgrad_resume_paste.py
+       Ten sections, each `<div class="section copy-target" id="quick-<name>">`
+       holding a `<button class="copy-btn">` plus either a <p> (prose) or a
+       <ul><li> (bullets). The button is stripped before pasting.
+
+       Section ids are NOT optional and NOT renameable. A missing id is
+       silently skipped by the parser and simply does not reach upGrad.
+       Experience order is fixed: vp, deque, rocket, voltuswave-cofounder,
+       teletext.
+
+       <strong> survives the paste. Styled <span>s do NOT. Bullets rooted in
+       a <ul> lose bold when pasted into upGrad's own list fields, which is
+       why bullets_for_upgrad.html restates each changed line as a bare <p>.
+       ============================================================ -->
+
+  <!-- PROSE — parsed as plain text -->
+  <div class="section copy-target" id="quick-headline">
+    <button class="copy-btn" data-copy-target="#quick-headline">Copy</button>
+    <p><!-- Tagline. Common acronyms may stay unexpanded HERE only; the summary
+            below must expand each on first use. --></p>
+  </div>
+
+  <!-- PROSE — parsed as HTML, <strong> preserved -->
+  <div class="section copy-target" id="quick-summary">
+    <button class="copy-btn" data-copy-target="#quick-summary">Copy</button>
+    <p><!-- Expand every acronym on first use in reading order. --></p>
+  </div>
+
+  <!-- SKILLS — three fixed subgroups, bullets -->
+  <div class="section copy-target" id="quick-skills-tls">
+    <button class="copy-btn" data-copy-target="#quick-skills-tls">Copy</button>
+    <ul><!-- heading in the editor: "Technology Leadership & Strategy" -->
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="section copy-target" id="quick-skills-ee">
+    <button class="copy-btn" data-copy-target="#quick-skills-ee">Copy</button>
+    <ul><!-- heading in the editor: "Engineering Excellence" -->
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="section copy-target" id="quick-skills-bd">
+    <button class="copy-btn" data-copy-target="#quick-skills-bd">Copy</button>
+    <ul><!-- heading in the editor: "Business & Delivery" -->
+      <li></li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE — order is load-bearing (maps to editor PR-child-0..4) -->
+
+  <div class="section copy-target" id="quick-vp">
+    <button class="copy-btn" data-copy-target="#quick-vp">Copy</button>
+    <ul><!-- VoltusWave, most recent role. Ended Apr 2026 — dates live in the
+             Hiration card, not in this file. ATS power verbs belong HERE only. -->
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="section copy-target" id="quick-deque">
+    <button class="copy-btn" data-copy-target="#quick-deque">Copy</button>
+    <ul>
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="section copy-target" id="quick-rocket">
+    <button class="copy-btn" data-copy-target="#quick-rocket">Copy</button>
+    <ul>
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="section copy-target" id="quick-voltuswave-cofounder">
+    <button class="copy-btn" data-copy-target="#quick-voltuswave-cofounder">Copy</button>
+    <ul>
+      <li></li>
+    </ul>
+  </div>
+
+  <div class="section copy-target" id="quick-teletext">
+    <button class="copy-btn" data-copy-target="#quick-teletext">Copy</button>
+    <ul>
+      <li></li>
+    </ul>
+  </div>
+
+</main>
+
+<script src="../static/copy.js" defer></script>
+</body>
+</html>

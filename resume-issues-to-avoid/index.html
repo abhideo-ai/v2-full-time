@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Resume Issues To Avoid — Hygiene Checklist</title>
+  <link rel="icon" type="image/svg+xml" href="../static/favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="toolbar no-print" aria-label="Primary">
+  <span class="breadcrumb" aria-label="Breadcrumb">
+    <a href="../">Full-time v1</a>
+    <span class="sep" aria-hidden="true">›</span>
+    <strong aria-current="page">Resume issues to avoid</strong>
+  </span>
+  <span class="spacer"></span>
+  <a class="button" href="../">All postings</a>
+</nav>
+
+<main class="page" id="main">
+
+  <h1>Resume Issues To Avoid</h1>
+  <p class="muted" style="margin-top: 0;">Source: distilled from two rounds of ATS resume-review screenshots that previously lived in this directory. <strong>First round</strong> produced the original six failure patterns. <strong>Second round (2026-06-06)</strong> evaluated the 17-bullet AI-centric VoltusWave VP section after the Killer-Query depth was folded in (0 Poor / 11 Okay / 21 Great out of 32 bullets) and surfaced three new findings about how this specific ATS tool scores.</p>
+  <p>Use this checklist when drafting or reviewing <code>resume_paste.html</code>, exported PDFs, and master-resume hygiene changes. The hard rules below combine both rounds.</p>
+
+  <h2>Hard Rules</h2>
+  <ul>
+    <li>Keep every resume bullet at <strong>25 words or fewer</strong>.</li>
+    <li>Every bullet should include at least <strong>one number, percentage, scale marker, or measurable outcome</strong>.</li>
+    <li>Every bullet should include at least <strong>one bolded/highlighted fact</strong> in the paste source.</li>
+    <li><strong>Bold must survive PDF export.</strong> Visually verify the exported PDF — some "Print to PDF" pipelines strip <code>&lt;strong&gt;</code> formatting and the ATS reads the result as plain text. Use "Save as PDF" (not Print) and confirm bold characters are visibly heavier in the rendered PDF before uploading. <em>(New, second round.)</em></li>
+    <li>Start every bullet with a <strong>strong action verb</strong>.</li>
+    <li>Keep leading verbs unique across the resume; same-root variants count as duplicates.</li>
+    <li><strong>Per-bullet hygiene is evaluated independently.</strong> Don't rely on cross-bullet acronym expansion — even if <code>GNN</code> was expanded in bullet 2, bullet 12 containing <code>GNN</code> will still get flagged on its own. Minimise acronyms per bullet; one acronym per bullet is the practical cap. <em>(New, second round.)</em></li>
+    <li>Do <strong>not</strong> end bullet points with periods.</li>
+    <li>Expand acronyms on first use in resume reading order — <strong>and consider re-expanding in later bullets</strong> where this specific ATS rescans per-bullet.</li>
+    <li>Do not rely on a bullet being merely true; it must be scan-friendly, quantified, and role-relevant.</li>
+  </ul>
+
+  <h2>ATS Scoring Methodology (Second-Round Discovery)</h2>
+  <p>The ATS evaluates <strong>every bullet in the resume independently</strong> and assigns each a category:</p>
+  <ul>
+    <li><strong>Great</strong> — passes the hygiene gate (lead verb, quantified, bolded fact, no orphaned acronym, ≤25 words, no trailing period).</li>
+    <li><strong>Okay</strong> — at least one warning fires. Common Okay-bullet triggers (from the second-round run): no bold visible in the PDF, an acronym present, OR no metric.</li>
+    <li><strong>Poor</strong> — multiple hard-rule violations stacked.</li>
+  </ul>
+  <p>A 17-bullet recent-role section with 11 Okay bullets is the failure mode the second round caught. Goal: every bullet in your current and previous role should fall in <strong>Great</strong>. Older roles can absorb the occasional Okay without tanking the overall score.</p>
+
+  <h2>Specific Failure Patterns From The Screenshots</h2>
+
+  <h3>1. Overlong Context Graph Bullet</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Architecting Context Graph, the core healthcare-AI decision intelligence layer for a virtual care platform treating 80+ chronic conditions — built on DynamoDB event spine, Amazon Neptune graph, and GNN models in training, exposed through a structured decision framework and a real-time adherence system.</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>Too long</li>
+    <li>Ends with a period</li>
+    <li>Acronyms not expanded (<code>AI</code>, <code>GNN</code>)</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Architecting <strong>Context Graph</strong> on Amazon Neptune + Graph Neural Network (GNN) models for <strong>80+ conditions</strong>, with decision schemas and real-time adherence primitives</p></blockquote>
+
+  <h3>2. Overlong Engineering-Org Bullet</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Built and scaled engineering organization from 0 to 20+ engineers across backend (Go, Python, Node.js), React Native, React, AI/Graph, and DevOps — exactly the shape a doctor-centric platform with mobile + web + AI + integrations needs</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>Too long</li>
+    <li>No bolded/highlighted fact</li>
+    <li>Acronyms not expanded</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Grew engineering from 0 to <strong>20+ engineers</strong> across backend, mobile, web, Artificial Intelligence (AI), and DevOps</p></blockquote>
+
+  <h3>3. Overlong Data-Platform Bullet</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Migrated PostgreSQL to AWS RDS and adopted Infrastructure as Code (CloudFormation) — cut daily backup time 3–4 hours, deployment errors 40%, and set the data-platform foundation a 0→1 startup needs from day 1.</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>Too long</li>
+    <li>No bolded/highlighted fact</li>
+    <li>Ends with a period</li>
+    <li>Acronyms not expanded (<code>AWS</code>, <code>RDS</code>)</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Migrated PostgreSQL to <strong>Amazon Web Services (AWS) RDS</strong>, cutting backup time <strong>3-4 hours</strong> and deployment errors <strong>40%</strong></p></blockquote>
+
+  <h3>4. Unquantified Mentorship Bullet</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Mentored engineers on scalable API design, code quality standards, documentation, and engineering best practices</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>No number or measurable outcome</li>
+    <li>No bolded/highlighted fact</li>
+    <li>Acronym not expanded (<code>API</code>)</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Raised API quality standards across a <strong>20+ tenant SaaS</strong>, mentoring engineers on documentation, code review, and scalable contracts</p></blockquote>
+
+  <h3>5. Unquantified Managed-Operations Bullet</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Managed end-to-end development, deployment, and operations on AWS Elastic Container Service, delivering highly scalable solutions that won early enterprise clients</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>No number or measurable outcome</li>
+    <li>No bolded/highlighted fact</li>
+    <li>Acronym not expanded (<code>AWS</code>)</li>
+    <li>Weak/generic opening verb for senior architecture resumes</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Delivered <strong>0-to-1 platform operations</strong> on Amazon Web Services (AWS) ECS, supporting early enterprise-client wins</p></blockquote>
+
+  <h3>6. Weak Verb + Unquantified ELK Bullet</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Replaced third-party product with in-house ELK Stack solution, significantly reducing operational costs</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>No number or measurable outcome</li>
+    <li>No bolded/highlighted fact</li>
+    <li>Weak opening verb</li>
+    <li>Acronym not expanded (<code>ELK</code>)</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Implemented in-house Elasticsearch, Logstash, and Kibana (ELK) observability, reducing vendor dependency and operational cost</p></blockquote>
+  <p>If there is no real metric for cost reduction, use this bullet sparingly or drop it from tailored resumes.</p>
+
+  <h3>7. Gerund Lead Verb ("Standing up …") — Second Round</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Standing up Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines — data protection, access governance, audit trails for clinical workflows</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>Lead phrase is a gerund (<code>Standing up</code>), not a recognised power verb</li>
+    <li>ATS flags it generically as "needs a power verb"</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <blockquote><p>Established <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> framework across <strong>10 production pipelines</strong> — data protection, access governance, audit trails for clinical workflows</p></blockquote>
+  <p>Use recognised power verbs (Established, Built, Launched, Instituted, Delivered, Spearheaded, Drove, Owned, Architected, Designed, Scaled) over gerunds and uncommon-but-fresh verbs on the <strong>most-prominent role</strong>. Save uncommon-fresh verbs (Codified, Productized, Stewarded, Anchored, Helmed) for older roles where ATS scoring weight is lower.</p>
+
+  <h3>8. Acronym-Dense Bullet — Second Round</h3>
+  <p>Problem example:</p>
+  <blockquote><p>Orchestrated multi-tenant isolation defense-in-depth — TraversalSource wrapper + parquet partition + runtime assertion + per-tenant Neptune for Protected Health Information (PHI) tier</p></blockquote>
+  <p>Issues:</p>
+  <ul>
+    <li>Bullet contains one acronym (<code>PHI</code>) — flagged even though expanded inline</li>
+    <li>Second-round ATS rescans per-bullet, so <code>PHI</code> alone earns the acronym warning</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <p>Either drop the acronym and spell it out, OR accept the acronym hit if it's load-bearing. Don't add MORE acronyms hoping the expansion saves you — the ATS will flag each one.</p>
+  <blockquote><p>Orchestrated <strong>multi-tenant SaaS isolation</strong> across <strong>10 production pipelines</strong> — TraversalSource wrapper, parquet partition, runtime assertion, per-tenant Neptune for health-data tier</p></blockquote>
+
+  <h3>9. Bold Stripped By PDF Export — Second Round</h3>
+  <p>Problem: every bullet in <code>resume_paste.html</code> carries <code>&lt;strong&gt;</code> tags around the bolded facts. After exporting to PDF, the rendered text reads flat — no visible bold.</p>
+  <p>Issues:</p>
+  <ul>
+    <li>ATS sees plain text and flags every bullet with the "no bolded fact" warning</li>
+    <li>Score craters even though the source HTML is hygienically correct</li>
+  </ul>
+  <p>Fix pattern:</p>
+  <ul>
+    <li>Use <strong>Save as PDF</strong> (Google Docs → File → Download → PDF; Word → Save As → PDF) instead of <strong>Print to PDF</strong> in the browser.</li>
+    <li>Open the exported PDF in a viewer (Preview, Adobe Reader). Confirm the bolded facts are visually heavier than surrounding text.</li>
+    <li>If bold is missing, the export pipeline stripped it. Switch tools (try <code>wkhtmltopdf</code>, LibreOffice headless export, or paste through Google Docs first then export).</li>
+  </ul>
+
+  <h2>Review Checklist Before Export</h2>
+  <ul>
+    <li>No bullet exceeds 25 words.</li>
+    <li>No bullet ends with a period.</li>
+    <li>Every bullet has a number or measurable scale marker.</li>
+    <li>Every bullet has a bolded fact in <code>resume_paste.html</code> — AND the <strong>exported PDF</strong> visually shows that bold. <em>(Second-round addition.)</em></li>
+    <li>Each bullet uses at most <strong>one acronym</strong> — even properly-expanded ones earn an ATS flag per-bullet. <em>(Second-round addition.)</em></li>
+    <li>The lead verb is on the standard ATS power-verb whitelist for the <strong>most-prominent role</strong> (avoid <code>Standing up</code>, <code>Codified</code>, <code>Productized</code>, <code>Anchored</code>, <code>Helmed</code>, <code>Stewarded</code> on the current job; save those for older roles). <em>(Second-round addition.)</em></li>
+    <li>Every acronym is expanded on first use in resume reading order: examples include Artificial Intelligence (AI), Graph Neural Network (GNN), Amazon Web Services (AWS), Elastic Container Service (ECS), Relational Database Service (RDS), Elasticsearch / Logstash / Kibana (ELK), Red Hat Enterprise Linux (RHEL), Quality Assurance (QA), Representational State Transfer (REST), Health Insurance Portability and Accountability Act (HIPAA), Protected Health Information (PHI), Large Language Model (LLM).</li>
+    <li>No screenshot problem bullet appears verbatim in a paste source.</li>
+    <li>Weak openers like <code>Managed</code>, <code>Replaced</code>, <code>Responsible for</code>, <code>Worked on</code>, and <code>Helped</code> are replaced with outcome verbs.</li>
+    <li>Run a second-round ATS check on the final exported PDF before uploading to a profile board. <em>(Second-round addition.)</em></li>
+  </ul>
+
+</main>
+<script src="../static/copy.js" defer></script>
+</body>
+</html>

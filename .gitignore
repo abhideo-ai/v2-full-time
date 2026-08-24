@@ -1,0 +1,25 @@
+.DS_Store
+.idea
+
+# automation/ (upGrad Playwright build)
+.venv/
+__pycache__/
+*.pyc
+.playwright-profile/
+.debug/
+
+# Per-job derived resume files. Each workspace authors its own
+# upgrad_resume.html; only the MASTER is canonical and tracked.
+**/upgrad_resume.html
+!master/upgrad_resume.html
+
+# upGrad credentials — NEVER commit (encrypted creds + decryption key, both local-only)
+automation/.upgrad_creds.enc
+automation/.upgrad_key
+
+# Office lock/temp files
+~$*
+~$*.docx
+~$*.pptx
+~$*.xlsx
+**/_word_source.html
