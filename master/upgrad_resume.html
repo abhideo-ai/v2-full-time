@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>upGrad resume — master (IC)</title>
+  <link rel="icon" type="image/svg+xml" href="../static/favicon.svg" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+<main class="page" id="main">
+
+  <!-- ============================================================
+       MASTER RÉSUMÉ — derived from professional-journey.md.
+       Ten parsed sections. Ids are the parser contract; do not rename.
+       Experience order is fixed: vp, deque, rocket, voltuswave-cofounder,
+       teletext -> PR-child-0..4.
+
+       Pre-2016 roles (LyntonWeb, El Paso, McDonald's, innRoad, Cura),
+       education, certifications and ALL DATES are card-only — edit them
+       by hand in Hiration. VoltusWave must read Apr 2026.
+
+       Total-years figure lives in ONE place: the summary. Grep before
+       adding it anywhere else.
+       ============================================================ -->
+
+  <!-- HEADLINE — prose, parsed as plain text.
+       Common acronyms may stay unexpanded HERE only. -->
+  <div class="section copy-target" id="quick-headline">
+    <button class="copy-btn" data-copy-target="#quick-headline">Copy</button>
+    <p>Principal Software Architect — multi-tenant SaaS platforms, Java and Spring Boot microservices, and production AI on AWS</p>
+  </div>
+
+  <!-- SUMMARY — parsed as HTML, <strong> preserved.
+       Carries the 19+ year span and the Java-across-three-eras thread,
+       which is what makes the card-only pre-2016 roles count. -->
+  <div class="section copy-target" id="quick-summary">
+    <button class="copy-btn" data-copy-target="#quick-summary">Copy</button>
+    <p>Principal-level software architect with <strong>19+ years</strong> across software as a service (SaaS), healthcare, travel and enterprise data. Deep in <strong>Java and Spring Boot</strong> — roughly <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025 — alongside <strong>Python</strong>, <strong>Go</strong> and artificial intelligence (AI) in production on Amazon Web Services (AWS). Moved a per-customer deployment model onto shared <strong>multi-tenant</strong> infrastructure, unified identity on central single sign-on (SSO) with zero user disruption, and retired a third-party pricing dependency for an in-house Elasticsearch, Logstash and Kibana (ELK) stack.</p>
+  </div>
+
+  <!-- SKILLS — three fixed subgroups.
+       Editor heading: "Technology Leadership & Strategy" -->
+  <div class="section copy-target" id="quick-skills-tls">
+    <button class="copy-btn" data-copy-target="#quick-skills-tls">Copy</button>
+    <ul>
+      <li><strong>Multi-tenant architecture and tenant isolation</strong> — shared-schema design, per-tenant data separation, dedicated carve-outs for regulated customers</li>
+      <li><strong>Monolith decomposition</strong> and cross-product platform services — identity, billing and subscription, global configuration</li>
+      <li><strong>Build-versus-buy judgement</strong> — vendor retirement, industry-standard integration, third-party dependency removal</li>
+      <li><strong>Engineering organisation design</strong> across backend, mobile, web, AI, quality assurance (QA) and DevOps</li>
+      <li>Architecture roadmaps and technical narrative for investor- and enterprise-facing programmes</li>
+    </ul>
+  </div>
+
+  <!-- Editor heading: "Engineering Excellence" -->
+  <div class="section copy-target" id="quick-skills-ee">
+    <button class="copy-btn" data-copy-target="#quick-skills-ee">Copy</button>
+    <ul>
+      <li><strong>Java 8/17, Spring Boot 2.x</strong>, Java Server Pages (JSP) — microservices, versioned interfaces, Representational State Transfer (REST) API design</li>
+      <li><strong>Python</strong> — Django, FastAPI, LangChain, LangGraph, <strong>retrieval-augmented generation (RAG)</strong> pipelines, Model Context Protocol (MCP) servers</li>
+      <li><strong>Go</strong>, JavaScript, TypeScript, React, Node.js</li>
+      <li><strong>PostgreSQL</strong>, Amazon Aurora, DynamoDB, OpenSearch, Elasticsearch; SQL Server and MySQL in earlier roles</li>
+      <li><strong>AWS</strong> — Kinesis, Lambda, Elastic Container Service (ECS), S3, SQS, EC2; Datadog and Amplitude observability</li>
+      <li>Keycloak, Red Hat single sign-on, OpenID Connect, OAuth 2.0</li>
+    </ul>
+  </div>
+
+  <!-- Editor heading: "Business & Delivery" -->
+  <div class="section copy-target" id="quick-skills-bd">
+    <button class="copy-btn" data-copy-target="#quick-skills-bd">Copy</button>
+    <ul>
+      <li>Enterprise onboarding and consolidation at <strong>multi-hundred-instance scale</strong></li>
+      <li>Regulated delivery — <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> pipelines, least-privilege access, role-based access control</li>
+      <li>Accessibility compliance to <strong>Web Content Accessibility Guidelines (WCAG) 2.2 Level AA</strong></li>
+      <li>Cost reduction through infrastructure consolidation and licence-model change</li>
+      <li>Distributed <strong>United States–India</strong> delivery teams</li>
+      <li>Measured adoption of AI-assisted development (Claude Code, OpenAI Codex) under hands-on review</li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE 0 — VoltusWave, Mar 2025 – Apr 2026. Principal Software Architect.
+       ATS power verbs belong HERE only. Dates live in the Hiration card.
+       Client name deliberately absent: "a chronic-care platform", never the customer. -->
+  <div class="section copy-target" id="quick-vp">
+    <button class="copy-btn" data-copy-target="#quick-vp">Copy</button>
+    <ul>
+      <li>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</li>
+      <li>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> in burst testing at <strong>P95 under 16 ms</strong>, on a flow firing ~50 calls per message</li>
+      <li>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</li>
+      <li>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</li>
+      <li>Engineered a <strong>RAG</strong> pipeline over dense vectors and an <strong>Amazon Neptune</strong> context graph spanning <strong>80+ chronic conditions</strong>, in <strong>Python</strong> with FastAPI, LangChain and LangGraph</li>
+      <li>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering first-cut implementation and test scaffolding under review</li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE 1 — Deque Software, Dec 2019 – Feb 2025 -->
+  <div class="section copy-target" id="quick-deque">
+    <button class="copy-btn" data-copy-target="#quick-deque">Copy</button>
+    <ul>
+      <li>Implemented multi-tenant isolation across <strong>approximately 300 enterprise instances</strong>, adding an organisation ID to every table and resolving tenant from the <strong>JSON Web Token (JWT)</strong></li>
+      <li>Steered <strong>70–80%</strong> of customers onto shared instances while regulated banks kept dedicated databases, with one codebase serving both deployment models</li>
+      <li>Forged a central authentication service in <strong>Java and Spring Boot</strong>, migrating every instance from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong> with zero user disruption</li>
+      <li>Productized a billing and subscription service consumed by <strong>every product</strong> in the portfolio, porting it from <strong>Node.js/TypeScript</strong> to <strong>Java and Spring Boot</strong></li>
+      <li>Stewarded a <strong>zero-downtime</strong> upgrade from <strong>PostgreSQL 9.6</strong> to <strong>Amazon Aurora PostgreSQL 13.x</strong> across every axe Auditor instance</li>
+      <li>Championed decomposition of a monolith into <strong>10–15 services</strong>, splitting on independent scaling and database ownership rather than on team boundaries</li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE 2 — Rocket Software, Aug 2018 – Jul 2019.
+       Title is Software Engineer III (IC) who managed 5 engineers. Never "Director". -->
+  <div class="section copy-target" id="quick-rocket">
+    <button class="copy-btn" data-copy-target="#quick-rocket">Copy</button>
+    <ul>
+      <li>Anchored decomposition of <strong>IBM Db2 Configuration Manager</strong> into <strong>Java and Spring Boot</strong> microservices, defining boundaries across <strong>z/OS and Linux, UNIX and Windows</strong> platforms</li>
+      <li>Coached a <strong>5-engineer</strong> team through delivery planning, code review and performance appraisals while remaining hands-on as an individual contributor</li>
+      <li>Surfaced defect hot-spots through <strong>REST</strong> interfaces and service isolation, reducing reported bugs <strong>over 50%</strong></li>
+      <li>Partnered with product to extend platform support to <strong>Windows</strong> and Linux — Ubuntu, CentOS and <strong>Red Hat Enterprise Linux (RHEL)</strong> — lifting sales <strong>over 20%</strong></li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE 3 — VoltusWave Co-Founder and VP, Mar 2017 – Apr 2018.
+       Historical and unambiguous — this title stays as-is. -->
+  <div class="section copy-target" id="quick-voltuswave-cofounder">
+    <button class="copy-btn" data-copy-target="#quick-voltuswave-cofounder">Copy</button>
+    <ul>
+      <li>Co-founded VoltusWave and launched its first <strong>application Platform-as-a-Service (aPaaS)</strong> product for web and Android, winning <strong>8 early enterprise clients</strong></li>
+      <li>Mobilized an engineering organisation from <strong>0 to 35</strong> in 13 months, mentoring freshers and senior engineers while establishing delivery process</li>
+      <li>Helmed development, deployment and operations on <strong>Amazon Elastic Container Service</strong>, setting the architecture roadmap every subsequent product inherited</li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE 4 — Teletext India, Mar 2016 – Mar 2017 -->
+  <div class="section copy-target" id="quick-teletext">
+    <button class="copy-btn" data-copy-target="#quick-teletext">Copy</button>
+    <ul>
+      <li>Codified a scatter-gather integration across <strong>25 hotel suppliers</strong> on a <strong>MuleSoft enterprise service bus</strong>, succeeding where a prior <strong>.NET 2.0</strong> upgrade had failed</li>
+      <li>Cut operational cost <strong>46%</strong> by retiring a third-party pricing product for an in-house <strong>ELK</strong> cache with a 20-minute time-to-live</li>
+      <li>Reconciled supplier hotel identifiers onto <strong>GIATA MultiCodes</strong>, automating the pipeline on <strong>AWS Lambda</strong> with human approval retained, lifting revenue <strong>8% month over month</strong></li>
+      <li>Lifted hotel booking conversions <strong>65%</strong> by widening matched inventory and ranking contracted properties first across <strong>2–3 million daily requests</strong></li>
+    </ul>
+  </div>
+
+</main>
+
+<script src="../static/copy.js" defer></script>
+</body>
+</html>

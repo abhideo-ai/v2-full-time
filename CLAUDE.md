@@ -2,12 +2,13 @@
 
 Tailored résumés + job descriptions (JDs) for **individual-contributor (IC) engineering roles**.
 
-This is a deliberate restart. v1 (`~/Documents/full-time-v1/`) is abandoned — read it for
-history if you must, but nothing here is derived from it except the automation, the shared
-assets (`style.css`, `static/`, `resume-issues-to-avoid/`), the journey document, and the rules
-below. **`professional-journey.md` is v1's file byte-for-byte** and still carries every
-unresolved `OPEN →` marker v1 recorded, plus a 20-item open-question list at its end. Resolve
-those before deriving the master. Two things changed, and they are the whole reason v2 exists.
+This is a deliberate restart. v1 is abandoned and nothing outside this directory is in
+scope — everything this workspace needs already lives here. Nothing here is derived from v1
+except the automation, the shared assets (`style.css`, `static/`, `resume-issues-to-avoid/`),
+the journey document, and the rules below. **`professional-journey.md` is v1's file
+byte-for-byte** and still carries every unresolved `OPEN →` marker v1 recorded, plus a 20-item
+open-question list at its end. Resolve those before deriving the master. Two things changed,
+and they are the whole reason v2 exists.
 
 ---
 
