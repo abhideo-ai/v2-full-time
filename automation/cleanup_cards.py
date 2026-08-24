@@ -25,7 +25,8 @@ from browser import headed_context
 import upgrad_apply as ua
 
 SUFFIX = "_ats_resume"
-PROTECTED = {"june_master_resume", "august_master_resume", "master_ic_architect"}
+PROTECTED = {"june_master_resume", "august_master_resume", "master_ic_architect",
+             "august_ic_master_resume"}
 
 
 def main() -> None:

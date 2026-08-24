@@ -173,23 +173,26 @@ versus a SOC, the security operations centre.
 
 ### Verb pool
 
-- **Used — do not reuse as leading verbs:** Embedded, Grew, Drove, Architected, Scaled,
-  Operationalized, Spearheaded, Reimagined, Built, Owned, Led, Designed, Migrated,
-  Engineered, Reworked, Increased, Expanded, Co-founded, Delivered, Shipped, Retired,
-  Consolidated, Unified, Provisioned, Centralized, Standardized, Automated, Established,
-  Secured, **Pioneered, Instituted, Orchestrated, Deployed, Launched, Improved, Modernised,
-  Raised, Supervised**.
-- **ATS power verbs — current role ONLY:** Established, Launched, Secured, Deployed,
-  Optimized, Strengthened, Built, Designed, Spearheaded, Drove, Owned, Architected,
-  Scaled, Engineered, Delivered, Reduced, Improved, Increased.
-- **Fresh verbs — older roles only:** Anchored, Stewarded, Surfaced, Partnered, Steered,
-  Forged, Championed, Productized, Codified, Mobilized, Translated, Helmed, Calibrated, and
-  — verified free against both v1 masters — **Implemented, Coached**.
+*Rebuilt 2026-08-25 from `master/upgrad_resume.html` — this list is now real, not inherited.*
 
-**⚠ This list is stale until rebuilt.** It was extracted from v1's masters, and v2 has no
-master résumé yet. **The moment `master/upgrad_resume.html` exists, regenerate the Used list by
-extracting the leading word of every `<li>` in it.** A stale note once caused an
-Established/Secured collision.
+- **Used — do not reuse as leading verbs** (all 23 leading verbs in the master):
+  Architected, Scaled, Deployed, Delivered, Engineered, Drove, Implemented, Steered, Forged,
+  Productized, Stewarded, Championed, Anchored, Coached, Surfaced, Partnered, Co-founded,
+  Mobilized, Helmed, Codified, Cut, Reconciled, Lifted.
+- **ATS power verbs — current role ONLY — still free:** Secured, Optimized, Strengthened,
+  Built, Spearheaded, Improved, Increased. *(Established, Launched, Designed, Reduced and
+  Owned are burnt — their roots appear mid-bullet as establishing / launched / design /
+  reducing / ownership.)*
+- **Fresh verbs — older roles only — still free: Translated, Calibrated. That is all.**
+  Thirteen of the original fifteen went into the master.
+- **Verified free against the master, for Rule 7 top-ups:** Extracted, Instrumented, Hardened,
+  Replatformed, Brokered, Piloted, Eliminated, Halved, Bridged, Curated, Sequenced, Seeded,
+  Salvaged, Trimmed.
+
+**Same-root collisions count, and they hide mid-bullet.** Check the whole master, not just the
+leading words: `Lifted` as a leading verb sat alongside *lifting sales* and *lifting revenue*
+until 2026-08-25. **Regenerate after every master edit** — extract the leading word of each
+experience `<li>`, then grep each candidate's stem across the entire file.
 
 ### Rule 7 — re-vector experience bullets per job, always
 
@@ -273,18 +276,32 @@ UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py \
     --slug <slug> --no-pause --reset
 ```
 
-Run from the repo root. It clones the master Hiration card (**`august_master_resume`** — the
-only card, and it always produces "Principal Software Architect"), overwrites **the ten parsed
+Run from the repo root. It clones a master Hiration card, overwrites **the ten parsed
 sections** — headline, summary, three skills blocks, five experience roles — from the
 workspace's `upgrad_resume.html`, exports `<workspace>/Abhisheik_Deo_Resume.pdf`, and
 prints ATS JSON. The persistent browser profile (`.playwright-profile/`) sits at the repo
 root, so **cwd matters**. Login is automated from encrypted credentials in `automation/`
 — gitignored, **never commit them**. The bot runs serially (shared browser).
 
-**Do NOT run `cleanup_cards.py` after an export.** The tailored `<slug>_ats_resume` card
-stays live in upGrad until the application is actually **submitted**. When he reports one
-submitted, delete only that card: `cleanup_cards.py --slug <slug>`. **A bare, slug-less
-run deletes every temp card — don't.**
+### Which master card
+
+Two live masters, both in `cleanup_cards.py`'s `PROTECTED` set:
+
+- **`august_ic_master_resume`** — the IC card, hand-built 2026-08-25 from
+  `master/master_paste.html`. **This is the default choice for the IC-only track.** It is
+  *not* the script default, so every export needs `--master august_ic_master_resume` or
+  `UPGRAD_MASTER_CARD=august_ic_master_resume` in the environment.
+- **`august_master_resume`** — kept deliberately. It may still be used for future positions.
+  It is what `upgrad_apply.py` falls back to when no `--master` is passed, so **an export with
+  no flag silently uses this one** — pass the flag or check which card you got.
+
+### ⛔ Card deletion — ask first, every time
+
+**Never run `cleanup_cards.py` at all until he explicitly says to delete a specific card.**
+Not after an export, not after a submission, not as tidy-up. He asks, by name, or it does not
+run. A bare, slug-less run deletes every temp card; even `--slug <slug>` is his call to make,
+not a follow-up to infer. Tailored `<slug>_ats_resume` cards accumulating is the intended
+state, not a mess to clean.
 
 **⚠ Dates live in the Hiration card, not the HTML.** The bot overwrites bullet text only, so
 the card itself must already read Apr 2026. **Education, certifications and the pre-2016 roles
