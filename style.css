@@ -3073,3 +3073,6 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .rb-role ul { margin: 0 0 10px; padding-left: 20px; }
 .rb-role li { font-size: 14px; margin-bottom: 4px; }
 .rb-left { font-size: 14px; background: var(--paper-2); border-radius: 4px; padding: 9px 13px; margin: 0; }
+
+/* Emitted by the journey renderers and the hygiene reference; never defined in v1. */
+@media print { .no-print { display: none !important; } }

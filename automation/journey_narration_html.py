@@ -82,7 +82,7 @@ def main():
 
 <nav class="toolbar no-print" aria-label="Primary">
   <span class="breadcrumb" aria-label="Breadcrumb">
-    <a href="./index.html">Full-time v1</a>
+    <a href="./index.html">Full-time v2</a>
     <span class="sep">/</span>
     <a href="./professional-journey.html">Professional journey</a>
     <span class="sep">/</span>

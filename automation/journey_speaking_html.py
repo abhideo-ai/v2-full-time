@@ -295,7 +295,7 @@ page = """<!doctype html>
 
 <nav class="toolbar no-print" aria-label="Primary">
   <span class="breadcrumb" aria-label="Breadcrumb">
-    <a href="./index.html">Full-time v1</a>
+    <a href="./index.html">Full-time v2</a>
     <span class="sep">/</span>
     <strong aria-current="page">Recall board</strong>
   </span>

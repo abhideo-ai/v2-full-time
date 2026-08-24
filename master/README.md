@@ -50,10 +50,12 @@ That is deliberate. v1's master was assembled from "bits and pieces"; v2 derives
 Carried over from v1 as open, not as fact — resolve each against
 `professional-journey.md` rather than against the old résumé:
 
-- The **role title on the 2025–26 VoltusWave line**. v1 exported an IC-facing title on
-  IC requisitions while the employment title was VP of Technology. On an IC-only track
-  this needs one accurate answer, not a per-requisition switch. The 2017 **Co-Founder
-  and VP** role is historical and unambiguous.
+- The **role title on the 2025–26 VoltusWave line**. His employment title was VP of
+  Technology; v1 resolved this by having the single master card (`august_master_resume`)
+  render **"Principal Software Architect"** for every seat, leadership included — verified
+  2026-08-18. On an IC-only track that convention is the one to carry, but it is his call to
+  confirm, not an assumption to inherit. The 2017 **Co-Founder and VP** role is historical
+  and unambiguous — it stays as-is.
 - The **total years figure**. v1 held it in two places in one file and they silently
   disagreed. Keep it in one place, or grep after every change.
 - Any metric that reads as a measured result but came from a burst test.

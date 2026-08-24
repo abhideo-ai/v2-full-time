@@ -12,7 +12,7 @@ Per application, in stages (each is a valid `--stop-after` point):
    creds (falls back to a 5-min manual sign-in poll if creds are missing or a
    captcha / two-factor challenge appears)
 2. **nav** — open the resume-builder / "My Resumes" grid
-3. **find-master** — locate the `june_master_resume` card
+3. **find-master** — locate the `august_master_resume` card
 4. **clone** — clone it to `<slug>_ats_resume` (`--reset` deletes a stale clone first)
 5. **open-copy** — open the clone in the editor
 6. **edit** — overwrite all **10 sections** from the workspace's
@@ -86,7 +86,7 @@ CLAUDE.md → "Automated upGrad export").
 | `--slug <slug>` | **Required.** Workspace to build the resume for. |
 | `--stop-after <stage>` | Stop after a stage (inclusive). Stages: `login nav find-master clone open-copy edit score export verify summary`. Default `summary`. |
 | `--output <path>` | PDF output path override (default `<workspace>/Abhisheik_Deo_Resume.pdf`). Use a temp path while testing so you don't clobber a committed PDF. |
-| `--master <title>` | Master resume card title (default `june_master_resume`; env `UPGRAD_MASTER_CARD` overrides the default). |
+| `--master <title>` | Master resume card title (default `august_master_resume`; env `UPGRAD_MASTER_CARD` overrides the default). |
 | `--bullets-as-paragraphs` | Paste experience bullets as `<p>` instead of `<ul><li>` — bold-survival fallback (see below). |
 | `--no-pause` | Don't pause between stages. |
 | `--reset` | Delete an existing `<slug>_ats_resume` in upGrad first (start fresh). |
@@ -104,7 +104,8 @@ On any stage failure the page is dumped to `.debug/upgrad/error-<stage>.{html,pn
 ## Clean up the temp clones (`cleanup_cards.py`)
 
 Deletes every card whose name ends in `_ats_resume` — the per-run clones the bot
-creates. `june_master_resume` and any card without that suffix are protected and
+creates. The protected set is `june_master_resume`, `august_master_resume` and
+`master_ic_architect`; any card without the `_ats_resume` suffix is protected and
 never touched. The exported PDFs already live in each workspace, so deleting the
 cards loses nothing.
 
@@ -138,7 +139,7 @@ is present, not that bold survived). If bold is flat, re-run with
 
 ## Prerequisites / notes
 
-- The `june_master_resume` card must exist in the Hiration account with the 5
+- The `august_master_resume` card must exist in the Hiration account with the 5
   roles in order — vp, deque, rocket, voltuswave-cofounder, teletext — because
   the editor binds them positionally to `#PR-child-0..4`.
 - First runs are easiest **headed** (a Chromium window opens) so you can watch
