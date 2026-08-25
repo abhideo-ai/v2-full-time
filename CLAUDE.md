@@ -235,6 +235,11 @@ versus a SOC, the security operations centre.
   *(Extracted, Hardened, Sequenced and Secured moved to the used list on 2026-08-25.
   `Built` is NOT free — `Build`-versus-buy sits mid-bullet in the skills block.)*
 
+**Check uniqueness across ALL TEN roles, not just the five parsed ones.** The card-only
+pre-2016 roles (§§11–15) live in the same file and their leading verbs count. Missing that
+on 2026-08-25 put `Hardened` in both VoltusWave and El Paso, and `Extracted` in both
+VoltusWave and CURA.
+
 **Same-root collisions count, and they hide mid-bullet.** Check the whole master, not just the
 leading words: `Lifted` as a leading verb sat alongside *lifting sales* and *lifting revenue*
 until 2026-08-25. **Regenerate after every master edit** — extract the leading word of each
@@ -501,6 +506,47 @@ every per-job résumé.
 - `data-copy-html="1"` on every button. A hand-dragged selection loses bold, and that does not
   surface until the exported PDF.
 
+### Pasting into Hiration — the matrix, settled 2026-08-25
+
+**No markup gives both bold and bullets through a real clipboard paste.** Tested by him, all
+three cases:
+
+| shape | bold | bullets |
+|---|---|---|
+| `<p>` per line, pasted alone | ✅ | ❌ |
+| several `<p>` at once | ✅ | ❌ collapses to one line |
+| `<ul><li>` compact | ❌ | ✅ |
+
+His console output proved the clipboard itself is correct — 18 `<strong>` tags, `ClipboardItem`
+present, rich path taken. **Hiration strips it on the way in.** Whitespace between tags was ruled
+out too. Do not go looking for a fourth markup shape; the space is mapped.
+
+**THE EXPORTER IS THE PATH.** `_paste_html` in `upgrad_apply.py` dispatches a *synthetic*
+`ClipboardEvent` carrying `text/html` straight into Draft.js, which honours `<ul>`, `<li>` and
+`<strong>` natively. That is where v1's "100% formatting carried over" actually came from — the
+bot, never hand-pasting. A page on `localhost` cannot do this to an iframe on `upgrad.com`;
+only Playwright can.
+
+**So the ten parsed sections never need pasting by hand.** The exporter overwrites every one of
+them from `<workspace>/upgrad_resume.html` on each run. The paste sheet is for *reading* what the
+bot will write, and for one-off single-line fixes where `<p>` alone works.
+
+**⚠ The upGrad onboarding modal blocks everything.** "Let's kickstart your career journey" renders
+in the **top-level page** and overlays the iframe, so every click fails with *"subtree intercepts
+pointer events"*. `_dismiss_modals` sweeps **every frame** — clearing only the app frame finds
+zero, which is the trap. `stage_nav` retries the click once after clearing.
+
+### Editing the card itself
+
+`automation/fix_master_card.py` edits the **card-only** material the exporter never touches — the
+five pre-2016 roles. Title and company are contenteditable divs with stable ids
+(`PR_designation_N`, `PR_company_N`); bullets are a Draft.js editor inside `#PR-child-N`. It
+refuses to touch a role whose current title is not what it expects, so it cannot silently rewrite
+the wrong entry.
+
+**Known limit:** bullet rewrites on the pre-2016 roles show in the editor and then **do not
+survive the save**. The title does. Those three El Paso bullets are his to paste by hand.
+
 ### upGrad paste quirk
 
 upGrad keeps raw `<strong>` but **strips styled `<span>`s, and strips bold from
@@ -632,63 +678,68 @@ recording failed.
 
 ---
 
-## Status — 2026-08-25, end of session
+## Status — 2026-08-25, ~21:50
 
-**The master résumé is written.** `master/upgrad_resume.html` — one file, ten parsed sections
-plus the card-only material, verified against the real parser, **27 experience bullets with 27
-unique leading verbs**. New headline and summary carrying the Amura work, four new Engineering
-Excellence lines, four new VoltusWave bullets, and the Neptune→Elasticsearch correction.
+**THE MASTER PDF IS EXPORTED AND VERIFIED.** `master/Abhisheik_Deo_Resume.pdf` — 3 pages,
+ATS 85, all 58 fragments present, bold font embedded, VoltusWave ends **Apr '26**, no
+`[fill in metric]`. The chain is proven end to end.
 
-**⚠ His live Hiration card is still the v1 LEADERSHIP résumé and must be rebuilt.** It says
-*"Engineering Leader"* in the headline and *"Engineering Manager"* in the summary, carries
-**no Java anywhere**, asserts *"Neptune + GNN"* and *"GNN models in production"*, claims ISO 27001,
-and opens with the typo *"ands-on"*. None of that is in the master here. Rebuilding the card from
-`master/paste_sheet.html` is the next physical step, and it is his hand-work.
+**The IC card exists.** `august_ic_master_resume` is live in Hiration and is the export default.
+Its ten parsed sections are overwritten from `master/upgrad_resume.html` on every run, so they
+never need hand-pasting.
+
+**The master résumé** — one file, `master/upgrad_resume.html`, ten parsed sections plus the
+card-only material. **39 bullets, 39 unique leading verbs.** His headline, kept verbatim with
+Java added. Key Skills rewritten in **his** format (short capability labels), 6 / 17 / 6 lines.
+Four new Amura bullets. The Neptune→Elasticsearch correction applied.
+
+**⚠ One thing outstanding, his hand:** El Paso's three bullets on the card still read .NET. The
+title is corrected to *Senior Java Developer*; the bullets revert on save (see *Editing the card
+itself*). Correct text is in `master/upgrad_resume.html` §14.
 
 **Built this session:**
 
 - **The daily log** — `daily/index.html` from `daily/days.json`, state in PostgreSQL (`v2_daily`),
-  `automation/serve.py` replacing `http.server`, `./todo` on the command line. Priorities,
-  dependencies, rollover, move-out with reasons and revivability. 36 + 50 test assertions.
-- **`automation/resume.py`** — `new` scaffolds a job workspace, `sheet` generates the paste sheet.
-- **The case studies** — `killer-query-case-studies/` (v1, all shipped), a `summary.html` with the
-  concept glossary, and ten per-query interview-prep pages under `prep/`.
-- **One master file** — `master_paste.html` and `upgrad_resume.template.html` folded in; the parser
-  now reads `<p>` bullets as well as `<ul><li>`, which is what made that possible.
+  `automation/serve.py` replacing `http.server`, `./todo` on the command line. 36 + 50 assertions.
+- **`automation/resume.py`** — `new` scaffolds a whole job workspace, `sheet` generates the
+  section-by-section paste sheet.
+- **`automation/fix_master_card.py`** — edits card-only material the exporter never touches.
+- **The case studies** — `killer-query-case-studies/` (v1, all shipped), `summary.html` with the
+  concept glossary, ten per-query interview-prep pages under `prep/`.
+- **One master file** — the three-file split folded in; the parser reads `<p>` as well as `<li>`.
 
-**The plan he set for tonight (25 Aug, from ~19:20, running into the morning):**
-build the Hiration card, export and verify the master PDF, then **15–20 job workspaces**. He pastes
-the JDs; we build. The bot exports serially on one shared browser, and he has accepted that queue.
+**The plan for tonight, running into the morning:** ~20 job workspaces. He pastes the JDs;
+`resume.py new --slug <slug>` scaffolds each; re-vector per Rule 7; export. **He runs the
+workspaces from his own terminal.**
 
-**Decided this session — all recorded in the sections above:**
+**Decided this session:**
 
-- Workflows and subagents do the work, including résumé creation and JD scoring, with a mandatory
-  adversarial verify pass. Technical score is the one that matters, target 95+, never fabricate.
-- He pastes JDs; **we do not source seats**, and we do not re-rank or recommend an order unasked.
-- A copy block is **one whole section that replaces its counterpart**, never a fragment.
-- **Redis is claimable.** Everything in the v1 case studies **shipped**. There are **no Amura
-  outcome metrics** — scale and design markers only. The **25–30% infrastructure cost** and
-  **hours → under 10 minutes** deploy time are **user-confirmed**; do not re-flag them.
-- v2 of the case studies lands beside v1, never over it — but **do not wait for it**.
+- Workflows and subagents do the work, with a mandatory adversarial verify pass. Technical score
+  is the one that matters, target 95+, never fabricate.
+- He pastes JDs; **we do not source seats**, and we do not re-rank unasked.
+- A copy block is **one whole section**. **Key Skills is one section, not three.** Skills are
+  short capability labels, never sentences.
+- **Never retroactively scrub a submitted claim.** Unverified ≠ false — see *Honesty*.
+- **Redis is claimable.** Everything in v1 case studies **shipped**. **No Amura outcome metrics
+  exist.** 25–30% infra cost and hours→under-10-minutes are **user-confirmed**. **GNN and ISO
+  27001 are settled** and in the résumé.
+- **The ATS score is not the target** — it moves on hygiene, not fit. 85 is fine.
+- **The exporter, not hand-pasting.** No markup gives both bold and bullets through a real
+  clipboard; see *Pasting into Hiration*.
 
-**Open — his call alone, nothing here is ours to settle:**
+**Open — his call alone:**
 
-- **The +65% hotel conversions**, live on the résumé. The journey doc flags it twice as unresolved
-  and his original has no 65% conversion claim at all. The evidenced alternative sits unused:
-  *"screens lading time was improved by 60-70%"* at innRoad, in his own handwriting.
-- **VoltusWave carries 10 bullets** — six chat-platform, four Amura — and will not fit three pages.
-  Trimming is per-job, not a master edit.
-- ~~ISO 27001~~ — **SETTLED 2026-08-25: Deque's certification, and the environment he delivered
-  in.** Written as "HIPAA pipelines in an ISO 27001-certified environment", never as a credential
-  he personally holds.
-- **Confirm-or-reject:** ~300 customers vs instances; the 70–80% consolidation; two Rocket metrics
-  (bugs −50%, sales +20%); 8% month-over-month sustained or one-time; the 100,000-concurrent
-  wording, currently written as burst testing.
-- **The large language model narrative guardrails.** Split, not yes-or-no: KQ1's claim grammar is
-  live inside its retrieval service, but KQ9's shared contract is unsigned and its narrator ships
-  **off by default**. A bullet claiming KQ9 must carry KQ9's hedge.
-- **El Paso on the card** — the v1 card calls it .NET; it is a Senior Java Developer role, and
-  leaving it hides four of the eleven Java years.
-- **The journey document now lags the master** on the entire Amura programme, and it is meant to
-  lead. Folding that material back in is `journey-doc`, P1 on `./todo`, and he has said it is the
-  task that matters most to him.
+- **The +65% hotel conversions**, live on the résumé and unsupported by his own documents. The
+  evidenced alternative — innRoad's **60–70% screen-load** improvement, in his handwriting — is
+  still unused. Per the no-scrub rule it **stays** until he decides.
+- **VoltusWave carries 10 bullets** — six chat-platform, four Amura. Trimming is per-job.
+- **His live card's 17 VoltusWave bullets are NOT merged into the master** — Kubernetes,
+  Terraform, ECS Fargate at 70% Spot, k6-validated, React Native across 2 app stores, the 4
+  reusable archetypes, `TraversalSource` wrapper, Rosenbaum γ + E-value. **This is the biggest
+  unfinished piece of résumé work.**
+- **Confirm-or-reject:** ~300 customers vs instances; 70–80% consolidation; two Rocket metrics
+  (bugs −50%, sales +20%); 8% month-over-month; the 100,000-concurrent wording.
+- **The large language model narrative guardrails** — split: KQ1's claim grammar is live, KQ9's
+  shared contract is unsigned and its narrator ships **off by default**.
+- **The journey document lags the master** on the whole Amura programme, and it is meant to lead.
+  `journey-doc` is P1 on `./todo` and he has said it matters most.
