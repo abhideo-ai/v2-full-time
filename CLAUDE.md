@@ -433,6 +433,25 @@ which flattens bold.)
 
 `automation/html_to_pdf.py` renders any workspace HTML to PDF via headless Chromium.
 
+### Copy blocks — one whole section, always
+
+**A copy block is one complete section that REPLACES its counterpart wholesale. Never a fragment
+to merge into an existing block.** Set 2026-08-25, and it holds for the master résumé and for
+every per-job résumé.
+
+- One button, one section, one paste. He selects the section in Hiration, deletes it, pastes.
+- **Never** "add this line to Engineering Excellence" or "paste these two bullets under the third
+  one". A partial paste means reading the existing block, working out where the new text goes, and
+  not duplicating what is already there — three chances to get it wrong, silently, in a field he
+  cannot easily diff afterwards.
+- If a section changed by one word, the block still carries the **whole** section.
+- **Generate copy blocks FROM the résumé file, never retype them.** A paste sheet that disagrees
+  with the file the bot writes from is the drift that merging three files into one removed.
+- Content that did not make it into a section is **not offered for pasting at all** — record it as
+  considered-and-not-applied, with no copy affordance, so nothing loose invites a hand-paste.
+- `data-copy-html="1"` on every button. A hand-dragged selection loses bold, and that does not
+  surface until the exported PDF.
+
 ### upGrad paste quirk
 
 upGrad keeps raw `<strong>` but **strips styled `<span>`s, and strips bold from
