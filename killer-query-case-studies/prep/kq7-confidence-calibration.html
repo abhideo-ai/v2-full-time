@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Confidence calibration — interview prep</title>
+<style>
+:root{
+  --paper:#F7F9FA; --card:#FFFFFF; --ink:#12222C; --steel:#51626D; --mist:#E4EBEC;
+  --hairline:#D5DFE1; --teal:#0B756F; --teal-deep:#084F4B; --amber:#8A5A00; --amber-soft:#FBF3E2;
+  --serif:"IBM Plex Serif",Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.02rem;line-height:1.65;-webkit-font-smoothing:antialiased}
+main{max-width:960px;margin:0 auto;padding:64px 24px 96px}
+a{color:var(--teal-deep)}
+
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:14px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.16;letter-spacing:-.015em}
+.sub{font-size:1.08rem;color:var(--steel);max-width:64ch;margin-top:16px}
+h2{font-family:var(--serif);font-weight:600;font-size:1.45rem;letter-spacing:-.01em;margin:0 0 6px}
+h3{font-family:var(--serif);font-weight:600;font-size:1.12rem;margin:34px 0 8px}
+h4{font-family:var(--sans);font-size:1rem;font-weight:600;margin-bottom:4px}
+p{max-width:74ch}
+.lede{color:var(--steel);font-size:.97rem;max-width:70ch;margin-bottom:18px}
+.body p+p{margin-top:12px}
+strong{font-weight:600}
+
+.nav{margin:22px 0 0;font-size:.86rem;color:var(--steel)}
+.nav a{margin-right:4px}
+.nav span{margin:0 8px;color:var(--hairline)}
+
+.sec{margin:64px 0 0;padding-top:26px;border-top:2px solid var(--ink)}
+.sec .n{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:10px}
+
+.open{background:var(--card);border:1px solid var(--hairline);border-left:3px solid var(--teal);border-radius:6px;padding:24px 28px;margin:26px 0}
+.open .term{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:10px}
+.open p{font-family:var(--serif);font-size:1.14rem;line-height:1.5;max-width:66ch}
+.open p+p{margin-top:12px}
+
+.guard{background:var(--amber-soft);border:1px solid #EBD9B4;border-left:3px solid var(--amber);border-radius:0 6px 6px 0;padding:18px 22px;margin:22px 0;font-size:.93rem}
+.guard h4{color:var(--amber);font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.guard ul{margin:6px 0 0 18px}
+.guard li{margin-bottom:5px}
+.guard li+li{margin-top:0}
+
+.g{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:18px 22px;margin:14px 0}
+.g .term{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:6px}
+.g p{font-size:.93rem;color:var(--steel);margin-bottom:8px}
+.g p:last-child{margin-bottom:0}
+.g p.why{color:var(--ink)}
+
+.d{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px 24px;margin:16px 0}
+.d h4{font-size:1.02rem;margin-bottom:8px}
+.d .alt{font-size:.9rem;color:var(--steel);background:var(--paper);border:1px solid var(--mist);border-radius:4px;padding:8px 12px;margin-bottom:10px}
+.d .alt b{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);display:inline-block;margin-right:6px}
+.d p{font-size:.95rem}
+.d p+p{margin-top:10px}
+blockquote{font-family:var(--serif);font-size:1rem;line-height:1.55;color:var(--ink);border-left:3px solid var(--teal);background:var(--paper);padding:12px 18px;margin:12px 0 0;border-radius:0 4px 4px 0;max-width:70ch}
+blockquote+blockquote{margin-top:8px}
+
+ol.rungs{counter-reset:r;list-style:none;margin:16px 0}
+ol.rungs li{position:relative;padding:12px 0 12px 46px;border-top:1px solid var(--mist);font-size:.95rem}
+ol.rungs li:first-child{border-top:none}
+ol.rungs li::before{counter-increment:r;content:counter(r);position:absolute;left:0;top:12px;width:28px;height:28px;border-radius:50%;background:var(--teal);color:#fff;font-family:var(--mono);font-size:.78rem;display:flex;align-items:center;justify-content:center}
+ol.rungs li b{display:block}
+
+ul.plain{margin:12px 0 0 20px}
+ul.plain li{margin-bottom:8px;font-size:.95rem}
+
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--hairline);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:640px}
+th,td{text-align:left;padding:10px 14px;vertical-align:top}
+thead th{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);border-bottom:1px solid var(--hairline);background:var(--paper)}
+tbody tr+tr td{border-top:1px solid var(--mist)}
+td.k{font-family:var(--mono);font-size:.76rem;color:var(--teal);white-space:nowrap}
+code{font-family:var(--mono);font-size:.84em;background:var(--mist);padding:1px 5px;border-radius:3px}
+
+figure.diagram{margin:26px 0;background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px}
+figure.diagram .mermaid{display:flex;justify-content:center;overflow-x:auto;min-width:0}
+figure.diagram .mermaid svg{max-width:100%;height:auto}
+figcaption{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--steel);text-align:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--mist)}
+.walk{margin:14px 0 0}
+.walk h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin:18px 0 6px}
+.walk p{font-size:.95rem}
+.walk p+p{margin-top:10px}
+.walk .break{background:var(--amber-soft);border-left:3px solid var(--amber);border-radius:0 4px 4px 0;padding:10px 14px;font-size:.92rem;margin-top:12px}
+.walk .break b{color:var(--amber)}
+
+.q{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px 24px;margin:16px 0}
+.q h4{font-family:var(--serif);font-size:1.06rem;font-weight:600;line-height:1.4;margin-bottom:10px}
+.q .head{font-size:1rem;font-weight:600;color:var(--teal-deep);background:var(--paper);border-left:3px solid var(--teal);padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:10px}
+.q p{font-size:.94rem}
+.q p+p{margin-top:10px}
+
+footer{margin-top:72px;padding-top:22px;border-top:1px solid var(--hairline);font-size:.86rem;color:var(--steel)}
+footer p+p{margin-top:10px}
+@media print{body{background:#fff}main{padding:0}figure.diagram{break-inside:avoid}.q,.d{break-inside:avoid}}
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">Confidence calibration</span></p>
+
+<span class="eyebrow">Interview prep · KQ7 · Staff / Principal</span>
+<h1>Confidence calibration</h1>
+<p class="sub">When a clinician says “high confidence”, does the outcome rate actually rise? A
+production service on a chronic-care platform covering <strong>80+ chronic conditions</strong>,
+carrying <strong>nine to ten years of patient history</strong>. Sole owner, design through
+production.</p>
+<p class="nav">
+  <a href="../kq7-confidence-calibration.html">full case study</a><span>·</span>
+  <a href="../summary.html">summary</a><span>·</span>
+  <a href="../index.html">all case studies</a>
+</p>
+
+<div class="open">
+  <span class="term">Open with these two sentences</span>
+  <p>“Every clinical decision on that platform carried the clinician’s own stated confidence —
+  low, medium, or high. I built the service that checks whether that label was worth anything:
+  when someone wrote <em>high confidence</em>, did the intended outcome actually arrive more often
+  ninety days later than when they wrote <em>low</em>?”</p>
+  <p>Then, if they lean in: “The first design review came back with one word — <em>redesign</em> —
+  and eight required changes before a line of production code. The headline finding was that my
+  cohort was selecting on outcome availability. What shipped is that redesign.”</p>
+</div>
+
+<div class="guard">
+  <h4>Numbers discipline — read this before the room</h4>
+  <p><strong>Safe to state</strong> — every one of these is a design or scale figure from the
+  system itself:</p>
+  <ul>
+    <li>80+ chronic conditions · roughly 10,000 patients · about nine years of history hydrated
+    into the event spine</li>
+    <li>Three ordinal confidence buckets · a 90-day outcome window · a floor of 30 mature outcomes
+    per cell · a 20% excluded-share suppression threshold</li>
+    <li>2,000 bootstrap resamples per interval, seeded from the snapshot manifest and clustered by
+    enrollment · statistical power at or above 0.80 at an alpha (significance level) of 0.05</li>
+    <li>Freshness tiers at 24 and 48 hours · projector lag of 30 minutes flips the tier to yellow ·
+    correction-to-fresh-tables at a 95th-percentile (P95) (95th percentile) of five minutes or under</li>
+    <li>Alarm escalation after seven or more consecutive refreshes · a 24-hour acknowledgement
+    cooldown</li>
+    <li>Zero language-model calls in the calibration path · eight required review changes, five
+    absorbed directly and three promoted to shared platform components</li>
+  </ul>
+  <p style="margin-top:10px"><strong>Never state</strong> an achieved latency, an adoption rate, an
+  error reduction, a cost saved, an accuracy figure, or any observed calibration result. You left
+  before outcome capture, and the observed results are not yours to publish. If asked for one, say
+  exactly that — it is a stronger answer than a number you cannot source.</p>
+</div>
+
+
+<!-- ============================================================ 1 -->
+<section class="sec">
+<span class="n">Section 01</span>
+<h2>What is it?</h2>
+<p class="lede">The problem as a clinician and a regulator actually meet it — then the reason a
+one-line comparison is a trap.</p>
+
+<div class="body">
+<h3>The situation, in plain language</h3>
+<p>A clinician on a chronic-care platform makes dozens of decisions a week — start a protocol,
+modify a plan, override a recommendation, escalate a case — and every one of them is logged with
+her own stated confidence: <strong>low</strong>, <strong>medium</strong>, or <strong>high</strong>.
+Her clinical lead tells her the team is well calibrated. Nobody in that conversation can say what
+that claim rests on.</p>
+<p>The regulator’s version of the same question is harder and less forgiving. <em>Show me the
+number. Show me you can produce the identical number again tomorrow from the same inputs. And show
+me you did not quietly drop the patients whose outcome never resolved.</em> That third demand is
+the one that killed the first design.</p>
+<p>The query itself is one sentence: <strong>“For low-confidence decisions, what is the outcome
+distribution versus high-confidence decisions?”</strong> A well-calibrated population shows outcome
+rates that climb from low to medium to high. A poorly calibrated one does not.</p>
+
+<h3>Why it is genuinely hard</h3>
+<p>A naive implementation is one structured query language (SQL) <code>GROUP BY</code> — group the decisions by confidence
+bucket, average the outcome flag, print three numbers. Those three numbers look exactly like an
+answer. Every artefact below moves them, and none of the movement has anything to do with real
+calibration.</p>
+
+<div class="g">
+<span class="term">Failure mode 01 · the one that got the design rejected</span>
+<h4>Selection on outcome availability</h4>
+<p class="why">Compute the rate only over decisions whose outcome has resolved, and you are
+computing over survivors. Low-confidence decisions plausibly censor at a different rate — the
+patient switched programmes, dropped out, the follow-up simply never matured. The review flagged
+this as a <strong>priority-zero (P0)</strong> (priority-zero, its highest severity) statistics risk: the surviving
+low-confidence rows are a biased sample, and calibration can look better or worse than it is.</p>
+</div>
+
+<div class="g">
+<span class="term">Failure mode 02</span>
+<h4>False confidence from small cells</h4>
+<p class="why">A handful of matured outcomes produces a confident-looking rate. And the slicing here
+is multiplicative — bucket × archetype × governed actor slice — so the grid is sample-hungry by
+construction. (A <strong>decision archetype</strong> is the kind of decision being made: initiate,
+modify, override, escalate.)</p>
+</div>
+
+<div class="g">
+<span class="term">Failure mode 03</span>
+<h4>Monotonicity that isn’t real</h4>
+<p class="why"><strong>Monotonic</strong> here means the outcome rate rises consistently from low to
+medium to high. With three buckets resampled every night, noise pushes one pair past another on a
+large fraction of nights. Page on that and the on-call rota learns to ignore the one signal that
+matters.</p>
+</div>
+
+<div class="g">
+<span class="term">Failure mode 04</span>
+<h4>Denominator gaming</h4>
+<p class="why">The person producing the number also controls the denominator. Ration your “high”
+labels and you manufacture apparent separation; compress everything into “medium” and you flatten
+it. Neither behaviour reflects any change in real accuracy — but a bare rate cannot tell the
+difference.</p>
+</div>
+
+<div class="g">
+<span class="term">Failure mode 05</span>
+<h4>Scorecard misuse</h4>
+<p class="why">The moment the numbers split by actor, the table reads as a ranking that can end a
+career — even when the statistics are sound. This is a design constraint on the surface, not a
+disclaimer at the bottom of it.</p>
+</div>
+
+<div class="g">
+<span class="term">Failure mode 06 · structural</span>
+<h4>Three ordinal buckets are not a probability</h4>
+<p class="why"><strong>ECE</strong> (expected calibration error) and the <strong>Brier score</strong>
+both assume a numeric predicted probability you can bin and compare against observed frequency. The
+field this platform actually captures is a three-level enumeration. So the honest deliverable is a
+bucket-versus-outcome comparison and a monotonicity check, never a smooth calibration curve.</p>
+</div>
+
+<div class="g">
+<span class="term">And the leak that would be invisible</span>
+<h4>An outcome influencing the confidence bucket it is later compared against</h4>
+<p class="why">If a confidence value is read <em>after</em> it could have been revised in light of
+how things turned out, the calibration curve becomes self-fulfilling — and it would look
+immaculate. This is why confidence is reconstructed as it stood at decision time, and why outcome
+maturity is gated at build time.</p>
+</div>
+</div>
+</section>
+
+
+<!-- ============================================================ 2 -->
+<section class="sec">
+<span class="n">Section 02</span>
+<h2>How did we solve it?</h2>
+<p class="lede">The architecture, the ordering, and the contracts — concretely enough to draw.</p>
+
+<div class="body">
+<div class="open" style="border-left-color:var(--amber)">
+  <span class="term" style="color:var(--amber)">The one-line version</span>
+  <p>Every calibration number is computed once a night from a frozen snapshot, never from the live
+  graph, so any figure can be reproduced exactly — and the graph database appears nowhere in the
+  build trace or the request trace.</p>
+</div>
+
+<h3>The moving parts</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Component</th><th>Its one job in this system</th></tr></thead>
+<tbody>
+<tr><td class="k">DynamoDB</td><td>The append-only <strong>event spine</strong> — the source of truth. Nothing is updated in place, so any past instant can be replayed.</td></tr>
+<tr><td class="k">Neptune</td><td>The <strong>decision graph</strong>, projected off the spine. Structural only — it feeds the nightly snapshot and is never scanned at cohort-build time or on a request.</td></tr>
+<tr><td class="k">Snapshot exporter</td><td>Freezes vertices and edges to <strong>Parquet</strong> (a columnar file format) at an <code>as_of_ms</code> timestamp, with a manifest carrying a snapshot hash, the maximum source event sequence, and an allowed-lateness bound.</td></tr>
+<tr><td class="k">DuckDB</td><td>Embedded columnar engine. Builds the tenant-scoped cohort over the Parquet snapshot with vectorised joins — cheap work that a graph traversal engine is not built for.</td></tr>
+<tr><td class="k">As-of reconstruction</td><td>Replays the spine up to each decision’s own event sequence to recover the confidence bucket, the acting clinician, the archetype, programme, and country as they stood <em>then</em>.</td></tr>
+<tr><td class="k">Shared 90-day labeller</td><td>One implementation across every cohort query in the programme. Returns a typed outcome status — mature, not-mature, missing, or censored — plus the attribution decision, rule version, distance in days, and censoring reason.</td></tr>
+<tr><td class="k">Aggregator</td><td>Counts per-bucket maturity, runs 2,000 seeded bootstrap resamples clustered by enrollment, evaluates the gates, writes the calibration artifact and its dependency set.</td></tr>
+<tr><td class="k">FastAPI service</td><td>The request path: audit-first serving, role resolution, canonical cache key, in-process cache, and a tenant assertion on every cell.</td></tr>
+<tr><td class="k">Correction listener</td><td>Maps a spine correction — to a confidence bucket, an actor, or an outcome — through a dependency index to exactly the calibration cells that depend on it, and rebuilds only those.</td></tr>
+<tr><td class="k">Downstream gate</td><td>The sibling artificial intelligence (AI)-versus-human comparison reads this artifact before it will call any cohort “high confidence”. This query is a producer, not only a dashboard.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Three lanes at three cadences</h3>
+<p>Each lane has a different latency budget and a different failure cost, so they are separated
+deliberately. The <strong>request path</strong> is what a clinician waits on, so it may only serve
+pre-computed, gated cells. The <strong>nightly and event-triggered offline lane</strong> runs the
+expensive statistics — bootstrap resampling, gate evaluation, correction-triggered rebuilds — where
+a few minutes are fine. The <strong>one-time hydration lane</strong> pre-seeded nine years of
+history and is proof-carrying rather than latency-sensitive. Mixing them would force heavy
+statistics onto the request path or reproducibility discipline onto a hot loop, and both would be
+wrong.</p>
+<p>Everything runs inside the client <strong>virtual private cloud (VPC)</strong> (virtual private cloud). The only thing
+that crosses the boundary is a governed, tenant-asserted response to the clinician’s browser over
+<strong>TLS</strong> (Transport Layer Security). <strong>PHI</strong> (protected health information)
+never leaves the network — which is also why the tracing and evaluation tooling is deployed
+self-hosted in-VPC rather than as a hosted service.</p>
+
+<h3>The nightly build, in order</h3>
+<p>The ordering is the contract. Two steps in particular are placed early on purpose.</p>
+<ol class="rungs">
+<li><b>Pin the tenant context and the as-of timestamp.</b> Both travel with the job; nothing downstream re-resolves them.</li>
+<li><b>DuckDB scan of the snapshot Parquet.</b> Filtered to at least the minimum supported confidence-schema version; pre-field rows excluded; deterministic sort by event time, then source event sequence, then id.</li>
+<li><b>Eligibility gate — 90 days.</b> A decision is eligible only if its event time is at least 90 days before the as-of timestamp, so its outcome window has fully closed inside the snapshot. This runs <em>before</em> the labeller, so an immature decision never reaches it at all. Immaturity is handled by exclusion-with-a-count at the eligibility boundary, not by a fragile downstream filter on outcome values.</li>
+<li><b>As-of reconstruction from the spine.</b> Confidence bucket read from the immutable creation event at its source event sequence, with that sequence persisted alongside the value; actor edge, archetype, programme and country reconstructed the same way, each carrying a <code>feature_as_of_ts</code> and its own source event sequence.</li>
+<li><b>Shared 90-day outcome labeller.</b> Missing and censored outcomes enter the denominator with an explicit status; they are never silently dropped.</li>
+<li><b>Aggregate by bucket × archetype × actor_type.</b> Per-bucket eligible, mature, missing, censored, and excluded percentage; 2,000 bootstrap resamples seeded from the snapshot manifest hash and clustered by enrollment.</li>
+<li><b>Statistics gates.</b> Exclusion threshold, sample floor, chi-square gaming test, confidence-interval-overlap monotonicity — in that order.</li>
+<li><b>Write the calibration artifact plus its dependency set</b> — the source event sequences each cell was built from, which is what makes targeted invalidation possible later.</li>
+</ol>
+
+<h3>The request path, in order</h3>
+<ol class="rungs">
+<li><b>Resolve the tenant.</b> A tenant is a three-field scope — <code>account_id</code>, <code>workspace_id</code>, <code>controlunit_id</code> — resolved from the caller’s authenticated identity, never passed as a query parameter a client could forge.</li>
+<li><b>Write the audit entry, before anything is served.</b> Viewer, target, purpose, time. An access-log id is returned in the response. If the audit write fails, the sensitive split does not go out.</li>
+<li><b>Build the canonical cache key.</b> Three tenant fields and the query namespace; archetype and actor-type split shape; confidence schema version, metric schema hash, outcome-library version, bootstrap-library version; snapshot manifest hash, maximum source event sequence, correction epoch.</li>
+<li><b>Cache lookup, or a DuckDB scan of the artifact</b> filtered to the caller’s tenant partition.</li>
+<li><b>Branch by role.</b> <strong>RBAC</strong> (role-based access control): leadership loads all splits including per-actor; a clinician viewing self is restricted to her own id; everyone else has the per-actor split stripped and gets population cells only.</li>
+<li><b>Climb the suppression ladder</b> (below).</li>
+<li><b>Assert the tenant on every cell, on the way out</b> — including on a cache hit. A mismatch pages out as an incident.</li>
+</ol>
+
+<h3>The suppression ladder</h3>
+<p>A calibration cell does not return a number and hope. It climbs a ladder and must clear every
+rung before it earns a headline rate. Anything that fails a rung is <em>not deleted</em> — it is
+returned as a typed, suppressed cell that still carries its denominators, so a suppressed result is
+honest rather than silent.</p>
+<ol class="rungs">
+<li><b>Exclusion.</b> If any bucket’s excluded share — missing plus censored over eligible — passes 20%, the headline rate and spread are suppressed and only the maturity and censoring breakdown is shown.</li>
+<li><b>Sample size.</b> Each bucket must hold at least 30 mature outcomes, in every archetype and every governed actor slice. Below the floor the cell reports “insufficient data” with its full per-bucket breakdown rather than a rate.</li>
+<li><b>Gaming.</b> A chi-square test against the population’s bucket distribution for that archetype flags decisions pushed into one bucket. A flagged cell is tagged and routed to clinical-ops — it still proceeds to the monotonicity rung.</li>
+<li><b>Monotonicity.</b> Evaluated per archetype, pairwise, and only where the two buckets’ bootstrap intervals actually separate.</li>
+<li><b>Tenant assertion, then return and cache.</b></li>
+</ol>
+
+<h3>The contracts that make it hold</h3>
+<ul class="plain">
+<li><strong>Typed cells, validated in code.</strong> Pydantic structured output defines the cell and the response envelope, and the suppression validator is where “a suppressed cell cannot carry a headline rate” is enforced in code rather than convention.</li>
+<li><strong>Four-field event time.</strong> Every hydrated decision carries <code>event_time_ms</code> and <code>observed_at_ms</code> read <em>from the record</em>, and <code>received_at_ms</code> and <code>written_at_ms</code> pinned to a single load-fence constant, never <code>now()</code>. An invariant asserts the real-world time falls strictly before the ingest time on every historical row.</li>
+<li><strong>Per-field provenance.</strong> Each reconstructed field carries the source event sequence it was read at; covariates additionally carry a <code>feature_as_of_ts</code>; the cohort row carries the snapshot manifest hash and the minimum and maximum source event sequence it spans.</li>
+<li><strong>A dependency index.</strong> Every derived cell records the set of source event sequences it was built from, so a correction can be walked to exactly the cells it moves.</li>
+<li><strong>Freshness tiers.</strong> Under 24 hours serves normally; 24 to 48 hours serves with a staleness banner; past 48 hours the service blocks and escalates. A projector lag beyond 30 minutes flips the tier to yellow independently.</li>
+</ul>
+
+<h3>The hydration that made the query answerable at all</h3>
+<p>The service did not start against an empty world. Roughly nine years of prior decisions and their
+matured outcomes were loaded through the same append-only spine by a first-class, quarantine-first
+pre-seed pipeline — not a throwaway backfill. Five properties make that load trustworthy: event time
+is read from the record and never collapsed onto load day; hydrating twice is a no-op, because
+content-addressed event ids plus conditional writes make the load <strong>idempotent</strong>
+(re-running it yields a byte-identical spine and an identical manifest hash); nothing is silently
+coerced, so any record that cannot be mapped to a known schema or to a tenant is quarantined with a
+reason and counted; history replays through the <em>same</em> projection code that serves the live
+stream; and the load is proof-carrying, gated on zero-event-loss reconciliation, per-tenant and
+per-class counts, as-of spot checks against known-good historical reports, and a golden replay
+before anything downstream is built.</p>
+<p>For this query specifically, depth of history is the difference between a verdict and a shrug. A
+cell is only testable once its bucket clears the thirty-mature-outcome floor — <em>and it must clear
+it inside every archetype and every governed actor slice</em>. A cold spine would suppress most of
+the grid for insufficient data and leave the low-versus-high comparison untestable exactly where it
+is most interesting.</p>
+</div>
+</section>
+
+
+<!-- ============================================================ 3 -->
+<section class="sec">
+<span class="n">Section 03</span>
+<h2>Why did we do what we did?</h2>
+<p class="lede">Each decision with the alternative it beat and the reason it beat it. Where the
+reasoning is on the record verbatim, it is quoted — those are the sentences to recall under
+pressure.</p>
+
+<div class="body">
+<h3>The cohort</h3>
+
+<div class="d">
+<h4>Build the cohort snapshot-only, over frozen Parquet</h4>
+<p class="alt"><b>Rejected</b> Scanning the always-current decision graph for each decision’s
+properties — the v1 design.</p>
+<p>A live graph scan answers with whatever the properties happen to be right now. Two runs minutes
+apart can disagree, and a confidence value or an actor could have been edited after the outcome was
+known. A frozen snapshot pinned to an as-of timestamp, with a manifest hash, makes the cohort
+deterministic and auditable: the same as-of always yields the same cells. DuckDB then does
+vectorised tenant-scoped joins over columnar Parquet cheaply — work a graph traversal engine is not
+built for.</p>
+<blockquote>“A live graph scan gives you whatever the properties happen to be right now, which is
+both non-reproducible and leakage-prone.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Reconstruct every field as of decision creation, by replaying the spine</h4>
+<p class="alt"><b>Rejected</b> Reading each field’s current value.</p>
+<p>All of them drift. A clinician changes teams, a patient’s programme or country of care changes,
+an archetype taxonomy is revised. Reading current values would attribute a historical decision to a
+present-day context it was never made in. This is also the answer to the sharpest question in the
+room — <em>isn’t reading the spine at build time the same live scan you condemned?</em></p>
+<blockquote>“One is a mutable point-in-time read that can silently change; the other is a replay of
+history that is by construction stable and reproducible.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Exclude pre-field rows. Never default them to “medium”.</h4>
+<p class="alt"><b>Rejected</b> Defaulting decisions that predate the confidence field to medium so
+the cohort looks complete — the v1 behaviour.</p>
+<p>This is the central honesty knob of the whole design. A confidence bucket that was never recorded
+is not a bucket; it is a gap. Defaulting it invents the very variable under study and biases the
+medium rate toward the population mean. The excluded count is reported separately, so any
+compression from the filter is visible at serve time — and nine years of history means the surviving
+sample is still deep enough to test.</p>
+<blockquote>“That is not keeping the cohort whole; it is fabricating the very variable under
+study.”</blockquote>
+<blockquote>“A smaller honest sample beats a larger one built on an invented value.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Keep missing and censored outcomes in the denominator, with a status</h4>
+<p class="alt"><b>Rejected</b> Dropping rows whose 90-day outcome never resolved.</p>
+<p>Dropping them is silent selection — the analyst never sees that a bucket lost a third of its rows,
+so a rate computed on survivors looks authoritative when it is biased. Keeping them with an explicit
+status makes the exclusion a first-class, countable fact that the suppression rule can act on and a
+reader can inspect. (<strong>Censored</strong> means the follow-up window closed without a resolved
+outcome — the patient left the programme, transferred, or the result never arrived.)</p>
+<blockquote>“A suppressed or partial answer that shows its denominators is honest, whereas a
+confident answer over a quietly filtered denominator is the failure mode the whole redesign was
+about.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Suppress the headline entirely past 20% exclusion — do not footnote it</h4>
+<p class="alt"><b>Rejected</b> Showing the rate with a caveat attached.</p>
+<p>The asymmetry is deliberate. A footnote survives exactly as long as it is convenient; removing
+the headline forces the conversation to be about the maturity of the data before any rate is
+quoted.</p>
+<blockquote>“A wrong headline propagates, a suppressed one merely delays.”</blockquote>
+</div>
+
+<h3>The statistics</h3>
+
+<div class="d">
+<h4>Ship a monotonicity check, not a calibration curve</h4>
+<p class="alt"><b>Rejected</b> ECE, Brier score, or a reliability diagram.</p>
+<p>Those instruments need a numeric predicted probability to bin against observed frequency. The
+field the platform captures is a three-level ordinal enumeration. The honest thing to compute over
+three ordered categories is whether the outcome rate rises across them and whether that rise is
+real. Migrating to numeric confidence is a genuine future option — but it is a clinical-workflow and
+data-collection change, not a statistics trick you can retrofit.</p>
+<blockquote>“Claiming an ECE off three coarse buckets would invent precision the input does not
+carry.”</blockquote>
+<blockquote>“Honest statistics follow the data you have, not the data you wish you had.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Gate monotonicity on pairwise confidence-interval overlap</h4>
+<p class="alt"><b>Rejected</b> Comparing the three point rates and paging when low edges past medium
+— the v1 alarm.</p>
+<p>Point rates over finite buckets jitter every night. The overlap screen asks whether two buckets’
+intervals genuinely separate before it treats their ordering as real; only a separation counts as a
+monotonic step or, reversed, an inversion. <strong>State the limitation yourself before they find
+it:</strong> non-overlapping marginal intervals are a deliberately conservative proxy for a pairwise
+difference test, not the test itself — they discard the covariance between the two bucket estimates
+even though both are resampled from the same clustered draws, so the alpha is nominal rather than
+achieved, and the screen under-detects real differences. The sharper instrument is a percentile
+interval on the bootstrap distribution of the rate <em>difference</em>, paired across resamples, and
+that is the obvious upgrade if the gate is ever asked to carry inferential weight. It is tuned to
+protect an alarm channel, not to be the sharpest available instrument.</p>
+<blockquote>“That converts ‘the numbers wiggled’ into ‘the numbers are distinguishable’, which is
+the difference between a metric a clinician trusts and one they learn to ignore.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Cluster the bootstrap by enrollment, not by row</h4>
+<p class="alt"><b>Rejected</b> Resampling individual decision rows.</p>
+<p>Decisions within one enrollment are correlated — the same patient episode generates several
+decisions sharing context — so resampling rows would treat correlated observations as independent
+and produce intervals that are too narrow. And because the monotonicity gate is driven by whether
+those intervals overlap, understating their width would directly manufacture false “significant”
+steps and inversions. The unit under study is still the decision, not the patient.</p>
+<blockquote>“Decision-grain for the signal, enrollment-cluster for the interval — the two choices go
+together.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Make 30 mature outcomes per cell a hard floor</h4>
+<p class="alt"><b>Rejected</b> A soft warning next to the number.</p>
+<p>Below roughly thirty mature outcomes a bucket’s rate and interval are too unstable to support any
+monotonicity claim, and a warning would let a reader quote the number anyway.</p>
+<blockquote>“A hard floor turns ‘we don’t have enough data’ into an enforced state rather than a
+caption someone can ignore.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Detect gaming with a chi-square against the population distribution — and keep the crude rule underneath</h4>
+<p class="alt"><b>Rejected</b> Relying on the legacy “more than 90% in one bucket” rule alone.</p>
+<p>The 90% rule only trips on the pathological extreme. It is structurally blind to systematic
+compression — every clinician quietly parking 70–80% of decisions in “high” flattens the spread
+without any single actor crossing 90%. The chi-square test compares an actor’s or cohort’s bucket
+distribution against the population distribution <em>for that archetype</em>, which absorbs a lot of
+legitimate case-mix variation, and flags a significant skew well below the extreme. The old rule is
+retained as a cheap, legible sanity floor.</p>
+<blockquote>“Keeping a simple floor under a statistical test is a hedge against the test being
+misconfigured or the reference distribution being wrong.”</blockquote>
+<p>The honest limit: this cannot distinguish an honest specialist with a genuinely skewed case mix
+from deliberate compression. That is precisely why the flag routes to clinical-ops as something to
+review, not as an automatic verdict — a human governance step sits between the flag and any
+consequence.</p>
+</div>
+
+<div class="d">
+<h4>Exempt Override and Escalate from the inversion alarm</h4>
+<p class="alt"><b>Rejected</b> One monotonicity alarm policy across all archetypes.</p>
+<p>Their outcome rates naturally carry very little spread across confidence buckets — the action
+itself, not the stated confidence, dominates what happens next — so an alarm there would fire on
+structure rather than on miscalibration, and would train the on-call to ignore the alarm entirely.
+They are given a lower minimum-spread floor and treated as descriptive-only. The exemption is
+explicitly provisional and on the record: the pooled verdict is withheld until clinical-ops
+governance signs off.</p>
+<blockquote>“The exemption is from the <em>alarm</em>, not from measurement.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Run no propensity matcher, and report the result observationally</h4>
+<p class="alt"><b>Rejected</b> Reusing the programme’s shared matcher to control for case mix.</p>
+<p>Calibration asks a within-population question — does stated confidence track outcomes across its
+own buckets — not a between-groups causal contrast, which is where matching earns its keep. The cost
+is owned openly: this query cannot separate genuine calibration from confounding by case difficulty,
+and the adjusted comparison is left to the sibling AI-versus-human query built for it.</p>
+<blockquote>“Adding a matcher here would impose a causal frame the query does not claim and does not
+need.”</blockquote>
+<blockquote>“A calibration signal that is quietly read as a causal claim is exactly how an analytics
+tool becomes a bad management weapon.”</blockquote>
+</div>
+
+<h3>The governance</h3>
+
+<div class="d">
+<h4>Define a tenant as three fields, not one</h4>
+<p class="alt"><b>Rejected</b> A single <code>account_id</code> check.</p>
+<p>The isolation boundary is genuinely three-dimensional: one account contains multiple workspaces,
+and a workspace multiple control units, each a distinct governance and access boundary. A
+single-field check would let a user in one control unit read calibration for another under the same
+account.</p>
+<blockquote>“The extra two fields are not ceremony; they are the actual shape of who is allowed to
+see what.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Partition by tenant <em>and</em> assert per cell at serve time</h4>
+<p class="alt"><b>Rejected</b> Either layer alone.</p>
+<p>They fail in different ways. Partitioning depends on the write path having partitioned correctly;
+a bug there would silently place a row in the wrong partition, and the row would then look native.
+The serve-time assertion catches exactly that class of bug at the last moment before data leaves the
+process, regardless of how the row got there — and it runs on a cache hit too, so even a
+hypothetical key collision is caught. The cache is treated as an untrusted accelerator, not a place
+where the isolation guarantee is allowed to lapse.</p>
+<blockquote>“A single layer would make a partitioning bug invisible; the assertion turns it into a
+loud page.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Write the audit entry <em>before</em> the per-actor split is served</h4>
+<p class="alt"><b>Rejected</b> Logging the access after the response is built.</p>
+<p>An entry written afterwards can be lost precisely when it matters — a crash or a dropped write
+between reading and logging would leave an unrecorded access to identified performance data.
+Writing first, and returning its id in the response, makes the access log a precondition of serving
+rather than a best-effort side effect.</p>
+<blockquote>“If the audit write fails, the sensitive split does not go out.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Make a league table hard, slow and visible — and claim nothing stronger</h4>
+<p class="alt"><b>Rejected</b> Claiming the surface “can never become a scorecard”.</p>
+<p>Four enforced mitigations, not a promise: actor ids are pseudonymous by default; access is gated
+to leadership-or-self-view; an audit entry recording viewer, target, purpose and time is written
+before any per-actor split is served; and the ordering is alphabetic with no rank-sortable column
+exposed. Every number also carries a mandatory observational caveat, and no pooled verdict ships
+without clinical-ops sign-off.</p>
+<blockquote>“They make misuse hard and auditable rather than metaphysically impossible, which is the
+honest claim to make about governance.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Put no language model anywhere in the calibration path</h4>
+<p class="alt"><b>Rejected</b> Adding a narrative explainer, or a retrieval-augmented generation
+surface, over the numbers.</p>
+<p>A confidence-versus-outcome comparison is buckets, rates, confidence intervals and gate decisions
+— arithmetic and governance end to end. There is no prompt to jailbreak, because the neutrality
+rules, suppression logic and access controls are code and configuration rather than instructions to
+a model; and nothing to hallucinate, because every number is computed and version-pinned. The
+platform ships a self-hosted <strong>LLM</strong> (large language model) seam inside the VPC for the
+queries that genuinely narrate. This one deliberately opens none of it — the seam is one import
+away, and the discipline is choosing not to reach for it.</p>
+<blockquote>“There is nothing here for a model to summarise that a deterministic template does not
+already own, and everything here for a model to get subtly, unaccountably wrong.”</blockquote>
+<p>If pushed on where a model <em>would</em> be allowed: in-VPC by default so PHI never leaves the
+network; an external provider only over a de-identified payload, because a contractual no-retention
+agreement is not a network-residency control; and the explainer strictly narrating a number the
+deterministic pipeline already computed and gated, never producing the number itself.</p>
+</div>
+
+<h3>The operations</h3>
+
+<div class="d">
+<h4>Rebuild only the cells a correction touches</h4>
+<p class="alt"><b>Rejected</b> Waiting for the nightly rebuild, or recomputing the whole table on
+every edit.</p>
+<p>A correction lands as a spine event; the listener walks the dependency index to exactly the cells
+that reference that sequence, rebuilds them, recounts maturity, reseeds the bootstrap, re-runs the
+gates and bumps the correction epoch on the affected keys — a P95 of five minutes or under. Waiting
+for the nightly would leave the dashboard, <em>and the downstream query that gates on it</em>,
+reading a verdict the correction has already overturned for up to a day.</p>
+<blockquote>“The index is a performance optimisation whose correctness is backstopped by a periodic
+full rebuild and a determinism test, not an unchecked source of truth.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Serve under a yellow projector lag; block hard at 48 hours</h4>
+<p class="alt"><b>Rejected</b> Blocking on any freshness degradation, or serving stale numbers
+silently.</p>
+<p>Every outcome in a calibration cell is at least 90 days old by construction, so a projector lag of
+tens of minutes cannot move a matured, gated verdict — it can only mean a very recent decision is
+not yet reflected, and recent decisions are immature and excluded anyway. The yellow banner tells
+the reader the freshness is degraded; the hard 48-hour block still stops genuinely stale serving.</p>
+<blockquote>“Serving with an honest staleness signal beats blocking a population statistic on a lag
+that provably cannot move its answer.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Tune every gate toward suppression</h4>
+<p class="alt"><b>Rejected</b> Treating a false emit and a false suppress as symmetric errors.</p>
+<p>The binding metric of the whole system is that it never emits a headline rate that should have
+been suppressed. Data-quality shortfalls suppress; isolation or governance breaches page. Cross-tenant
+safety is a page-out, not a metric — there is no acceptable non-zero rate to chart.</p>
+<blockquote>“A false suppress merely withholds a number until more data matures — a delay — whereas
+a false emit puts an unreliable calibration verdict in front of a clinician.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Quarantine anything unmappable during hydration; default nothing</h4>
+<p class="alt"><b>Rejected</b> Defaulting an unmapped record to a schema, a bucket, or a tenant so
+the load completes.</p>
+<p>Each legacy payload-schema version gets an explicit upconverter, and any record that cannot be
+mapped to a known schema or to a tenant is quarantined with a reason and counted. The quarantine
+count is itself reported, so the cost of the strictness is visible rather than hidden.</p>
+<blockquote>“A defaulted confidence bucket poisons a statistic; a defaulted tenant poisons isolation,
+and the latter is the more serious of the two failures.”</blockquote>
+</div>
+
+<div class="d">
+<h4>Replay history through the same projection code that serves the live stream</h4>
+<p class="alt"><b>Rejected</b> A separate, faster backfill projection.</p>
+<p>If history were projected by a separate code path, the hydrated graph would be a subtly different
+product from the streaming one, and every determinism and as-of guarantee would hold for only one of
+them.</p>
+<blockquote>“Otherwise the reproducibility guarantees would be theatre — true of the test path, false
+of production.”</blockquote>
+</div>
+
+<h3>The design review this query absorbed</h3>
+<p>Most reviews in the programme returned a punch-list. This one returned a verdict:
+<strong>do not implement as written</strong> — recommendation, one word, <em>redesign</em> — with
+<strong>eight required changes before a line of production code</strong>. Headline finding:
+selection on outcome availability is a P0 statistics risk. The eight spanned the cohort path, as-of
+reconstruction, the outcome library, tenant partitioning, the cache-key envelope, correction
+invalidation, the rebuilt statistics, and actor governance.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>v1 · condemned</th><th>v2 · shipped</th></tr></thead>
+<tbody>
+<tr><td>Live graph scan at build time, reading current decision properties</td><td>Snapshot-only cohort over frozen Parquet in tenant-scoped DuckDB; the graph is never scanned at cohort-build or on a request</td></tr>
+<tr><td>Missing outcomes silently dropped — the P0 statistics risk</td><td>Shared 90-day labeller; missing and censored outcomes enter the denominator as mature / not-mature / missing / censored</td></tr>
+<tr><td>Pre-field rows defaulted to <code>medium</code></td><td>Pre-field rows excluded and counted — no invented bucket</td></tr>
+<tr><td>Bare-rate alarm: fire if the low rate exceeds the medium rate, plus a 90%-in-one-bucket rule</td><td>Gated statistics: per-archetype thresholds, chi-square gaming test, confidence-interval-overlap monotonicity, pre-registered power and minimum-detectable-effect table</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>Five of the eight were absorbed directly into the design</strong> — snapshot-only cohort,
+as-of reconstruction, the shared outcome labeller, the canonical envelope, the rebuilt statistics.
+<strong>Three were deliberately promoted to shared platform components</strong> — the tenant-isolation
+wrapper, correction-invalidation with a replay test, and the actor-access policy — because they are
+cross-cutting concerns several cohort queries share, and solving them locally would mean each query
+reimplementing them slightly differently. All three have since landed at the platform layer, and
+this query binds to the shared versions rather than an inlined stand-in. A programme-level knock-on:
+the actor-dashboard access-and-de-identification requirement became the standard for every
+actor-facing surface.</p>
+
+<div class="guard">
+<h4>Say this before they ask it</h4>
+<p>The service is <strong>live in production</strong>. What never happened is a <em>second</em>
+independent design review re-running the loop to a formal approval stamp — across the whole
+programme only one query ever reached “approved with nits”, and this is not it. The honest status is
+<strong>“redesign absorbed, shared platform dependencies since landed”</strong>, not “approved”.
+Separately, several <em>policy</em> sign-offs still sit with clinical-ops governance — the
+per-archetype monotonicity thresholds, the Override/Escalate exemption, the gaming-test reference
+distribution, the published power table, and the alarm severity and cooldown policy — and until
+those land the pooled monotonicity verdict is withheld and those archetypes stay descriptive-only.
+Volunteering this reads as the person who ran the review honestly. Being caught on it does not.</p>
+</div>
+</div>
+</section>
+
+
+<!-- ============================================================ 4 -->
+<section class="sec">
+<span class="n">Section 04</span>
+<h2>Architecture</h2>
+<p class="lede">Four diagrams, exactly as they appear in the case study. Each walkthrough is written
+so you can redraw the diagram on a whiteboard from the words alone.</p>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+    S2[Snapshot frozen at as_of_ms<br/>vertices + edges parquet<br/>manifest · snapshot hash · source_event_seq_max · allowed_lateness]
+    S3[Snapshot-only cohort builder<br/>tenant-scoped DuckDB · no live graph scan<br/>filter supported schema version · pre-field rows excluded · no medium default<br/>deterministic sort by event time · seq · id]
+    S4[As-of reconstruction from the spine<br/>self-reported confidence + its event seq<br/>acting clinician edge · archetype + program + country<br/>feature_as_of_ts + source_event_seq per field]
+    S5[Shared 90-day outcome labeller<br/>status mature · not-mature · missing · censored<br/>attribution decision + rule version + distance<br/>missing outcomes never silently dropped]
+    S6[Aggregate<br/>group by bucket x archetype x actor_type<br/>per-bucket eligible · mature · missing · censored · pct_excluded<br/>seeded enrollment-cluster bootstrap intervals]
+    S7[Statistics gates<br/>monotonicity only when bucket intervals separate<br/>chi-square denominator-gaming vs population<br/>per-archetype thresholds · pre-registered power and MDE · CI-width suppression]
+    S8[Serve · FastAPI<br/>canonical metric-cache key · tenant assertion per cell<br/>role-based access + audit log + pseudonymous actor id]
+    S9[Eval + golden replay + alarm routing<br/>monotonicity 90-day history · severity + owner + ack + cooldown]
+    CORR[Correction-event listener<br/>confidence · actor · outcome corrections invalidate calibration rows<br/>dependency-targeted rebuild · P95 5 min]
+    GATE[(Downstream AI-vs-human gate<br/>reads the calibration artifact tagged<br/>metric version + snapshot hash)]
+    S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
+    CORR -.-> S3
+    CORR -.-> S6
+    CORR -.-> S8
+    S6 --> GATE
+</pre>
+<figcaption>Fig 1 · End to end — snapshot-only cohort, as-of reconstruction, gated statistics; the graph is never on the build path</figcaption>
+<div class="walk">
+<h4>What flows where</h4>
+<p>Read it as one spine with a side-channel. Data enters at the top as a <strong>frozen
+snapshot</strong> — vertices and edges written to Parquet at a pinned <code>as_of_ms</code>, with a
+manifest carrying the snapshot hash, the maximum source event sequence, and an allowed-lateness
+bound. Those three manifest fields are what make everything below reproducible; without them the
+next box is just a query against a moving target.</p>
+<p>The <strong>cohort builder</strong> scans that snapshot in DuckDB, scoped to one tenant. Three
+filters fire here and nowhere else: only supported confidence-schema versions pass, pre-field rows
+are dropped rather than defaulted, and the result is sorted deterministically by event time, then
+source event sequence, then id — so two decisions in the same millisecond can never produce two
+different cohorts.</p>
+<p><strong>As-of reconstruction</strong> then goes back to the spine for the fields that matter,
+reading each at the decision’s own event sequence and persisting that sequence alongside the value.
+This is the only place the spine is read on the build path, and it reads immutable creation events,
+not current state.</p>
+<p>The <strong>shared labeller</strong> attaches a 90-day outcome status to each decision — mature,
+not-mature, missing, or censored — with its attribution decision, rule version and distance. The
+<strong>aggregator</strong> groups by bucket × archetype × actor type, counts eligible / mature /
+missing / censored / excluded percentage per bucket, and computes seeded, enrollment-clustered
+bootstrap intervals. The <strong>statistics gates</strong> then decide what may be shown.
+<strong>Serve</strong> adds the cache key, role resolution, audit and per-cell tenant assertion, and
+<strong>eval</strong> hangs off the end with golden replay and alarm routing.</p>
+<h4>The side-channel and the consumer</h4>
+<p>The dashed lines from the <strong>correction listener</strong> are the only edges that do not run
+top-to-bottom. A correction to a confidence bucket, an actor, or an outcome re-enters at three
+points — the cohort, the aggregate, and the served cache — and it invalidates by dependency rather
+than by wholesale rebuild. The solid line from the aggregate to the <strong>downstream
+AI-versus-human gate</strong> is the reason this is a producer and not just a dashboard: a sibling
+query reads this artifact, tagged with metric version and snapshot hash, before it will trust a
+“high confidence” cohort.</p>
+<div class="break"><b>What would break without it:</b> remove the snapshot at the top and the whole
+chain becomes non-reproducible — the same question asked twice gives two answers, and no figure on
+the surface can be audited. Remove the as-of reconstruction and every historical decision gets
+bucketed by whatever its confidence says <em>today</em>, which is exactly the self-fulfilling
+calibration curve the design exists to prevent.</div>
+</div>
+</figure>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TB
+    subgraph VPC["Client VPC · PHI never crosses this boundary"]
+        direction TB
+        subgraph HIST["One-time historical · hydration + pre-seed"]
+            direction TB
+            LEG[Legacy corpus · about 9 yr] --> HYD[Quarantine-first load]
+        end
+        subgraph OFF["Nightly + event-triggered · offline"]
+            direction TB
+            EXP[Snapshot exporter] --> COH[Cohort builder · DuckDB]
+            COH --> LAB[90-day outcome labeller] --> AGG[Aggregator · bootstrap + gates]
+            CORR[Correction listener] --> AGG
+        end
+        subgraph REQ["Request path · what a clinician waits on"]
+            direction TB
+            API[FastAPI calibration service] --> RB[RBAC + audit]
+            RB --> CACHE[LRU cache] --> TEN[Tenant assertion per cell]
+        end
+        SPINE[(Event spine · DynamoDB)]
+        SERVE[(calibration.parquet)]
+        NEP[(Decision graph · Neptune)]
+        LLM[[Self-hosted LLM seam]]
+        HYD --> SPINE
+        SPINE -->|projection| NEP
+        NEP --> EXP
+        SPINE -->|as-of reconstruction| COH
+        AGG --> SERVE --> CACHE
+        NEP -. never read at cohort-build or request .-> COH
+        API -. not called by this query .- LLM
+    end
+    BROWSER[Clinician browser · over TLS · governed cells only]
+    TEN --> BROWSER
+    BROWSER -->|TLS request| API
+</pre>
+<figcaption>Fig 11 · The stack by lane and cadence — the graph database and the model seam are both off the request path, so nothing a clinician waits on depends on either</figcaption>
+<div class="walk">
+<h4>What flows where</h4>
+<p>Draw one big box first — the client VPC — and put everything except the browser inside it. That
+outer box is the claim: PHI never crosses it, and the only thing that leaves is a governed,
+tenant-asserted response over TLS.</p>
+<p>Inside, three lanes at three cadences. <strong>Historical, one time:</strong> a nine-year legacy
+corpus goes through a quarantine-first load into the event spine. <strong>Offline, nightly and
+event-triggered:</strong> the snapshot exporter reads the decision graph, the cohort builder reads
+the snapshot in DuckDB, the labeller attaches outcomes, and the aggregator runs the bootstrap and
+the gates, writing <code>calibration.parquet</code>. The correction listener joins that lane at the
+aggregator. <strong>Request path:</strong> FastAPI, then RBAC and audit, then the
+<strong>LRU</strong> (least-recently-used) in-process cache, then the per-cell tenant assertion, and
+only then the browser.</p>
+<p>Note the order inside the request lane: role resolution and audit sit <em>before</em> the cache,
+and the tenant assertion sits <em>after</em> it. That is not decoration. Audit before the cache means
+the access is logged whether or not the answer was already computed; assertion after the cache means
+a cache hit is still checked on the way out.</p>
+<h4>The two dashed edges are the whole argument</h4>
+<p>One dashed edge runs from the Neptune decision graph to the cohort builder, labelled <em>never
+read at cohort-build or request</em>. The other runs from the FastAPI service to the self-hosted
+LLM seam, labelled <em>not called by this query</em>. Both are drawn precisely because they are
+<strong>not</strong> used: the graph is a shared platform asset that feeds the snapshot and serves
+other queries live, and the model seam exists one import away for siblings that genuinely narrate.
+Drawing an unused dependency is how you document a deliberate omission instead of leaving it looking
+like an oversight.</p>
+<div class="break"><b>What would break without it:</b> put the graph on the request path and graph
+latency or drift can corrupt a calibration cell, and a clinician’s wait becomes hostage to a
+traversal engine. Collapse the three lanes into one and either the bootstrap lands on the hot path
+or the reproducibility discipline lands on a hot loop.</div>
+</div>
+</figure>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+    IN([Access-resolved cell]) --> EXCL{Any bucket over the exclusion threshold}
+    EXCL -- yes --> SUPPHEAD[Suppress headline rate + spread<br/>expose maturity + censoring breakdown only]
+    EXCL -- no --> SS{Each bucket has 30 or more mature outcomes}
+    SS -- no --> SUP[Emit insufficient data<br/>with the full per-bucket breakdown]
+    SS -- yes --> GAME{Chi-square vs the population<br/>bucket distribution}
+    GAME -- alarm --> GAMETAG[Tag denominator gaming · route to clinical-ops]
+    GAME -- ok --> MON{Per-archetype monotonicity<br/>bucket intervals must separate}
+    GAMETAG --> MON
+    MON -- inverted + intervals separate --> ALARM[Calibration-inverted alarm<br/>severity + owner + ack path + cooldown]
+    MON -- intervals overlap --> EMIT[Emit rates + intervals + maturity + monotonicity status]
+    ALARM --> EMIT
+    SUPPHEAD --> TENANT[Tenant assertion on every cell]
+    SUP --> TENANT
+    EMIT --> TENANT
+    TENANT --> RET[Return + cache]
+    RET --> DONE([Caller])
+</pre>
+<figcaption>Fig 7 · The statistics gate ladder — maturity, sample size, gaming, and monotonicity; suppress in place, then assert tenant last</figcaption>
+<div class="walk">
+<h4>What each gate does</h4>
+<p>The cell arrives <em>already access-resolved</em> — role branch taken, audit written. Nothing here
+computes a statistic for a caller who was not entitled to it.</p>
+<p><strong>Gate 1, exclusion.</strong> If any bucket’s missing-plus-censored share passes 20%, the
+headline rate and spread are suppressed and only the maturity and censoring breakdown goes out. This
+is the P0 finding turned into a runtime control.</p>
+<p><strong>Gate 2, sample size.</strong> Each bucket needs at least 30 mature outcomes. Below that
+the cell emits “insufficient data” <em>with its full per-bucket breakdown</em> — the reader sees the
+denominators, just not a rate.</p>
+<p><strong>Gate 3, gaming.</strong> A chi-square against the population’s bucket distribution for the
+archetype. Note the topology: an alarm here <em>tags and routes</em> to clinical-ops and then rejoins
+the flow at gate 4. Gaming does not suppress the cell; it annotates it and puts a human in the loop.</p>
+<p><strong>Gate 4, monotonicity.</strong> Evaluated per archetype, and only where the bucket intervals
+separate. An inversion with separated intervals raises an alarm carrying severity, owner,
+acknowledgement path and cooldown — and then <em>still emits</em>. Overlapping intervals emit
+directly. Either way the caller gets rates, intervals, maturity and monotonicity status.</p>
+<h4>The shape to remember</h4>
+<p>Every path converges on one box — <strong>tenant assertion on every cell</strong> — before return
+and cache. There is no branch that reaches the caller without passing through it. And no failed rung
+deletes anything: it converts the cell into a typed, suppressed cell that still carries its
+denominators.</p>
+<div class="break"><b>What would break without it:</b> drop gate 1 and a bucket that lost a third of
+its rows still prints a confident rate. Drop gate 2 and eleven outcomes produce a headline. Move the
+tenant assertion anywhere but last and a bug in the write path becomes an invisible cross-tenant
+leak instead of a loud page.</div>
+</div>
+</figure>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+    IN([Three bucket rates · each with a bootstrap CI]) --> NAIVE[Naive check · rate low above rate medium<br/>rejected in review · noise inverts a cell most nights]
+    IN --> PAIR[Pairwise CI-overlap check]
+    PAIR --> LM{Low vs medium<br/>intervals separate}
+    PAIR --> MH{Medium vs high<br/>intervals separate}
+    LM -- overlap --> INFO[Intervals overlap · informational · never pages]
+    MH -- overlap --> INFO
+    LM -- separate --> DIR{Direction inverts}
+    MH -- separate --> DIR
+    DIR -- no --> OK[Monotonic · outcome rate rises with confidence]
+    DIR -- yes --> ARCH{Archetype carries an inversion alarm}
+    ARCH -- override or escalate --> EXPECT[No alarm · a flat curve here is expected by design]
+    ARCH -- modify or initiate --> ALARM[Inversion alarm · severity + owner + ack + cooldown]
+</pre>
+<figcaption>Fig 8 · Monotonicity by pairwise CI overlap — an inversion only pages when the intervals genuinely separate, so night-to-night noise never wakes a clinician</figcaption>
+<div class="walk">
+<h4>The fork at the top is the argument</h4>
+<p>Three bucket rates enter, each with a bootstrap confidence interval. The left branch is the
+<strong>rejected</strong> design, drawn deliberately: compare the point rates, fire if the low rate
+exceeds the medium rate. It is on the diagram as a dead end so the contrast is impossible to miss.</p>
+<p>The right branch splits the comparison into two adjacent pairs — low versus medium, medium versus
+high — and asks one question of each: <em>do the intervals separate?</em> If they overlap, the result
+is informational and never pages, however dramatic the point rates look. Only a genuine separation
+proceeds.</p>
+<h4>Two more conditions before anyone is woken</h4>
+<p>A separation asks whether the <strong>direction inverts</strong>. If it does not, the step is
+monotonic and the answer is the good one: outcome rate rises with stated confidence. If it does
+invert, one last question — <strong>does this archetype even carry an inversion alarm?</strong>
+Override and escalate do not, because their natural spread is small and a flat curve there is
+expected by design; modify and initiate do, and that path raises the alarm with severity, owner,
+acknowledgement path and cooldown.</p>
+<p>So a page requires three things simultaneously: separated intervals, an inverted direction, and an
+alarming archetype. Everything else is measured, shown, and left alone.</p>
+<div class="break"><b>What would break without it:</b> delete the overlap gate and the naive path on
+the left takes over. With three buckets resampled nightly, one pair crosses by chance on a large
+fraction of nights, the alarm fires almost constantly, and the on-call rota learns to dismiss
+calibration alarms wholesale — so the one night a real, sustained inversion appears, it is waved off
+with the noise. The gate is not there to be sensitive; it is there to keep a real inversion
+legible.</div>
+</div>
+</figure>
+</section>
+
+
+<!-- ============================================================ Q -->
+<section class="sec">
+<span class="n">Likely questions</span>
+<h2>Eight they will actually ask</h2>
+<p class="lede">Headline sentence first, every time — it has to land on its own, because you may not
+get the second one.</p>
+
+<div class="q">
+<h4>1. Confidence here is three ordinal buckets, not a probability. Why ship a monotonicity check instead of a proper calibration curve?</h4>
+<p class="head">Because expected calibration error and Brier score both need a numeric predicted probability to bin, and the field this platform captures is a three-level enum — so the honest computation over three ordered categories is whether the rate rises across them and whether that rise is real.</p>
+<p>A well-calibrated population shows outcome rates climbing from low to medium to high. What I ship is that climb plus a confidence interval on each bucket, and a gate that only calls a step real when the intervals separate. Claiming an expected calibration error off three coarse buckets would invent precision the input does not carry.</p>
+<p>Migrating to numeric confidence and a reliability diagram is a real future option and I would push to collect numeric confidence earlier — but it is a clinical-workflow and data-collection change, not a statistics trick you can retrofit. You would need clinicians entering calibrated probabilities, an upconversion story for a decade of enum history or an explicit break at the migration boundary, and a re-registration of the power and minimum-detectable-effect assumptions for a continuous scale.</p>
+</div>
+
+<div class="q">
+<h4>2. You read the event spine directly at build time. Isn’t that the same live scan you condemned in v1?</h4>
+<p class="head">No — v1 read the <em>current</em> properties of live graph vertices, and as-of reconstruction replays the append-only spine’s immutable creation events at a pinned event sequence.</p>
+<p>One is a mutable point-in-time read that can silently change between two runs minutes apart. The other recovers the value a field held at the moment the decision was made, and by construction it is stable and reproducible.</p>
+<p>The detail that makes it auditable: each reconstructed field persists the source event sequence it was read at, and covariates additionally carry a <code>feature_as_of_ts</code>. You can point to the exact event that produced each bucket. If the field was corrected later, that arrives as a separate sequenced correction event — it never overwrites the as-of value, and it is what the correction listener keys on.</p>
+</div>
+
+<div class="q">
+<h4>3. Excluding pre-field rows and immature decisions shrinks your denominator. Defend throwing away data.</h4>
+<p class="head">The alternative was not a bigger honest sample — it was defaulting decisions that predate the confidence field to “medium”, which fabricates the very variable under study.</p>
+<p>A defaulted bucket biases the medium rate toward the population mean and quietly corrupts every comparison the query exists to make. Excluding those rows by schema version contracts the denominator honestly, and the per-bucket missing count is reported separately so any compression from the filter is visible at serve time.</p>
+<p>Immature decisions are a separate and stricter case: a decision is only eligible if its event time is at least 90 days before the as-of timestamp, so it is not merely excluded — it is <em>not yet countable</em>. And the cost is affordable here precisely because nine years of history were hydrated into the spine before the service went live; a cold start would have left most of the grid suppressed for insufficient data.</p>
+</div>
+
+<div class="q">
+<h4>4. What actually breaks if you delete the confidence-interval overlap gate and just page when low exceeds medium?</h4>
+<p class="head">With three buckets resampled every night, one pair crosses by chance on a large fraction of nights, so the alarm fires almost constantly and the on-call rota learns to dismiss calibration alarms wholesale.</p>
+<p>Then the one night a real, sustained inversion appears, it gets waved off with the noise. Deleting the gate does not make the system more sensitive to real problems — it destroys the signal-to-noise ratio that makes any alarm actionable.</p>
+<p>Two things sit alongside it. Severity is a function of persistence, not of one refresh: an inversion escalates from P2 to P1 only when it is sustained across seven or more refreshes, driven by the rolling 90-day monotonicity history appended to the artifact, and a 24-hour cooldown after an acknowledgement stops a known condition re-paging while it is being worked. And <strong>if they push on the archetype exemption</strong> — override and escalate carry no inversion alarm because their outcome rates naturally have very little spread, so alarming there would fire on structure rather than miscalibration. The exemption is from the <em>alarm</em>, not from measurement: those archetypes are still computed, still shown, still carry their spread. It is provisional and on the record, pending clinical-ops sign-off.</p>
+</div>
+
+<div class="q">
+<h4>5. Isn’t a monotonic low-to-high curve exactly what you would get from case difficulty rather than good calibration?</h4>
+<p class="head">Yes, and the design does not pretend otherwise — confounding by case difficulty produces the same monotonic shape, this query does not run a propensity matcher, and the result is framed observationally for exactly that reason.</p>
+<p>Harder cases draw lower confidence and worse outcomes; that alone reproduces the curve. So the query reports that outcome rates track stated confidence in a population, never that confidence caused the outcomes. Every surface carries an observational caveat and the design deliberately avoids causal verbs, because a calibration signal quietly read as a causal claim is how an analytics tool becomes a bad management weapon.</p>
+<p>Calibration asks a within-population question. The between-groups causal contrast — did the AI do better than the clinician on comparable cases — is where matching earns its keep, and that is a separate sibling query built for it. Adding a matcher here would impose a causal frame this query does not claim and does not need. This is the weakest point in the design and I name it as such: the real answer is numeric confidence plus the matched sibling comparison.</p>
+</div>
+
+<div class="q">
+<h4>6. “Never becomes a scorecard” is a strong claim. What actually stops a determined manager ranking clinicians with this?</h4>
+<p class="head">Nothing makes it metaphysically impossible, and claiming otherwise would be dishonest — what the design does is make it hard, slow, and visible.</p>
+<p>Four enforced mitigations. Actor ids are pseudonymous by default, so the common case never needs real identities. Access to any per-actor split is gated to leadership or self-view through role-based access control. An audit entry recording viewer, target, purpose and time is written <em>before</em> the split is served, and its access-log id is returned in the response — so if the audit write fails, the sensitive data does not go out. And the ordering is alphabetic with no rank-sortable column exposed.</p>
+<p>A manager would therefore have to hold leadership access, act with a logged purpose, and reconstruct a ranking by hand from a pseudonymous, alphabetically sorted surface — with every access recorded. On top of that the numbers carry a mandatory observational caveat, and no pooled verdict ships without clinical-ops sign-off. That is governance as a set of mitigations that raise the cost and leave a trail, which is the honest claim to make.</p>
+</div>
+
+<div class="q">
+<h4>7. Is there a language model anywhere in this, and why not?</h4>
+<p class="head">Zero model calls in the calibration path — a confidence-versus-outcome comparison is buckets, rates, confidence intervals and gate decisions, which is arithmetic and governance end to end.</p>
+<p>There is nothing here for a model to summarise that a deterministic template does not already own, and everything here for a model to get subtly, unaccountably wrong. Concretely: there is no prompt to jailbreak, because the neutrality rules, suppression logic and access controls are code and configuration rather than instructions to a model — they cannot drift with a model update, because there is no model in the loop. And there is nothing to hallucinate, because every number on the surface is computed and version-pinned.</p>
+<p>I would add that the seam exists. The platform ships a self-hosted large-language-model seam inside the client VPC for the queries that genuinely narrate — the graph-traversal and orchestration surfaces. It is one import away. Choosing not to open it here is the design decision, not a missing feature. If I ever did add a narrative explainer, it would run in-VPC by default so protected health information never leaves the network, an external provider would be permitted only over a de-identified payload — a contractual no-retention clause is not a network-residency control — and the explainer would strictly narrate a number the deterministic pipeline had already computed and gated.</p>
+</div>
+
+<div class="q">
+<h4>8. You say “redesigned and shipped, eight of eight dispositioned.” What does the review record actually show about approval?</h4>
+<p class="head">It shows a first-round design review whose one-word recommendation was <em>redesign</em>, with eight required changes before any production code — and no second independent review re-running the loop to a formal approval stamp.</p>
+<p>The headline finding was that selection on outcome availability was a P0 statistics risk. The eight changes spanned the cohort path, as-of reconstruction, the outcome library, tenant partitioning, the cache-key envelope, correction invalidation, the rebuilt statistics, and actor governance. Five were absorbed directly into the design. Three were deliberately promoted to shared platform components — the tenant-isolation wrapper, correction-invalidation with a replay test, and the actor-access policy — so sibling queries inherit the same fixes rather than reimplementing them and drifting. All three have since landed at the platform layer and the query binds to the shared versions.</p>
+<p>So the honest status is “redesign absorbed, shared platform dependencies since landed”, not “approved”. Across the whole programme only one query ever reached “approved with nits”, and this is not it. The service is live in production; what is outstanding is a review stamp and a set of clinical-ops <em>policy</em> sign-offs — the per-archetype thresholds, the override/escalate exemption, the gaming-test reference distribution, the published power table, and the alarm severity and cooldown policy. Until those land, the pooled monotonicity verdict is withheld and those archetypes stay descriptive-only.</p>
+</div>
+</section>
+
+<footer>
+<p><strong>Two more they sometimes reach for.</strong> <em>“Same as-of, shuffled spine, identical
+hash — what real bug does that catch that a unit test wouldn’t?”</em> Order-dependence, which unit
+tests almost never exercise: a group-by resolving ties by first-seen row, a bootstrap drawing from an
+unstable iteration order, a de-duplication keeping whichever duplicate arrived first, a
+floating-point sum whose result depends on summation order. Each looks correct under one ordering and
+differs subtly under another. And <em>“why does a calibration read need a cache at all?”</em> The
+artifact only changes when the snapshot advances or a correction lands, while a dashboard is read
+many times between those events — so an in-process cache keyed on every input that can change the
+answer makes repeat reads instant, and any change produces a miss rather than a stale hit.
+Completeness of that key is a correctness property, not a performance tuning knob.</p>
+<p><strong>Reference:</strong> <a href="../kq7-confidence-calibration.html">full case study</a> ·
+<a href="../summary.html">summary</a> ·
+<a href="../index.html">all case studies</a></p>
+<p>Chronic-care platform covering 80+ chronic conditions, roughly 10,000 patients, about nine years
+of history hydrated into the event spine. Sole owner, design through production. Client and product
+identifiers anonymised. Every figure on this page is a design threshold, an acceptance target, or a
+scale fact — no observed production result is stated anywhere, and none should be.</p>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

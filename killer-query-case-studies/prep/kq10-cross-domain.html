@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cross-domain analytics — interview prep</title>
+<meta name="description" content="Interview prep for the cross-domain patient-analytics query: what it is, how it was built, why each decision was taken, the real architecture diagrams, and the questions an interviewer will actually ask.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #8A5A00;
+    --amber-soft: #FBF3E2;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 64px 24px 96px; }
+
+  /* ---- type ---- */
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.6vw, 2.9rem);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 1.95rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.24rem;
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  h4 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 1.02rem;
+    line-height: 1.4;
+  }
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+  a { color: var(--teal-deep); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--teal); }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--mist);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .deck {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 2.1vw, 1.24rem);
+    color: var(--steel);
+    line-height: 1.5;
+    margin-top: 16px;
+    max-width: 44em;
+  }
+
+  /* ---- header ---- */
+  header.page { border-bottom: 2px solid var(--ink); padding-bottom: 28px; margin-bottom: 8px; }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-top: 22px;
+  }
+  .meta span {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+    color: var(--steel);
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    padding: 4px 9px;
+  }
+  nav.crumbs {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 26px;
+    color: var(--steel);
+  }
+  nav.crumbs a { margin-right: 4px; }
+  nav.crumbs span { margin: 0 8px; color: var(--hairline); }
+
+  /* ---- sections ---- */
+  section.major { margin-top: 64px; }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 12px;
+    margin-bottom: 26px;
+  }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    flex: none;
+    padding-top: 4px;
+  }
+  .sec-sub {
+    font-family: var(--serif);
+    color: var(--steel);
+    font-size: 1.05rem;
+    margin-top: -14px;
+    margin-bottom: 26px;
+    max-width: 46em;
+  }
+
+  h3.rule {
+    margin-top: 38px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* ---- cards ---- */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 22px 24px;
+    margin: 22px 0;
+  }
+  .lead-card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--teal);
+    border-radius: 5px;
+    padding: 22px 24px;
+    margin: 24px 0;
+  }
+  .lead-card .say {
+    font-family: var(--serif);
+    font-size: 1.14rem;
+    line-height: 1.55;
+  }
+  .caution {
+    background: var(--amber-soft);
+    border: 1px solid #EBDCB8;
+    border-left: 4px solid var(--amber);
+    border-radius: 5px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .caution h4 { color: var(--amber); margin-bottom: 8px; }
+  .label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--steel);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .query-box {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+  .query-box q {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    quotes: '"' '"';
+  }
+
+  /* ---- lists ---- */
+  ul.plain, ol.steps { margin: 0 0 14px 0; padding-left: 0; list-style: none; }
+  ul.plain li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+  }
+  ul.plain li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 0.72em;
+    width: 6px;
+    height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+  }
+  ol.steps { counter-reset: st; }
+  ol.steps li {
+    counter-increment: st;
+    position: relative;
+    padding-left: 40px;
+    margin-bottom: 14px;
+  }
+  ol.steps li::before {
+    content: counter(st);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--teal);
+    border: 1px solid var(--hairline);
+    background: var(--card);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fail-list li strong { color: var(--ink); }
+
+  /* ---- why cards ---- */
+  .why {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 20px 22px;
+    margin: 16px 0;
+  }
+  .why h4 { margin-bottom: 12px; }
+  .why .row { display: flex; gap: 12px; margin-bottom: 9px; align-items: baseline; }
+  .why .row:last-of-type { margin-bottom: 0; }
+  .why .tag {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--steel);
+    flex: none;
+    width: 84px;
+    padding-top: 3px;
+  }
+  .why .tag.no { color: var(--amber); }
+  .why .row p { margin: 0; }
+  blockquote.verbatim {
+    font-family: var(--serif);
+    font-size: 1.02rem;
+    line-height: 1.5;
+    color: var(--teal-deep);
+    border-left: 3px solid var(--mist);
+    padding-left: 16px;
+    margin-top: 14px;
+  }
+
+  /* ---- figures ---- */
+  figure.fig {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 24px 20px 18px;
+    margin: 28px 0 0;
+    overflow-x: auto;
+  }
+  pre.mermaid {
+    background: none;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--steel);
+    white-space: pre-wrap;
+  }
+  pre.mermaid svg { max-width: 100%; height: auto; }
+  figcaption {
+    font-family: var(--sans);
+    font-size: 0.86rem;
+    color: var(--steel);
+    line-height: 1.5;
+    border-top: 1px solid var(--hairline);
+    margin-top: 18px;
+    padding-top: 12px;
+  }
+  figcaption b { color: var(--ink); font-weight: 600; }
+  .walk { margin: 18px 0 0; }
+  .walk h4 {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .breaks {
+    background: var(--amber-soft);
+    border-left: 3px solid var(--amber);
+    padding: 12px 16px;
+    border-radius: 0 4px 4px 0;
+    margin-top: 14px;
+    font-size: 0.96rem;
+  }
+  .breaks span.label { color: var(--amber); }
+
+  /* ---- Q&A ---- */
+  .qa {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 22px 24px;
+    margin: 18px 0;
+  }
+  .qa .q {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.16rem;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+  .qa .headline {
+    font-weight: 600;
+    border-left: 3px solid var(--teal);
+    padding-left: 14px;
+    margin-bottom: 12px;
+  }
+  .qa .detail { color: var(--steel); }
+  .qa .detail strong { color: var(--ink); }
+  .qnum {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ---- glossary ---- */
+  details.gloss {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 16px 22px;
+    margin: 24px 0;
+  }
+  details.gloss summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-family: var(--sans);
+    list-style-position: outside;
+  }
+  details.gloss summary::marker { color: var(--teal); }
+  .gloss-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px 30px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--hairline);
+  }
+  .gloss-grid dt {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .gloss-grid dd {
+    font-size: 0.93rem;
+    color: var(--steel);
+    line-height: 1.5;
+    margin: 2px 0 0;
+  }
+
+  footer.page {
+    margin-top: 72px;
+    padding-top: 22px;
+    border-top: 2px solid var(--ink);
+    font-size: 0.9rem;
+    color: var(--steel);
+  }
+  footer.page a { margin-right: 18px; }
+
+  @media (max-width: 600px) {
+    main { padding: 40px 18px 72px; }
+    .why .row { display: block; }
+    .why .tag { width: auto; margin-bottom: 2px; }
+    .sec-head { display: block; }
+    .sec-num { margin-bottom: 6px; }
+  }
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">Cross-domain analytics</span></p>
+
+<nav class="crumbs">
+  <a href="../kq10-cross-domain.html">full case study</a><span>·</span>
+  <a href="../summary.html">summary</a><span>·</span>
+  <a href="../index.html">all case studies</a>
+</nav>
+
+<header class="page">
+  <div class="eyebrow">Interview prep · killer query 10</div>
+  <h1>Cross-domain analytics</h1>
+  <p class="deck">Three subsystems each saw one patient go wrong. Finding the patients where all three broke down inside the same window is a three-way join — and almost everything that made it shippable is the machinery that stops that join from producing a confident, wrong number.</p>
+  <div class="meta">
+    <span>Chronic-care platform · 80+ conditions</span>
+    <span>~10,000 patients · ~9 years of history</span>
+    <span>Role: sole owner, design → production</span>
+    <span>Status: live in production</span>
+  </div>
+</header>
+
+<div class="query-box">
+  <span class="label">The query the system answers</span>
+  <q>Among patients who received refund exceptions, had poor early adherence, and escalated complaints, what care decisions followed and what were the outcomes?</q>
+</div>
+
+<div class="caution">
+  <h4>Numbers discipline — read this before you open your mouth</h4>
+  <p>Every figure on this page is a <strong>design parameter</strong> (90-day window, 365-day lookback, adherence below 0.50, 2,000 bootstrap resamples, five-field identity key) or a <strong>pre-registered acceptance target</strong> (95th-percentile correction-to-refresh at or under 5 minutes, citation faithfulness 1.0, standardised mean difference at or under 0.10). None of them is a measured production result. You left before outcomes were captured, so there is <strong>no achieved latency, adoption, accuracy or cost number</strong> to quote. If asked for one, say the observed results belong to the client and are not yours to publish — then offer the acceptance target instead. Never compute, estimate or round one into existence.</p>
+</div>
+
+<details class="gloss">
+  <summary>Glossary — plain English for every term used on this page</summary>
+  <dl class="gloss-grid">
+    <dt>Adherence</dt><dd>Whether a patient actually takes the medication or follows the care plan. An <em>early adherence score</em> grades their first weeks in the programme.</dd>
+    <dt>Refund exception</dt><dd>Billing granted a refund outside normal policy — a signal that something went wrong commercially for that patient.</dd>
+    <dt>Escalated complaint</dt><dd>A support ticket pushed above front-line handling.</dd>
+    <dt>Cohort</dt><dd>The set of patients a query selects to study.</dd>
+    <dt>Pivot</dt><dd>The single moment that cuts a patient's story into "before" and "after". Here it is the latest of the three qualifying events.</dd>
+    <dt>As-of</dt><dd>Reconstructing the world as it was known at a chosen instant, deliberately ignoring anything learned later.</dd>
+    <dt>Event time vs ingestion time</dt><dd>When something happened in the real world, versus when the system was told about it. Confusing the two is the failure this design is built around.</dd>
+    <dt>Snapshot · manifest hash</dt><dd>A frozen copy of the data at an as-of instant, plus a fingerprint identifying exactly which copy.</dd>
+    <dt>Watermark</dt><dd>How long a pipeline waits for late-arriving data before it treats a time window as closed.</dd>
+    <dt>Idempotent</dt><dd>Running it twice produces exactly what running it once produced.</dd>
+    <dt>Content-addressed</dt><dd>The identifier is a hash of the content, so the same record always gets the same identifier — which is what makes a re-run a no-op.</dd>
+    <dt>Quarantine</dt><dd>Holding a record aside, counted and reported, instead of guessing a value for it.</dd>
+    <dt>Fenced cutover</dt><dd>Switching from the historical load to the live stream at a proven boundary, with neither a gap nor a duplicate.</dd>
+    <dt>Propensity matching</dt><dd>Pairing each cohort patient with a non-cohort patient who looked statistically similar <em>beforehand</em>, so the comparison is not apples to oranges.</dd>
+    <dt>Covariate</dt><dd>A background fact about a patient — severity, programme, tenure, prior utilisation — used to build that comparable pair.</dd>
+    <dt>Standardised mean difference (SMD)</dt><dd>Per-covariate measure of how far apart the two arms still are after matching. A common rule of thumb treats anything above 0.10 as not comparable.</dd>
+    <dt>Confidence interval (CI)</dt><dd>The range the estimate could plausibly sit in. Wide means "we don't really know."</dd>
+    <dt>Effective N</dt><dd>How many genuinely independent observations you have — fewer than the raw row count when one patient contributes many rows.</dd>
+    <dt>Bootstrap</dt><dd>Resampling the data thousands of times to see how much the answer wobbles. <em>Seeded</em> means the randomness is reproducible; <em>clustered by enrollment</em> means whole patients are resampled, not individual rows.</dd>
+    <dt>Kaplan–Meier censoring</dt><dd>The standard survival-analysis treatment for people who leave before the window ends, so they are not miscounted as failures.</dd>
+    <dt>Estimand</dt><dd>The precise quantity you set out to measure, fixed in advance so it cannot be chosen after seeing the data.</dd>
+    <dt>Sensitivity bounds (Rosenbaum gamma, E-value)</dt><dd>How strong a confounder you never measured would have to be to wipe out the result you are reporting.</dd>
+    <dt>Large language model (LLM)</dt><dd>The generative model. Here it is allowed to write sentences, never numbers.</dd>
+    <dt>Protected health information (PHI)</dt><dd>Patient-identifying clinical data, legally restricted in where it may travel.</dd>
+    <dt>Virtual private cloud (VPC)</dt><dd>A network boundary the client controls. "In-VPC" means the data never crosses to a third party.</dd>
+    <dt>Role-based access control (RBAC)</dt><dd>Who is allowed to see which surface, resolved from the caller's authenticated role.</dd>
+    <dt>Time to live (TTL)</dt><dd>A cache expiry timer — it bounds age by the clock, and says nothing about whether the underlying data changed.</dd>
+    <dt>95th percentile (P95)</dt><dd>95 out of 100 cases finish at or under this figure.</dd>
+    <dt>Claim grammar</dt><dd>A typed rulebook every generated sentence must decompose into, each part backed by a cited field. Anything that will not decompose is rejected.</dd>
+    <dt>Directed acyclic graph (DAG)</dt><dd>A pipeline of steps with no loops — the shape a plain batch job takes.</dd>
+    <dt>Parquet · DuckDB</dt><dd>A columnar file format and an embedded analytical engine that reads it — a query engine with no server to run.</dd>
+    <dt>DynamoDB · Neptune</dt><dd>Amazon Web Services (AWS) managed key-value store and graph database.</dd>
+    <dt>Ollama</dt><dd>A runtime that serves open-weight models on your own hardware, over a local application programming interface (API).</dd>
+    <dt>LangGraph · LangChain · Pydantic</dt><dd>Python orchestration and typed-validation libraries. A LangGraph <em>StateGraph</em> declares nodes and edges as ordinary code.</dd>
+    <dt>Watch the collision</dt><dd>"CI" means <strong>confidence interval</strong> everywhere on this page. Where the case study mentions the orchestrator running in continuous integration, that is the build pipeline — say the words, don't say the initials.</dd>
+  </dl>
+</details>
+
+<!-- ============ 1 ============ -->
+<section class="major" id="what">
+  <div class="sec-head">
+    <div class="sec-num">01</div>
+    <h2>What is it?</h2>
+  </div>
+  <p class="sec-sub">Start with the person, not the pipeline.</p>
+
+  <h3>The situation, in plain language</h3>
+  <p>A chronic-care platform covers more than eighty chronic conditions and holds close to a decade of history per patient. An operations reviewer there has three screens. Billing shows refund exceptions. The care programme shows early adherence scores. Support shows escalated complaints. Each screen is healthy on its own terms, and each belongs to a different team.</p>
+  <p>The patients who actually matter are the ones sitting on all three screens at once, inside the same few weeks — a refund exception granted, an early adherence score that collapsed in the first thirty days, and a complaint that escalated. Nobody in the building can see them. Seeing them requires the three systems to agree on one identity, one clock, and one frozen copy of the past, and they never had to agree on any of those before.</p>
+  <p>The regulator's version of the same request is harder still: show me what care decisions followed for those patients and how they did afterwards — and prove the number you are showing me is the same number you showed me last month.</p>
+
+  <div class="lead-card">
+    <span class="label">Open with this</span>
+    <p class="say">"A chronic-care platform had three systems that each saw one patient go wrong — billing granted a refund exception, the care programme logged an early-adherence collapse, support escalated a complaint — and nothing in the company could tell you those were the same patient inside the same ninety days. I owned the service that finds those patients and reports what care decisions followed, and almost none of the engineering is the join; it is the machinery that stops a three-way join from producing a confident, wrong, blame-shaped number."</p>
+    <p style="margin-top:14px"><span class="label">If you have twelve seconds</span> "It joins finance, adherence and support signals into one patient timeline, behind statistical gates that suppress the answer rather than caveat it. A language model is allowed to write sentences about it and is never allowed near a number."</p>
+  </div>
+
+  <h3 class="rule">Why it is genuinely hard</h3>
+  <p>The naive version is one structured-query-language (SQL) join across three tables, and it fails four ways at once. Each of the four is treated in the design as a first-class requirement with a named control, not as a caveat.</p>
+  <ul class="plain fail-list">
+    <li><strong>Coincidence dressed as a pattern.</strong> Three events that merely happened within the same year are not a cross-domain episode. With no window rule you manufacture a cohort out of unrelated timelines and then report outcomes for it.</li>
+    <li><strong>Confounding by design.</strong> Patients whose finances, adherence and support all break down are sicker, more complex and more engaged than average. The cohort is a <em>help-seeking population by construction</em> — the selection process itself guarantees the arms differ — so a raw outcome comparison is confounded before it starts.</li>
+    <li><strong>Cross-domain identity collision.</strong> Three subsystems historically carried their own keys. Join them loosely and you silently mix the wrong people; do it across tenants and it is a reportable data-exposure incident, not a bug.</li>
+    <li><strong>Blame framing.</strong> "What happened to the patients who complained and missed doses" reads as a service-quality scorecard for the support team the moment the table exists — even though every patient is in it precisely because they asked for help.</li>
+  </ul>
+  <p>There is a fifth difficulty underneath all of them, and it is the one worth saying out loud: the window is measured on <em>true event time</em> across three subsystems that ran on three different clocks and were loaded into one spine years after the fact. If any one domain's event time collapses into the moment the system ingested it, every event in that domain lands on load day, the 90-day window admits everyone or no one, and the cross-domain episode dissolves into an artefact of the load.</p>
+
+  <div class="card">
+    <span class="label">The line that reframes the whole problem</span>
+    <p style="font-family:var(--serif);font-size:1.08rem">"The query is 10% intersection and 90% the machinery that makes the intersection honest — overlap predicate, snapshot pinning, identity key, propensity matching, and the suppression gates. The join is the easy part and the least of the risk."</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="major" id="how">
+  <div class="sec-head">
+    <div class="sec-num">02</div>
+    <h2>How did we solve it?</h2>
+  </div>
+  <p class="sec-sub">Two stages, one deterministic orchestrator, and two gates that decide whether a number is allowed to exist.</p>
+
+  <h3>The two stages</h3>
+  <p><strong>Stage A is a cohort screen.</strong> A nightly, snapshot-only pass that finds the patients whose finance, adherence and operations signals all broke inside one 90-day window, using tenant-scoped analytical joins over frozen columnar files. No live graph reads. No per-patient traversal.</p>
+  <p><strong>Stage B is a per-patient drill-in.</strong> When a reviewer opens one patient, the service delegates to the platform's deterministic single-patient chain service with an explicit window running from the pivot to the pivot plus ninety days. Stage A is pre-computed nightly; Stage B is on-demand only and never pre-walked.</p>
+  <p>That split is also the latency story: the request path — the only thing a clinician waits on — resolves the caller's role, writes an audit entry, and reads a cell that was computed last night. A cohort number is never computed at request time.</p>
+
+  <h3 class="rule">What the data does as it moves</h3>
+  <ol class="steps">
+    <li><strong>Append-only event spine.</strong> Every finance, adherence and operations event lands on one DynamoDB spine, each carrying four event-time fields chosen per event class — the real-world moment and the source's observed-at time come from the record; received-at and written-at record only when the system learned of it.</li>
+    <li><strong>Nightly projection.</strong> The spine is projected into a decision graph and into an <em>ungated observation store</em> where finance, adherence and operations events are visible even when no care decision references them. "Ungated" relaxes the decision-attachment gate only — the tenant predicate still runs at the scan.</li>
+    <li><strong>Frozen snapshot.</strong> The projection freezes at an as-of instant into vertices, edges, observations and a manifest hash. Everything downstream reads this, never a live value.</li>
+    <li><strong>Three domain filters.</strong> Finance: a refund exception granted within a trailing 365 days. Adherence: an early adherence score below 0.50 within the patient's first thirty days of enrollment. Operations: an escalated complaint within 365 days. Every threshold is a pre-registered design parameter, not a tuned result.</li>
+    <li><strong>The overlap-window predicate.</strong> All three qualifying events must fall inside a single 90-day window. Window start and end are the earliest and latest of the three event times; the pivot is the window end; the rule version is pinned. A row that spans 91 days is <em>rejected outright</em> — the window is never stretched to force a match, and the rejection is counted rather than papered over.</li>
+    <li><strong>Qualifying cohort.</strong> The three domains are joined on a five-field cross-domain identity key — account, workspace and control-unit (the tenant triple) plus enrollment and patient — applied <em>at</em> the join, not after it. Each row persists its pivot, window bounds, pivot-rule version, feature-as-of timestamp, source event sequence and snapshot manifest hash.</li>
+    <li><strong>Outcome labeller.</strong> The shared labeller emits a status, not a bare 0/1. An outcome counts as mature only when pivot-plus-90-days is at or before the snapshot's as-of; otherwise it is marked not-mature and excluded from the rate. Dropouts, programme switches and phase transitions are censored Kaplan–Meier style. Attribution records the decision identifier, the attribution rule version, and the day-distance to the outcome under a nearest-decision-before-outcome rule, so a later decision cannot steal credit — it is recorded as censored by a later decision instead of double-counted.</li>
+    <li><strong>Propensity matcher.</strong> The shared matcher pairs each cohort patient against a control on pre-registered covariates — baseline clinical severity, programme, tenure, demographics, prior utilisation, prior adherence, refund and complaint history, engagement — and emits a match manifest identifier over the covariate schema, snapshot, caliper, replacement policy, seed and cohort filter.</li>
+    <li><strong>Aggregate builder.</strong> An observed follow-up histogram plus a confidence interval from a 2,000-resample bootstrap, seeded from the snapshot manifest hash and clustered by enrollment so one patient's repeated events cannot masquerade as independent evidence. The output is written as pre-computed cells.</li>
+    <li><strong>Serving.</strong> The analytics API resolves the role, writes the audit entry <em>first</em>, builds a canonical cache key, reads the cell, runs the two gates, and asserts the tenant on every returned row before anything leaves.</li>
+    <li><strong>Correction listener.</strong> Every derived artefact records the range of source event sequences it depends on. When a correction lands — refund, adherence, operations, decision or outcome — the listener maps it to the slices whose dependency ranges include it and rebuilds only those, targeting a 95th-percentile correction-to-refresh at or under five minutes.</li>
+  </ol>
+
+  <h3 class="rule">The two honesty gates, in order</h3>
+  <p>Before any cross-domain delta reaches a screen it passes two deterministic gates, and the order matters.</p>
+  <p><strong>First the power gate.</strong> Matched-pair N, effective N, and confidence-interval width must all clear their thresholds. If any fails, the cell returns descriptive facts only — cohort count, matched count, full denominators — and no causal-looking delta. This is a statistical-reliability floor, and it is a different question from the separate privacy floor: a privacy floor asks whether there are enough people that you might identify one; a reliability floor asks whether there are enough people that the number means anything.</p>
+  <p><strong>Then the balance gate.</strong> Every covariate's standardised mean difference must sit under the gate and the sensitivity bounds must hold. If not, the delta is suppressed and the response carries descriptive facts plus the failed-balance diagnostics. Suppressed, not tagged.</p>
+  <p>All three exits — descriptive-only, suppressed, emitted — funnel through the same per-row tenant assertion and return the same envelope shape with the access-log identifier attached. Nothing about which exit you took changes the isolation guarantees.</p>
+
+  <h3 class="rule">The orchestrator, as five primitives</h3>
+  <p>Stage A is where the multi-agent machinery lives, and it is a declared, deterministic LangGraph state graph: nodes and edges are fixed code, the state passed between them is typed and validated with Pydantic, and the only place a language model may appear is inside a single node body. Nothing about the control flow is decided by a model.</p>
+  <ul class="plain">
+    <li><strong>Parallel blind finders.</strong> Three narrow finder personas — finance, adherence, operations — fan out from the start and run concurrently on the cheap model tier. Each is blind to the others' results.</li>
+    <li><strong>Barrier.</strong> One fan-in node runs once, after all three return, and intersects their candidate identifier sets through the overlap-window predicate. It does more than wait: it re-verifies every proposed patient identifier against the frozen snapshot and the predicate before that identifier is allowed to count. A finder can only ever propose; it can never admit.</li>
+    <li><strong>Pipeline drill-in.</strong> Each matched patient's chain is built independently — patient two drills in while patient fifty is still being fetched — and each returns a typed chain artefact.</li>
+    <li><strong>Gated reduce.</strong> The matched-control comparison and the clustered bootstrap run behind the power and balance gates. Under-powered, the delta is suppressed, not degraded.</li>
+    <li><strong>Synthesis with a real cycle.</strong> One node composes the optional per-patient narrative. A conditional edge forms a genuine loop: output validation catches a citation that is not grounded in the chain, the node re-prompts exactly once with the offending citation flagged, and if it fails again the narrative is suppressed while the chain still ships.</li>
+  </ul>
+
+  <h3 class="rule">The language-model boundary</h3>
+  <p>The intersection, every per-patient chain, the balance gate and every statistic are deterministic code. A model appears at exactly two edges: the cheap-tier finders proposing candidates per domain, and an optional synthesis narrator putting words to a single patient's chain the code already assembled. The cohort delta itself is always served as numbers — a histogram, a delta, a confidence interval — never as a sentence.</p>
+  <p>When the narrator is on it runs behind three protections: a typed claim grammar that rejects any narrative whose citations are not grounded in the chain; a self-hosted Llama 3.1 cascade — a pre-hoc classifier routes easy calls to the 8-billion-parameter model with a structured-output, few-shot, self-consistency boost, and a post-hoc confidence gate escalates the uncertain tail to 70 billion — served through the native Ollama API inside the VPC so PHI never egresses; and a fail-quiet default, so a model outage costs a sentence of prose, not a number, a gate or a control. It is off by default today, because its guardrail contract is not signed.</p>
+
+  <div class="card">
+    <span class="label">Two things called "feedback loop" — keep them apart out loud</span>
+    <p><strong>Loop A is deterministic data-plane re-derivation.</strong> A correction lands on the spine, a dependency index evicts the derived keys that depended on it, and just those are rebuilt. No model involved.</p>
+    <p><strong>Loop B is model-in-the-loop self-correction.</strong> A narrative cites a node that is not in the chain, a typed validator flags it, the node re-prompts once with the offending citation flagged, and if it still fails the narrative is suppressed.</p>
+    <p>"Same word, different machines — one re-derives data with code, the other re-prompts a model behind a code gate, and both are bounded."</p>
+  </div>
+
+  <h3 class="rule">The contracts worth naming</h3>
+  <ul class="plain">
+    <li><strong>Tenant scope is three fields</strong> — account, workspace, control-unit — resolved from the caller's authenticated context, never passed as a parameter. There is no single-field tenant check anywhere in the path.</li>
+    <li><strong>Isolation is three independent controls.</strong> The tenant predicate is pushed into the columnar scan so foreign rows never load; the cohort and metric tables are physically partitioned by tenant, snapshot hash and pivot rule; and a runtime assertion checks every emitted row and fails closed. All three have to fail for a leak.</li>
+    <li><strong>The canonical cache key</strong> is a sorted key over the tenant triple, the query namespace, the endpoint, the filters, the metric-schema hash, the match manifest identifier, the outcome-library version, the bootstrap-library version, the snapshot manifest hash, the source-event-sequence high-water mark, the correction epoch, and the pivot-rule version. Change any of them and it is a different key and a different cell.</li>
+    <li><strong>Freshness is a field, not an assumption.</strong> Every response carries the snapshot's as-of, its manifest hash and its event-sequence high-water mark; a drill-in additionally carries the live walk's as-of, its last event sequence, the projector lag in milliseconds and a degradation status.</li>
+    <li><strong>The chain artefact</strong> comes back typed, with an export hash and validation metadata alongside it, from a service this query does not own.</li>
+  </ul>
+  <div class="caution">
+    <h4>One honest asymmetry to volunteer if caching comes up</h4>
+    <p>The outcome-library and bootstrap-library <em>code</em> versions are pinned in the cache key. The matcher is not: it enters only through the match manifest identifier, and that manifest hashes the matcher's <strong>inputs</strong>, not its code — so a matcher upgrade does not by itself mint a new key here. It is traced through the matcher version stamped on the result rather than keyed on. The sibling override-intelligence query pins the matcher binary version as its own key field; that is the stronger form, and this one does not claim to be it. Saying this before an interviewer finds it is worth more than the gap costs.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="major" id="why">
+  <div class="sec-head">
+    <div class="sec-num">03</div>
+    <h2>Why did we do what we did?</h2>
+  </div>
+  <p class="sec-sub">Each decision with the alternative that was rejected and the reason. Quoted lines are verbatim from the design record — say them close to word for word.</p>
+
+  <h3>Making the cohort real</h3>
+
+  <div class="why">
+    <h4>A 90-day overlap-window predicate that rejects rows</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Co-occurrence inside the 365-day lookback — "all three happened this year" — and, when a patient nearly qualified, stretching the pivot to admit them.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A raw join gives you co-occurrence within a lookback, not a cross-domain episode. Without a window rule you manufacture cohorts out of unrelated timelines. A rejected row is dropped and counted; the pivot is never quietly stretched, because a stretched pivot is a silently different cohort that still passes every test.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>The pivot is the window end, not any single event</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Anchoring on the first qualifying event, or on the "most important" domain.</p></div>
+    <div class="row"><div class="tag">Because</div><p>"What followed" has to be measured strictly after all three signals are present. Anchor earlier and one of the three qualifying signals falls inside the outcome window — you leak a defining feature into the thing you are trying to measure. Pinning the pivot with its rule version is also what makes two runs measure outcomes over the identical interval.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Snapshot-only Stage A, computed nightly</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>A live cross-domain graph walk at request time.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A live walk would be non-deterministic, expensive at cohort scale, and would leak current state into a historical cohort — reading a patient's <em>current</em> programme when the decision was made under a different one. It also does not fit a request budget: the screen intersects three filtered domains, builds a matched control, and runs a 2,000-resample clustered bootstrap. The price is a freshness gap, and the design surfaces it rather than hiding it.</p></div>
+    <blockquote class="verbatim">"The honesty of a reproducible number outweighs the freshness of a live one."</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>A five-field identity key applied at the join</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Joining on patient identifier and filtering by tenant afterwards.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A single-domain query joins within one system's identifiers; this one joins three subsystems that historically used their own keys, so the surface area for a wrong join is multiplied. Making the tenant triple part of the join key is what stops a finance row for one patient joining an adherence row for a different patient who happens to share a looser identifier. Filtering after the join means the wrong people have already been mixed.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Preserve event time per event class; quarantine anything unmappable</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>One timestamp field for all three domains, and defaulting an unresolved legacy row to a placeholder tenant so the load could finish.</p></div>
+    <div class="row"><div class="tag">Because</div><p>Finance, adherence and operations ran on their own clocks, so forcing one field for all three misaligns the window; each class names its axis and the choice is persisted per row. An invariant asserts that every historical event's real-world time falls strictly before the moment the system received it — the tripwire that catches an event time accidentally defaulted to the ingestion clock. And a defaulted tenant would be a cross-tenant leak, the exact failure this query's identity discipline exists to prevent, so an unmappable row is held out and counted instead of guessed at.</p></div>
+    <blockquote class="verbatim">"Collapse event time into ingestion time and nine years of decisions would look as though they all happened on load day, voiding every as-of reconstruction."</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Hydrate nine years through the same spine and the same projection code</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>A throwaway backfill with its own loader and its own quirks.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A cohort built on a load that behaves differently from the live stream measures the load, not the patients. Replaying history through the projection logic that serves live is what keeps the cohort meaning the same thing across the whole span — otherwise every determinism guarantee is theatre. The load is idempotent (content-addressed identifiers plus conditional writes, so hydrating twice yields an identical spine and an identical snapshot-manifest hash — an executable proof, not an assurance) and proof-carrying: zero-event-loss reconciliation, per-tenant and per-class counts, as-of spot checks and a golden replay gate it before anything downstream is built, then a fenced cutover attaches the live stream with proof of neither gap nor duplicate.</p></div>
+  </div>
+
+  <h3 class="rule">Making the number honest</h3>
+
+  <div class="why">
+    <h4>Suppress the delta on failed balance — never return it with a caveat</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Returning the raw delta with a warning label underneath it. The design review refused this outright.</p></div>
+    <div class="row"><div class="tag">Because</div><p>If the arms are not comparable, the honest output is that no comparison can be made — not a comparison with a warning label. The cost is a blank headline that some readers find unsatisfying; the benefit is that the system never publishes a misleading effect.</p></div>
+    <blockquote class="verbatim">"A raw delta from an unmatched cohort looks exactly like a causal effect, and a tag underneath it is read past — the number anchors the reader before the caveat registers."</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>A statistical-reliability floor, not only a privacy N-floor</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>The usual small-cell privacy threshold on its own.</p></div>
+    <div class="row"><div class="tag">Because</div><p>They answer different questions, and for this cohort the reliability question bites first. Rarity is expected here — the interesting patients are rare by construction — so most as-of values produce a small cohort that returns descriptive facts only. The bootstrap plays into the same gate: on a tiny cohort the interval is wide, and the width is itself one of the thresholds, so a cohort too small to say anything produces an interval too wide to pass.</p></div>
+    <blockquote class="verbatim">"A privacy N-floor asks 'are there enough people that I might identify one'; a reliability floor asks 'are there enough people that this number means anything.'"</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>A propensity-matched control on pre-registered covariates, plus sensitivity bounds</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Comparing the cohort against the average patient, and choosing covariates after seeing which combination produced a striking delta.</p></div>
+    <div class="row"><div class="tag">Because</div><p>The cohort is a help-seeking population by construction, so it differs systematically on severity, complexity and engagement — the very things that would drive an outcome gap having nothing to do with the care decisions. Pre-registering the estimand makes the number a property of the design rather than of the analyst who ran it. And standardised mean difference only proves the <em>measured</em> covariates are balanced, so Rosenbaum-style gamma and an E-value quantify how strong an unmeasured confounder would have to be to explain the delta away. If a modest one could erase it, the result is not robust.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Reuse shared statistical libraries instead of query-local ones</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>This query shipping its own outcome labeller, matcher and bootstrap.</p></div>
+    <div class="row"><div class="tag">Because</div><p>Several sibling cohort queries run propensity matching. Private copies would drift on seed, caliper, replacement policy, covariate hash and interval method, producing divergent matched cohorts and divergent intervals for the same patients — and making any cross-query reuse claim unverifiable. The tradeoff is coordination cost and a dependency on those libraries landing at the platform level. They have since landed, and the query binds to the shared versions.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Delegate Stage B to the existing deterministic chain service</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Writing a second per-patient traversal inside this query.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A second traversal drifts from the first, and two answers to "what happened to this patient" is worse than a slower one. Delegating means the drill-in inherits that service's determinism and its bounded-walk discipline, and gets back a typed artefact with an export hash. The tenant context travels with the request across the service boundary rather than being dropped at it, and a chain artefact that came back with a foreign tenant would fail the assertion before it reached the reviewer.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Neutral labels, audit-first serving and need-to-know access against blame framing</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Claiming the design makes scorecard misuse impossible.</p></div>
+    <div class="row"><div class="tag">Because</div><p>The controls are real: the cohort is labelled "patients with finance, adherence and operations friction signals"; the histogram key is "observed follow-up decisions," never "recommended action"; the delta is suppressed unless it survives both gates; the drill-in is audit-first and need-to-know; and the wording is governed by Policy and Clinical Ops rather than left to a chart title. But labelling constrains a causal misreading, it does not prevent one. The surface is <em>constrained and auditable, not impossible</em> to misuse — and saying so is stronger than claiming otherwise.</p></div>
+  </div>
+
+  <h3 class="rule">Keeping the model away from the arithmetic</h3>
+
+  <div class="why">
+    <h4>A declared state graph where agents may only propose</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>A chat-style agent loop where the model decides control flow, and — at the other extreme — a plain batch DAG.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A chat loop makes the cohort depend on the order and content of inter-agent messages, which is neither reproducible nor reviewable. A batch DAG would handle the joins and statistics fine — in fact those parts <em>are</em> effectively a DAG — but it cannot express the one genuine cycle. Be honest about where the framework earns its keep, because a good interviewer will press exactly here.</p></div>
+    <blockquote class="verbatim">"You could replace [the finders] with plain scans and the numbers would be identical, because the barrier re-verifies everything against the snapshot anyway… the graph framework earns its place at the barrier, the gated reduce, and the feedback cycle."</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Finders blind to each other, intersecting at a single barrier</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Letting the three finders share findings and negotiate the intersection between themselves.</p></div>
+    <div class="row"><div class="tag">Because</div><p>Blindness stops one domain's results priming another's — the intersection has to be earned at the barrier, not negotiated — and it makes each finder independently cacheable and independently testable. One fan-in node gives you one deterministic set operation, one place to re-verify and one place to audit. It also enforces a happens-before: nothing downstream starts until the intersection exists, so no partial cohort leaks into the reduce.</p></div>
+    <blockquote class="verbatim">"A finder can only ever propose; it can never admit."</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Self-hosted inference inside the VPC</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>A hosted provider under a business-associate agreement with a no-retention clause.</p></div>
+    <div class="row"><div class="tag">Because</div><p>Conflating the two would be a real error. A contractual no-retention promise governs what a provider does <em>after</em> it receives the data; it is not a network-residency control and does not stop clinical text crossing the network in the first place. The design treats residency as the primary control — the payload stays in-VPC, served through the native local runtime with no vendor software development kit and no external egress — and permits an external provider only for a de-identified payload.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Governance shipped as deterministic interface copy, not as prompt instructions</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Telling the model to be neutral and non-causal in its system prompt.</p></div>
+    <div class="row"><div class="tag">Because</div><p>The observational labels and neutrality rules never pass through the model at all, so there is no prompt to jailbreak. It also means a model outage leaves the governed copy untouched.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>The narrator ships off by default</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Shipping it behind a feature flag an operator could turn on.</p></div>
+    <div class="row"><div class="tag">Because</div><p>Its guardrail contract — the field-level claim grammar, the PHI deployment, the citation validation — is still being settled at the platform level, and the words that describe a patient's care are the one place a model could mislead on a care surface. Off-by-default is stronger than a flag someone could flip prematurely: the narrator is simply not eligible until the contract is live. Every number ships regardless, so nothing of value waits on it.</p></div>
+  </div>
+
+  <h3 class="rule">Making it operable</h3>
+
+  <div class="why">
+    <h4>Event-driven invalidation with a dependency index — no TTL, no full recompute</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>A one-hour cache time-to-live, and rebuilding everything on the next nightly run.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A time-to-live bounds age by the clock and says nothing about whether the data changed: a correction landing two minutes after a cell is cached leaves a one-hour timer serving a wrong number for fifty-eight more minutes. A full recompute is the opposite failure — too slow, and it rebuilds vast amounts of unaffected data. Because every artefact records the source-event-sequence range it depends on, the rebuild is surgical. The correction epoch is part of the cache key, so a request reads either the pre-correction cell or the rebuilt one, never a half-updated blend.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Persist a source event sequence per row even though the build is deterministic</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Relying on determinism alone — "we can always rebuild it."</p></div>
+    <div class="row"><div class="tag">Because</div><p>Determinism tells you the build is reproducible; the per-row sequence tells you <em>which</em> spine events a given row depends on. That dependency record is what lets a correction invalidate exactly the rows it touches, and what lets an auditor confirm on replay that a row's freshness matches its claim. Determinism and provenance answer different questions, so the design keeps both.</p></div>
+  </div>
+
+  <div class="why">
+    <h4>Isolation failures page; freshness failures degrade visibly</h4>
+    <div class="row"><div class="tag no">Rejected</div><p>Treating staleness as an outage, or treating a cross-tenant row as a metric with a tolerable rate.</p></div>
+    <div class="row"><div class="tag">Because</div><p>A cross-tenant row or a partition mismatch is an incident with a target of zero and a page-out — "we leak one tenant in a thousand" is not a posture for PHI. Staleness is different: if the nightly build fails, the serving store still holds the last good snapshot and the response carries its as-of and a degradation tier, so a reader sees yesterday's cohort clearly labelled as of yesterday rather than a spinner. Suppression rate, failed-balance rate, refresh lag, cohort churn and drill-in audit volume are monitored precisely because a surface that quietly suppresses most cells is misleading in a way no single response reveals.</p></div>
+    <blockquote class="verbatim">"A stale number with an honest timestamp is acceptable; a stale number presented as current is the failure."</blockquote>
+  </div>
+
+  <h3 class="rule">The design review this absorbed</h3>
+  <p>Before anything shipped, the design went through structured adversarial self-review under a Principal-AI-Engineer lens. This query — the most exposed surface in the whole system — drew the most blood: <strong>twenty findings</strong> across correctness, statistics, governance and operations, with an unambiguous "do not implement as written."</p>
+  <p><strong>What the review actually named:</strong> an undefined overlap window; live-graph leakage into what was supposed to be a snapshot-only nightly cohort screen; outcome labels too coarse to distinguish a mature outcome from an immature one; an unsafe dependency on the patient-chain service; and a flat refusal of the idea that a raw delta on failed balance could ever be returned.</p>
+  <p><strong>What changed as a result — all twenty resolved, folded into the v2 design body:</strong></p>
+  <ul class="plain">
+    <li>The overlap-window predicate, defined at 90 days, with row rejection rather than pivot stretching.</li>
+    <li>Stage A made strictly snapshot-only; the live graph is reachable only from the on-demand per-patient drill-in.</li>
+    <li>The shared outcome labeller with a maturity status, attribution fields and Kaplan–Meier censoring, replacing coarse labels.</li>
+    <li>Balance-fail suppression as the only behaviour, with failed-balance diagnostics returned in place of the delta.</li>
+    <li>The per-patient drill-in made audited and need-to-know, delegating to the chain service with an explicit window and tenant context.</li>
+  </ul>
+  <p><strong>What was promoted out of the query:</strong> its cross-cutting dependencies — the tenant-isolation wrapper, the outcome and bootstrap libraries, the correction backbone, the deterministic exporter's golden-replay proof, the four-field event-time schema, the ungated observation projection, the metric-cache-key contract, and the deterministic single-patient chain artefact — became shared platform components, so every sibling query inherits the same fixes instead of reimplementing them. Those have landed and this query binds to the shared versions rather than its own inlined copies. The isolation change is the clearest example: the review's finding was not that isolation was wrong but that it was enforced inline per query rather than through one shared choke point.</p>
+  <div class="caution">
+    <h4>How to say the verdict without tripping</h4>
+    <p><strong>The service is live in production.</strong> "Ship-with-changes" is the <em>design-review sign-off state</em>, not the deployment state — twenty of twenty local findings were resolved, the changes went into the v2 design, and it shipped after executive sign-off. If pressed on why the review record still reads ship-with-changes: one dependency is still open — the shared narrative-guardrail contract is unsigned, which is exactly why the synthesis narrator ships off by default — and the upstream finance, adherence and operations teams must emit schema-versioned events on the agreed time axis. Landing components does not by itself move a review verdict. Say it plainly; a self-run adversarial review that drew twenty findings and then closed them is a strength, and treating it as an embarrassment is the only way to lose points on it.</p>
+  </div>
+
+  <h3 class="rule">Honest limits — good answers, not confessions</h3>
+  <ul class="plain">
+    <li><strong>It makes no causal claim and is never a service-quality score.</strong> Matching balances only measured covariates, so unmeasured confounding is never ruled out.</li>
+    <li><strong>It is silent on a patient who newly qualifies inside the nightly gap.</strong> That is the accepted contract of a nightly metric with an honest timestamp, not a bug to fix by going live.</li>
+    <li><strong>On small or imbalanced cohorts it often returns descriptive facts only.</strong> That is the gate working, and a query that admits it cannot say anything is worth more than one that manufactures a confident claim from a handful of complex patients.</li>
+    <li><strong>Pinning the model, prompt and temperature buys drift detection, not generation determinism.</strong> The hashes detect drift; they do not prevent it. Which is exactly why the numbers never flow through the model.</li>
+    <li><strong>If rebuilt:</strong> prove the deterministic exporter's golden replay and the ungated observation projection at the platform level before trusting cohort completeness, get the narrative-guardrail contract signed before any words ship, and calibrate the effective-N and interval-width thresholds against the real distribution of cohort sizes rather than assumed values — those thresholds decide how often the query can say anything at all.</li>
+  </ul>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="major" id="architecture">
+  <div class="sec-head">
+    <div class="sec-num">04</div>
+    <h2>Architecture</h2>
+  </div>
+  <p class="sec-sub">Four diagrams from the design record. Each walkthrough is written so you can redraw the picture on a whiteboard while talking.</p>
+
+  <figure class="fig">
+<pre class="mermaid">
+flowchart TD
+    SPINE[(Append-only event spine · DynamoDB&lt;br/&gt;four-field event-time per event class)] --> PROJ[Nightly projection · ungated observation store&lt;br/&gt;finance · adherence · ops events all visible]
+    PROJ --> SNAP[(Frozen snapshot at as-of&lt;br/&gt;vertices · edges · observations · manifest hash)]
+    SNAP --> F1[Finance filter&lt;br/&gt;refund exception in 365 days]
+    SNAP --> F2[Adherence filter&lt;br/&gt;early score under 0.50 · first 30 days]
+    SNAP --> F3[Ops filter&lt;br/&gt;escalated complaint in 365 days]
+    F1 --> OV{Overlap-window predicate&lt;br/&gt;all three inside one 90-day window}
+    F2 --> OV
+    F3 --> OV
+    OV -- fails --> REJ([Row rejected · never papered over])
+    OV -- holds --> COH[Qualifying cohort · Stage A output&lt;br/&gt;cross-domain identity key · pivot pinned]
+    COH --> OUT[90-day outcome labeller&lt;br/&gt;status · attribution · censoring reason]
+    OUT --> MATCH[Propensity matcher&lt;br/&gt;pre-registered covariates · versioned manifest]
+    MATCH --> AGG[Aggregate metric builder&lt;br/&gt;observed follow-up histogram · seeded bootstrap CI]
+    AGG --> API[Analytics API · Stage B entry&lt;br/&gt;RBAC · audit · tenant assertion per row]
+    AGG --> COR[Correction listener · dependency-targeted rebuild&lt;br/&gt;only affected slices · P95 under 5 minutes]
+    API -. per-patient drill-in · on-demand .-> CHAIN[Deterministic patient-chain service&lt;br/&gt;explicit pivot to pivot plus 90 days]
+</pre>
+    <figcaption><b>Fig 1 · Spine to serving.</b> A nightly frozen-snapshot build feeds a snapshot-only cohort screen with an overlap-window predicate; a correction listener rebuilds only the slices a correction touches, and the per-patient chain walk stays on-demand.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>Draw it as one column, top to bottom. Start with a cylinder — the append-only DynamoDB spine, every finance, adherence and operations event with its four event-time fields. One arrow down to the nightly projection, which also emits the ungated observation store; say what "ungated" relaxes, because it sounds alarming and is not — it means an event is visible even when no care decision references it, which the cohort needs for completeness, and it has nothing to do with the tenant gate, which still runs at the scan.</p>
+    <p>The projection freezes into a second cylinder: the snapshot at an as-of instant, with a manifest hash. <strong>Everything below this line reads the snapshot, never a live value.</strong> From it, three arrows fan out to the three domain filters — refund exception in 365 days, early adherence below 0.50 in the first 30 days, escalated complaint in 365 days — and all three converge on a single diamond.</p>
+    <p>That diamond is the overlap-window predicate, and drawing <em>both</em> its exits is the point of the picture. Fails goes to a rounded terminal: the row is rejected and counted, never papered over. Holds goes to the qualifying cohort, where the five-field identity key does the joining and the pivot is pinned at the window end. From there it is a straight chain — outcome labeller (status, attribution, censoring reason), propensity matcher (pre-registered covariates, versioned manifest), aggregate builder (observed follow-up histogram, seeded bootstrap interval).</p>
+    <p>The aggregate has two consumers, and that fork is worth drawing: the analytics API, which is also the entry point for Stage B and carries the role check, the audit write and the per-row tenant assertion; and the correction listener, which rebuilds only the affected slices. One last dotted arrow leaves the API for the deterministic patient-chain service with an explicit pivot-to-pivot-plus-90-days window. Dotted because it is on-demand — nothing pre-walks it.</p>
+    <div class="breaks">
+      <span class="label">What breaks without each piece</span>
+      <p>Without the predicate diamond, you have co-occurrence within a year and a cohort assembled from unrelated timelines. Without the <em>rejected</em> exit drawn as a real terminal, someone eventually stretches the pivot to make a near-miss qualify. Without the snapshot cylinder, Stage A reads live values and a historical cohort silently absorbs current state. Without the labeller's maturity status, a cohort assembled near the as-of edge scores half its patients as failures because their window has not elapsed. Without the matcher, the comparison is confounded by the very thing that defined the cohort. Without the correction listener, a late refund reversal keeps serving a wrong cell until tomorrow night.</p>
+    </div>
+  </div>
+
+  <figure class="fig">
+<pre class="mermaid">
+flowchart TD
+    S([START]) --> FA[Finance finder agent&lt;br/&gt;blind · cheap tier]
+    S --> AD[Adherence finder agent&lt;br/&gt;blind · cheap tier]
+    S --> OP[Ops finder agent&lt;br/&gt;blind · cheap tier]
+    FA --> BR{{Barrier · intersect three id sets&lt;br/&gt;runs once all three return}}
+    AD --> BR
+    OP --> BR
+    BR --> DR[Drill-in · typed chain artifact per patient&lt;br/&gt;pipeline · each patient independent]
+    DR --> GR{Gated reduce · matched delta then N-floor and balance gate}
+    GR -- under-powered --> SUP[Suppress delta · descriptive facts only]
+    GR -- passes --> SY[Synthesize · per-patient chain narrative&lt;br/&gt;strong tier · off by default]
+    SUP --> SY
+    SY --> QC{Every citation grounded in the chain}
+    QC -- reject · re-prompt once --> SY
+    QC -- reject again --> NS([Suppress narrative · answer still ships])
+    QC -- grounded or narrative off --> E([END])
+    NS --> E
+</pre>
+    <figcaption><b>Fig 4 · The orchestrator as a state graph.</b> Fan-out, barrier, pipeline, gated reduce, and a synthesis node inside a real citation-validation cycle.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>One start node fans out to three finder agents — finance, adherence, operations — drawn side by side because they run concurrently, each on the cheap model tier and each blind to the others. All three arrows land on one hexagon: the barrier. Say what the barrier does beyond waiting, because this is the sentence that wins the architecture argument: it intersects the three candidate-identifier sets <em>and re-verifies every proposed identifier</em> against the frozen snapshot and the overlap-window predicate before that identifier is allowed to count.</p>
+    <p>Out of the barrier, one arrow to the drill-in stage — a pipeline, not a batch: each matched patient's typed chain artefact is built independently, so patient two drills in while patient fifty is still being fetched. Then the gated reduce diamond with two exits: under-powered suppresses the delta and returns descriptive facts only; passes goes on to synthesis.</p>
+    <p>Both exits converge on the synthesis node, and that convergence is deliberate, not sloppy drawing — the narrative is about a single patient's chain, not about the cohort delta, so a suppressed delta does not disqualify a per-patient sentence. Synthesis feeds the citation diamond, which has three exits and forms the only genuine cycle in the graph: reject sends the arrow <em>back up</em> to synthesis for exactly one re-prompt with the offending citation flagged; reject again drops to a terminal that suppresses the narrative while the answer still ships; grounded, or the narrative being off entirely, goes to end.</p>
+    <div class="breaks">
+      <span class="label">What breaks without each piece</span>
+      <p>Without the barrier there is no happens-before: a partial cohort leaks into the reduce, and a finder that invents a patient identifier gets one counted. Without the re-verification inside the barrier, the whole "a model cannot corrupt the numbers" claim collapses — the barrier is where that claim lives. Without the two-exit reduce, a delta from six unusually complex patients gets a headline. Without the second rejection exit, the cycle is either unbounded — re-prompting forever — or it ships a fabricated citation. And note what has no exit at all: there is no path from any finder directly into the cohort.</p>
+    </div>
+  </div>
+
+  <figure class="fig">
+<pre class="mermaid">
+flowchart TD
+    Q[Request · cohort outcome summary] --> AUD[Audit entry written first&lt;br/&gt;viewer · purpose · tenant · time]
+    AUD --> RBAC{Caller role}
+    RBAC -- exec or ops --> KEY[Canonical cache key&lt;br/&gt;tenant scope · query namespace&lt;br/&gt;endpoint · filters&lt;br/&gt;metric-schema + snapshot-manifest hashes&lt;br/&gt;match manifest id&lt;br/&gt;outcome-library + bootstrap-library versions&lt;br/&gt;event-seq watermark · correction epoch&lt;br/&gt;pivot-rule version]
+    RBAC -- other --> DENY([Denied])
+    KEY --> CACHE{Cache lookup}
+    CACHE -- hit --> TEN[Tenant assertion on every row]
+    CACHE -- miss --> SCAN[Analytical read · cohort and metric tables&lt;br/&gt;no graph calls · no stats recomputed at query time]
+    SCAN --> NSTAT{Matched-pair N · effective-N&lt;br/&gt;CI width all pass}
+    NSTAT -- no --> DESC[Descriptive only · cohort and matched N&lt;br/&gt;full denominators&lt;br/&gt;no causal-looking delta]
+    NSTAT -- yes --> SMD{Covariates balanced and&lt;br/&gt;sensitivity bounds tolerable}
+    SMD -- no --> SUP[Suppress the delta&lt;br/&gt;descriptive facts and&lt;br/&gt;failed-balance diagnostics only]
+    SMD -- yes --> EMIT[Emit observed follow-up histogram&lt;br/&gt;+ delta with CI&lt;br/&gt;matched-pair N · sensitivity bounds&lt;br/&gt;observational labels]
+    DESC --> TEN
+    SUP --> TEN
+    EMIT --> TEN
+    TEN --> RET([Return · cache · access_log_id])
+</pre>
+    <figcaption><b>Fig 7 · The query path.</b> Audit first, gate on power, then on balance; every exit is explicit and every surface stays observational.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>A request arrives and the <em>first</em> thing that happens is the audit write — viewer, purpose, tenant, time — before any data is touched. Draw that box before the role diamond and say why: writing the audit first means an access is recorded even if the serving step then fails. Then the role diamond: executive or operations continues; anything else terminates at denied.</p>
+    <p>Next the cache key. Do not summarise this box — reading its contents aloud is the whole reproducibility argument in one breath: tenant scope, query namespace, endpoint, filters, metric-schema and snapshot-manifest hashes, the match manifest identifier, the outcome-library and bootstrap-library versions, the event-sequence watermark, the correction epoch, and the pivot-rule version. If any of them differs, it is a different key and a different cell. A cache hit jumps straight down to the tenant assertion; a miss goes to the analytical read over the pre-computed cohort and metric tables — no graph calls, and no statistics recomputed at request time.</p>
+    <p>Then the two gates, stacked in order. The power diamond (matched-pair N, effective N, interval width) exits <em>no</em> into descriptive-only with full denominators; exits <em>yes</em> into the balance diamond (covariate balance and sensitivity bounds), which exits <em>no</em> into suppression with the failed-balance diagnostics and <em>yes</em> into the emitted surface — histogram, delta with interval, matched-pair N, sensitivity bounds, observational labels.</p>
+    <p>The last move is the one people forget to draw: all three of those outcomes funnel into the same per-row tenant assertion and out through the same return, which caches the cell and hands back the access-log identifier. Which exit you took never changes the isolation guarantee or the envelope shape.</p>
+    <div class="breaks">
+      <span class="label">What breaks without each piece</span>
+      <p>Without audit-before-serve, a request that fails midway leaves no trace that someone looked. Without the version pins in the key, a hit computed by last month's bootstrap library is served as if it were current and two deploys silently disagree. Without the correction epoch in the key, a rebuild mid-serve gives you a half-updated blend instead of a clean either/or. Without the power gate ahead of the balance gate, you run a balance check on a cohort too small to mean anything and then publish the result of it. And without the shared funnel, the suppressed path is exactly the one where somebody forgets the tenant assertion.</p>
+    </div>
+  </div>
+
+  <figure class="fig">
+<pre class="mermaid">
+flowchart TB
+    BROWSER["Clinician browser · dashboard and drill-in&lt;br/&gt;over TLS · outside the trust boundary"]
+    subgraph VPC["Inside the client VPC · PHI never crosses this boundary"]
+      subgraph REQ["Request path · a user is waiting"]
+        API["FastAPI · RBAC · audit · tenant assertion"]
+        CACHE[("Redis · keyed cache")]
+        CHAIN["Patient-chain service · drill-in"]
+      end
+      STORE[("Parquet + DuckDB&lt;br/&gt;pre-computed cohort and metric cells")]
+      subgraph NIGHT["Nightly · offline · nobody waiting"]
+        BUILD["Snapshot export · cohort build · overlap predicate&lt;br/&gt;matcher · metrics · bootstrap · correction rebuilds"]
+      end
+      subgraph HIST["One-time · historical"]
+        HYD["Nine-year hydration · replay · proof gates · fenced cutover"]
+      end
+      SPINE[("DynamoDB event spine")]
+      NEP[("Neptune graph · projected nightly")]
+      LLM["Self-hosted Llama · Ollama"]
+    end
+    BROWSER -->|request| API
+    API --> CACHE
+    CACHE -. miss .-> STORE
+    STORE --> API
+    API --> CHAIN
+    HYD --> SPINE
+    SPINE --> BUILD
+    BUILD --> STORE
+    CHAIN -. drill-down only · Stage A never reads it .-> NEP
+    CHAIN -. optional narrator · off by default .-> LLM
+</pre>
+    <figcaption><b>Fig 10 · When each component is touched.</b> The graph database and the language-model seam both sit off the request path; nothing a clinician waits on for a cohort number depends on either.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>Draw one box outside a big rectangle and everything else inside it. The box outside is the clinician's browser, talking over transport-layer security (TLS). The rectangle is the client's VPC, and the label on it is the claim: PHI never crosses this boundary.</p>
+    <p>Inside, three lanes. <strong>The request path</strong> — the only lane with a person waiting — is FastAPI doing role resolution, the audit write and the tenant assertion; a Redis keyed cache; and, on a miss, a dotted arrow to the Parquet-and-DuckDB store of pre-computed cohort and metric cells. The patient-chain service sits in this lane too, because a drill-in is also synchronous. <strong>The nightly lane</strong> has nobody waiting: snapshot export, cohort build, the overlap predicate, matching, metrics, bootstrap and correction rebuilds, all writing into that same store. <strong>The one-time historical lane</strong> is the nine-year hydration, feeding the DynamoDB spine, which feeds the nightly build.</p>
+    <p>Then two dotted arrows out of the chain service, and they carry the punchline. One to Neptune — drill-down only; Stage A never reads the graph. One to the self-hosted Llama on Ollama — optional narrator, off by default. Both of the heaviest, least predictable components hang off the side of the picture, not in the middle of it.</p>
+    <p>The sentence to land while drawing: the two things an interviewer expects to be on the hot path — the graph database and the model — are the two things deliberately kept off it.</p>
+    <div class="breaks">
+      <span class="label">What breaks without each piece</span>
+      <p>Without the lane split, a clinician waits on a 2,000-resample bootstrap and a cohort number becomes a load-test result. Without the pre-computed store, the request has to recompute statistics and two identical requests can disagree. Without the trust boundary drawn, clinical text crosses the network to a vendor and the entire governance story becomes a contract rather than a network fact. Without Neptune being reachable only from the drill-in, Stage A picks up live state and the historical cohort quietly stops being historical.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Q ============ -->
+<section class="major" id="questions">
+  <div class="sec-head">
+    <div class="sec-num">Q</div>
+    <h2>Likely questions</h2>
+  </div>
+  <p class="sec-sub">Headline sentence first, every time. The detail underneath is only for if they let you keep going.</p>
+
+  <div class="qa">
+    <span class="qnum">Q1</span>
+    <p class="q">Isn't this just a dashboard? Why call it multi-agent orchestration?</p>
+    <p class="headline">The orchestration is a declared, deterministic state graph — fan-out, barrier, pipeline, gated reduce, and one real feedback cycle — not a chat loop, and the agents are cheap, blind, and allowed only to propose candidates.</p>
+    <p class="detail">Every join, the intersection and every statistic are deterministic code, so the dashboard is the output of an orchestration you can audit edge by edge. The honest framing is the opposite of hype: <strong>the intersection itself does not need agents.</strong> You could replace the three finders with plain scans and the numbers would be identical, because the barrier re-verifies everything against the snapshot anyway. What the graph buys is the disciplined structure expressed as auditable code with typed channels, and a runnable artefact a reviewer can execute offline in the build pipeline with no keys. The value is the orchestration discipline, not agents doing arithmetic, which they never do.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q2</span>
+    <p class="q">One of your finder agents hallucinates a patient. What stops it entering the cohort?</p>
+    <p class="headline">The barrier re-verifies every proposed patient identifier against the frozen snapshot and the overlap-window predicate before it is allowed to count — a finder can only ever propose, it can never admit.</p>
+    <p class="detail">A finder that invents a patient, or proposes one whose three events do not actually satisfy the 90-day window, is dropped at the barrier and never enters the cohort. That is the structural reason a language model at the edge cannot corrupt the numbers: the model's output is a <em>suggestion</em> that has to survive a deterministic check against data it cannot write to. The same principle governs the other model surface — the narrator only puts words to a chain the code already assembled, and a citation that does not resolve to a real chain node gets one re-prompt and then suppression.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q3</span>
+    <p class="q">Why suppress the number instead of showing it with a caveat?</p>
+    <p class="headline">Because a caveat under a number is read past — the figure anchors the reader before the warning registers, and on a care surface that is dangerous.</p>
+    <p class="detail">A raw delta from an unmatched cohort looks exactly like a causal effect. When the arms are not comparable, the only responsible output is that no comparison can be made, so the delta is withheld and the reason is stated in its place along with the failed-balance diagnostics. The design review explicitly rejected returning a raw delta on failed balance for this reason. The cost is a blank headline some readers find unsatisfying; the benefit is that the system never ships a confident number it cannot stand behind. The same logic drives the power gate ahead of it — and note the ordering: power first, because running a balance check on a cohort too small to mean anything just launders it.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q4</span>
+    <p class="q">A patient qualifies today but tonight's build hasn't run. Isn't that a bug?</p>
+    <p class="headline">No — it is the accepted contract of a nightly metric with an honest timestamp, and every response carries the as-of that makes the boundary explicit.</p>
+    <p class="detail">Treating it as a bug pushes you toward live cohort reads, which sacrifices determinism and leaks current state into a historical cohort. A live cross-domain walk is also non-deterministic and expensive at cohort scale, and it does not fit a request budget once you include matching and a 2,000-resample bootstrap. The freshness gap is surfaced rather than reconciled: the response carries the snapshot's as-of, its manifest hash and its event-sequence high-water mark, and a drill-in adds the live walk's as-of, the projector lag and a degradation status. If the nightly build fails outright, the serving store still holds the last good snapshot and the response says so — a stale number with an honest timestamp is acceptable; a stale number presented as current is the failure.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q5</span>
+    <p class="q">Why isn't a cache time-to-live enough for freshness?</p>
+    <p class="headline">A time-to-live bounds how old a value is by the clock and says nothing about whether the underlying data changed — a correction landing two minutes after a cell is cached leaves a one-hour timer serving a wrong number for fifty-eight more minutes.</p>
+    <p class="detail">Freshness here comes from the source-event-sequence watermark and the correction epoch being <em>in the cache key</em>, plus event-driven invalidation: the cell is evicted when its inputs change, not when a timer expires. Every derived artefact records the range of source event sequences it depends on, so a correction listener maps a spine correction to exactly the slices whose ranges include it and rebuilds only those, targeting a 95th-percentile refresh at or under five minutes. A full nightly recompute would be both too slow and mostly wasted work. And because the correction epoch is part of the key, a request mid-rebuild reads either the pre-correction cell or the rebuilt one — never a half-updated blend — and the epoch on the response tells the reader which world their number came from.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q6</span>
+    <p class="q">Where does patient data go when the model runs? Isn't a no-retention agreement with a vendor equivalent to self-hosting?</p>
+    <p class="headline">No — a no-retention clause is a legal promise about what a provider does after it receives the data; it is not a network-residency control, and it does not stop clinical text crossing the network in the first place.</p>
+    <p class="detail">The narrator runs on a self-hosted Llama 3.1 inside the client's VPC, served through the native local runtime with no vendor software development kit and no external egress, so patient data never leaves the cluster. An external provider is permitted only for a de-identified payload, never for raw clinical text. Inside that boundary, routing is auditable code rather than a hidden prompt: a pre-hoc classifier sends easy calls to the 8-billion-parameter model with a structured-output and self-consistency boost, and a post-hoc confidence gate escalates the uncertain tail to 70 billion — both tiers in-VPC, both held to the same citation validation. Tracing runs on a self-hosted deployment inside the VPC for the same reason. Keeping that one call in-network is what lets the rest of the governance story be about content rather than about trusting a third party with protected health information.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q7</span>
+    <p class="q">The moment this table exists, doesn't it become a service-quality scorecard for the support team?</p>
+    <p class="headline">The risk is real, and the design makes that misuse hard and visible rather than claiming it is impossible.</p>
+    <p class="detail">Every patient in the cohort is there precisely because they generated friction — they are a help-seeking population by construction, not a random sample. So the controls are concrete: the cohort is labelled "patients with finance, adherence and operations friction signals"; the histogram key is "observed follow-up decisions," never "recommended action"; the delta is suppressed unless it survives both gates; the drill-in is audit-first and narrowed to clinical-operations need-to-know with a stated purpose; and the wording is governed by Policy and Clinical Ops rather than left to whoever titles the chart. Those constrain a scorecard reading and make it auditable when someone tries. They do not make it impossible, and I would not claim they do.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q8</span>
+    <p class="q">You have no production numbers. How do you know any of this works?</p>
+    <p class="headline">Every property that matters here is one you can only test where the ground truth is known by construction, so the evaluation runs on seeded synthetic cohorts and names, per stage, the single binding metric.</p>
+    <p class="detail">Stage A is graded on <strong>recall</strong> against a seeded cross-domain cohort, because silently missing a qualifying patient is the failure that matters most there. The power and balance gates are graded <strong>precision-dominant</strong>, because a false emit is far worse than a false suppress. Citation faithfulness is a hard gate at 1.0, with a deliberately planted fabricated citation in the golden set that the harness must catch. The golden regression is byte-for-byte, with fixtures for late arrivals, corrections, supersede chains and events sitting right on the 90-day boundary — the four places a determinism or off-by-one bug hides. Tenant safety is not a rate at all: zero, with a page-out. What that evaluation deliberately does <em>not</em> claim is a real-world effect size; the observed production results belong to the client and are not mine to publish, and the figures I do quote are pre-registered acceptance targets the system was designed, reviewed and deployed against.</p>
+  </div>
+</section>
+
+<footer class="page">
+  <p>
+    <a href="../kq10-cross-domain.html">full case study</a>
+    <a href="../summary.html">summary</a>
+    <a href="../index.html">all case studies</a>
+  </p>
+  <p style="margin-top:14px">Interview prep · cross-domain patient analytics · chronic-care platform, sole owner from design through production. The published case study anonymises client and product identifiers — keep them out of anything written, and use them only in the room. Design parameters and pre-registered acceptance targets only; no measured production metric appears here.</p>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

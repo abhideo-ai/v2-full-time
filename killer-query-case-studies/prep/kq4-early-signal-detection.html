@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Early-signal detection — interview prep</title>
+<style>
+:root{
+  --paper:#F7F9FA; --card:#FFFFFF; --ink:#12222C; --steel:#51626D; --mist:#E4EBEC;
+  --hairline:#D5DFE1; --teal:#0B756F; --teal-deep:#084F4B; --amber:#8A5A00; --amber-soft:#FBF3E2;
+  --serif:"IBM Plex Serif",Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.02rem;line-height:1.65;-webkit-font-smoothing:antialiased}
+main{max-width:960px;margin:0 auto;padding:64px 24px 96px}
+a{color:var(--teal-deep)}
+
+.crumb{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--steel);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal)}
+.crumb .sep{color:var(--hairline)}
+.crumb .here{color:var(--ink);font-weight:500}
+
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:14px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.16;letter-spacing:-.015em}
+.sub{font-size:1.08rem;color:var(--steel);max-width:66ch;margin-top:16px}
+h2{font-family:var(--serif);font-weight:600;font-size:1.45rem;letter-spacing:-.01em;margin:56px 0 6px;padding-top:22px;border-top:1px solid var(--hairline)}
+h2 .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;color:var(--teal);display:block;margin-bottom:8px;font-weight:500;text-transform:uppercase}
+h3{font-family:var(--serif);font-weight:600;font-size:1.14rem;margin:30px 0 8px}
+h4{font-family:var(--sans);font-weight:600;font-size:1rem;margin:20px 0 6px}
+p{margin-bottom:12px;max-width:74ch}
+.lede{color:var(--steel);font-size:.97rem;max-width:72ch;margin-bottom:18px}
+ul,ol{margin:10px 0 16px 22px;max-width:74ch}
+li{margin-bottom:8px}
+code{font-family:var(--mono);font-size:.84em;background:var(--mist);padding:1px 5px;border-radius:3px}
+strong{font-weight:600}
+
+/* facts strip */
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.facts .f{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:9px 14px;font-size:.85rem;color:var(--steel)}
+.facts .f b{color:var(--ink);font-weight:600}
+
+/* the opener */
+.open{background:var(--card);border:1px solid var(--hairline);border-left:3px solid var(--teal);border-radius:6px;padding:24px 28px;margin:24px 0}
+.open .term{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:10px}
+.open p{font-family:var(--serif);font-size:1.14rem;line-height:1.5;color:var(--ink);max-width:66ch}
+.open p+p{margin-top:12px}
+
+/* the query, verbatim */
+.query{background:var(--teal-deep);color:#EAF3F2;border-radius:6px;padding:20px 26px;margin:20px 0}
+.query .term{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#8FC7C2;display:block;margin-bottom:9px}
+.query p{font-family:var(--serif);font-size:1.1rem;line-height:1.45;margin:0;max-width:none}
+
+/* decoder */
+.decoder{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:18px 22px;margin:20px 0}
+.decoder .term{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:10px}
+.decoder dl{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:6px 18px;font-size:.9rem}
+.decoder dt{font-family:var(--mono);font-size:.78rem;color:var(--ink);padding-top:2px}
+.decoder dd{color:var(--steel)}
+
+/* callouts */
+.callout{background:var(--card);border:1px solid var(--hairline);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:16px 22px;margin:18px 0}
+.callout .label{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:6px}
+.callout p:last-child{margin-bottom:0}
+.warn{background:var(--amber-soft);border:1px solid #E9DCC0;border-left:3px solid var(--amber)}
+.warn .label{color:var(--amber)}
+
+/* failure-mode cards */
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:18px 0}
+.trap{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:15px 18px}
+.trap h4{font-size:.95rem;margin:0 0 5px}
+.trap p{font-size:.9rem;color:var(--steel);margin:0;max-width:none}
+
+/* decision blocks */
+.dec{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px 24px;margin:16px 0}
+.dec h3{margin:0 0 12px;font-size:1.06rem}
+.dec .row{display:grid;grid-template-columns:78px 1fr;gap:14px;margin-bottom:9px;align-items:start}
+.dec .row:last-child{margin-bottom:0}
+.dec .k{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding-top:5px}
+.dec .k.chose{color:var(--teal)}
+.dec .k.rej{color:var(--amber)}
+.dec .k.bec{color:var(--steel)}
+.dec .v{font-size:.94rem;max-width:none;margin:0}
+.dec blockquote{margin:12px 0 0;padding:12px 18px;background:var(--paper);border-left:2px solid var(--teal);border-radius:0 4px 4px 0;font-family:var(--serif);font-size:.98rem;line-height:1.55;color:var(--ink)}
+.dec blockquote cite{display:block;margin-top:6px;font-family:var(--mono);font-style:normal;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+
+/* tables */
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--hairline);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:640px}
+th,td{text-align:left;padding:10px 14px;vertical-align:top}
+thead th{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);border-bottom:1px solid var(--hairline);background:var(--paper)}
+tbody tr+tr td{border-top:1px solid var(--mist)}
+td.t{font-family:var(--mono);font-size:.76rem;color:var(--teal);white-space:nowrap}
+
+/* diagrams */
+figure.diagram{margin:26px 0 10px;background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px;overflow-x:auto}
+figure.diagram pre.mermaid{background:none;font-family:var(--mono);font-size:.72rem;color:var(--steel);white-space:pre;text-align:center}
+figure.diagram figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--mist);font-size:.84rem;color:var(--steel);font-family:var(--sans)}
+figure.diagram figcaption b{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);font-weight:500}
+.walk{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:18px 24px;margin:0 0 30px}
+.walk .term{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:8px}
+.walk p{font-size:.94rem}
+.walk ol{margin-left:20px}
+.walk li{font-size:.94rem}
+.walk .breaks{margin-top:12px;padding:10px 14px;background:var(--amber-soft);border-left:3px solid var(--amber);border-radius:0 4px 4px 0;font-size:.9rem}
+.walk .breaks b{color:var(--amber)}
+
+/* questions */
+.q{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px 24px;margin:14px 0}
+.q .ask{font-family:var(--serif);font-weight:600;font-size:1.06rem;line-height:1.4;margin-bottom:12px;display:block}
+.q .ask .num{font-family:var(--mono);font-size:.7rem;color:var(--teal);letter-spacing:.08em;margin-right:9px;font-weight:500}
+.q .head{background:var(--paper);border-left:3px solid var(--teal);border-radius:0 4px 4px 0;padding:11px 16px;font-size:.99rem;font-weight:600;margin-bottom:11px;max-width:none}
+.q .det{font-size:.94rem;color:var(--steel);max-width:none}
+.q .det strong{color:var(--ink)}
+.q .det+.det{margin-top:9px}
+
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--hairline);font-size:.86rem;color:var(--steel)}
+footer a{margin-right:16px}
+@media print{body{background:#fff}main{padding:0}figure.diagram{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><a href="../kq4-early-signal-detection.html">KQ4 · Early-signal detection</a><span class="sep">›</span><span class="here">Interview prep</span></p>
+
+<span class="eyebrow">Interview prep · KQ4 · Staff / Principal</span>
+<h1>Early-signal detection — interview prep</h1>
+<p class="sub">A sequence model that reads the ordered run-up of clinical events before a relapse, and
+warns a care coach while there is still time to act. Built and shipped as sole owner — design through
+production — on a chronic-care platform covering <strong>80+ chronic conditions</strong> with roughly
+<strong>nine to ten years</strong> of patient history. Live in production.</p>
+
+<div class="facts">
+  <span class="f"><b>Role</b> · sole owner, design through production</span>
+  <span class="f"><b>Status</b> · live in production, in-VPC</span>
+  <span class="f"><b>Scale</b> · ~10,000 patients · 80+ conditions</span>
+  <span class="f"><b>History</b> · ~9 years hydrated into the event spine</span>
+  <span class="f"><b>Review</b> · 23 findings · shipped after sign-off</span>
+</div>
+
+<div class="callout warn">
+  <span class="label">Read this before you quote a number</span>
+  <p>Every figure on this page is a <strong>pre-registered acceptance target</strong> or a
+  <strong>design parameter</strong> — a bar set before the build, or a knob chosen during it. None of them
+  is a measured production result. If an interviewer pushes for outcomes, the honest line is short:
+  <em>"I left before the outcome windows I'd need were captured, and the client's measured results
+  aren't mine to publish — what I can take you through is the bar I set and the machinery that produces a
+  trustworthy number rather than a claimed one."</em> Say it once and move on; do not invent, estimate or
+  round toward a number.</p>
+</div>
+
+<div class="decoder">
+  <span class="term">Decoder · every term this page uses, once</span>
+  <dl>
+    <dt>virtual private cloud (VPC)</dt><dd>Virtual private cloud — the client's own isolated network on Amazon Web Services (AWS).</dd>
+    <dt>PHI</dt><dd>Protected health information — patient-identifying clinical data.</dd>
+    <dt>TTL</dt><dd>Time to live — how long a cached value is allowed to survive before it expires.</dd>
+    <dt>service-level agreement (SLA)</dt><dd>Service-level agreement — a promised bound on how long something takes.</dd>
+    <dt>95th-percentile (P95)</dt><dd>95th percentile — the value that 95 out of 100 runs come in under.</dd>
+    <dt>application programming interface (API)</dt><dd>Application programming interface — here, the small service a coach's screen calls.</dd>
+    <dt>LLM</dt><dd>Large language model — a text-generating model. This system never calls one.</dd>
+    <dt>RAG</dt><dd>Retrieval-augmented generation — fetching documents to ground a generated answer. Deliberately absent here.</dd>
+    <dt>IRB</dt><dd>Institutional review board — the ethics committee that approves research on human subjects.</dd>
+    <dt>RBAC</dt><dd>Role-based access control — permissions granted by job role rather than per person.</dd>
+    <dt>TLS</dt><dd>Transport layer security — the encryption on the link from browser to server.</dd>
+    <dt>SHAP</dt><dd>SHapley Additive exPlanations — a method for apportioning a score across the inputs that produced it.</dd>
+    <dt>IST</dt><dd>India Standard Time — the timezone the nightly job is scheduled in.</dd>
+    <dt>PrefixSpan</dt><dd>Prefix-projected sequential pattern mining. It counts <em>ordered</em> sub-sequences that occur more often before an event than by chance, so its output is a readable chain — "missed dose → glucose high → missed dose" — rather than a weight.</dd>
+    <dt>Token</dt><dd>One discretised clinical event: a missed dose, a glucose reading bucketed into a band, a restriction violation, a weight change past a threshold. The model reads a string of these, not raw values.</dd>
+    <dt>Tokenizer</dt><dd>The map from raw events to that vocabulary — including where the glucose buckets fall. Versioned, because changing the map silently changes every sequence.</dd>
+    <dt>Base rate</dt><dd>How often the thing happens at all. Relapse runs roughly 5–15% of at-risk windows.</dd>
+    <dt>Lift</dt><dd>How much more concentrated relapse is among the patients you flag than in the panel at large. 3× means three times as concentrated.</dd>
+    <dt>Calibration</dt><dd>Whether a score of 0.7 actually means a 70% chance. A model can rank well and still be badly calibrated.</dd>
+    <dt>Brier score</dt><dd>A direct measure of calibration — the mean squared error between predicted probabilities and what happened.</dd>
+    <dt>Censoring</dt><dd>An outcome you cannot observe because the patient left, switched programme, or the follow-up has not finished. Not the same as "it didn't happen".</dd>
+    <dt>Discrete-time hazard</dt><dd>Modelling "what is the risk in the next interval, given it has not happened yet" across a run of intervals — instead of one yes/no over a fixed box.</dd>
+    <dt>Kaplan–Meier</dt><dd>The standard survival-analysis estimator for event rates in the presence of censoring.</dd>
+    <dt>IPW</dt><dd>Inverse-probability weighting — up-weighting the observations that survived to stand in for the ones that were censored, rather than dropping them in as zeros.</dd>
+    <dt>Time-cut back-test</dt><dd>Train on everything before a date, validate on everything after it. The opposite of a random split.</dd>
+    <dt>k-fold</dt><dd>Randomly splitting data into k parts and rotating which is held out. Forbidden here — it lets a patient's later week teach the model about their earlier week.</dd>
+    <dt>Parquet</dt><dd>A columnar file format. Used here for frozen, hashable point-in-time snapshots.</dd>
+    <dt>DuckDB</dt><dd>An in-process analytical database that reads those Parquet files directly.</dd>
+    <dt>Neptune / DynamoDB / SageMaker</dt><dd>AWS managed graph database, key-value store, and model training-and-hosting service, respectively.</dd>
+    <dt>Stepped wedge</dt><dd>A rollout where cohorts are switched on at staggered times, so the not-yet-switched cohorts act as a comparison group without anyone being knowingly denied care.</dd>
+  </dl>
+</div>
+
+
+<h2><span class="n">Section 1</span>What is it?</h2>
+
+<p class="lede">Open with the coach, not the architecture. The interviewer has to feel the miss before
+they can care about the machinery that prevents it.</p>
+
+<div class="open">
+  <span class="term">The two sentences to open with</span>
+  <p>Relapse in chronic care is rare — five to fifteen percent — and by the time it is recorded, the
+  interesting part has already happened: a run-up of missed check-ins, drifting biomarkers and quietly
+  worsening self-reports spread across the weeks before. The signal is in the <em>order</em> of those
+  events, not the totals — which means the hard part of this system was never the model, it was the time
+  geometry that decides what counts as a positive, what counts as a negative, and what is not yet allowed
+  to be either.</p>
+</div>
+
+<h3>The clinician's actual situation</h3>
+
+<p>A care coach carries a panel of chronic patients. One of them is going to relapse weeks from now. The
+evidence is already on her screen today, and it is unremarkable: a check-in she missed, a fasting-glucose
+reading a little higher than the last one, a self-report that got shorter and vaguer, a dose logged late.
+Nothing crosses a threshold. Other patients on the panel produced similar-looking readings this month and
+are perfectly fine. She is not going to catch it, and she is not being careless — the events are spread
+across weeks and their meaning lives in the sequence, which is exactly the thing a screen full of current
+values cannot show.</p>
+
+<p>Then there is the retrospective version, which is the one a clinical-governance reviewer or a
+regulator asks after the fact: <em>the relapse happened — what were the warning signs, and did anyone act
+on them?</em> That is a records question, and answering it honestly means being able to reconstruct what
+was visible at each past moment and what decision, if any, followed. The system has to answer both halves,
+and the second half is what keeps the first honest.</p>
+
+<div class="query">
+  <span class="term">The killer query · verbatim from the design spec</span>
+  <p>"In cases that later relapsed, what evidence signals appeared in the 30 days prior, and were
+  decisions made in response?"</p>
+</div>
+
+<h3>Why it is genuinely hard</h3>
+
+<p>Three things stack before you write a line of modelling code. <strong>The positive class is
+rare</strong>, so label count — not algorithm choice — is the binding constraint. <strong>The signal is
+temporal</strong>: it lives in the order and spacing of events, not in a static feature vector.
+And <strong>the label is time-to-event, not a clean yes/no</strong> — a patient who relapses on day
+thirty-one looks identical to a never-relapser inside a thirty-day window. A classifier that ignores any
+one of those three learns the wrong thing confidently.</p>
+
+<p>This is also not a shape of question the rest of the platform answers. It is not a <code>GROUP BY</code>
+and it is not a similarity search; it is a <em>"what came before X?"</em> question where sequence matters,
+which is a different class of model entirely. A histogram of event counts misses it completely, because a
+missed dose followed by rising glucose followed by another missed dose is a deteriorating spiral, whereas
+the same three events scattered and self-corrected are noise. Same counts. Opposite meaning.</p>
+
+<h4>The failure modes a naive implementation produces</h4>
+
+<p>Each of these produces a model that <em>looks</em> like it works, which is why they are the interesting
+part. Name them in this order — it is roughly the order in which a team hits them.</p>
+
+<div class="traps">
+  <div class="trap">
+    <h4>Too few matured labels</h4>
+    <p>Train before the outcomes have accrued and you fit a handful of relapses. Many machine-learning
+    efforts die here — on label count, not on architecture. The result is plausible and quietly
+    worthless.</p>
+  </div>
+  <div class="trap">
+    <h4>Proxy-label circularity</h4>
+    <p>Training on "the clinician raised the risk level" instead of on relapse itself teaches the model to
+    predict clinicians, not outcomes. It will score beautifully and tell you nothing you did not already
+    know.</p>
+  </div>
+  <div class="trap">
+    <h4>Biased negatives</h4>
+    <p>Sampling "healthy" windows without first removing the run-up to a future relapse hands the model
+    the exact pattern it should fire on, labelled zero. The most damaging single bug in this
+    archetype.</p>
+  </div>
+  <div class="trap">
+    <h4>Leaked time</h4>
+    <p>A random train/test split lets a patient's later week teach the model about their earlier week. The
+    back-test looks brilliant; production does not. Leakage dressed as generalisation.</p>
+  </div>
+  <div class="trap">
+    <h4>The accuracy trap</h4>
+    <p>Against a 5–15% base rate, a model that predicts "no relapse" for everyone scores 85–95% accuracy.
+    Any metric that rewards the majority class rewards doing nothing.</p>
+  </div>
+  <div class="trap">
+    <h4>Censored outcomes as zeros</h4>
+    <p>Counting a patient who simply left the programme as a "success" inflates every rate and teaches the
+    model that disengagement looks like health.</p>
+  </div>
+  <div class="trap">
+    <h4>The self-fulfilling model</h4>
+    <p>The moment a coach acts on an alert, the intervention can change the outcome. A naive retrain reads
+    its own success as the signal disappearing, and the model looks broken precisely when it is
+    working.</p>
+  </div>
+  <div class="trap">
+    <h4>Alert fatigue</h4>
+    <p>Fire often enough and coaches stop reading, at which point precision on paper is irrelevant. Coach
+    attention is the scarcest resource in the system and the easiest one to spend.</p>
+  </div>
+</div>
+
+<h3>The bars, set before the build</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Pre-registered target</th><th>Bar</th><th>Why that bar</th></tr></thead>
+<tbody>
+<tr><td class="t">Precision @ K days early</td><td>≥ 0.40 calibrated</td><td>When the signal fires, days before a relapse surfaces, it has to be right often enough to be worth a coach's time. Calibrated per tenant and per programme, not globally averaged.</td></tr>
+<tr><td class="t">Lift over base rate</td><td>≥ 3×</td><td>Against a 5–15% base rate the model must clearly beat a "page everyone" policy — otherwise it is noise with a dashboard.</td></tr>
+<tr><td class="t">Coverage on mature relapses</td><td>≥ 80%</td><td>Immature and censored cases are excluded from the <em>denominator</em>, never quietly hidden to flatter the number.</td></tr>
+<tr><td class="t">Outcome maturity gate</td><td>6 months</td><td>A relapse becomes a supervised label only once its follow-up window has fully run. Enforced on historical and newly-accruing windows alike.</td></tr>
+<tr><td class="t">Observation window</td><td>30 days</td><td>Long enough to capture a developing run-up, short enough that the signal is actionable rather than a background trait. Fixed per model version — changing it is a retrain, not a query flag.</td></tr>
+<tr><td class="t">Future-relapse buffer</td><td>90 days</td><td>Wider than the observation window, so windows carrying early signal just outside the 30-day mark are not sampled as negatives.</td></tr>
+<tr><td class="t">Freshness tiers</td><td>24h / 48h</td><td>Under 24 hours green, 24–48 yellow, past 48 red. Projector lag over 30 minutes flags yellow.</td></tr>
+<tr><td class="t">Correction turnaround</td><td>P95 5 min</td><td>From a corrected relapse landing on the spine to the affected sequences, scores and alerts being rebuilt.</td></tr>
+<tr><td class="t">Risk cache TTL</td><td>6 hours</td><td>Bounds staleness within a day — but freshness is really enforced by what is <em>in the key</em>, not by the clock.</td></tr>
+</tbody>
+</table>
+</div>
+
+
+<h2><span class="n">Section 2</span>How did we solve it?</h2>
+
+<p class="lede">Snapshot-only sequence mining over an append-only event spine, with the heavy work moved
+to a nightly batch and the coach-facing path reduced to an audited cache read.</p>
+
+<h3>The upstream lane — and the feed that makes the whole thing possible</h3>
+
+<p>The platform's source of truth is an <strong>append-only event spine</strong> on DynamoDB. Nothing is
+updated in place, so any past instant can be reconstructed. One field on it matters more than the rest:
+<code>relapse_detected</code>, the canonical outcome, and the only thing that ever supervises this
+model.</p>
+
+<p>An AWS Lambda projection reads the spine and writes <em>two</em> things. First, the <strong>decision
+graph</strong> in Neptune — decisions, patients, protocols, outcomes and the edges between them. Second,
+and this is the design decision that makes the query answerable at all, a separate
+<strong>observation snapshot</strong> that is deliberately <em>not gated on whether a decision ever
+referenced the observation</em>.</p>
+
+<div class="callout">
+  <span class="label">Why the ungated feed matters</span>
+  <p>The projector historically emitted an observation only once a decision referenced it. That is fine
+  for retrieval and analytics — but it means the graph is silently biased toward cases where someone
+  already responded. For a query whose entire job is to find the tail where <em>no one reacted yet</em>,
+  that bias is fatal: the observations that matter most are precisely the ones nobody acted on. So the
+  observation snapshot is materialised without the decision-attachment gate. This was named as the single
+  largest data exposure across the whole programme, and the ungated projection became a shared platform
+  component rather than a local fix.</p>
+</div>
+
+<p>A <strong>deterministic nightly export</strong> then freezes both feeds to columnar Parquet at an
+as-of timestamp, behind a watermark. The manifest carries a <code>snapshot_manifest_hash</code> and a
+<code>source_event_seq_max</code>, and every downstream store is version-pinned to that same hash — so any
+score can be traced back to the exact frozen state it was computed against.</p>
+
+<h3>Nine years of history, replayed — the labels included</h3>
+
+<p>This was not built against an empty world. Roughly nine years of prior history — check-ins, labs,
+decisions, and the relapse outcomes themselves — were hydrated through the same append-only spine that
+carries live traffic. Five rules keep the replay faithful:</p>
+
+<ol>
+<li><strong>Event time is not ingestion time.</strong> Time is split into four fields with explicit
+provenance. <code>event_time_ms</code> and <code>observed_at_ms</code> — when it happened, and when the
+source resulted it — are read from the record. <code>received_at_ms</code> and <code>written_at_ms</code>
+are pinned to a single corpus load fence, never to the wall clock. A hard invariant — every historical
+event's real-world time must fall strictly before its received time — turns the cardinal sin into a
+quarantined error rather than a silent one.</li>
+<li><strong>Hydrating twice is a no-op.</strong> Content-addressed event identifiers and conditional
+writes make the load idempotent and resumable. Re-running over the same corpus yields a byte-identical
+spine and an identical snapshot-manifest hash — an executable proof of determinism, not an assurance.</li>
+<li><strong>Nothing is silently coerced.</strong> Nine years spans many legacy payload-schema versions;
+each gets an explicit up-converter, and any row that cannot be mapped to a schema, or to a tenant, is
+quarantined with a reason rather than defaulted.</li>
+<li><strong>The same projection code runs for history and for live.</strong> Replayed history passes
+through the exact projection logic that serves the live stream, so the sequences the model trains on have
+the same shape as the sequences it will score tomorrow.</li>
+<li><strong>The load is proof-carrying.</strong> Zero-event-loss reconciliation against the source,
+per-tenant and per-class counts, as-of spot checks against known-good historical reports, and a golden
+replay over a historical slice all gate the load before a single model is trained on it.</li>
+</ol>
+
+<p>Then a <strong>fenced cutover</strong> joins history to the live stream. The live consumer is armed in
+buffering mode <em>before</em> the last historical chunk seals; a delta pass replays anything that arrived
+in between; and a boundary proof checks that the first live sequence number is exactly one past the fence,
+that no hydrated event reappears as a fresh write, and that the two ranges are contiguous. The served
+spine does not flip until that proof is green — a single missing sequence number aborts the cutover and
+forces another delta pass.</p>
+
+<h3>The nine-step pipeline</h3>
+
+<p>Everything after the snapshot is a strictly ordered pipeline, with a correction listener that reaches
+back into four of its stages. Step by step:</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Step</th><th>What it does</th><th>The contract it carries</th></tr></thead>
+<tbody>
+<tr><td class="t">2 · Snapshot</td><td>Freezes vertices, edges and the observation snapshot at an as-of timestamp.</td><td>Manifest carries <code>snapshot_manifest_hash</code> + <code>source_event_seq_max</code>.</td></tr>
+<tr><td class="t">3 · Sequence builder</td><td>Turns the snapshot into ordered token windows. For each anchor — a matured relapse, or an at-risk negative window — an ordered, tokenised list of that window's events.</td><td>Sorts deterministically by <code>(event_time_ms, source_event_seq, event_id)</code> <em>once</em>, before tokenisation. Persists <code>tokenizer_version</code>, <code>label_status</code>, <code>snapshot_manifest_hash</code>, source event-sequence range and a dependency set. Partitioned by the three tenant fields plus the snapshot hash. Nothing downstream re-derives ordering.</td></tr>
+<tr><td class="t">4 · Label library</td><td>Applies the outcome-maturity gate, censoring, and attribution.</td><td><code>label_status</code> is an enforced enum: <code>mature</code>, <code>not_mature</code>, <code>censored_dropout</code>, <code>program_switch</code>, <code>by_later_relapse</code>. Only <code>mature</code> rows carry supervised labels.</td></tr>
+<tr><td class="t">5 · Model</td><td>Trains the weekly challenger through a three-rung promotion gate — logistic baseline, then PrefixSpan, then a transformer.</td><td>Each rung must show a calibrated precision-recall gain at the clinical operating point. A time-cut back-test assertion fails the build on leakage.</td></tr>
+<tr><td class="t">6 · Nightly batch score</td><td>Scans active patients from the tenant-partitioned Parquet, pre-materialises every 30-day window, hands one payload to a SageMaker batch transform.</td><td>No per-patient graph scans, ever. Tenant-scoped, with a response assertion back against that scope.</td></tr>
+<tr><td class="t">7 · Alert lifecycle</td><td>Turns above-threshold, in-budget, un-suppressed candidates into owned alerts.</td><td>Emits <code>risk_signal_detected</code>; assigns owner, acknowledgement, dismiss reason, escalation SLA. Suppression on cooldown or an open alert. Every transition lands back on the spine as a first-class event.</td></tr>
+<tr><td class="t">8 · Serve</td><td>The scoring API a coach's screen calls.</td><td>Canonical cache key, per-cell tenant assertion, single-flight request coalescing on a miss.</td></tr>
+<tr><td class="t">9 · Eval and golden</td><td>Time-cut back-tests, per-coach budget tuning, per-tenant calibration, drift monitors, the IRB-approved rollout.</td><td>Golden replay pinned on late-arrival, correction and supersede fixtures.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The <strong>correction listener</strong> sits beside all of it. When a relapse correction lands on the
+spine, it uses the dependency sets recorded at step 3 to invalidate exactly the affected sequences, scores
+and alerts, and triggers a targeted rebuild within a P95 five-minute SLA. A model swap invalidates the
+entire risk-cache namespace. Relapse corrections are the most consequential kind, because a corrected
+label can flip a training example — so that loop closes fast rather than waiting for the next nightly
+batch.</p>
+
+<h3>The gates that decide what is a positive, a negative, and neither</h3>
+
+<p>This is the centre of the system. Three windowing rules do the work:</p>
+
+<ul>
+<li><strong>The positive</strong> is the 30-day window before a relapse — the sequence of events the model
+is asked to recognise early.</li>
+<li><strong>The negatives</strong> are drawn from a patient's <em>active time-at-risk</em>, not from "any
+window without a relapse". For every patient the sampler removes two zones first: the 30-day pre-event
+window, and a 90-day future-relapse buffer around any relapse that patient later has.</li>
+<li><strong>Neither</strong> — a row only counts once its follow-up has matured. Censored cases are
+handled with Kaplan–Meier or inverse-probability weighting rather than being swept into the zero
+class.</li>
+</ul>
+
+<p>And the loss is a <strong>discrete-time hazard</strong>, not a binary 0/1: the question becomes "what is
+the risk in the next interval, given no relapse yet", across a run of intervals. The binary number
+survives only as an operating-point summary for reporting, never as the thing the model is trained on.</p>
+
+<h3>The scoring path — bulk overnight, milliseconds on demand</h3>
+
+<p>Two things must never happen: a per-patient scan of the graph database, and a stampede on a cold cache
+key.</p>
+
+<p><strong>The nightly lane</strong> runs on a cron at 02:30 IST, pinned to one tenant partition at a
+time. It scans active patients from the snapshot Parquet, builds every 30-day window, sends one batch to
+SageMaker, applies the per-tenant calibrated threshold and then the per-coach daily alert budget, creates
+alerts for what survives, prewarms the Redis risk cache by canonical key, and writes scores plus
+dependency sets back to Parquet.</p>
+
+<p><strong>The on-demand lane</strong> is what a coach actually waits on, and it is audit-first. The API
+writes the audit entry — viewer, target, purpose, time — <em>before</em> the score is served, and returns
+the <code>access_log_id</code> in the response. It then builds the canonical cache key and reads. On a hit,
+a per-cell tenant assertion runs and the score is returned. On a genuine miss, a single-flight lock
+coalesces concurrent requests so only one of them builds that patient's window and calls the live
+endpoint.</p>
+
+<div class="callout">
+  <span class="label">The cache key — every field is result-affecting</span>
+  <p>The key is <code>q4:risk</code> over the three tenant fields (<code>account_id</code>,
+  <code>workspace_id</code>, <code>controlunit_id</code>), the patient, the window length, plus
+  <code>tokenizer_version</code>, <code>model_version</code>, <code>snapshot_manifest_hash</code> and
+  <code>last_event_seq</code>. Drop the tokenizer or model version and a promoted model serves an old
+  score. Drop the snapshot hash or the last event sequence and a fresher snapshot serves a stale one. Drop
+  a tenant field and you risk a cross-tenant hit. A key that omits any of these is a correctness bug
+  wearing a performance optimisation's clothes.</p>
+</div>
+
+<h3>Tenancy — five enforcement points, deliberately redundant</h3>
+
+<p>Tenant identity is a three-field scope resolved from the caller's authenticated identity, never passed
+in the request body. A single-field check would be a real hole: two workspaces under one account, or two
+control units under one workspace, would be treated as one tenant. Enforcement sits at the DuckDB scan
+predicate (before any join runs), the Parquet output partitioning, the tenant assertion on batch and live
+scoring requests, Postgres row-level tenant keys, and the Redis namespace — with a
+<strong>fail-closed per-cell assertion</strong> at response time as the backstop. Per-cell, not per-request,
+because the failure being defended against is one contaminated row riding along inside an otherwise
+correct query.</p>
+
+<h3>Where the language model is — nowhere</h3>
+
+<p>Sequence mining, scoring, calibration, thresholding and suppression are all deterministic code, and the
+pattern attribution itself — sequential-pattern lift for PrefixSpan, or attention and feature attribution
+for the transformer — is computed by that same non-LLM pipeline. The model driving the numbers is a
+<em>sequence</em> model, not a <em>language</em> model. There is no persona, no prompt and no generated
+sentence anywhere in the alerting path. What the coach sees — "three missed check-ins and a rising
+fasting-glucose trend in the last two weeks" — is the attribution the pipeline already computed, rendered
+by a template.</p>
+
+<p>The platform's LangChain model seam and LangGraph runtime are inherited, not exercised. What this query
+does use from that layer is the boring, valuable part: <strong>typed structured output</strong> (Pydantic
+v2) so <code>label_status</code> is an enum the schema enforces and an immature row cannot masquerade as a
+training label, and a <strong>PHI-safe callback tracer</strong> that logs metadata and payload hashes but
+never raw clinical text. LangSmith runs self-hosted inside the VPC, so production tracing and evaluation
+datasets never take PHI off the network.</p>
+
+<h3>The stack, and what each store is for</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Component</th><th>Job in this system</th></tr></thead>
+<tbody>
+<tr><td class="t">DynamoDB</td><td>Append-only event spine — the source of truth. <code>relapse_detected</code> is the only supervised label; the risk-level-upgrade event is a leak-guarded feature, never a target.</td></tr>
+<tr><td class="t">Neptune</td><td>Decision graph projected off the spine; feeds the nightly export. Never scanned per patient at scoring time.</td></tr>
+<tr><td class="t">Parquet + DuckDB</td><td>Snapshot-only store: frozen vertices and edges plus the ungated observation snapshot. Sequence, score and dependency tables partitioned by tenant and snapshot hash.</td></tr>
+<tr><td class="t">SageMaker</td><td>Hosts the sequence model, runs the nightly batch transform, and runs the weekly retrain through the three-way promotion gate.</td></tr>
+<tr><td class="t">Postgres</td><td>The pattern store — top patterns and lift per tenant, model and tokenizer version — and the alert-lifecycle table: owner, acknowledgement, dismiss reason, escalation, audit link.</td></tr>
+<tr><td class="t">Redis + FastAPI</td><td>Canonical-keyed risk cache (6-hour TTL) and the scoring service: audit-first, tenant-asserted, request-coalesced.</td></tr>
+<tr><td class="t">LangChain / LangGraph / LangSmith</td><td>Inherited platform layer. Structured output and the PHI-safe tracer are used; the model seam is not called on any path this query owns.</td></tr>
+</tbody>
+</table>
+</div>
+
+
+<h2><span class="n">Section 3</span>Why did we do what we did?</h2>
+
+<p class="lede">Every decision below is paired with what was rejected and why. Where the reasoning exists
+in his own words, it is quoted — under pressure, the sentence is easier to recall than the argument.</p>
+
+<h3>The scheduling decision that outranks every modelling decision</h3>
+
+<div class="dec">
+  <h3>Sequence this query last, and refuse to train until the labels are real</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">To hold the query back until the relapse outcomes were loaded, validated and matured — and to keep a six-month outcome-maturity gate standing permanently over every newly-accruing window.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Fitting the model on whatever relapses existed at the time and shipping something that scored well on a small validation set.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">A sequence model needs outcomes to learn from, and outcomes accumulate over months. Many machine-learning efforts fail here — on label count, not on architecture.</p></div>
+  <blockquote>"The hardest decision in this whole system was a scheduling one: sequence this query last, and do not train it until the labels are real." … "A model fit on too little matured signal is worse than no model, because it looks like it works."<cite>Case study · §01 and §04</cite></blockquote>
+</div>
+
+<div class="dec">
+  <h3>Hydrate nine years of history rather than wait a calendar out</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">To replay roughly nine years of prior history — including the relapse outcomes themselves — through the same spine that carries live traffic, so a deep supply of already-matured outcome windows existed on day one.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">The original plan's calendar wait: ship the label typing, then idle for months while post-launch relapses accrued.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Hydration converts label scarcity from "wait years of wall-clock time" into "already accrued", and it makes the honest evaluation the affordable one — with years of history on both sides of the cut, a time-cut back-test is not starved of data. Crucially, it does <em>not</em> retire the maturity requirement.</p></div>
+  <blockquote>"Hydration filled the training set; it did not close the design."<cite>Q&amp;A · §08</cite></blockquote>
+</div>
+
+<h3>Label and window decisions</h3>
+
+<div class="dec">
+  <h3>Only <code>relapse_detected</code> supervises the model</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">The canonical clinical outcome as the sole label. "A clinician upgraded this patient to high risk" is admitted as a <em>feature</em>, and only behind an event-time guard — its event time and source sequence must sit strictly before the moment being scored.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Using the risk-level upgrade as the label. It is abundant, it is early, and it is exactly the wrong target.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Proxy-label circularity — flagged as high-severity in review. Train on the reaction and you learn to predict the reactor.</p></div>
+  <blockquote>"The model predicts outcomes, not the people who react to them."<cite>Case study · §06</cite></blockquote>
+</div>
+
+<div class="dec">
+  <h3>Negatives from active time-at-risk, with a 90-day future-relapse buffer removed first</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">A buffer deliberately <em>wider</em> than the 30-day observation window, so windows that carry early signal but sit just outside the strict 30-day mark are never handed to the model as confident zeros.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Sampling negatives from "any window without a relapse" — the obvious, cheap, and catastrophic default.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Get it wrong and the model is taught that the exact pattern it should fire on is normal. The cost is named rather than hidden: excluding those windows discards the hardest, most informative negatives and shrinks an already small training set. The trade is <strong>label purity over label volume</strong>, made on purpose — and the 90-day width is an open tuning question, not a proven optimum.</p></div>
+  <blockquote>"Those near-relapse windows are the most informative to learn from but the most dangerous to mislabel, because their true status is ambiguous — signal is present, the outcome just has not landed."<cite>Q&amp;A · §03</cite></blockquote>
+</div>
+
+<div class="dec">
+  <h3>Discrete-time hazard, not binary 0/1</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">To model the probability of relapse in the next interval given no relapse yet, across a sequence of intervals, on matured rows only. Censored cases handled by Kaplan–Meier or inverse-probability-of-censoring weighting.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">A plain binary classifier over a fixed 30-day box. Also considered and set aside: continuous-time Cox proportional hazards and a DeepSurv-style model.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Binary treats a day-thirty-one relapser and a never-relapser as identical, throwing away that the first was days from the edge. Hazard framing is also more sample-efficient with sparse labels — each surviving interval contributes information. Cox and DeepSurv are legitimate cousins of the same survival instinct, but discrete-time hazard composes naturally with a token sequence model and per-interval censoring in a way continuous-time Cox does not; DeepSurv is a reasonable rung to trial, and it would face the same promotion gate.</p></div>
+</div>
+
+<h3>Correctness and determinism decisions</h3>
+
+<div class="dec">
+  <h3>Time-cut back-tests only, enforced by an assertion in the trainer</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">A hard build failure if any validation event-time is at or before the maximum training event-time, or if any patient or enrollment appears on both sides of a fold.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Random k-fold cross-validation — and, just as importantly, rejected the idea that "we always use time-cut splits" is a sufficient control.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">A random split lets a patient's later week teach the model about their earlier week, which is leakage dressed as generalisation. Making it an assertion rather than a convention means the pipeline stops instead of quietly reporting an inflated number.</p></div>
+</div>
+
+<div class="dec">
+  <h3>Sort deterministically once, before tokenisation</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">A single sort by <code>(event_time_ms, source_event_seq, event_id)</code> in the sequence builder, with ties broken by immutable identifiers. Nothing downstream re-derives ordering.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Letting ordering emerge from whatever the query planner returned, or re-sorting at each consumer.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Two events sharing a millisecond would otherwise produce two different token strings and two different scores for the same patient on two replays. This is what lets the same snapshot hash reproduce the same sequences, and it is the hook the whole deterministic-exporter guarantee hangs on.</p></div>
+</div>
+
+<div class="dec">
+  <h3>Four-field event time in hydration, with a strict-ordering guard</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Two fields read from the record (when it happened, when the source resulted it), two pinned to the corpus load fence (when the load received and wrote it) — plus an invariant that every historical event's real-world time falls strictly before its received time. Violations are quarantined.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Stamping ingestion time and treating it as event time — the standard backfill shortcut.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Collapse real-world event time into load time and nine years of events all appear to land on load day, scrambling the very ordering a sequence model reads.</p></div>
+  <blockquote>"Without that split the back-test would still be deterministic — and deterministically wrong: every sequence would sort by the day it was loaded, so the model would learn an order that never happened and score tomorrow's patients against it."<cite>Case study · §03</cite></blockquote>
+</div>
+
+<div class="dec">
+  <h3>The fenced cutover fails closed</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Arm the live consumer in buffering mode before sealing history, run a delta pass, then prove first-live-sequence equals fence-plus-one, no hydrated sequence re-writes, contiguity golden across the fence. A single missing sequence number aborts and re-fences.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Sealing history and attaching the live stream on the assumption that nothing landed in the gap.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">For an order-sensitive model, a one-event hole at the boundary is not cosmetic — it is a phantom gap in a patient's timeline that could invent or erase a pre-relapse pattern.</p></div>
+</div>
+
+<h3>Architecture and serving decisions</h3>
+
+<div class="dec">
+  <h3>Read a separate ungated observation snapshot, not just the decision graph</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">A second feed materialised without the decision-attachment gate, promoted to a shared platform component so sibling queries inherit it.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Reading only the decision graph, which is what every other query on the platform does.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">The projector historically emitted an observation only when a decision referenced it, so the graph is silently biased toward cases where someone already responded. For a query whose entire job is the tail where nobody reacted yet, that bias is fatal. This was named as the single largest data exposure of the whole programme.</p></div>
+</div>
+
+<div class="dec">
+  <h3>Score in a nightly batch over a frozen snapshot</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Pre-materialise 30-day windows for all active patients from the tenant-partitioned Parquet, and hand one payload to a batch transform. A live endpoint exists only to serve a cache-miss check.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Walking the graph per patient on demand — which is what the first design actually did, and what the review killed.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Per-patient traversal does not scale and is not reproducible. Batch makes the nightly cost predictable, pins the whole run to one snapshot hash, and means a coach's on-demand check is almost always a prewarmed cache read rather than a cold, variable-latency traversal.</p></div>
+</div>
+
+<div class="dec">
+  <h3>Invalidate the cache namespace <em>before</em> repointing the endpoint</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">On promotion, flush the entire <code>q4:risk:*</code> namespace first, then swap the serving endpoint to the new model version. A hold leaves the champion and its warm cache untouched.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Repointing first and letting the six-hour TTL age the old keys out — the design an umbrella review caught, where a model swap left old keys live.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">That ordering is the whole reason a promotion is safe to run mid-day. Reverse it and a coach could read a fresh cache entry scored by a model that no longer exists.</p></div>
+</div>
+
+<div class="dec">
+  <h3>Alert lifecycle transitions are events on the spine, not a status column</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Creating, acknowledging, dismissing and escalating an alert each land back on the append-only spine as first-class events, alongside owner, acknowledgement timestamp, dismiss reason and escalation due time.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Treating an alert as user-interface state with a mutable status field.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">An alert is a clinical fact with a history. Events let the response-window join reconstruct "a decision was made in response" from immutable sequence numbers, which is literally the second half of the killer query — and they turn an unacknowledged alert into a queryable, escalatable state rather than a lost message. The system cannot force a human to act, but it makes inaction a recorded fact.</p></div>
+</div>
+
+<h3>Modelling and evaluation decisions</h3>
+
+<div class="dec">
+  <h3>A three-rung promotion ladder, not a bake-off</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Logistic baseline sets the floor; PrefixSpan must beat it on calibrated precision-recall at the clinical operating point; only then may a transformer run, and only if it beats PrefixSpan <em>and</em> preserves explanation fidelity. The simplest model that cleared its bar becomes the candidate — and the candidate still has to beat the live champion before the endpoint swaps.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Training several models and shipping whichever scored highest on a single metric.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">"Best on a metric" is the wrong objective for a clinical alerter, and in a clinical setting an unexplained alert is a weaker product than a slightly-less-accurate explainable one. Complexity is admitted only where it pays.</p></div>
+  <blockquote>"A fancier model that does not earn its opacity does not ship."<cite>Q&amp;A · §05</cite></blockquote>
+</div>
+
+<div class="dec">
+  <h3>Lift over base rate and calibrated precision, never accuracy</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Precision at K days early ≥ 0.40 calibrated, lift ≥ 3×, coverage ≥ 80% measured on the matured-relapse denominator, calibration tracked by Brier score and per-tenant reliability slices.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Accuracy, area under the curve as a headline, and any global metric that averages across tenants.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">A model that predicts "no relapse" for everyone scores 85–95% accuracy against this base rate. And precision at a threshold tells you nothing about whether a score of 0.7 means a 70% chance — if it does not, every per-tenant threshold and alert budget built on top of it is misgrounded.</p></div>
+</div>
+
+<div class="dec">
+  <h3>A global model with per-tenant calibration</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Shared weights, with the operating threshold and reliability curve fit per tenant and programme — but only once a tenant crosses a minimum effective event count. Below that, the tenant falls back to global calibration and is <em>told</em> its scores are globally calibrated.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">Per-tenant models, and equally, a single global threshold applied everywhere.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Label scarcity would leave most single tenants unable to train at all. But a tenant with a different base rate deserves a threshold tuned to its own reality, not a global average that over- or under-alerts. The honest framing separates two things: <strong>data isolation</strong> — no tenant can read another's rows — is enforced end to end; <strong>statistical pooling</strong> is a deliberate modelling trade, and a client requiring fully siloed weights would move to per-tenant models at a real cost in label efficiency.</p></div>
+</div>
+
+<div class="dec">
+  <h3>A per-coach daily alert budget with suppression</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Apply the budget <em>after</em> thresholding; suppress on cooldown or an open alert for that patient; on breach, raise the threshold or escalate to leadership.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">"Alert everyone and let coaches triage" — which is also, deliberately, the baseline the model has to beat.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Alerting everyone spends the scarcest resource in the system, coach attention, on the 85–95% who will not relapse, and within weeks every alert is ignored. The trade is stated rather than hidden: a hard budget can defer a genuine alert, which is why a breach is a monitored condition and not an invisible one.</p></div>
+  <blockquote>"The point of the query is triage the humans cannot do by eye, not a firehose they will learn to mute."<cite>Q&amp;A · §01</cite></blockquote>
+</div>
+
+<div class="dec">
+  <h3>An IRB-approved stepped-wedge rollout, recorded on the spine</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Staggered cohort exposure under an institutional-review-board-approved evaluation plan, with <code>model_exposed</code> and <code>intervention_received</code> written to the spine as events.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">A pure holdout — and a naive retrain that ignores the treatment effect entirely.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">Acting on a relapse alert is an intervention on a patient, so who gets it and when is an ethics question, not only a statistics one — a pure holdout means knowingly leaving high-risk patients unwarned. And without the exposure record you cannot separate "precision fell because the model prevented relapses" from "precision fell because the world changed". Governance and evaluation are the same mechanism here.</p></div>
+</div>
+
+<h3>The decision to keep the language model out</h3>
+
+<div class="dec">
+  <h3>No language model anywhere on the scoring or alerting path</h3>
+  <div class="row"><span class="k chose">Chose</span><p class="v">Deterministic code for mining, scoring, calibration, thresholding and suppression — and for the attribution too. What the coach sees is the ranked patterns the pipeline already computed, rendered by a template.</p></div>
+  <div class="row"><span class="k rej">Rejected</span><p class="v">An LLM narrator to restate the alert in prose, and a retrieval-augmented-generation surface to "justify" the signal with supporting documents.</p></div>
+  <div class="row"><span class="k bec">Because</span><p class="v">"Three missed check-ins and a rising fasting-glucose trend in the last two weeks" is not prose a model wrote — it is the attribution the pipeline holds. A model asked to restate it could only add a failure mode.</p></div>
+  <blockquote>"A paraphrase that sounds more certain than the number underneath it." … "Pointing a retriever at documents to justify a signal the model has already computed and attributed would be adding a narrator, not adding evidence."<cite>Case study · §07</cite></blockquote>
+</div>
+
+<div class="callout">
+  <span class="label">If they ask about determinism and temperature zero</span>
+  <p>Be precise, because it is a common overclaim: temperature zero does <em>not</em> make a language
+  model's output deterministic. A pinned model, prompt and temperature-zero setting with output hashes give
+  you drift <em>detection</em> and reproducible auditing — the hashes detect drift, they do not prevent it.
+  This query sidesteps the issue entirely: its determinism comes from the structured chain — deterministic
+  sort, pinned tokenizer and model versions, frozen snapshot — and not from a narrator, because there is
+  no narrator on this path.</p>
+</div>
+
+<h3>The design review, and what it changed</h3>
+
+<p>Before anything was built, the design went through a structured adversarial self-review under a
+Principal-AI-Engineer lens. It returned <strong>twenty-three findings</strong> and an unusually strict
+verdict: <em>ship-with-changes</em>, carrying an explicit rider — <strong>do not implement the alerting
+path until six preconditions close</strong>. Twelve of the findings were high-severity.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>High-severity finding</th><th>What changed in v2</th></tr></thead>
+<tbody>
+<tr><td>Proxy-label circularity</td><td><code>relapse_detected</code> became the only supervised label; the risk-level upgrade was demoted to a feature behind an event-time guard.</td></tr>
+<tr><td>Missing censoring</td><td>The <code>label_status</code> enum was introduced and enforced in the schema, with Kaplan–Meier / inverse-probability weighting for censored cases. Promoted to a shared platform library.</td></tr>
+<tr><td>A biased negative sampler</td><td>Negatives redrawn from active time-at-risk with the 30-day pre-event window and a 90-day future-relapse buffer removed first.</td></tr>
+<tr><td>An unenforced time-cut</td><td>The split became a hard assertion inside the trainer — the build fails on a leaked event-time or a patient crossing folds — rather than a convention in a notebook.</td></tr>
+<tr><td>An absent clinical-safety loop</td><td>The full alert lifecycle was added: owner, acknowledgement, dismiss reason, escalation SLA, per-coach budget, cooldown suppression, every transition an event on the spine.</td></tr>
+<tr><td>A nightly scan that walked the graph one patient at a time</td><td>Replaced by parquet-driven pre-materialised windows and a single batch transform, with per-patient graph scans explicitly forbidden.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Of the twenty-three: <strong>sixteen were absorbed locally</strong> into the hardened v2 design;
+<strong>six were deliberately promoted into shared platform components</strong> — the tenant wrapper, the
+outcome-maturity and censoring library, the correction-invalidation contract, the ungated observation
+projection, the deterministic exporter, and the four-field event-time split — so sibling queries inherit
+the same fixes rather than each re-solving them; and <strong>one was the label-maturity
+prerequisite</strong> that gated the whole thing. An umbrella review separately caught the cache-swap
+ordering bug described above.</p>
+
+<div class="callout warn">
+  <span class="label">Say this precisely — the distinction is worth points</span>
+  <p>The <em>design-review</em> verdict was ship-with-changes, not approved. The changes were made, the six
+  platform components landed, the relapse labels were hydrated, validated and matured — and the service
+  <strong>shipped and runs in production</strong> on the platform's self-hosted, in-VPC stack, with the
+  nightly batch scorer, the alert-lifecycle service and the correction listener wired to the shared
+  backbone. Go-live was gated on purpose, and then it went live. Do not let "ship-with-changes" be heard as
+  "never shipped", and do not upgrade it to "the review approved it" either.</p>
+</div>
+
+<h3>What the design does not claim</h3>
+
+<ul>
+<li><strong>Vocabulary leakage is real and named rather than buried.</strong> The token vocabulary is
+derived from the full corpus, so the token set — not the events, the values, or the labels — reflects
+periods after the cut. The mitigation is a versioned, frozen tokenizer fixed at train time and monitored
+for drift rather than re-fit per scoring run. That reduces the exposure; it does not make it zero.</li>
+<li><strong>Everything surfaced is observational.</strong> A detected pattern is <em>associated</em> with
+relapse in the cohort, not proven to cause it. Buffering, calibration and the maturity gate reduce known
+biases; unmeasured confounding is never ruled out.</li>
+<li><strong>Attention weights are indicative, not a causal account.</strong> That is one reason PrefixSpan
+is the preferred explainable rung — its patterns are literally the sub-sequences it counted — and why the
+transformer must clear an explanation-fidelity bar before it can displace it. The trustworthy claim is
+"here is what the model weighted", not "here is why the patient will relapse".</li>
+<li><strong>It is a daily-cadence run-up detector, not a seconds-fresh acute monitor.</strong> A two-hour
+physiological crash is a different system with a different SLA.</li>
+<li><strong>Nine-year-old sequences reflect older care protocols.</strong> Managed by the versioned
+tokenizer with drift monitoring, time-cut evaluation that weights recent performance, and per-tenant
+recalibration — but a windowing-out policy for old episodes is a legitimate tuning question, not a settled
+one.</li>
+</ul>
+
+
+<h2><span class="n">Section 4</span>Architecture</h2>
+
+<p class="lede">Four diagrams, verbatim from the case study. If you can redraw these on a whiteboard in
+order — geometry, pipeline, request path, ladder — you can hold the room without notes.</p>
+
+<h3>Fig 6 · The windowing geometry</h3>
+
+<figure class="diagram">
+<pre class="mermaid">
+gantt
+    dateFormat YYYY-MM-DD
+    axisFormat %b
+    section Patient who later relapsed
+    Event history · embedded into the sequence :done, h1, 2025-01-01, 111d
+    30-day pre-relapse window · positive example :crit, pre, 2025-04-22, 30d
+    relapse_detected · the only supervised label :milestone, rel, 2025-05-22, 0d
+    Follow-up must mature · six-month label_status gate :active, mat, 2025-05-22, 180d
+    section Negative sampling · active time-at-risk
+    Window drawn from stable active time :done, neg, 2025-01-05, 45d
+    Future-relapse buffer · never sampled negative :crit, buf, 2025-02-21, 90d
+</pre>
+<figcaption><b>Fig 6</b> · The windowing geometry — a 30-day positive window, a buffer that keeps the
+negatives clean, and a six-month maturity gate on every label</figcaption>
+</figure>
+
+<div class="walk">
+<span class="term">Walkthrough — draw this first, it is the centre of the system</span>
+<p>Draw a horizontal time axis and two lanes.</p>
+<ol>
+<li><strong>Top lane — a patient who later relapsed.</strong> A long stretch of ordinary event history
+runs along the axis; all of it is embedded into the token sequence as context. Then a
+<strong>30-day block</strong> immediately before the relapse: this is the <em>positive example</em>, the
+run-up the model is asked to recognise early.</li>
+<li><strong>The milestone.</strong> At the right-hand edge of that block sits
+<code>relapse_detected</code> — a single point, and the only thing that ever supervises this model.</li>
+<li><strong>The maturity gate.</strong> Extending <em>to the right</em> of the milestone is a
+<strong>six-month bar</strong>. Until that bar has fully run, the relapse is <code>not_mature</code> and
+carries no supervised label. Nothing to its left is usable as training data yet.</li>
+<li><strong>Bottom lane — negative sampling.</strong> A window is drawn from stable active
+time-at-risk, well away from anything. Beside it, a <strong>90-day exclusion buffer</strong> sits around
+any relapse the patient later has. Nothing inside that buffer is ever sampled as a negative — including
+the 30-day pre-event window itself.</li>
+</ol>
+<p>The three gates in order: <em>is this window inside a buffer?</em> (if yes, it is not a negative) →
+<em>has this outcome matured?</em> (if no, it is neither a positive nor a negative) → <em>only then</em>
+does the row get a supervised label. The buffer is drawn wider than the observation window on purpose.</p>
+<p class="breaks"><b>Without the buffer</b> — a window sitting inside a developing run-up gets handed to
+the model as a confident zero, and the model learns that the exact pattern it should fire on is normal.
+That is the single most damaging bug in this archetype, and it does not show up as a bad metric; it shows
+up as a good one. <b>Without the maturity bar</b> — you train on a handful of relapses that happen to have
+resolved quickly, which is itself a biased sample, and the model looks like it works.</p>
+</div>
+
+<h3>Fig 2 · The build-to-serve pipeline</h3>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+    S2[Step 2 · Snapshot frozen at an as-of timestamp&lt;br/&gt;vertices · edges · observation_snapshot parquet&lt;br/&gt;manifest carries snapshot_manifest_hash + source_event_seq_max]
+    S3[Step 3 · Sequence builder&lt;br/&gt;canonical label relapse_detected only&lt;br/&gt;active-patient-time-at-risk negatives · future-relapse buffer excluded&lt;br/&gt;deterministic sort by event_time_ms · source_event_seq · event_id&lt;br/&gt;persist tokenizer_version + label_status + snapshot_manifest_hash]
+    S4[Step 4 · Label library&lt;br/&gt;outcome-maturity gate · censoring · attribution&lt;br/&gt;label_status in mature · not_mature · censored_dropout · program_switch · by_later_relapse]
+    S5[Step 5 · Model · three-way gate&lt;br/&gt;logistic baseline then PrefixSpan then Transformer&lt;br/&gt;each step must show calibrated precision-recall gain at the operating point&lt;br/&gt;time-cut back-test assertion fails on leakage]
+    S6[Step 6 · Nightly batch score&lt;br/&gt;parquet-driven active-patient windows · SageMaker batch transform&lt;br/&gt;NO per-patient graph scans · tenant-scoped with response assertion]
+    S7[Step 7 · Alert lifecycle service&lt;br/&gt;emit risk_signal_detected · assign owner · ack · dismiss reason · escalation SLA&lt;br/&gt;suppression · cooldown · full audit trail]
+    S8[Step 8 · Serve · scoring API&lt;br/&gt;canonical cache key · tenant assertion per cell&lt;br/&gt;request coalescing on a miss]
+    S9[Step 9 · Eval and golden&lt;br/&gt;time-cut back-test only · per-coach budget tuning&lt;br/&gt;per-tenant calibration · drift monitors · IRB rollout&lt;br/&gt;golden replay with late-arrivals + corrections + supersedes fixtures]
+    CORR[Correction-event listener&lt;br/&gt;relapse corrections invalidate sequences + scores + alerts&lt;br/&gt;model swap invalidates the risk cache namespace&lt;br/&gt;dependency-index targeted rebuild · P95 5 min SLA]
+    S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6 --&gt; S7 --&gt; S8 --&gt; S9
+    CORR -.-&gt; S3
+    CORR -.-&gt; S5
+    CORR -.-&gt; S6
+    CORR -.-&gt; S8
+</pre>
+<figcaption><b>Fig 2</b> · The build-to-serve pipeline — nine ordered steps, with corrections reaching
+back into sequence, model, score, and serve</figcaption>
+</figure>
+
+<div class="walk">
+<span class="term">Walkthrough — one straight spine, one listener reaching back</span>
+<p>Draw a single vertical column of eight boxes, top to bottom, with solid arrows. Then draw one box off
+to the side with four dotted arrows reaching back into the column.</p>
+<ol>
+<li><strong>Step 2 — snapshot.</strong> The frozen point-in-time state: vertices, edges and the ungated
+observation snapshot, in Parquet. The manifest is the contract everything downstream pins to —
+<code>snapshot_manifest_hash</code> plus <code>source_event_seq_max</code>.</li>
+<li><strong>Step 3 — sequence builder.</strong> The only place ordering is decided. It applies the label
+and sampling rules, sorts deterministically by <code>(event_time_ms, source_event_seq, event_id)</code>,
+tokenises, and persists the version pins and the dependency set with every row.</li>
+<li><strong>Step 4 — label library.</strong> The maturity gate, censoring and attribution. It is what
+stamps <code>label_status</code>, and only <code>mature</code> passes through with a supervised label.
+This is a shared platform component, not local code.</li>
+<li><strong>Step 5 — model.</strong> The three-rung gate runs here, and the leakage assertion fails the
+build rather than reporting an inflated number.</li>
+<li><strong>Step 6 — nightly batch score.</strong> Reads Parquet, not the graph. Tenant-scoped, with the
+response asserted back against the scope it was sent with.</li>
+<li><strong>Step 7 — alert lifecycle.</strong> Turns surviving candidates into owned alerts and emits
+<code>risk_signal_detected</code> back onto the spine.</li>
+<li><strong>Step 8 — serve.</strong> The coach-facing API: canonical key, per-cell tenant assertion,
+request coalescing on a miss.</li>
+<li><strong>Step 9 — eval and golden.</strong> Time-cut back-tests, budget tuning, calibration, drift
+monitors, the IRB rollout, and the golden replay pinned on late-arrival, correction and supersede
+fixtures.</li>
+</ol>
+<p><strong>The listener.</strong> The dotted arrows land on exactly four steps — 3, 5, 6 and 8 — and that
+choice is the interesting part. A corrected relapse can flip a <em>sequence</em> (3), invalidate the
+<em>training example</em> a model was fit on (5), invalidate a <em>batch score</em> (6), and invalidate a
+<em>cached score</em> (8). It does not need to touch 4, 7 or 9. The rebuild is dependency-targeted rather
+than a full re-run, which is what makes a P95 five-minute SLA achievable.</p>
+<p class="breaks"><b>Without the dependency sets recorded at step 3</b> — a correction has no way to find
+the rows it touched, so the only safe response is rebuilding everything, and the five-minute SLA becomes a
+nightly one. <b>Without the ordering being fixed at step 3</b> — every downstream consumer re-derives it,
+and the same patient can produce two scores from one snapshot.</p>
+</div>
+
+<h3>Fig 7 · The on-demand scoring path</h3>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+    Q[Coach asks · check this patient for a relapse signal]
+    Q --&gt; AUDIT[Audit log entry first&lt;br/&gt;viewer + target + purpose + time&lt;br/&gt;access_log_id returned in the response]
+    AUDIT --&gt; CKEY[Canonical cache key&lt;br/&gt;account · workspace · controlunit · patient · window&lt;br/&gt;+ tokenizer_version + model_version&lt;br/&gt;+ snapshot_manifest_hash + last_event_seq]
+    CKEY --&gt; CACHE{Cache lookup}
+    CACHE -- hit --&gt; ASSERT[Tenant assertion on the cell]
+    CACHE -- miss --&gt; COAL[Single-flight request coalescing&lt;br/&gt;prevents a cache stampede]
+    COAL --&gt; SEQ[Build the 30-day sequence&lt;br/&gt;from snapshot windows + observation_snapshot]
+    SEQ --&gt; SCORE[SageMaker InvokeEndpoint&lt;br/&gt;tenant header asserted]
+    SCORE --&gt; ATTR[Top-pattern attribution&lt;br/&gt;SHAP or attention weights]
+    ATTR --&gt; T{Score at or over threshold}
+    T -- no --&gt; NULL[No alert · cache the result]
+    T -- yes --&gt; SUPP{Cooldown active OR open alert for patient}
+    SUPP -- suppress --&gt; NULL
+    SUPP -- emit --&gt; LIFECYCLE[Create alert&lt;br/&gt;owner · ack-pending · audit log]
+    LIFECYCLE --&gt; EVT[Emit risk_signal_detected on the spine]
+    EVT --&gt; CW[SET cache · TTL 6h]
+    NULL --&gt; CW
+    CW --&gt; ASSERT
+    ASSERT --&gt; RET[Return score + top patterns + version pins]
+    RET --&gt; DONE([Caller])
+</pre>
+<figcaption><b>Fig 7</b> · The on-demand path — audit first, coalesce on a miss, attribute the patterns,
+then gate and suppress before any alert is born</figcaption>
+</figure>
+
+<div class="walk">
+<span class="term">Walkthrough — four gates, and one join that matters</span>
+<p>Draw it top to bottom with one branch that rejoins. The shape to notice: both the hit path and the miss
+path converge on the <em>same</em> tenant assertion before anything returns.</p>
+<ol>
+<li><strong>Audit before anything.</strong> The first write is the access log — viewer, target, purpose,
+time — and the <code>access_log_id</code> comes back in the response. This is deliberately ahead of the
+cache lookup: a read that never reaches the model is still a read of protected health information.</li>
+<li><strong>Canonical key.</strong> Built from the three tenant fields, the patient, the window length,
+and four version pins: tokenizer, model, snapshot hash, last event sequence.</li>
+<li><strong>Gate 1 — cache lookup.</strong> A hit jumps straight to the tenant assertion. A miss goes
+into single-flight coalescing, so if five coaches open the same freshly-invalidated patient at once, one
+request builds and calls, and four wait on its result.</li>
+<li><strong>Build, score, attribute.</strong> The 30-day sequence is built from the snapshot windows
+<em>and</em> the ungated observation snapshot; the endpoint is invoked with the tenant header asserted;
+attribution is computed by the same pipeline — no language model is involved at any point here.</li>
+<li><strong>Gate 2 — threshold.</strong> Below the per-tenant calibrated threshold, no alert is born, but
+the result is still cached. A negative result is worth caching too.</li>
+<li><strong>Gate 3 — suppression.</strong> Above threshold, check for an active cooldown or an already-open
+alert for that patient. Either one suppresses, and the flow rejoins the no-alert branch. This is why a
+deteriorating patient does not re-page a coach every night.</li>
+<li><strong>Alert birth.</strong> Only what survives all three gates becomes an alert with an owner and a
+pending acknowledgement — and emits <code>risk_signal_detected</code> onto the spine.</li>
+<li><strong>Gate 4 — the per-cell tenant assertion.</strong> Both branches funnel through it before the
+score, the top patterns and the version pins are returned. Per cell, not per request.</li>
+</ol>
+<p class="breaks"><b>Without coalescing</b> — a popular patient right after a model swap fans out into
+many identical, expensive sequence builds and endpoint calls, exactly when the cache is coldest.
+<b>Without suppression</b> — the same patient re-pages nightly, the budget is consumed by one case, and
+coaches learn to mute the channel. <b>Without the per-cell assertion</b> — a top-level check passes while
+one contaminated row from another tenant rides along inside an otherwise correct query. <b>Without
+audit-first ordering</b> — a cache hit serves protected health information with no record that anyone
+looked.</p>
+</div>
+
+<h3>Fig 10 · The promotion ladder</h3>
+
+<figure class="diagram">
+<pre class="mermaid">
+flowchart TD
+    START[Weekly challenger · built on matured label windows only]
+    START --&gt; L[Rung 1 · Logistic baseline · sets the floor]
+    L --&gt; P{Rung 2 · does PrefixSpan beat logistic&lt;br/&gt;on calibrated precision-recall}
+    P -- no --&gt; CAND1[Candidate is logistic]
+    P -- yes --&gt; T{Rung 3 · does the Transformer beat PrefixSpan&lt;br/&gt;AND keep attribution faithful}
+    T -- no --&gt; CAND2[Candidate is PrefixSpan · a fancier model did not earn its opacity]
+    T -- yes --&gt; CAND3[Candidate is the Transformer]
+    CAND1 --&gt; CH{Does the candidate beat&lt;br/&gt;the live champion at the operating point}
+    CAND2 --&gt; CH
+    CAND3 --&gt; CH
+    CH -- no --&gt; HOLD([Hold the champion · no endpoint swap])
+    CH -- yes --&gt; PROMOTE([Promote · swap endpoint · flush the risk cache])
+</pre>
+<figcaption><b>Fig 10</b> · The promotion ladder — each rung must beat the one below it, a fancier model
+must earn its opacity, and the winner still has to beat the live champion before it ships</figcaption>
+</figure>
+
+<div class="walk">
+<span class="term">Walkthrough — a ladder, not a bake-off</span>
+<p>Draw a vertical chain of three rungs, each with a "no" exit to the side, and then a single funnel where
+all three exits rejoin.</p>
+<ol>
+<li><strong>The entry condition.</strong> The weekly challenger is built on <em>matured label windows
+only</em>. This is not a footnote — it is the gate that makes everything below it meaningful.</li>
+<li><strong>Rung 1 — logistic baseline.</strong> A tabular model. Its job is to set the floor and to be
+the stand-in for "a simple model" — including a hand-written clinical rule, which can be encoded and
+evaluated on the same time-cut back-test.</li>
+<li><strong>Rung 2 — PrefixSpan.</strong> Must beat logistic on <em>calibrated precision-recall at the
+clinical operating point</em>, not on a global metric. If it does not, the candidate is logistic and the
+ladder stops.</li>
+<li><strong>Rung 3 — the transformer.</strong> Only runs if rung 2 cleared, and carries an
+<em>extra</em> bar: it must beat PrefixSpan <em>and</em> keep its attribution faithful enough that the top
+patterns shown to a coach genuinely reflect what drove the score. Fail either and the candidate is
+PrefixSpan.</li>
+<li><strong>The champion check.</strong> All three candidate paths converge here. Whatever won the ladder
+still has to beat the model currently live at the operating point. A "no" holds the champion and leaves
+its warm cache untouched.</li>
+<li><strong>Promotion, in order.</strong> Flush the risk cache namespace, <em>then</em> swap the endpoint.
+Never the reverse.</li>
+</ol>
+<p class="breaks"><b>Without the ladder</b> — you ship whichever model scored highest, which on a few
+thousand sparse labels means shipping an overfit transformer whose alerts a coach cannot interrogate.
+<b>Without the explanation-fidelity bar</b> — a model that wins on the metric turns the explanation into a
+black box, and in a clinical setting an unexplained alert is a weaker product than a slightly-less-accurate
+explainable one. <b>Without the champion check</b> — a model gets promoted for being newer.
+<b>With the promotion order reversed</b> — the first request after the swap can read a fresh cache entry
+scored by a model that no longer exists.</p>
+</div>
+
+
+<h2><span class="n">Closing</span>Likely questions</h2>
+
+<p class="lede">Headline sentence first, every time — it has to land on its own if you get interrupted.
+Detail only if they ask for it.</p>
+
+<div class="q">
+<span class="ask"><span class="num">01</span>Isn't this just a churn model wearing medical vocabulary?</span>
+<p class="head">Structurally it rhymes with churn and the transferable spine is real — but churn rarely forces the three things that made this hard: a label that has to mature before you can trust it, a false negative that can mean a hospitalisation, and an alert that changes the very outcome it predicts.</p>
+<p class="det">The shared shape is an order-dependent run-up before a rare, expensive event, and I'd say so openly — the pattern applies to fraud escalation, equipment failure and hospital readmission just as well.</p>
+<p class="det">What is different: <strong>maturity</strong> — you cannot count an outcome until its follow-up window has fully run, which is why a six-month gate sits on every label. <strong>Cost asymmetry</strong> — the two error types are not remotely symmetric, so the operating point is tuned against a per-coach load model rather than a global F-score. <strong>The feedback loop</strong> — if a coach acts on the alert and prevents the relapse, the model has erased its own training signal, which a churn model almost never has to reason about.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">02</span>Why is scoring a nightly batch rather than a live per-request traversal? A coach could be looking at yesterday's risk.</span>
+<p class="head">Because a thirty-day run-up does not turn on a dime overnight, so a nightly cadence matches the physiology — and the staleness is stamped and surfaced rather than hidden.</p>
+<p class="det">The alternative — walking the graph per patient on demand — was the first design, and the review killed it: it does not scale and it is not reproducible. Batch pre-materialises every active patient's 30-day window from the frozen snapshot and runs one transform, so the nightly cost is predictable, the whole run pins to one snapshot hash, and the morning's on-demand checks are prewarmed hits.</p>
+<p class="det">Freshness is tiered and enforced: <strong>under 24 hours green, 24–48 yellow, past 48 red</strong>, and a projector lag over 30 minutes flags yellow. At red the system stops presenting scores as current. Two more mechanisms cover the gap inside a TTL: the patient's <code>last_event_seq</code> is <em>in the cache key</em>, so a new event changes the key and the old entry becomes unreachable; and a correction triggers targeted invalidation rather than waiting the clock out.</p>
+<p class="det">And I'd volunteer the boundary: this is a daily-cadence run-up detector, not a seconds-fresh acute monitor. A two-hour physiological crash is a different system with a different SLA, and saying so is part of the design, not a concession.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">03</span>How do you stop a pre-relapse run-up from being labelled "healthy"?</span>
+<p class="head">Negatives are drawn from active time-at-risk with two zones removed first — the 30-day pre-event window and a 90-day future-relapse buffer around any relapse that patient later has.</p>
+<p class="det">The naive version samples "any window without a relapse", which hands the model the exact pattern it should fire on, labelled zero. That is the most damaging single bug in this archetype and it does not announce itself — the metrics look fine.</p>
+<p class="det">The buffer is deliberately wider than the observation window, so windows carrying early signal just outside the 30-day mark are not swept in. And I'd name the cost rather than wait to be asked: <strong>this discards the hardest, most informative negatives</strong> and shrinks an already small training set. It is label purity over label volume, chosen on purpose — and whether 90 days is the right frontier of that trade is an open tuning question, not something I'd claim is solved.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">04</span>A shared global model trains on every tenant's sequences. Isn't that already a cross-tenant leak?</span>
+<p class="head">Data isolation and statistical pooling are two different things — no tenant can retrieve another's rows, scores or patterns, but the model's weights are informed by all of them, and that is a deliberate trade I'd reverse for a client who requires siloed weights.</p>
+<p class="det"><strong>Isolation</strong> is enforced at five deliberately redundant points: the DuckDB predicate filters at the scan before any join, output is partitioned on all three tenant fields plus the snapshot hash, batch and live scoring requests carry a tenant context whose response is asserted back, Postgres rows are tenant-keyed, and Redis is namespaced — with a fail-closed per-cell assertion at response time as the backstop.</p>
+<p class="det"><strong>Pooling</strong> is a modelling choice, made because label scarcity would leave most single tenants unable to train at all. It is not zero-risk: a global model can memorise a rare pattern. The mitigations are that explanations come from a per-tenant pattern store and outputs are per-tenant calibrated. If a client needs fully siloed weights, per-tenant models are the answer, at a real cost in label efficiency — and I'd rather state that price than pretend it is free.</p>
+<p class="det">Worth adding: tenant identity is <em>three</em> fields — account, workspace, control unit — resolved from the authenticated caller, never from the request body. A single-field check would treat two workspaces under one account as one tenant.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">05</span>The intervention works, precision decays, and the model looks broken. How do you tell that apart from real drift?</span>
+<p class="head">You cannot tell them apart from precision alone — which is exactly why precision alone is not the monitor, and why the spine records who was exposed to the model and who received an intervention.</p>
+<p class="det">This is the sharpest failure in the whole design. If coaches act on flagged patients and prevent their relapses, the model's own success erases the signal it was trained on, and measured precision falls precisely because the thing is working.</p>
+<p class="det">The mechanism is an <strong>IRB-approved stepped-wedge rollout</strong>: cohorts are switched on at staggered times, and <code>model_exposed</code> and <code>intervention_received</code> are written to the spine as events. That gives a defensible way to estimate whether the alert actually helps — because some patients are exposed later — without an unethical pure holdout where high-risk patients are knowingly left unwarned. Governance and evaluation turn out to be the same mechanism here.</p>
+<p class="det">The honest caveat: it is operationally heavy, it depends on IRB approval and disciplined exposure recording, and it gives you a defensible attribution rather than a clean one. I list it as one of the two weakest seams in the design.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">06</span>Precision of 0.40 sounds low. Is that good enough to page a human?</span>
+<p class="head">Against a 5–15% base rate, 0.40 calibrated precision is the three-times-lift floor stated a different way — for a rare event that is a strong bar, not a weak one.</p>
+<p class="det">The reason accuracy is not the metric: a model that predicts "no relapse" for everyone scores 85–95% here. Lift asks the only question that matters operationally — among the patients you flag, how much more concentrated is relapse than in the panel at large.</p>
+<p class="det">Whether 0.40 justifies a page depends on the cost of the intervention versus a missed relapse, which is why the operating point is tuned <em>per tenant</em> against a per-coach load model rather than fixed globally. The bar is set where a coach's attention is better spent on the flagged set than on the panel at large.</p>
+<p class="det">"Calibrated" is doing real work in that sentence. Raw precision can look healthy while the model is badly miscalibrated on one tenant or programme — so calibration is measured per tenant and per programme with Brier score and reliability slices, and drift triggers recalibration. A well-ranked but poorly-calibrated model passes a precision check and still misgrounds every threshold and alert budget built on top of it.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">07</span>Where does the language model fit in this?</span>
+<p class="head">Nowhere on this path, deliberately — the score comes from a sequence model over discrete event tokens, the attribution is computed by that same non-LLM pipeline, and there is no prompt, no persona and no generated sentence anywhere in the alerting flow.</p>
+<p class="det">If they push on the transformer: "transformer" is an architecture, not a mandate to process natural language. This one reads a short string of clinical event tokens and emits a probability — it has no English vocabulary, no prompt and no generative output. Calling it a large language model confuses the shape of the network with the job it does, and the distinction matters operationally: none of the governance, determinism or residency concerns that attach to a text-generating model apply to a token classifier that never emits language.</p>
+<p class="det">What a coach sees — "three missed check-ins and a rising fasting-glucose trend in the last two weeks" — is the attribution the pipeline already holds, rendered by a template. A model asked to restate it could only add a failure mode: a paraphrase that sounds more certain than the number underneath it.</p>
+<p class="det">And there is deliberately no retrieval-augmented-generation surface. An early-warning alert is a calibrated risk score bound to the ranked patterns that triggered it; pointing a retriever at documents to justify a signal the pipeline has already computed and attributed would be adding a narrator, not adding evidence.</p>
+<p class="det">The platform's LangChain model seam and LangGraph runtime <em>are</em> inherited — the sibling queries that genuinely narrate use them. This query uses the boring parts: typed structured output so an immature row cannot masquerade as a training label, and a PHI-safe tracer that logs hashes rather than clinical text.</p>
+</div>
+
+<div class="q">
+<span class="ask"><span class="num">08</span>What is the weakest part of this design?</span>
+<p class="head">Two seams: the self-fulfilling feedback loop, and the fragility of any precision estimate on a sparse positive class.</p>
+<p class="det">The stepped-wedge rollout gives a principled way to reason about the first, but it is operationally heavy and depends on IRB approval and disciplined exposure recording. On the second — with a rare positive class, early estimates are inherently wide, which is why the maturity gate, the hazard framing and per-slice calibration monitoring all exist, and why no measured precision figure is claimed at all.</p>
+<p class="det">I'd name a third if there's room, because it is the one people miss: <strong>vocabulary leakage</strong>. The token vocabulary is derived from the full corpus, so the token <em>set</em> — not the events, the values or the labels — reflects periods after the cut. The mitigation is a versioned, frozen tokenizer fixed at train time and monitored for drift rather than re-fit per scoring run. That reduces the exposure; it does not close it, and I treat tokenizer construction as a versioned artefact with drift triggers precisely because it is not fully closed.</p>
+<p class="det">The framing I'd close on: a system that pretends these are solved is more dangerous than one that admits them.</p>
+</div>
+
+<div class="callout">
+  <span class="label">The one line to leave them with</span>
+  <p>Earn the labels before you model. Any early-warning system where an order-dependent signal precedes a
+  rare, expensive event lives or dies on having enough matured outcomes, windowing that does not leak the
+  future, and a detector that beats "alert everyone" — with the language model kept well away from the
+  numbers. The architecture is portable; the discipline is the product.</p>
+</div>
+
+<footer>
+<a href="../kq4-early-signal-detection.html">Full case study</a>
+<a href="../kq4-early-signal-detection-qa.html">Question-and-answer companion</a>
+<a href="../summary.html">Summary</a>
+<a href="../index.html">All case studies</a>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

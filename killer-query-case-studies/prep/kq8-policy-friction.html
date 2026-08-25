@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Policy friction — interview prep</title>
+<meta name="description" content="Interview prep for the policy-friction analytics system: what it is, how it works, why every decision was made, the real architecture diagrams, and the questions an interviewer will actually ask.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:#F7F9FA;
+    --card:#FFFFFF;
+    --ink:#12222C;
+    --steel:#51626D;
+    --mist:#E4EBEC;
+    --hairline:#D5DFE1;
+    --teal:#0B756F;
+    --teal-deep:#084F4B;
+    --amber:#8A5A00;
+    --amber-soft:#FBF3E2;
+    --serif:"IBM Plex Serif", Georgia, serif;
+    --sans:"IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+  body {
+    background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:1.02rem; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  main { max-width:960px; margin:0 auto; padding:64px 24px 96px; }
+
+  /* type */
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(2rem,5vw,3rem);
+       line-height:1.12; letter-spacing:-0.015em; max-width:20ch; }
+  h1 em { font-style:normal; color:var(--teal); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(1.5rem,3.4vw,2rem);
+       line-height:1.2; letter-spacing:-0.012em; margin:0 0 6px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:1.16rem; line-height:1.3;
+       margin:32px 0 10px; }
+  h4 { font-family:var(--sans); font-weight:600; font-size:0.98rem; margin:0 0 6px; }
+  p { margin:0 0 15px; max-width:74ch; }
+  ul, ol { margin:0 0 15px 0; padding-left:1.15rem; max-width:74ch; }
+  li { margin-bottom:8px; }
+  strong { font-weight:600; }
+  em.lead { font-style:normal; color:var(--teal-deep); font-weight:600; }
+  a { color:var(--teal); text-decoration-thickness:1px; text-underline-offset:3px; }
+  a:hover { color:var(--teal-deep); }
+  code { font-family:var(--mono); font-size:0.86em; background:var(--mist);
+         padding:1px 5px; border-radius:3px; color:var(--teal-deep); }
+  .muted { color:var(--steel); }
+  .eyebrow { font-family:var(--mono); font-size:0.72rem; font-weight:500;
+             letter-spacing:0.14em; text-transform:uppercase; color:var(--teal);
+             display:block; margin-bottom:14px; }
+
+  /* hero */
+  header.hero { padding-bottom:8px; }
+  .hero .sub { font-size:1.1rem; color:var(--steel); max-width:64ch; margin-top:18px; }
+  .crumbs { font-size:0.86rem; color:var(--steel); margin-top:26px;
+            padding-top:16px; border-top:1px solid var(--hairline); }
+  .crumbs a { margin-right:6px; }
+  .crumbs span { color:var(--hairline); margin-right:6px; }
+
+  .brief { margin:30px 0 0; padding:20px 24px; background:var(--card);
+           border:1px solid var(--hairline); border-left:3px solid var(--teal);
+           border-radius:6px; }
+  .brief .label { font-family:var(--mono); font-size:0.66rem; letter-spacing:0.12em;
+                  text-transform:uppercase; color:var(--steel); display:block; margin-bottom:9px; }
+  .brief blockquote { font-family:var(--mono); font-size:0.9rem; line-height:1.7; }
+
+  /* the opener */
+  .opener { margin:26px 0 0; padding:24px 26px; background:var(--teal-deep);
+            color:#EAF3F2; border-radius:6px; }
+  .opener .label { font-family:var(--mono); font-size:0.66rem; letter-spacing:0.12em;
+                   text-transform:uppercase; color:#8FC9C4; display:block; margin-bottom:10px; }
+  .opener p { font-family:var(--serif); font-size:1.24rem; line-height:1.48;
+              margin:0; max-width:62ch; color:#FFFFFF; }
+  .opener p + p { margin-top:12px; }
+
+  /* warnings */
+  .warn { margin:24px 0; padding:16px 20px; background:var(--amber-soft);
+          border:1px solid #E7D4A8; border-left:3px solid var(--amber); border-radius:6px;
+          font-size:0.94rem; }
+  .warn b { color:var(--amber); }
+  .warn p:last-child { margin-bottom:0; }
+
+  /* sections */
+  section { margin-top:76px; }
+  .stage { font-family:var(--mono); font-size:0.72rem; font-weight:500;
+           letter-spacing:0.14em; text-transform:uppercase; color:var(--steel);
+           display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .stage::after { content:""; flex:1; height:1px; background:var(--hairline); }
+  .stage b { color:var(--teal); font-weight:500; }
+  .deck { font-size:1.06rem; color:var(--steel); max-width:66ch; margin-bottom:26px; }
+
+  /* generic card */
+  .card { background:var(--card); border:1px solid var(--hairline); border-radius:6px;
+          padding:20px 24px; margin:18px 0; }
+  .card > :last-child { margin-bottom:0; }
+
+  /* numbered failure modes */
+  .modes { display:grid; gap:12px; margin:20px 0; }
+  .mode { background:var(--card); border:1px solid var(--hairline); border-radius:6px;
+          padding:18px 22px; display:grid; grid-template-columns:34px 1fr; gap:16px; }
+  .mode .n { font-family:var(--mono); font-size:0.8rem; font-weight:500; color:var(--teal);
+             border:1px solid var(--hairline); border-radius:4px; height:28px;
+             display:flex; align-items:center; justify-content:center; }
+  .mode h4 { margin-bottom:4px; }
+  .mode p { margin:0; font-size:0.95rem; }
+  .mode p + p { margin-top:8px; }
+
+  /* vocabulary */
+  .vocab { background:var(--card); border:1px solid var(--hairline); border-radius:6px;
+           padding:8px 24px 14px; margin:22px 0; }
+  .vocab dl { display:grid; grid-template-columns:minmax(190px, 260px) 1fr;
+              gap:0 22px; font-size:0.93rem; }
+  .vocab dt { font-weight:600; padding:11px 0 11px; border-top:1px solid var(--hairline); }
+  .vocab dd { color:var(--steel); padding:11px 0 11px; border-top:1px solid var(--hairline); }
+  .vocab dl > dt:first-of-type, .vocab dl > dt:first-of-type + dd { border-top:none; }
+  @media (max-width:640px) {
+    .vocab dl { grid-template-columns:1fr; }
+    .vocab dd { border-top:none; padding-top:0; }
+  }
+
+  /* pipeline steps */
+  .steps { counter-reset:step; margin:20px 0; }
+  .step { position:relative; padding:0 0 22px 46px; border-left:1px solid var(--hairline);
+          margin-left:13px; }
+  .step:last-child { border-left-color:transparent; padding-bottom:0; }
+  .step::before { counter-increment:step; content:counter(step);
+                  position:absolute; left:-13px; top:0; width:26px; height:26px;
+                  border-radius:50%; background:var(--card); border:1px solid var(--hairline);
+                  color:var(--teal); font-family:var(--mono); font-size:0.74rem;
+                  display:flex; align-items:center; justify-content:center; }
+  .step h4 { margin-top:1px; }
+  .step p { font-size:0.95rem; margin-bottom:8px; }
+  .step > :last-child { margin-bottom:0; }
+
+  /* decision cards */
+  .why { background:var(--card); border:1px solid var(--hairline); border-radius:6px;
+         padding:20px 24px 18px; margin:16px 0; }
+  .why h4 { font-family:var(--serif); font-size:1.1rem; font-weight:600; margin-bottom:12px; }
+  .why dl { display:grid; grid-template-columns:auto 1fr; gap:9px 16px; font-size:0.95rem; }
+  .why dt { font-family:var(--mono); font-size:0.63rem; letter-spacing:0.11em;
+            text-transform:uppercase; color:var(--steel); padding-top:5px; white-space:nowrap; }
+  .why dd { color:var(--ink); }
+  .why dt.rej { color:var(--amber); }
+  @media (max-width:640px) {
+    .why dl { grid-template-columns:1fr; gap:2px 0; }
+    .why dt { padding-top:10px; }
+  }
+  blockquote.said { margin:12px 0 0; padding:10px 0 10px 16px;
+                    border-left:2px solid var(--teal); font-family:var(--serif);
+                    font-size:1.02rem; line-height:1.55; color:var(--teal-deep); max-width:70ch; }
+
+  /* tables */
+  .tablewrap { overflow-x:auto; margin:20px 0; border:1px solid var(--hairline);
+               border-radius:6px; background:var(--card); }
+  table { border-collapse:collapse; width:100%; font-size:0.92rem; min-width:600px; }
+  th { text-align:left; font-family:var(--mono); font-size:0.64rem; letter-spacing:0.11em;
+       text-transform:uppercase; color:var(--steel); font-weight:500;
+       padding:12px 16px; border-bottom:1px solid var(--hairline); vertical-align:bottom; }
+  td { padding:12px 16px; border-bottom:1px solid var(--mist); vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  td.mono, th.mono { font-family:var(--mono); font-size:0.84rem; }
+
+  /* diagrams */
+  figure.diagram { margin:26px 0 10px; padding:20px 16px 12px; background:var(--card);
+                   border:1px solid var(--hairline); border-radius:6px; overflow-x:auto; }
+  figure.diagram .mermaid { min-width:520px; }
+  figure.diagram figcaption { font-size:0.84rem; color:var(--steel); margin-top:12px;
+                              padding-top:10px; border-top:1px solid var(--mist);
+                              font-family:var(--sans); }
+  .walk { margin:0 0 34px; }
+  .walk h4 { font-family:var(--mono); font-size:0.66rem; letter-spacing:0.12em;
+             text-transform:uppercase; color:var(--teal); margin:18px 0 8px; }
+  .walk p, .walk ul { font-size:0.96rem; }
+  .breaks { background:var(--card); border:1px solid var(--hairline);
+            border-left:3px solid var(--amber); border-radius:6px;
+            padding:14px 20px; margin:14px 0 0; font-size:0.94rem; }
+  .breaks b { color:var(--amber); font-family:var(--mono); font-size:0.64rem;
+              letter-spacing:0.11em; text-transform:uppercase; display:block; margin-bottom:5px; }
+  .breaks p:last-child { margin-bottom:0; }
+
+  /* questions */
+  .q { background:var(--card); border:1px solid var(--hairline); border-radius:6px;
+       padding:22px 26px; margin:16px 0; }
+  .q .ask { font-family:var(--serif); font-weight:600; font-size:1.12rem; line-height:1.35;
+            margin:0 0 14px; display:grid; grid-template-columns:auto 1fr; gap:14px; }
+  .q .ask .qn { font-family:var(--mono); font-size:0.7rem; font-weight:500; color:var(--teal);
+                padding-top:6px; }
+  .q .headline { background:var(--mist); border-radius:5px; padding:13px 17px;
+                 font-weight:600; margin:0 0 14px; font-size:1rem; line-height:1.5; }
+  .q .detail p { font-size:0.95rem; }
+  .q .detail > :last-child { margin-bottom:0; }
+
+  footer { margin-top:80px; padding-top:24px; border-top:1px solid var(--hairline);
+           font-size:0.88rem; color:var(--steel); }
+  footer a { margin-right:8px; }
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">Policy friction</span></p>
+
+<header class="hero">
+  <span class="eyebrow">Interview prep · Killer query 8</span>
+  <h1>Policy friction — <em>a count that must never become a verdict</em></h1>
+  <p class="sub">Which platform rules do clinicians keep overriding, and do those overrides track
+  better or worse patient outcomes? A production analytics service on a chronic-care platform
+  covering 80+ chronic conditions, with roughly nine years of patient history hydrated behind it —
+  and no language model anywhere in the pipeline.</p>
+
+  <div class="brief">
+    <span class="label">The verbatim brief</span>
+    <blockquote>“Which policy constraints most frequently trigger overrides? Which correlate with
+    worse outcomes?”</blockquote>
+  </div>
+
+  <div class="opener">
+    <span class="label">Open with these two sentences</span>
+    <p>It looks like one <code style="background:rgba(255,255,255,.14);color:#CFEAE7">GROUP BY</code>
+    over the rulebook — count the overrides per rule, compare outcomes when it was followed against
+    when it was broken.</p>
+    <p>It is one bad label away from a machine that puts rules — and, by proximity, the clinicians
+    who break them — on trial.</p>
+  </div>
+
+  <div class="warn">
+    <p><b>Standing honesty guard.</b> Every figure on this page is a pre-registered acceptance
+    target, a design constant, or an illustrative fixture value. <strong>There is not one measured
+    production metric here</strong> — no achieved latency, no adoption number, no error reduction,
+    no cost saved. If asked “what did it actually move?”, the honest answer is: <em>I left before
+    the outcome window closed, so I don’t have measured results — what I can give you is the
+    acceptance gates the system was reviewed and deployed against.</em> Say that, then keep going.</p>
+  </div>
+
+  <p class="crumbs">
+    <a href="../kq8-policy-friction.html">full case study</a><span>·</span>
+    <a href="../summary.html">summary</a><span>·</span>
+    <a href="../index.html">all case studies</a>
+  </p>
+</header>
+
+
+<!-- ============ 1 ============ -->
+<section id="what">
+  <div class="stage"><b>01</b> What is it?</div>
+  <h2>A governance owner has to decide which rules to change</h2>
+  <p class="deck">Start with the person, not the pipeline. There are two of them, and they are
+  standing at opposite ends of the same fact.</p>
+
+  <h3>The clinician</h3>
+  <p>A clinician is treating a patient whose kidney function has been drifting. The platform holds a
+  rule — a dose ceiling on a particular drug — and when she starts writing the prescription, the
+  platform flags it. She writes it anyway, and logs that she did.</p>
+  <p>That is a <strong>policy override</strong>, and it is worth being precise about what it is,
+  because interviewers assume it is inferred: it is not. Every decision carries a recorded
+  <em class="lead">alignment</em> field against each rule that constrained it. When that field reads
+  <code>overridden</code>, the clinician acted against the rule and said so. Nothing is mined out of
+  free text, and no model reads her notes.</p>
+
+  <h3>The governance owner</h3>
+  <p>Now stand at the other end. Across 80+ chronic conditions, roughly 10,000 patients, and about
+  nine years of history, some rules get overridden constantly and some almost never. A
+  policy-governance committee has to decide which rules to revise — and a rule change on a
+  chronic-care platform propagates to every clinician and every patient on it. The question they
+  bring is exactly the brief above.</p>
+
+  <h3>Why it is genuinely hard</h3>
+  <p>The counting is trivial. It would be a day’s work. Everything else exists to stop the count
+  from becoming a verdict — and this query is <strong>more dangerous than its decision-indexed
+  sister</strong>, which asks the same thing about individual override decisions. A per-rule signal
+  is exactly the shape that triggers <strong>a policy revision or a model retraining</strong>. A
+  wrong signal here rewrites the rulebook for everyone.</p>
+
+  <div class="modes">
+    <div class="mode">
+      <span class="n">1</span>
+      <div>
+        <h4>Confounding, built in by design</h4>
+        <p>Clinicians override on their sickest and most atypical patients — that is what clinical
+        judgement is <em>for</em>. So the followed group and the overridden group differ in baseline
+        risk before the rule is even evaluated.</p>
+        <p><strong>Naive failure:</strong> a raw followed-versus-overridden outcome delta measures
+        patient mix, not the rule. It will reliably show that overriding leads to worse outcomes,
+        because overrides land on sicker people.</p>
+      </div>
+    </div>
+    <div class="mode">
+      <span class="n">2</span>
+      <div>
+        <h4>False confidence at scale</h4>
+        <p>The map scores dozens of policy versions at once. If every rule on the platform were
+        perfectly neutral, a handful would still look damning by chance alone.</p>
+        <p><strong>Naive failure:</strong> a sorted league table of rules where positions 3 and 8
+        are statistically indistinguishable, read by a committee as a ranking.</p>
+      </div>
+    </div>
+    <div class="mode">
+      <span class="n">3</span>
+      <div>
+        <h4>Verdict misuse</h4>
+        <p>The moment a cell reads “policy too strict” or “clinicians ignoring evidence”, a
+        governance action fires off a machine’s opinion.</p>
+        <p><strong>Naive failure:</strong> the label is the product. Everyone reads the string and
+        nobody reads the interval underneath it.</p>
+      </div>
+    </div>
+    <div class="mode">
+      <span class="n">4</span>
+      <div>
+        <h4>Grouping by a mutable rule id</h4>
+        <p>A rule’s text changes over time under a stable id — a threshold moves, an exception is
+        added.</p>
+        <p><strong>Naive failure:</strong> three genuinely different rules pool into one cell and
+        smear their override rates together, and editing a rule tomorrow silently rewrites what
+        yesterday’s version looked like.</p>
+      </div>
+    </div>
+    <div class="mode">
+      <span class="n">5</span>
+      <div>
+        <h4>Reading current state for a historical decision</h4>
+        <p>A rule retexted after the decision, an alignment flipped by a later correction, or an
+        exception added months on will all bleed backward.</p>
+        <p><strong>Naive failure:</strong> the override is scored against a rule that did not exist
+        when it was made, and the map blames a version of the rulebook nobody was working under.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn">
+    <p><b>State the ceiling before they find it.</b> Nothing this system produces is causal. Every
+    cell is a <strong>matched-cohort association</strong>, labelled observational. The brief says
+    “correlate”, and that verb is honoured literally on every surface. Matching balances only what
+    was <em>measured</em>; unmeasured confounding is never ruled out. Saying this first turns the
+    interviewer’s best objection into your own framing.</p>
+  </div>
+
+  <h3>Vocabulary — everything expanded, in reading order</h3>
+  <div class="vocab">
+    <dl>
+      <dt>Policy override</dt>
+      <dd>An explicit recorded field on a clinical decision saying the clinician acted against a
+      platform rule. Not inferred, not modelled — logged.</dd>
+
+      <dt>Propensity matching</dt>
+      <dd>Pairing each override with a non-override decision whose patient looks statistically
+      alike on measured baseline characteristics, so the comparison is like-for-like instead of
+      sick-versus-healthy.</dd>
+
+      <dt>Caliper</dt>
+      <dd>How close a candidate has to be before it counts as a match. Tight caliper: fewer, better
+      pairs. Loose caliper: more pairs, worse similarity.</dd>
+
+      <dt>Common support</dt>
+      <dd>A check that the two arms actually overlap in the range where they are being compared. If
+      no overridden patient looks anything like any followed patient, there is no comparison to make.</dd>
+
+      <dt>SMD (standardized mean difference)</dt>
+      <dd>A unit-free measure of how far apart the two arms still are on a covariate after matching.
+      The balance gate. Above the threshold, the arms are not comparable and the delta is suppressed.</dd>
+
+      <dt>CI (confidence interval)</dt>
+      <dd>The range the estimate is compatible with. If the interval crosses zero, the direction of
+      the effect is not distinguishable from “no effect”.</dd>
+
+      <dt>Bootstrap</dt>
+      <dd>Building that interval by resampling the data thousands of times rather than assuming a
+      formula. Here: 2,000 resamples, percentile method, seeded from the snapshot hash.</dd>
+
+      <dt>Clustered by enrollment</dt>
+      <dd>Resampling whole enrollments rather than individual rows, because several decisions inside
+      one enrollment are correlated. Resampling rows independently would fake precision.</dd>
+
+      <dt>FDR (false discovery rate) and the BH (Benjamini–Hochberg) q-value</dt>
+      <dd>A way of accounting for the fact that testing many rules at once produces false positives.
+      The q-value is the per-cell version of that accounting. Here it is <em>reported</em>, never
+      used as a filter.</dd>
+
+      <dt>As-of reconstruction</dt>
+      <dd>Computing every historical fact using only what was true at or before the decision’s own
+      moment — never current state.</dd>
+
+      <dt>Event spine</dt>
+      <dd>The append-only log of everything that happened, in order. The source of truth. Facts are
+      replayed out of it rather than read off a mutable graph.</dd>
+
+      <dt>Snapshot manifest</dt>
+      <dd>A hash describing exactly which frozen inputs a build ran against. If two runs share a
+      manifest, they saw the same world.</dd>
+
+      <dt>Correction epoch</dt>
+      <dd>A counter that advances every time a correction lands on the spine. It sits in the cache
+      key so a cell computed before a correction can never be served after one.</dd>
+
+      <dt>Zone code</dt>
+      <dd>One of six neutral labels the data layer is allowed to emit. Never a judgement — a
+      coordinate.</dd>
+
+      <dt>virtual private cloud (VPC) (virtual private cloud)</dt>
+      <dd>The client’s own isolated network. Protected health information never crosses that
+      boundary; everything runs inside it.</dd>
+
+      <dt>LLM (large language model)</dt>
+      <dd>The thing this system deliberately does not contain. See section 3.</dd>
+
+      <dt>95th-percentile (P95)</dt>
+      <dd>The 95th percentile — the value 95% of measurements come in under. Used here as an service-level agreement (SLA)
+      (service-level agreement) target, not a measured result.</dd>
+
+      <dt>LRU (least-recently-used) cache</dt>
+      <dd>An in-process cache that evicts whatever was touched longest ago. It sits in front of the
+      pre-computed cells — and the key, not a timer, is what makes a hit safe.</dd>
+
+      <dt>TTL (time to live)</dt>
+      <dd>Expiring a cache entry after a fixed duration. Explicitly <em>rejected</em> here in favour
+      of keying on every result-affecting input.</dd>
+    </dl>
+  </div>
+</section>
+
+
+<!-- ============ 2 ============ -->
+<section id="how">
+  <div class="stage"><b>02</b> How did we solve it?</div>
+  <h2>Snapshot-only analytics, indexed by immutable policy version</h2>
+  <p class="deck">Two clocks. A nightly offline lane does all the work and writes pre-computed
+  cells; the request lane is a governed lookup over those cells. Nothing a human waits on touches
+  the live graph, runs a statistic, or calls a model.</p>
+
+  <h3>The offline lane — what happens every night</h3>
+  <div class="steps">
+    <div class="step">
+      <h4>Freeze a snapshot</h4>
+      <p>State is frozen at an <code>as_of_ms</code>: vertices, edges, a manifest hash, the maximum
+      source event sequence consumed, and an allowed-lateness watermark. Everything downstream is
+      pinned to that manifest, so a reviewer months later can regenerate the identical number.</p>
+    </div>
+    <div class="step">
+      <h4>Rebuild each override as of the moment it happened</h4>
+      <p>The cohort builder does tenant-scoped analytical joins over frozen columnar files plus
+      targeted reads of the append-only spine — <strong>no live graph traversal at any point</strong>.
+      For each decision it reconstructs, at that decision’s own event time and source-sequence
+      position: the <code>policy_alignment</code> flag, the <code>CONSTRAINED_BY</code> edge to the
+      rule, the <code>policy_version_id</code> resolved from the spine’s rule-creation and
+      rule-revision events, and the immutable <code>policy_text_hash</code>.</p>
+      <p>One decision can be constrained by several rules at once. Each produces <strong>one row per
+      rule</strong>, keyed by decision id plus <code>policy_edge_seq</code>, so the decision appears
+      under multiple policy cells — and the intervals later refuse to treat those rows as
+      independent observations, because they share an underlying decision.</p>
+    </div>
+    <div class="step">
+      <h4>Borrow the control arm, or rebuild it whole</h4>
+      <p>This system does not build its own matched controls. The decision-indexed sister query
+      already pairs each override with a propensity-matched control and ships that cohort with a
+      versioned <strong>match manifest</strong> — one hash over seven fields:
+      <code>covariate_schema_hash</code>, <code>snapshot_manifest_hash</code>,
+      <code>cohort_filter_hash</code>, <code>seed</code>, <code>caliper</code>,
+      <code>replacement_policy</code>, <code>tie_break_policy</code>.</p>
+      <p>All seven equal → reuse the arm <strong>verbatim</strong>,
+      <code>manifest_source = reused_from_sibling</code>. Any one different → <strong>full rebuild</strong>
+      with the same matcher binary, a new <code>match_manifest_id</code>, and a recorded
+      <code>rebuild_reason</code>. It is strictly binary. There is no partial adoption and no fresh
+      fallback for the rows the borrowed set missed.</p>
+      <p>Control eligibility is constrained too — same archetype, same policy family, same program
+      and phase, same tenant, pre-treatment records only — and common support is checked, because a
+      non-override from an unrelated program is not a plausible counterfactual even if its
+      covariates happen to line up.</p>
+    </div>
+    <div class="step">
+      <h4>Label both arms from one shared outcome library</h4>
+      <p>Not a per-team outcome definition. One implementation, emitting
+      <code>status</code>, <code>attribution_decision_id</code>, <code>rule_version</code>,
+      <code>distance_days</code> and <code>censoring_reason</code>. The 90-day outcome window is
+      forward-looking on purpose and is only allowed to count once it has <strong>fully matured
+      before the snapshot’s as_of</strong>. That is the leakage line: covariates must be as-of
+      because they are inputs; the label is a gated future window, which is a different role.</p>
+    </div>
+    <div class="step">
+      <h4>Aggregate per policy version — never pooled across versions</h4>
+      <p>Per <code>policy_version_id</code>, with four things computed: the SMD balance gate; a
+      sensitivity sweep at threshold ±20% <em>and</em> ±50% crossed with strict, base and loose
+      calipers; a seeded bootstrap confidence interval (2,000 resamples, percentile method, seed
+      derived from the snapshot manifest hash, clustered by enrollment); and multiple-testing
+      diagnostics — how many policies were tested, insufficient, borderline, uncertain — plus a
+      Benjamini–Hochberg q-value at q = 0.10.</p>
+    </div>
+    <div class="step">
+      <h4>Classify into one of six neutral codes</h4>
+      <p>Four zone codes — override rate high or low, crossed with outcome delta positive or
+      negative: <code>high_override_positive_delta</code>, <code>high_override_negative_delta</code>,
+      <code>low_override_positive_delta</code>, <code>low_override_negative_delta</code> — plus
+      <code>uncertain_zone</code> when the interval crosses zero and <code>borderline_zone</code>
+      when the sensitivity sweep is unstable. Conclusory strings are banned at the source: there is
+      no <code>policy_too_strict</code>, no <code>clinicians_ignoring</code>, anywhere in the data
+      layer.</p>
+    </div>
+    <div class="step">
+      <h4>Write the tables the request path reads</h4>
+      <p>Parquet files queried by DuckDB — policy-fact, policy-zone and zone-history tables,
+      partitioned by tenant scope, snapshot hash, policy version and threshold version. Plus a
+      <code>zone_history</code> append for the quarter-over-quarter governance audit.</p>
+    </div>
+  </div>
+
+  <h3>The gate ladder — the reasoning, as deterministic code</h3>
+  <p>Before a cell may show a headline zone code it climbs four rungs, <strong>in this order</strong>:</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Rung</th><th>Test</th><th>Fail behaviour</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">1 · Power</td><td>At least 30 patients in <em>each</em> arm for this
+          policy version, plus common support</td>
+          <td><code>insufficient_data</code> with full denominators — references, overrides,
+          matched, unmatched, censored. No zone code.</td></tr>
+        <tr><td class="mono">2 · Balance</td><td>SMD within the gate across covariates</td>
+          <td>Suppress the delta, emit a diagnostic instead of a headline.</td></tr>
+        <tr><td class="mono">3 · Sensitivity</td><td>Sign and interval hold across every point of
+          the sweep grid</td>
+          <td><code>borderline_zone</code>, recommendation withheld.</td></tr>
+        <tr><td class="mono">4 · Interval</td><td>Outcome confidence interval excludes zero</td>
+          <td><code>uncertain_zone</code>, neutral code only.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The ordering is cheapest-and-most-disqualifying first: a cell with twelve patients per arm
+  never has a balance test spent on it. Every failure exits <strong>with a stated reason and its
+  full denominators</strong> — never a silent gap, and never a confident code built on sand. Because
+  the branch is deterministic, the same cell suppresses the same way on every rebuild, so an audit
+  can replay exactly why a code was or was not shown.</p>
+
+  <h3>The request lane — what a governance viewer actually triggers</h3>
+  <div class="steps">
+    <div class="step">
+      <h4>Audit first, before anything is served</h4>
+      <p>An access-log entry is written — viewer, target policy, purpose, time — and its
+      <code>access_log_id</code> ships back with the rows. Reading a friction map is itself an
+      event on the record.</p>
+    </div>
+    <div class="step">
+      <h4>Build a canonical cache key over every result-affecting input</h4>
+      <p>The three-field tenant scope (<code>account_id</code>, <code>workspace_id</code>,
+      <code>controlunit_id</code>), the query namespace and endpoint and filters, the metric schema
+      hash, <code>policy_version_id</code>, <code>threshold_version</code>,
+      <code>match_manifest_id</code>, the snapshot manifest hash,
+      <code>source_event_seq_max</code>, and <code>correction_epoch</code> — a sorted canonical
+      serialization. <strong>Not a TTL.</strong></p>
+    </div>
+    <div class="step">
+      <h4>Look up a pre-computed, already-gated cell</h4>
+      <p>The serving path does no statistics. It reads a cell that was gated and classified last
+      night, out of an in-process LRU cache over the DuckDB tables.</p>
+    </div>
+    <div class="step">
+      <h4>Assert the tenant on every row on the way out</h4>
+      <p>All three scope fields must match the caller, row by row. <strong>A cache hit still
+      re-checks</strong> before anything leaves the process. One mismatched row fails the entire
+      response — it is not filtered out and served anyway.</p>
+    </div>
+    <div class="step">
+      <h4>Return codes plus governed copy plus caveats</h4>
+      <p>Rows, neutral zone codes, override rates, deltas and intervals, sensitivity and multiplicity
+      diagnostics, the observational label, the interpretive wording (owned and versioned separately
+      by the governance team), and the access-log id.</p>
+    </div>
+  </div>
+
+  <h3>The contracts that hold it together</h3>
+  <ul>
+    <li><strong>A gate-failing number is unrepresentable.</strong> The typed Pydantic cell contract
+    carries a suppression validator that <em>raises</em> rather than emit a delta on a failed cell.
+    The guarantee lives in the type, not in reviewer discipline.</li>
+    <li><strong>Tenancy is structural.</strong> The filter is applied at the columnar scan, before
+    load — data is partitioned by the three-field scope, so a foreign tenant’s bytes are never read
+    into the working set. Fail-closed assertions run again in the builder and on every served row.</li>
+    <li><strong>Freshness degrades visibly, then stops.</strong> Under 24 hours green; 24–48 hours
+    yellow with a visible staleness banner; past 48 hours <strong>red, which blocks and escalates
+    rather than serve quietly outdated statistics</strong>. Projector lag over 30 minutes also flips
+    yellow.</li>
+    <li><strong>Corrections rebuild only what they touch.</strong> Every derived row records its
+    source-event sequence range and a dependency set indexed by policy version. A correction
+    listener resolves through that index to exactly the affected cells, rebuilds those at the pinned
+    snapshot, and invalidates by <code>policy_version_id</code> + <code>correction_epoch</code> —
+    P95 under five minutes, as a pre-registered SLA.</li>
+    <li><strong>Thresholds are versioned and owned by humans.</strong> Changing an override-rate or
+    outcome-delta threshold mints a new <code>threshold_version</code>; previously computed zones
+    stay queryable at their prior version, so a re-thresholding never silently rewrites past cells.</li>
+    <li><strong>Cross-tenant pooling is not a default view.</strong> It requires separate
+    authorization, emits a per-tenant heterogeneity report, and suppresses cells small enough to
+    identify a tenant.</li>
+  </ul>
+
+  <h3>Nine years, hydrated first — and why that is the enabling condition</h3>
+  <p>The system was not switched on against an empty world. Roughly nine years of prior decisions —
+  every override, every rule version, and every outcome that followed — were hydrated through the
+  same append-only spine before the first friction map was ever drawn. That depth is not a nice-to-have:
+  <strong>a per-version cell only clears the thirty-per-arm floor if enough overrides accrued against
+  that exact rule text over time.</strong> Rule versions rotate; a single recent quarter rarely
+  accumulates thirty overrides against one version. Without the history, the map comes back mostly
+  empty.</p>
+  <p>Hydration was a first-class, quarantine-first, proof-carrying pipeline, and it holds five lines
+  it will not cross:</p>
+  <ol>
+    <li><strong>Event time is not load time.</strong> Four timestamps: <code>event_time_ms</code> and
+    <code>observed_at_ms</code> come from the record and are true of the world;
+    <code>received_at_ms</code> and <code>written_at_ms</code> are pinned to a single load fence, not
+    the load clock. The invariant is <code>event_time_ms</code> strictly before
+    <code>received_at_ms</code>, and a nine-year gap is <em>expected</em>, not an anomaly to be
+    dropped.</li>
+    <li><strong>Hydrating twice changes nothing.</strong> Content-addressed event ids written
+    conditionally, so a re-run over the same corpus yields a byte-identical spine and an identical
+    snapshot manifest hash. Idempotency as an executable proof, not a promise.</li>
+    <li><strong>Nothing is silently coerced.</strong> Each legacy payload generation gets an explicit
+    up-converter; any row that cannot map to a known schema, or to a tenant, is quarantined with a
+    reason and counted. Never defaulted.</li>
+    <li><strong>History runs the live code.</strong> Replayed history is projected through the exact
+    same projection code that serves the live stream.</li>
+    <li><strong>The load proves itself.</strong> Zero-event-loss reconciliation against the source,
+    per-tenant and per-class counts, as-of spot checks against known-good historical reports, and a
+    golden replay over a historical slice all gate the load before anything downstream is built —
+    then a fenced cutover attaches the live stream with a proof of neither gap nor duplicate.</li>
+  </ol>
+
+  <h3>Zero model calls</h3>
+  <p>There is no language model in this system — not in the numbers, not in the labels, not as an
+  optional narrator. The platform’s self-hosted model seam (a Llama 3.1 running inside the client
+  VPC, so patient data never leaves the network) exists and is wired to the sibling queries that
+  produce prose. On every path here it sits present and untouched. Section 3 has the argument.</p>
+</section>
+
+
+<!-- ============ 3 ============ -->
+<section id="why">
+  <div class="stage"><b>03</b> Why did we do what we did?</div>
+  <h2>Every decision, and the alternative it beat</h2>
+  <p class="deck">This is the section to be fluent in. Each card is one decision, the thing that was
+  rejected, and the reason — with the original reasoning quoted where the wording is worth keeping.</p>
+
+  <div class="why">
+    <h4>Match each override to a comparable control, rather than compare all overrides to all non-overrides</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>The raw group-versus-group outcome delta.</dd>
+      <dt>Because</dt><dd>Overrides are selected onto sicker and more atypical patients, so the raw
+      delta measures case mix.</dd>
+    </dl>
+    <blockquote class="said">“Comparing the whole overridden group to the whole followed group
+    measures that case-mix gap, not the rule’s effect. Matching each override to a baseline-similar
+    control removes the measured imbalance, so the remaining outcome difference is a cleaner (though
+    still observational) read on the rule.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Reuse the sister query’s matcher, not an independent one</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Building an independent matcher for this query, for
+      decoupling.</dd>
+      <dt>Because</dt><dd>The two queries are the same overrides under different indexes. Two
+      matchers make that claim unverifiable.</dd>
+    </dl>
+    <blockquote class="said">“Two independent matchers guarantee divergent cohorts and divergent
+    intervals over time… Independence here would buy nothing and cost the one property — cross-query
+    consistency — that the parity fixture is built to defend.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Borrow the control arm verbatim or rebuild it whole — never blend</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>The earlier design’s “fresh fallback”: borrow most matches,
+      freshly compute matches for the rows the borrowed set missed.</dd>
+      <dt>Because</dt><dd>That produces a cohort that is neither the sister’s cohort nor a clean
+      rebuild, so its confidence intervals are unverifiable and the two queries can silently
+      diverge.</dd>
+    </dl>
+    <blockquote class="said">“There is no ‘fresh fallback’ that quietly matches a few unmatched rows
+    a different way — that path was designed out, because two dashboards disagreeing about the same
+    cohort is precisely the bug this removes.”</blockquote>
+    <p style="margin-top:12px;font-size:0.95rem">The rule is binary so that <strong>a cell’s
+    provenance is always exactly one thing</strong>. And the coupling is explicit rather than hidden:
+    a manifest mismatch is a normal logged event during a nightly refresh — usually the sister query
+    re-ran under new inputs — that triggers a rebuild and continues, with the
+    <code>rebuild_reason</code> telling a later reviewer why that night borrowed versus rebuilt.</p>
+  </div>
+
+  <div class="why">
+    <h4>Index by <code>policy_version_id</code> plus <code>policy_text_hash</code>, not the policy id</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Grouping by the stable, mutable rule id.</dd>
+      <dt>Because</dt><dd>A rule’s text changes under a stable id, so the mutable key pools distinct
+      rules into one cell and lets an edit rewrite history.</dd>
+    </dl>
+    <p style="font-size:0.95rem;margin-top:4px">The text hash is doing real work beyond being an id:
+    it is the <em>content address</em> of the rule text. A cosmetic re-save that does not change a
+    byte collapses to the same hash and does not fracture the history; a genuine edit mints a new
+    hash and a new lineage. That is what makes “the same rule” provable across replays.</p>
+  </div>
+
+  <div class="why">
+    <h4>Snapshot-only analytics, not a live per-policy traversal</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Traversing the decision graph per policy at query time.</dd>
+      <dt>Because</dt><dd>A governance figure has to be reproducible and isolated from live latency.</dd>
+    </dl>
+    <blockquote class="said">“A live per-policy traversal would return a slightly different answer on
+    every run as the graph mutates, and would couple the report’s latency to graph load. Freezing
+    state at an as_of with a manifest hash means the same inputs always give the same friction map,
+    and a reviewer months later can regenerate the identical number.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Reconstruct override facts from the spine, not from current graph properties</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Reading the alignment flag and rule text off the live graph.</dd>
+      <dt>Because</dt><dd>A rule edited later would bleed backward into a decision that predates the
+      edit.</dd>
+    </dl>
+    <p style="font-size:0.95rem;margin-top:4px">This was one of the design review’s high-severity
+    findings — “reading the current graph for historical policy facts” — and it is the single
+    correctness bug most likely to survive a green test suite. See the honest answer about that in
+    the questions below.</p>
+  </div>
+
+  <div class="why">
+    <h4>Six neutral zone codes; conclusory strings banned at the source</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Interpretive labels in the data layer — “policy too strict”,
+      “clinicians ignoring evidence”.</dd>
+      <dt>Because</dt><dd>A string like that, emitted by code, reads as a machine’s verdict and can
+      directly fire a governance action.</dd>
+    </dl>
+    <blockquote class="said">“The layer that computes the statistic is not allowed to also
+    editorialize about it.”</blockquote>
+    <p style="margin-top:12px;font-size:0.95rem">Interpretation lives in <strong>governed user interface (UI) copy</strong>
+    owned by the policy-governance team, labelled observational, and versioned separately from the
+    numbers. A named human sits between the number and the decision. Note the honest limit that goes
+    with this — nothing in the pipeline can stop a person downstream from reading a code as a
+    verdict; the design makes that reading <em>harder and traceable</em>, not impossible.</p>
+  </div>
+
+  <div class="why">
+    <h4>Report the false-discovery q-value; do not gate on it</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Making the q-value a rung in the ladder — filtering cells out
+      on multiplicity.</dd>
+      <dt>Because</dt><dd>A cell earns its code on power, balance, sensitivity and an interval
+      excluding zero; multiplicity is a property of the whole map that the reader has to weigh.</dd>
+    </dl>
+    <blockquote class="said">“The q-value is a disclosure the reader must weigh, not a filter applied
+    on their behalf.”</blockquote>
+    <p style="margin-top:12px;font-size:0.95rem">This is a precision point worth having ready,
+    because interviewers routinely assume the opposite: <strong>the four emission rungs are
+    unadjusted</strong>, and the exploratory label is what carries that limit.</p>
+  </div>
+
+  <div class="why">
+    <h4>Label the ranking exploratory; never offer a sort</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>A rank-sortable league table of the worst rules.</dd>
+      <dt>Because</dt><dd>With multiplicity and wide intervals the order is genuinely noisy.</dd>
+    </dl>
+    <blockquote class="said">“The third and eighth cells may be statistically indistinguishable…
+    keeps the map an evidence surface instead of a scoreboard the eye trusts more than the intervals
+    warrant.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>A hard floor of 30 per arm — and no pretence it is more than a floor</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>The original one-arm sample gate (a review finding), and any
+      claim that thirty certifies power.</dd>
+      <dt>Because</dt><dd>Thirty rejects the obviously under-powered; it does not bless what clears
+      it.</dd>
+    </dl>
+    <blockquote class="said">“A cell with thirty-one per arm and a huge interval is suppressed just
+    the same. The floor gates entry; it does not bless what clears it.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Bootstrap clustered by enrollment, not by row</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Independent row resampling.</dd>
+      <dt>Because</dt><dd>Multiple decisions within one enrollment are correlated; resampling rows
+      independently would treat them as independent evidence and produce intervals that are too
+      narrow.</dd>
+    </dl>
+    <p style="font-size:0.95rem;margin-top:4px">And the residual honestly stated: if the true unit
+    were coarser still — the same patient across multiple enrollments — the intervals could remain
+    slightly optimistic. That is exactly why no zone rests on one interval; the sensitivity battery
+    and the exploratory label backstop the resampling choice.</p>
+  </div>
+
+  <div class="why">
+    <h4>Sweep the thresholds and the caliper before believing anything</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Testing at ±20% only — which is what the first design did, and
+      what the review flagged.</dd>
+      <dt>Because</dt><dd>The override-rate and outcome-delta thresholds are judgement calls, and a
+      finding that survives only at one exact threshold is not a finding.</dd>
+    </dl>
+    <blockquote class="said">“Without the sweep, the most confident-looking headline would routinely
+    be the most fragile one.”</blockquote>
+    <p style="margin-top:12px;font-size:0.95rem">The grid is ±20% and ±50% on the threshold, crossed
+    with strict, base and loose calipers, on the same cohort and the same seed. A single sign flip or
+    interval cross anywhere in the grid tags the cell <code>borderline_zone</code>.</p>
+  </div>
+
+  <div class="why">
+    <h4>Filter tenants at the scan, not after the join</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Post-filtering the joined result on a tenant predicate.</dd>
+      <dt>Because</dt><dd>An aggregate is computed over whatever rows enter the query.</dd>
+    </dl>
+    <blockquote class="said">“If a foreign tenant’s rows are loaded and a predicate is later forgotten
+    on one branch, they contaminate a sum or a rate silently and then propagate into every downstream
+    table. Scanning only the caller’s partitions means a forgotten predicate cannot leak a tenant,
+    because those bytes were never in scope to begin with.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Key the cache on every result-affecting input, not on a TTL</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Time-based expiry.</dd>
+      <dt>Because</dt><dd>Each key field changes the result, and expiry does not know that.</dd>
+    </dl>
+    <blockquote class="said">“Drop the threshold version and a re-thresholded map serves under the
+    old key; drop the correction epoch and a cell computed before a correction serves after it; drop
+    the tenant scope and you risk a cross-tenant hit. Time-to-live expiry is not freshness — only
+    keying on every input that can move the number is.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Rebuild only what a correction touches</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>Both extremes: rebuild the whole map on every correction, or
+      wait for the next nightly run.</dd>
+      <dt>Because</dt><dd>Neither meets the freshness contract without an unacceptable cost.</dd>
+    </dl>
+    <blockquote class="said">“A rebuild-everything policy would either miss the SLA or burn the
+    cluster nightly; a do-nothing policy would keep serving a number the source has already
+    retracted.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Per-version cells, not one fitted model of override versus outcome</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>A single model over overrides and outcomes.</dd>
+      <dt>Because</dt><dd>A fitted surface hides the per-rule evidence and the suppression logic, and
+      invites a causal reading of its coefficients.</dd>
+    </dl>
+    <blockquote class="said">“Legibility to a human decision-maker is worth more here than predictive
+    compression.”</blockquote>
+  </div>
+
+  <div class="why">
+    <h4>Zero language-model calls — the purest case of knowing when not to use one</h4>
+    <dl>
+      <dt class="rej">Rejected</dt><dd>A narrated friction map. Also rejected: a retrieval-augmented
+      generation surface over the policy corpus.</dd>
+      <dt>Because</dt><dd>The output is a governance signal that can revise a rulebook or trigger a
+      retraining, and a generated sentence editorialises a coordinate into a judgement.</dd>
+    </dl>
+    <blockquote class="said">“The moment a model is allowed to narrate one in prose it editorialises
+    a policy into good or bad — the very verdict the codes exist to withhold.”</blockquote>
+    <p style="margin-top:12px;font-size:0.95rem">Three consequences worth naming out loud.
+    <strong>Neutrality is code, not a prompt</strong> — the six codes are assigned by deterministic
+    classification, so there is no prompt to jailbreak because no claim ever passes through a model.
+    <strong>There is nothing to fail quiet</strong> — with no generated text there is no additive
+    layer to lose. And on retrieval-augmented generation specifically: a governance signal has to be
+    a matched-cohort statistic an auditor can trace back to its own denominators, not a passage
+    retrieved from somewhere and paraphrased into a sentence that merely sounds authoritative.</p>
+  </div>
+
+  <h3>The system had a provocative story available, and declined to tell it</h3>
+  <p>This is the single best concrete illustration of the discipline, and it is worth having the
+  numbers ready. These are <strong>illustrative fixture values with synthetic policy names</strong>,
+  not production results:</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Policy</th><th>Version</th><th class="mono">Refs</th>
+        <th class="mono">Override rate</th><th class="mono">Δ outcome (95% CI)</th>
+        <th>Zone code</th><th>Sensitivity</th></tr></thead>
+      <tbody>
+        <tr><td>metformin ceiling</td><td class="mono">v4</td><td class="mono">612</td>
+          <td class="mono">13.7%</td><td class="mono">+0.09 [+.02, +.16]</td>
+          <td class="mono">high_override_positive_delta</td><td>stable</td></tr>
+        <tr><td>no-insulin phase-1</td><td class="mono">v2</td><td class="mono">418</td>
+          <td class="mono">17.0%</td><td class="mono">+0.04 [−.03, +.11]</td>
+          <td class="mono">uncertain_zone</td><td>—</td></tr>
+        <tr><td>carb floor</td><td class="mono">v1</td><td class="mono">893</td>
+          <td class="mono">5.8%</td><td class="mono">−0.02 [−.06, +.02]</td>
+          <td class="mono">uncertain_zone</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Look at the middle row. A 17% override rate and a positive point estimate — that is an easy
+  headline, and it would have written itself. The interval crosses zero, so the cell renders
+  diagnostics only: no zone label, no interpretive copy. <strong>Most policy versions get no zone at
+  all</strong>, and that is the correct output, not a defect. A map that lit up every cell would be
+  the untrustworthy one.</p>
+
+  <h3>The design review — seventeen findings, and what changed</h3>
+  <p>Before anything shipped, the design went through structured adversarial self-review under a
+  Principal-AI-Engineer lens. It drew blood: <strong>seventeen findings</strong> across correctness,
+  statistics and governance, with a verdict of <strong>ship-with-changes</strong> — an unambiguous
+  “do not implement as written”. The high-severity core, and what each one turned into:</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Finding (round 1)</th><th>What changed in v2</th></tr></thead>
+      <tbody>
+        <tr><td>Cross-query sign-flip — opposite conclusions about the same cohort</td>
+          <td>A cross-query parity fixture, wired in as a deliberately failing test, that must be
+          green before either system releases</td></tr>
+        <tr><td>A “fresh fallback” silently building a different control group</td>
+          <td>The path was designed out. Reuse is binary: verbatim on seven-field manifest equality,
+          or a full rebuild with the same matcher binary</td></tr>
+        <tr><td>Reading the current graph for historical policy facts</td>
+          <td>As-of reconstruction from the append-only spine at the decision’s own event time and
+          sequence position</td></tr>
+        <tr><td>No policy versioning</td>
+          <td>Everything grouped by immutable <code>policy_version_id</code> and
+          <code>policy_text_hash</code></td></tr>
+        <tr><td>Ad-hoc outcome labels</td>
+          <td>One shared outcome library used by every cohort query in the programme</td></tr>
+        <tr><td>Zone labels assigned from point estimates while the interval crossed zero</td>
+          <td><code>uncertain_zone</code> — the interval-excludes-zero rung became mandatory before
+          any code is emitted</td></tr>
+        <tr><td>Sensitivity tested at only ±20%</td>
+          <td>±20% <em>and</em> ±50%, crossed with strict, base and loose calipers</td></tr>
+        <tr><td>A one-arm sample gate</td>
+          <td>At least 30 in <em>each</em> arm, plus a common-support check</td></tr>
+        <tr><td>No tenant fields anywhere</td>
+          <td>A three-field scope carried through partitioning, the build, the cache key and a
+          fail-closed per-row response assertion</td></tr>
+        <tr><td>Conclusory friction labels baked into the data layer</td>
+          <td>Six neutral codes only; interpretation moved to governed, separately versioned UI copy</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>Fifteen findings were absorbed directly into the design body.</strong> The remaining
+  two — the cross-query sign-flip and its manifest contract — were promoted into shared platform
+  components: a tenant wrapper, the outcome library, the matcher binary, a deterministic exporter, a
+  cache-key envelope, and the clustered bootstrap.</p>
+
+  <div class="warn">
+    <p><b>Say this precisely, because it is the one thing easy to garble.</b> The hardened v2 is the
+    design that <strong>shipped to production</strong> and it runs there. What remains open is the
+    <em>design-review approval</em>, which the design deliberately held against itself: it does not
+    get to call itself <em>approved</em> until the sibling system emits its match manifest and the
+    cross-query parity fixture passes for every policy version. The nine platform components have
+    landed; those two conditions have not. Landing components does not by itself convert a review
+    verdict. <strong>Deployed and live; design-review verdict held at ship-with-changes, on the
+    record, on purpose.</strong></p>
+  </div>
+
+  <h3>The fixture that started life red</h3>
+  <p>Worth telling as a story, because it is the most convincing thirty seconds available. The parity
+  check began as a <em>failing</em> test. On one policy version with 418 references and 71 overrides,
+  this pipeline reported an outcome delta of <strong>−0.05</strong> while its sibling reported
+  <strong>+0.04</strong> — opposite signs, same cohort, a contradiction that would have shipped to a
+  governance dashboard. The two views are supposed to be the same overrides reindexed, so opposite
+  signs mean one of them mis-joined outcomes or matched differently, and no downstream reading of
+  either would be trustworthy. It had to go green before either system was allowed to release.</p>
+  <blockquote class="said">“A disagreement about human decisions should fail a test, not a career.”</blockquote>
+</section>
+
+
+<!-- ============ 4 ============ -->
+<section id="architecture">
+  <div class="stage"><b>04</b> Architecture</div>
+  <h2>Four diagrams, and how to redraw each on a whiteboard</h2>
+  <p class="deck">These are the diagrams from the case study, unmodified. If you can talk through
+  the four walkthroughs below without the page, you can draw this system live.</p>
+
+  <h3>Fig 1 · The full pipeline</h3>
+  <figure class="diagram">
+    <pre class="mermaid">flowchart TD
+    S2[Snapshot frozen at as_of_ms&lt;br/&gt;vertices + edges + manifest&lt;br/&gt;+ source_event_seq_max + allowed_lateness]
+    S3[Cohort builder&lt;br/&gt;tenant-scoped analytical joins · no live graph&lt;br/&gt;as-of reconstruction of policy_alignment + CONSTRAINED_BY&lt;br/&gt;+ policy_version_id resolved from spine&lt;br/&gt;decision-to-policy multiplicity preserved via policy_edge_seq]
+    S4[Borrowed control arm&lt;br/&gt;strict match_manifest_id check across&lt;br/&gt;covariate_schema_hash + snapshot_manifest_hash + cohort_filter_hash&lt;br/&gt;+ seed + caliper + replacement_policy + tie_break_policy&lt;br/&gt;mismatch equals FULL rebuild with same matcher binary · no fresh fallback]
+    S5[Outcome label · shared outcome library&lt;br/&gt;status + attribution_decision_id + rule_version&lt;br/&gt;+ distance_days + censoring_reason]
+    S6[Aggregate metric · per policy_version_id · NOT pooled across versions&lt;br/&gt;SMD balance gate + threshold sensitivity +/-20% AND +/-50% + caliper sensitivity strict base loose&lt;br/&gt;seeded bootstrap CI clustered by enrollment&lt;br/&gt;multiple-testing diagnostics: tested + insufficient + borderline + FDR-q]
+    S7[Neutral zone classifier&lt;br/&gt;high_override_positive_delta · high_override_negative_delta&lt;br/&gt;low_override_positive_delta · low_override_negative_delta&lt;br/&gt;uncertain_zone if CI crosses zero · borderline_zone if sensitivity unstable&lt;br/&gt;no conclusory policy_too_strict or clinicians_ignoring labels]
+    S8[Serve · analytics API&lt;br/&gt;tenant filter BEFORE load · canonical metric-cache key&lt;br/&gt;per-policy access log · cross-tenant pooling separately authorized]
+    S9[Eval and golden&lt;br/&gt;both arms at least 30 AND common support per policy&lt;br/&gt;cross-query parity fixture: identical policy cells under identical manifest inputs&lt;br/&gt;golden regression with late-arrivals + corrections + SUPERSEDES]
+    S10[zone_history persistence&lt;br/&gt;policy_version_id + tenant + snapshot_hash + threshold_version + match_manifest_id&lt;br/&gt;monthly governance audit + quarter-over-quarter movement]
+    CORR[Correction-event listener&lt;br/&gt;policy + decision + edge + outcome corrections invalidate by policy_version_id&lt;br/&gt;dependency-index targeted rebuild · P95 5 min SLA]
+    S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6 --&gt; S7 --&gt; S8 --&gt; S9
+    S6 --&gt; S10
+    CORR -.-&gt; S3
+    CORR -.-&gt; S4
+    CORR -.-&gt; S6
+    CORR -.-&gt; S8</pre>
+    <figcaption>Fig 1 · Reconstruct as-of, borrow or rebuild the control arm, gate, classify into
+    neutral codes; corrections rebuild only what they touch.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>Read it as a single spine with one side-branch and one listener hanging off it.</p>
+    <ul>
+      <li><strong>Snapshot → cohort builder.</strong> A frozen snapshot enters; the builder emits one
+      row per (decision, policy edge), each carrying the alignment flag, the constraining edge, and
+      the policy version and text hash <em>in force at that decision’s own event time</em>. Nothing
+      here reads the live graph.</li>
+      <li><strong>Cohort → control arm.</strong> The seven-field manifest check runs. Reuse or full
+      rebuild — no third path. Whichever fires is stamped on the rows.</li>
+      <li><strong>Control arm → outcome label.</strong> Both arms are labelled by one shared library,
+      so the treated and control outcomes cannot drift apart through two implementations.</li>
+      <li><strong>Outcome → aggregate.</strong> Per policy version, never pooled. This is where the
+      balance gate, the sensitivity grid, the seeded clustered bootstrap and the multiplicity
+      diagnostics all run.</li>
+      <li><strong>Aggregate → classifier → serve → eval.</strong> Six neutral codes, then an application programming interface (API) that
+      audits, keys, and asserts tenancy; then the golden and parity fixtures that must be green.</li>
+      <li><strong>The side branch:</strong> the aggregate also writes <code>zone_history</code>, so a
+      rule’s friction can be followed quarter over quarter.</li>
+      <li><strong>The listener:</strong> the correction-event listener dots into four stages —
+      builder, control arm, aggregate and serve — because a correction can invalidate any of them.
+      Dotted, because it is an out-of-band trigger, not a stage in the flow.</li>
+    </ul>
+    <div class="breaks">
+      <b>What breaks without it</b>
+      <p>Drop the snapshot freeze and the map returns a different answer every run. Drop the as-of
+      reconstruction and a rule edited last month rewrites a decision made two years ago. Drop the
+      per-version grouping and distinct rule texts smear into one cell. Drop the correction listener
+      and the map keeps serving a figure the source has already retracted — or you rebuild everything
+      nightly and burn the cluster to do it.</p>
+    </div>
+  </div>
+
+  <h3>Fig 4 · The manifest contract</h3>
+  <figure class="diagram">
+    <pre class="mermaid">flowchart TD
+    subgraph SIB["Sister system · override analytics · producer"]
+      P1[matched_control&lt;br/&gt;each override paired with a&lt;br/&gt;propensity-matched control decision]
+      P2[match_manifest_id&lt;br/&gt;one hash over seven fields]
+      P1 --&gt; P2
+    end
+    P2 --&gt; F[covariate_schema_hash · snapshot_manifest_hash&lt;br/&gt;cohort_filter_hash · seed · caliper&lt;br/&gt;replacement_policy · tie_break_policy]
+    F --&gt; EQ{All seven fields match}
+    EQ -- yes --&gt; REUSE[Reuse the control arm VERBATIM&lt;br/&gt;manifest_source equals reused_from_sibling]
+    EQ -- no --&gt; REBUILD[Rebuild with the SAME matcher binary&lt;br/&gt;new match_manifest_id · rebuild_reason recorded&lt;br/&gt;manifest_source equals rebuilt_here]
+    REUSE --&gt; PARITY[Both systems report identical policy cells&lt;br/&gt;per policy_version_id]
+    REBUILD --&gt; PARITY
+    PARITY --&gt; FIX[A parity fixture guards this contract&lt;br/&gt;it reproduces a real class of bug — a cross-query sign-flip&lt;br/&gt;on an illustrative cohort · refs 418 · overrides 71&lt;br/&gt;came out -0.05 here vs +0.04 in the sibling&lt;br/&gt;must pass before approval]</pre>
+    <figcaption>Fig 4 · Reuse the sibling’s control arm verbatim or rebuild it with the same binary;
+    a parity fixture proves the two systems never disagree about the same cohort.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>A producer box, one predicate, two mutually exclusive outcomes, and a test that converges on
+    both. That is the whole shape.</p>
+    <ul>
+      <li><strong>The producer</strong> is the sister query. It pairs each override with a
+      propensity-matched control and hashes seven inputs into a single
+      <code>match_manifest_id</code>.</li>
+      <li><strong>The predicate</strong> is exact equality on all seven: covariate schema, snapshot
+      manifest, cohort filters, seed, caliper, replacement policy, tie-break policy. Not “mostly the
+      same”. All seven.</li>
+      <li><strong>Yes</strong> → reuse verbatim, stamped <code>reused_from_sibling</code>. This is
+      provably identical to a rebuild, because under identical inputs the matcher is deterministic —
+      the borrowed pairs are the same pairs a rebuild would produce, cell for cell.</li>
+      <li><strong>No</strong> → full rebuild with the <em>same matcher binary</em>, a new manifest id
+      and a recorded <code>rebuild_reason</code>, stamped <code>rebuilt_here</code>.</li>
+      <li><strong>Both arrows converge</strong> on the same claim: both systems report identical
+      policy cells per policy version. And the parity fixture is drawn as a node because it is a
+      release gate, not documentation.</li>
+    </ul>
+    <p>Two details worth having ready. The manifest is <strong>tenant-bound</strong> — the cohort
+    filter hash and the snapshot manifest hash are both tenant-scoped, so a foreign-tenant cohort
+    cannot be silently borrowed; a scope difference changes the manifest and forces an in-tenant
+    rebuild. And the reuse path is <em>tested against a rebuild under an identical manifest</em>: if
+    they differ, the conclusion is not “reuse is fine anyway”, it is “the manifest is incomplete” —
+    some result-affecting input is missing from the seven fields.</p>
+    <div class="breaks">
+      <b>What breaks without it</b>
+      <p>Without exact-equality gating you get the fresh fallback: a cohort that is neither the
+      sister’s nor a clean rebuild, with unverifiable intervals. Without the same matcher binary, two
+      implementations drift and the “same overrides, two indexings” claim becomes unfalsifiable.
+      Without the parity fixture, the sign-flip ships — two dashboards telling a governance board
+      opposite stories about the same rule.</p>
+    </div>
+  </div>
+
+  <h3>Fig 5 · The gate ladder as code</h3>
+  <figure class="diagram">
+    <pre class="mermaid">flowchart TD
+    REQ[Read a policy cell] --&gt; AUD[Access log · viewer + target policy + purpose]
+    AUD --&gt; KEY[Canonical cache key over account · workspace · controlunit ·&lt;br/&gt;query + filters · metric-schema version ·&lt;br/&gt;policy_version_id · threshold_version · match_manifest_id ·&lt;br/&gt;snapshot hash · source_event_seq_max · correction_epoch]
+    KEY --&gt; HIT{Cache hit}
+    HIT -- yes --&gt; TEN[Assert tenant on every row]
+    HIT -- no --&gt; SUP{Both arms at least 30 per policy version}
+    SUP -- no --&gt; S1[Emit insufficient_data&lt;br/&gt;full denominators · no zone code]
+    SUP -- yes --&gt; BAL{SMD balanced and common support}
+    BAL -- no --&gt; S2[Suppress the delta&lt;br/&gt;diagnostic only]
+    BAL -- yes --&gt; SEN{Sensitivity stable across all sweeps}
+    SEN -- no --&gt; S3[Tag borderline_zone&lt;br/&gt;withhold the recommendation]
+    SEN -- yes --&gt; CI{Outcome CI excludes zero}
+    CI -- no --&gt; S4[Tag uncertain_zone&lt;br/&gt;neutral code only]
+    CI -- yes --&gt; EMIT[Emit neutral zone code + override rate + delta + CI&lt;br/&gt;+ policy_version_id + multiple-testing diagnostics]
+    S1 --&gt; TEN
+    S2 --&gt; TEN
+    S3 --&gt; TEN
+    S4 --&gt; TEN
+    EMIT --&gt; TEN
+    TEN --&gt; RET[Return + cache]</pre>
+    <figcaption>Fig 5 · Power, then balance, then sensitivity, then a confidence interval that must
+    exclude zero; fail any rung and the cell leaves as a neutral suppression with full denominators.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>This is the diagram to draw if you only get to draw one — it is the query’s reasoning made
+    literal, and it is the answer to “where is the chain of thought?” The answer is: it is code, it
+    is seeded, and it replays.</p>
+    <ul>
+      <li><strong>Audit before anything.</strong> The very first node after the read is the access
+      log — viewer, target policy, purpose. The log entry exists before a result does.</li>
+      <li><strong>Then the key,</strong> spanning every result-affecting input. Then a cache-hit
+      branch.</li>
+      <li><strong>Four gates in a fixed order,</strong> each with exactly one escape:
+      power → <code>insufficient_data</code>; balance → suppress the delta, keep the diagnostic;
+      sensitivity → <code>borderline_zone</code>; interval → <code>uncertain_zone</code>. Only a cell
+      that clears all four reaches <code>EMIT</code>.</li>
+      <li><strong>Every path reconverges on the tenant assertion.</strong> This is the structurally
+      important bit: the suppression exits and the emit path and the cache-hit path <em>all</em> flow
+      into <code>TEN</code>. There is no route out of this diagram that skips the per-row tenant
+      check — including a cache hit.</li>
+      <li><strong>Then return and cache.</strong></li>
+    </ul>
+    <p>Note what the escapes carry. A failed cell is not a blank; it leaves with its full
+    denominators — references, overrides, matched, unmatched, censored — and a stated reason. And
+    <code>uncertain_zone</code> versus <code>borderline_zone</code> are not synonyms: uncertain means
+    the interval crosses zero, so there is no distinguishable delta; borderline means a delta exists
+    at the base setting but does not survive perturbation. Different failures, different messages to
+    a reviewer.</p>
+    <div class="breaks">
+      <b>What breaks without it</b>
+      <p>Skip the power rung and a twelve-patient cell gets a confident code. Skip balance and you
+      publish a case-mix artifact. Skip sensitivity and the most confident-looking headline is
+      routinely the most fragile. Skip the interval rung and you are back at the review finding —
+      zone labels assigned from point estimates while the interval crossed zero. And if the cache-hit
+      path bypassed the tenant assertion, one poisoned key is a cross-tenant leak on a governance
+      surface.</p>
+    </div>
+  </div>
+
+  <h3>Fig 11 · The request path, and where the model seam is not</h3>
+  <figure class="diagram">
+    <pre class="mermaid">flowchart LR
+    BROWSER[Clinician browser] -- TLS --&gt; API
+    subgraph VPC["Client VPC · PHI never crosses this boundary"]
+      subgraph REQ["Request path · what a clinician waits on"]
+        API[Analytics API · FastAPI&lt;br/&gt;audit · tenant assert · suppress]
+        LRU[(In-process&lt;br/&gt;LRU cache)]
+        DUCK[(DuckDB over Parquet&lt;br/&gt;cells · zones · history)]
+        API --&gt; LRU
+        API --&gt; DUCK
+      end
+      NEP[(Neptune graph)]
+      SEAM[Model seam · Llama in-VPC]
+      TRACE[LangSmith · self-hosted]
+    end
+    API -. audit + build only .-&gt; NEP
+    API -. no model on any path .-&gt; SEAM
+    API -. traces · hashes only .-&gt; TRACE</pre>
+    <figcaption>Fig 11 · The decision graph and the model seam are dotted and off to the side on
+    purpose; nothing a clinician waits on depends on either, and no language model sits on any path.</figcaption>
+  </figure>
+  <div class="walk">
+    <h4>Walkthrough</h4>
+    <p>Two boxes inside one box, plus three dotted stubs. The nesting is the argument.</p>
+    <ul>
+      <li><strong>The outer box is the client VPC.</strong> Everything is inside it. The only thing
+      outside is the clinician’s browser, reaching in over TLS. Protected health information never
+      crosses that boundary — which is why the de-identification-versus-network-residency debate that
+      governs an external model call simply does not arise for this query.</li>
+      <li><strong>The inner box is the request path</strong> — the only lane anyone waits on, and it
+      has exactly three components: the FastAPI analytics service (which audits, asserts tenancy, and
+      suppresses), an in-process LRU cache, and DuckDB over Parquet cells, zones and history. That is
+      it. No statistics, no traversal, no model.</li>
+      <li><strong>Three dotted stubs, deliberately outside the inner box.</strong> Neptune is reached
+      for audit and drill-down and by the nightly build — never a live per-policy traversal.
+      LangSmith, self-hosted in the VPC, takes traces and hashes only. And the model seam — a Llama
+      3.1 the platform can run in-VPC — is drawn connected to nothing, labelled <em>no model on any
+      path</em>.</li>
+    </ul>
+    <p>The seam is on the diagram <em>because</em> it is unused. It is the point: the capability
+    exists, it is wired to the sibling queries that produce prose, and it was declined here. That is a
+    decision, not an omission.</p>
+    <p>Off-diagram, two offline lanes feed the DuckDB tables: a one-time historical lane that
+    hydrated about nine years of decisions into the DynamoDB event spine, and a nightly lane that
+    replays the spine into a snapshot, rebuilds the cohort and its borrowed control arm, runs the
+    seeded statistics, and writes the zone tables. No human ever waits on either.</p>
+    <div class="breaks">
+      <b>What breaks without it</b>
+      <p>Put the graph on the request path and the report’s latency couples to graph load, and the
+      answer moves between runs. Move the cache out of process without keeping the per-row assertion
+      and you inherit a shared-cache leak surface. And wire the seam in — even as an optional
+      narrator — and every figure on the dashboard stops being deterministic, on the one surface
+      where a sentence that reads as a judgement must never appear.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ QUESTIONS ============ -->
+<section id="questions">
+  <div class="stage"><b>05</b> Likely questions</div>
+  <h2>Headline first, detail only if they ask</h2>
+  <p class="deck">The first sentence has to land alone — assume you get interrupted. Say the bold
+  line, stop, and let them pull.</p>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q1</span><span>Why isn’t this just a
+    <code>GROUP BY</code> over the rulebook?</span></p>
+    <p class="headline">Because the count is a day’s work and everything else exists to stop the
+    count from becoming a verdict.</p>
+    <div class="detail">
+      <p>Three failure modes are built into the naive version. Confounding: clinicians override on
+      their sickest patients, so a raw followed-versus-overridden delta measures patient mix, not the
+      rule. False confidence at scale: dozens of policy versions are scored at once, so a handful
+      look damning by chance alone. Verdict misuse: a label like “policy too strict” reads as a
+      machine’s ruling and can directly fire a governance action.</p>
+      <p>And this one is more dangerous than its decision-indexed sister, because a per-rule signal
+      is exactly the shape that triggers a policy revision or a model retraining. A wrong signal here
+      rewrites the rulebook for everyone. The naive one-query version isn’t simpler in the ways that
+      matter — it is the dangerous version.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q2</span><span>A rule has a 17% override rate. Doesn’t that alone
+    prove it’s a bad rule?</span></p>
+    <p class="headline">No — override rate on its own is a popularity count of dissent; it tells you
+    clinicians disagree, not whether they were right.</p>
+    <div class="detail">
+      <p>A high override rate paired with a positive outcome delta and one paired with a negative
+      delta are different zones, and neither is a verdict. Only the matched outcome comparison
+      distinguishes a rule worth revisiting from a healthy guardrail that clinicians happen to chafe
+      against.</p>
+      <p>There is a live example in the fixtures: a rule at 17.0% override with a positive point
+      estimate of +0.04 — an easy headline — whose interval runs from −0.03 to +0.11. It crosses
+      zero, so the cell is <code>uncertain_zone</code> and renders diagnostics only. The system had a
+      provocative story available and declined to tell it.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q3</span><span>Reusing the sister query’s matched cohort is a
+    hidden coupling. Won’t that rot?</span></p>
+    <p class="headline">It’s an explicit versioned contract that fails loudly and self-heals, not a
+    hidden one — reuse happens only on exact equality across seven manifest fields, and any mismatch
+    triggers a full rebuild with the same matcher binary.</p>
+    <div class="detail">
+      <p>The seven fields are the covariate schema hash, the snapshot manifest hash, the cohort
+      filter hash, the seed, the caliper, the replacement policy, and the tie-break policy. Under
+      identical inputs the matcher is deterministic, so the borrowed pairs are the same pairs a
+      rebuild would produce — which is the only condition under which borrowing is provably the same
+      as rebuilding.</p>
+      <p>The alternative is worse, not better. Two independent matchers guarantee divergent cohorts
+      and divergent intervals over time, and they make the “same overrides, two indexings” claim
+      unverifiable. And the coupling is tested, not assumed: the reuse path is exercised against a
+      rebuild under an identical manifest and required to produce identical cells. If they differ,
+      the conclusion is that the manifest is incomplete — some result-affecting input is missing from
+      the seven fields.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q4</span><span>Your golden replay is green. How do you know the
+    reconstruction is genuinely as-of and not accidentally reading current state?</span></p>
+    <p class="headline">The golden replay doesn’t prove that — it proves determinism, and a
+    future-leaking reconstruction leaks deterministically, so replay reproduces the bug as faithfully
+    as it reproduces a correct result.</p>
+    <div class="detail">
+      <p>This is the distinction I’d want a team to be precise about, because conflating the two is
+      how future leakage survives a green suite. Golden replay shuffles the spine order, injects late
+      arrivals, corrections and supersede chains, exports twice at the same <code>as_of</code>, and
+      requires byte-identical output. That is determinism: same inputs, same answer, regardless of
+      load order. It says nothing about whether the cutoff is honoured.</p>
+      <p>As-of correctness needs tests whose expected result changes <em>only</em> if the cutoff is
+      being honoured. Two do that here. The first is metamorphic: take a fixture, append events
+      measured after the <code>as_of</code>, re-export at the same <code>as_of</code>, and assert the
+      output does not move — any read of post-cutoff state changes the answer and fails. The second
+      is known-good historical spot checks: hand-reconstructed states at chosen dates, asserted field
+      by field, which catches an as-of that is self-consistent but wrong.</p>
+      <p>Determinism is the floor. Those two are what turn “we intend it to be as-of” into “it is”.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q5</span><span>Why is there no language model here — and if you
+    pinned it at temperature zero, wouldn’t it be deterministic?</span></p>
+    <p class="headline">Temperature zero doesn’t make a model’s output deterministic — it gives you
+    drift detection, not generation determinism — and on a surface that can revise a rulebook, a
+    narrated verdict that drifts while the audit reports “same inputs” is worse than no narration.</p>
+    <div class="detail">
+      <p>Pinning the model, the prompt and the temperature, and hashing inputs and outputs, buys you
+      the ability to notice when the text changed. It does not buy you a guarantee that it won’t.</p>
+      <p>There is also no natural-language task on this path. The output is a coordinate — an
+      override rate and an outcome delta with an interval — and the moment a model is allowed to
+      narrate one in prose it editorialises a policy into good or bad, which is the exact verdict the
+      neutral codes exist to withhold. So neutrality is code, not a prompt: the six codes are
+      assigned by deterministic classification, there is no prompt to jailbreak because no claim ever
+      passes through a model, and there is no additive layer that can fail quiet.</p>
+      <p>Same logic kills retrieval-augmented generation here. A governance signal has to be a
+      matched-cohort statistic an auditor can trace back to its own denominators, not a retrieved
+      passage paraphrased into a sentence that merely sounds authoritative. The platform can run a
+      Llama 3.1 inside the VPC and does, for the queries that genuinely produce sentences. This one
+      was the right place to decline it.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q6</span><span>With that gate ladder, most cells get suppressed.
+    Is the map even useful?</span></p>
+    <p class="headline">Often most cells are suppressed, and that is the honest state of the
+    evidence, not a defect — a map that lit up every cell would be the untrustworthy one.</p>
+    <div class="detail">
+      <p>First, a correction to the usual premise: the false-discovery figure doesn’t suppress
+      anything. The q-value is computed at q = 0.10 and returned with every cell; it is not a rung in
+      the gate. The suppression comes from the power floor, the balance gate, the sensitivity battery
+      and intervals that cross zero — all unadjusted for multiplicity, which is precisely why the
+      ranking is labelled exploratory and the q-value is put in front of the reader rather than
+      applied on their behalf.</p>
+      <p>The value isn’t a full grid of colours. It is the small number of well-powered,
+      sensitivity-stable cells whose signal you can stand behind in front of a governance board. And
+      the map’s own sparsity is a monitored signal in its own right — a sudden collapse in the number
+      of cells clearing the gates points at an upstream data problem, not at policies suddenly
+      becoming uninteresting.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q7</span><span>You keep saying “deterministic”. Where does that
+    actually break?</span></p>
+    <p class="headline">It holds per manifest and per pinned library version — not forever; upgrade
+    the matcher, the outcome library or the bootstrap, or land a correction, and the output
+    legitimately changes with it.</p>
+    <div class="detail">
+      <p>Be precise about the two mechanisms, because they are different. A <strong>correction</strong>
+      advances the correction epoch, which <em>is</em> a cache-key field, so a stale cell can’t be
+      served past it. A <strong>library upgrade</strong> does not move the manifest hash — the seven
+      manifest fields hash the matcher’s <em>inputs</em>, not the matcher’s <em>code</em> — so it is
+      traced through the library versions stamped on every result and its audit record, not through
+      the key.</p>
+      <p>That is an honest weakness and I’d name it as one: the sibling query’s cache key, which pins
+      the matcher binary and the statistical-plan version explicitly, is the stronger form. Here, if
+      two library versions disagree on the same cohort, neither is declared right by fiat — each
+      result is stamped with its libraries and its manifest so the two are distinguishable, and the
+      parity fixture and the golden replay decide whether a version change is a fix or a regression.</p>
+      <p>Also worth saying: hashes detect drift, they don’t create determinism. Determinism comes
+      from the seeded, structured computation — a seeded bootstrap, a deterministic exporter,
+      canonical tie-breaks in the matcher, manifest-addressed inputs. The hashes are how you audit
+      that it held.</p>
+    </div>
+  </div>
+
+  <div class="q">
+    <p class="ask"><span class="qn">Q8</span><span>What’s the worst silent failure this design still
+    permits — and what would you change first?</span></p>
+    <p class="headline">A covariate that matters but was never measured: an unmeasured confounder can
+    move an outcome delta with every gate showing green — balanced, stable, well-powered, interval
+    excluding zero — and nothing in the pipeline will flag it.</p>
+    <div class="detail">
+      <p>That is precisely why every cell stays observational and no zone is ever a causal claim. The
+      limit is stated rather than engineered away, because it cannot be engineered away: matching
+      balances only what was measured. The strongest argument against shipping this query at all is
+      that no observational design can rule that out, so any delta it reports is contestable and
+      could be acted on wrongly. The design’s answer isn’t that it solved that — it can’t — but that
+      it refuses to emit a verdict, gates hard, labels everything observational and exploratory, and
+      keeps a named human owner. Mitigation of a real limitation, not a resolution of it.</p>
+      <p><strong>What I’d change first:</strong> make the unmeasured-confounding limit quantitative
+      instead of only textual. A formal robustness figure per cell — how strong an unmeasured
+      confounder would have to be to explain away the observed delta — would let a governance reader
+      weigh a signal’s fragility numerically, rather than reading a blanket “observational” caveat
+      that is easy to discount. It turns the honest limit from a disclaimer into a reported metric.</p>
+      <p>And on accountability, if governance ignores the caveats and acts on a cell anyway: partly
+      the design’s fault, if it made the caveat easy to ignore. Which is why the mitigations are
+      structural rather than cosmetic — verdict strings forbidden at the source, an observational
+      label on every cell, an exploratory rather than ranked ordering, every read logged. Acting
+      against the caveats becomes a visible, attributable choice by a person, not a default the
+      surface quietly encouraged.</p>
+    </div>
+  </div>
+
+  <div class="warn">
+    <p><b>Two more they may reach for.</b> <strong>“Does this put clinicians on a scoreboard?”</strong>
+    — No; the unit of analysis is the policy version, not the doctor, and this query produces no
+    per-clinician breakdown at all. <strong>“What happens when the snapshot goes stale?”</strong> —
+    Degradation is tiered and visible: green under 24 hours, yellow with a banner at 24–48, and past
+    48 hours it blocks and escalates rather than hand over quietly outdated statistics. Isolation and
+    provenance have no graceful tier at all: a tenant-scope mismatch or a manifest-equality violation
+    fails closed immediately, because serving cross-tenant or blended-cohort data is strictly worse
+    than serving nothing.</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Where it transfers.</strong> Any system that grades a rulebook by how often it is broken
+  and which breaks track better or worse outcomes — underwriting exception rates, site-reliability
+  runbook bypasses, fraud-rule overrides, content-policy appeals. When the finding can change the
+  rule, it must never read as a machine’s verdict; the statistics must be gated, the control group
+  must be exactly the one you claim, and the access must be governed.</p>
+  <p style="margin-top:14px">
+    <a href="../kq8-policy-friction.html">full case study</a>·
+    <a href="../summary.html">summary</a>·
+    <a href="../index.html">all case studies</a>
+  </p>
+  <p style="margin-top:14px" class="muted">Chronic-care platform, 80+ chronic conditions, roughly
+  10,000 patients, about nine years of history hydrated into the event spine. Client and product
+  identifiers anonymised. Role: sole owner, design through production. Stack: DynamoDB event spine ·
+  Neptune decision graph · Parquet + DuckDB · borrowed propensity-matched control arm with versioned
+  manifests · seeded enrollment-clustered bootstrap intervals with false-discovery-rate disclosure ·
+  FastAPI · LangGraph in-VPC runtime and self-hosted LangSmith as deployment and tracing only ·
+  Pydantic structured output · no language model on any path.</p>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

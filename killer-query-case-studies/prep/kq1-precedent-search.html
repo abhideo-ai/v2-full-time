@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Precedent search — interview prep</title>
+<style>
+:root{
+  --paper:#F7F9FA; --card:#FFFFFF; --ink:#12222C; --steel:#51626D; --mist:#E4EBEC;
+  --hairline:#D5DFE1; --teal:#0B756F; --teal-deep:#084F4B; --amber:#8A5A00; --amber-soft:#FBF3E2;
+  --serif:"IBM Plex Serif",Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.02rem;line-height:1.65;-webkit-font-smoothing:antialiased}
+main{max-width:960px;margin:0 auto;padding:64px 24px 96px}
+a{color:var(--teal-deep)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:14px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.16;letter-spacing:-.015em}
+.sub{font-size:1.08rem;color:var(--steel);max-width:66ch;margin-top:16px}
+h2{font-family:var(--serif);font-weight:600;font-size:1.45rem;letter-spacing:-.01em;margin:56px 0 6px}
+h2 .num{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--teal);display:block;margin-bottom:6px;font-weight:500}
+h3{font-family:var(--serif);font-weight:600;font-size:1.14rem;margin:32px 0 8px}
+h4{font-family:var(--sans);font-size:.98rem;font-weight:600;margin:18px 0 4px}
+p{max-width:72ch;margin-bottom:12px}
+.lede{color:var(--steel);font-size:.97rem;max-width:70ch;margin-bottom:18px}
+ul,ol{margin:10px 0 14px 22px;max-width:72ch}
+li{margin-bottom:7px;font-size:.95rem}
+code{font-family:var(--mono);font-size:.84em;background:var(--mist);padding:1px 5px;border-radius:3px}
+.nav{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;margin-top:26px;color:var(--steel)}
+.nav a{margin-right:6px}
+.nav span{margin-right:6px;color:var(--hairline)}
+.say{background:var(--card);border:1px solid var(--hairline);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:18px 22px;margin:18px 0}
+.say .term{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:8px}
+.say p{font-family:var(--serif);font-size:1.06rem;line-height:1.55;margin-bottom:10px}
+.say p:last-child{margin-bottom:0}
+blockquote{background:var(--amber-soft);border-left:3px solid var(--amber);border-radius:0 4px 4px 0;padding:12px 16px;margin:14px 0;max-width:72ch;font-size:.94rem}
+blockquote p{margin-bottom:0;font-style:italic}
+.dec{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:18px 22px;margin:14px 0}
+.dec h4{margin:0 0 8px}
+.dec dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:.93rem}
+.dec dt{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--steel);padding-top:5px;white-space:nowrap}
+.dec dd{color:var(--ink)}
+.dec dd.alt{color:var(--steel)}
+.dec blockquote{margin:12px 0 0}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--hairline);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:700px}
+th,td{text-align:left;padding:10px 14px;vertical-align:top}
+thead th{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);border-bottom:1px solid var(--hairline);background:var(--paper)}
+tbody tr+tr td{border-top:1px solid var(--mist)}
+td.rnd{font-family:var(--mono);font-size:.74rem;color:var(--teal);white-space:nowrap}
+.spine{background:var(--card);border:1px solid var(--hairline);border-left:3px solid var(--teal);border-radius:6px;padding:22px 26px;margin:18px 0}
+.spine ol{margin:10px 0 0 20px}
+.warn{background:var(--amber-soft);border:1px solid #E8D8B4;border-radius:6px;padding:18px 22px;margin:20px 0}
+.warn h4{margin-top:0;color:var(--amber)}
+.warn p,.warn li{font-size:.93rem}
+.gloss{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:8px 22px 14px;margin:18px 0}
+.gloss dl{display:grid;grid-template-columns:minmax(140px,auto) 1fr;gap:0 18px;font-size:.9rem}
+.gloss dt{font-weight:600;padding:7px 0 0}
+.gloss dd{color:var(--steel);padding:7px 0 0;border-top:1px solid var(--mist)}
+.gloss dt{border-top:1px solid var(--mist)}
+.gloss dl>dt:first-of-type,.gloss dl>dt:first-of-type+dd{border-top:0}
+.fig{margin:26px 0 8px;background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px 16px;overflow-x:auto}
+pre.mermaid{font-family:var(--mono);font-size:.8rem;color:var(--steel)}
+.figcap{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--steel);text-transform:uppercase;margin:0 0 22px}
+.walk{border-left:2px solid var(--mist);padding-left:18px;margin:16px 0 8px}
+.walk h4{margin-top:14px}
+.walk h4:first-child{margin-top:0}
+.breaks{background:var(--paper);border:1px dashed var(--hairline);border-radius:5px;padding:12px 16px;margin:12px 0;font-size:.92rem}
+.breaks b{color:var(--amber)}
+.q{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:20px 24px;margin:16px 0}
+.q .ask{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:10px;color:var(--ink)}
+.q .head{border-left:3px solid var(--teal);background:var(--paper);padding:10px 14px;border-radius:0 4px 4px 0;font-size:.98rem;margin-bottom:12px}
+.q .head b{color:var(--teal-deep)}
+.q p{font-size:.94rem;color:var(--steel)}
+.q p strong,.q p b{color:var(--ink)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--hairline);background:var(--paper);color:var(--steel);margin-left:8px;vertical-align:middle}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--hairline);font-size:.86rem;color:var(--steel)}
+footer a{margin-right:14px}
+@media print{body{background:#fff}main{padding:0}.fig{break-inside:avoid}}
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">Precedent search</span></p>
+
+<span class="eyebrow">Interview prep · KQ1</span>
+<h1>Precedent search</h1>
+<p class="sub">Leakage-safe, multi-tenant precedent retrieval over a chronic-care decision graph.
+Built at VoltusWave for Amura — a platform covering <strong>80+ chronic conditions</strong> with
+roughly <strong>ten thousand patients</strong> and <strong>nine years of history</strong>. Sole
+owner, design through production. <strong>Live in production.</strong></p>
+<p class="nav"><a href="../kq1-precedent-search.html">full case study</a><span>·</span><a href="../summary.html">summary</a><span>·</span><a href="../index.html">all case studies</a></p>
+
+<div class="warn">
+<h4>Read this before you quote a number</h4>
+<p>Every figure on this page is either a <strong>design or scale fact</strong> (80+ conditions,
+nine years of history, seven required fields, four review rounds) or a <strong>pre-registered
+acceptance target</strong> the system was designed and reviewed against (under 200&nbsp;ms warm-path
+P99, normalised discounted cumulative gain at 10 of at least 0.75). <strong>There are no measured
+production outcomes here.</strong> You left before the observed results were captured, and they are
+not yours to publish. If asked "what did it actually hit?", the answer is:
+<em>"Those are the floors we designed and reviewed against; I left before the post-launch numbers
+were mine to quote, so I won't invent one."</em> That answer is stronger than a guess, and an
+interviewer who is worth working for will read it as discipline.</p>
+</div>
+
+<!-- ═══════════════ 1 ═══════════════ -->
+<h2><span class="num">01</span>What is it?</h2>
+
+<h3>The situation, in plain language</h3>
+<p>A doctor is on a call with a patient. Fasting insulin above 15, glycated haemoglobin (HbA1c —
+the marker that averages blood sugar over roughly three months) sitting between 6.5 and 7.5, body
+mass index (BMI) above 28, patient in India. The doctor is about to put them on nutrition
+protocol A. The question actually in the doctor's head is not "show me similar patients." It is:</p>
+
+<blockquote><p>"Show prior cases where fasting insulin &gt;15, HbA1c between 6.5–7.5, BMI &gt;28,
+country = India, and nutrition protocol A was chosen. Return decision rationale summaries, evidence
+used, and outcomes at 3 and 6 months."</p></blockquote>
+
+<p>Who else faced this exact fork, what did they choose and why, and what happened at three and six
+months. This system answers that in the clinical flow, on a right-rail panel, while the decision is
+still a draft. Three roles open it: a <strong>guidance counsellor</strong> sitting with a
+prospective patient before enrolment, a <strong>doctor</strong> with an existing patient, and a
+<strong>health coach</strong> on a minor ailment.</p>
+
+<p>There is a second reader, and he arrives months later. A compliance officer — or a regulator —
+asks why the panel showed <em>those</em> ten cases on <em>that</em> date. Every response carries an
+as-of timestamp plus the version pins that produced it: the index-manifest hash, the feature-schema
+hash and the embedding-model version. The exact answer can be re-derived, not reconstructed from
+memory. That requirement shapes the architecture as much as the doctor's does.</p>
+
+<p>One boundary worth stating early, because interviewers reach for it: <strong>the panel puts
+forward nothing.</strong> A separate service — an artificial-intelligence recommender — proposes an
+option and carries a confidence. This panel emits no option and no confidence. It shows what
+happened to comparable patients who faced the decision before. It is the evidence a human weighs
+when deciding whether to accept the recommender's suggestion — the thing that makes an override
+informed rather than a gut call.</p>
+
+<div class="say">
+<span class="term">Open with these two sentences</span>
+<p>"A clinician drafting a treatment decision wants to know which prior decisions looked like this
+one, and how they turned out. The hard part isn't finding them — it's guaranteeing that nothing
+which happened <em>after</em> those decisions is allowed to influence which ones come back, because
+a precedent that looks wiser than it actually was is worse than no precedent at all."</p>
+</div>
+
+<h3>Why it is genuinely hard</h3>
+<p>The spec reads like a database filter with a fuzzy tail. The design's first job is to notice that
+<strong>the fuzzy tail is the whole product.</strong></p>
+<p>The structured half — the HbA1c band, the BMI threshold, country, chosen protocol — is a cohort
+filter any database can run with structured query language (SQL). It returns three hundred patients.
+It cannot rank the most analogous decisions <em>inside</em> that cohort, because analogy lives in
+symptom phrasing, in the decision rationale, and in the pattern of evidence sitting in front of the
+clinician at the time. That half needs dense-vector similarity. So the system is deliberately
+hybrid: structured filters define the cohort, vector similarity orders it by resemblance.</p>
+
+<p>Then there are three silent failure modes. None of them throws an error. All three return
+plausible, wrong answers — which is precisely why they destroy trust quietly instead of loudly.</p>
+<ol>
+<li><strong>Future leakage</strong> — describing a past case using information that only arrived
+after the decision was made. It makes every precedent look wiser than it was. The obvious version:
+grabbing the patient's latest recorded BMI for a decision made two years ago.</li>
+<li><strong>Tenant leakage</strong> — one clinic's patients surfacing in another clinic's results.
+That is a reportable privacy incident, not a bug.</li>
+<li><strong>Immature or misattributed outcomes</strong> — showing a six-month outcome for a decision
+made six weeks ago, or crediting an improvement to one of two overlapping decisions when a later
+intervention may have caused it.</li>
+</ol>
+
+<p>On top of those: the panel sits inside a live clinical workflow, so the warm path carries a
+sub-200-millisecond 99th-percentile (P99) latency budget; the corpus is protected health
+information (PHI), so no patient data may leave the client's virtual private cloud (VPC); and the
+platform is multi-tenant, so isolation is a first-class control rather than a query predicate.</p>
+
+<div class="say">
+<span class="term">The one-line framing of the risk</span>
+<p>"A precedent panel is an advisory surface a clinician reads at decision time, so a
+wrong-but-plausible result is worse than an empty one — it can nudge a real clinical choice on a
+false analogy. The whole design is biased toward refusing to answer over answering badly."</p>
+</div>
+
+<div class="gloss">
+<dl>
+<dt>As-of</dt><dd>Every field describing a past decision is the most recent valid observation
+at or before that decision's timestamp — never the latest value.</dd>
+<dt>Censoring</dt><dd>Deliberately refusing to credit an outcome to a decision when a later
+decision could have caused it. Here: <code>censored_by_later_decision</code>.</dd>
+<dt>kNN</dt><dd>k-nearest-neighbour search — return the k closest vectors to a query vector.
+"Filtered kNN" means the structured filters run inside that same search.</dd>
+<dt>Recall@10</dt><dd>Is the known-relevant precedent anywhere in the top ten at all.</dd>
+<dt>NDCG@10</dt><dd>Normalised discounted cumulative gain at 10 — is the <em>top</em> of that
+list well ordered, since the top is what a clinician actually reads.</dd>
+<dt>Denormalised</dt><dd>Pre-joined and copied into the serving document so reading it costs one
+hop, not two.</dd>
+<dt>RAG</dt><dd>Retrieval-augmented generation — retrieve evidence, then let a model speak over
+it. Here the retrieval is governed and the model's leash is very short.</dd>
+</dl>
+</div>
+
+<!-- ═══════════════ 2 ═══════════════ -->
+<h2><span class="num">02</span>How did we solve it?</h2>
+
+<h3>The pivotal choice: the unit of retrieval is the Decision, not the Patient</h3>
+<p>One Elasticsearch document per qualifying <em>decision</em>, keyed by
+<code>tenant · patient · enrollment · decision · decision_ts</code>. The query asks about an action
+taken at a point in time ("protocol A was chosen"), so patient-level retrieval answers the wrong
+question: you would get a similar patient without necessarily getting the matching decision, and a
+single patient carries several decisions with different rationales and different outcomes. Making
+the decision the addressable, embeddable, filterable object is what aligns the returned rationale,
+evidence and outcomes with the action the clinician is about to take. Almost every other choice in
+the design follows from this one.</p>
+
+<h3>Five stores, each doing exactly one job</h3>
+<div class="spine">
+<ol>
+<li><strong>DynamoDB</strong> — the append-only event spine, the source of truth. Nothing is ever
+updated in place, so any past instant is reconstructible.</li>
+<li><strong>Amazon Neptune</strong> — the decision graph, projected off the spine. Audit, regulator
+export and deep drill-down only. <strong>Never on the serving path.</strong></li>
+<li><strong>SageMaker</strong> — the self-hosted embedding model, in-VPC. Vectors cached by
+<code>content_hash + model_version</code>, so a document is embedded once per model version.</li>
+<li><strong>Elasticsearch <code>dense_vector</code></strong> — the authoritative serving index:
+filtered kNN plus the denormalised precedent-card payload in the same document.</li>
+<li><strong>Redis</strong> — a two-tier cache (final results, and query embeddings) on canonical
+keys, with single-flight owner-token locks.</li>
+<li><strong>FastAPI</strong> — the retrieval service. One authenticated endpoint, tenancy resolved
+from the token.</li>
+</ol>
+</div>
+
+<h3>The as-of rule, and the nightly indexer that enforces it</h3>
+<p>Every night at 02:00 the indexer picks up the decisions whose follow-up has newly matured past
+<code>min_followup_days</code>, and for each one <strong>replays the append-only spine up to that
+decision's <code>source_event_seq</code></strong> — it never reads current graph properties. It
+computes the clinical state, the rationale and the evidence <em>available at the time</em>, builds a
+context-only document plus a separate denormalised precedent card, embeds the document (cache hit on
+<code>content_hash + model_version</code>, otherwise a batched call to the in-VPC embedder), and
+upserts into a <strong>fresh versioned index</strong> carrying every version pin. Nothing is edited
+in place.</p>
+<p>Outcomes are computed in a <strong>separate later pass</strong>, only once follow-up has matured,
+and stamped onto the card — never into the embedding. The attribution rule is "nearest eligible
+same-domain decision before the outcome observation wins", and every outcome record persists the
+attribution decision id, the rule version and the distance in days. If a later same-domain decision
+falls inside an earlier decision's outcome window, that earlier window is marked
+<code>censored_by_later_decision</code> rather than credited a result a subsequent intervention may
+have caused.</p>
+<p>The new index is built behind an alias, <strong>shadow-evaluated</strong> against the golden set
+and the operational metrics, and only then does the alias flip atomically. If the acceptance floors
+do not hold, the system keeps serving yesterday's index and pages the on-call. The previous index is
+retained for rollback through a full follow-up refresh cycle.</p>
+
+<h3>The query path — the gates, in order</h3>
+<p>This is the sequence to be able to recite. Each step is a gate, and the ordering is
+load-bearing.</p>
+<ol>
+<li><strong>Auth resolves the tenant scope</strong> — a three-field identity of account, workspace
+and control-unit, taken from the authenticated token. Never from client-supplied parameters. A
+caller cannot widen its own scope by editing the request body.</li>
+<li><strong>Persona 1 parses the request.</strong> A large language model (LLM) turns free text into
+a typed, schema-validated <code>QueryCase</code> (Pydantic v2 structured output). A malformed parse
+is a validation retry, never a corrupted query.</li>
+<li><strong>Cold-start quality gate.</strong> All seven required at-decision clinical fields
+present; at least three pieces of at-decision evidence; a minimum two-hop graph neighbourhood; and a
+large-enough filtered candidate pool inside the caller's own tenant. Fail any one and the panel
+returns an honest "insufficient comparable precedents" state with a plain cohort count — explicitly
+labelled a filter count and explicitly <em>not</em> vector similarity.</li>
+<li><strong>Canonical cache key.</strong> A canonical sorted hash over everything that could change
+the result: tenant scope, query case, draft decision, K, every filter, the dedup policy, the
+feature-schema version, the embedding-model version, the index-manifest hash, the patient's latest
+event sequence and the correction epoch.</li>
+<li><strong>Redis final-result tier.</strong> A hit skips straight to the tenant assertion — that is
+the warm path, and it costs milliseconds.</li>
+<li><strong>Redis query-embedding tier.</strong> A miss on the final tier can still skip the model
+call. A true cold miss goes to the self-hosted embedder behind a <strong>circuit breaker at roughly
+1.5 seconds</strong>; if it trips, the panel stays in its deferred state and never blocks the warm
+path.</li>
+<li><strong>Filtered kNN in Elasticsearch.</strong> The tenant filter lives <em>inside</em> the
+vector query, alongside the hard structured filters on the <code>*_at_decision</code> fields — never
+applied after the fact.</li>
+<li><strong>Oversample, then dedup.</strong> Retrieve K × an oversample factor, then exclude the
+query's own patient and enrollment and collapse to at most one result per patient.</li>
+<li><strong>Read the precedent card straight from the search hit.</strong> No graph call on the
+serving path.</li>
+<li><strong>Annotate outcome maturity</strong> — <code>mature</code>, <code>not_mature</code>,
+<code>missing</code>, <code>censored</code>, <code>censored_by_later_decision</code> — plus the
+attribution rule that linked each outcome to this decision.</li>
+<li><strong>Assert tenancy on every returned row</strong> and verify the manifest pins match the
+request. Fail closed.</li>
+<li><strong>Persona 2, optionally.</strong> One neutral summary sentence per card, generated from
+as-of-decision fields only, then scanned by a leakage guard and decomposed by a claim grammar. If
+validation fails, the sentence is suppressed with failure metadata and the cards serve anyway.</li>
+<li><strong>Respond</strong> with the top-K cards, the as-of timestamp and the version pins.
+Tracing goes asynchronously to self-hosted LangSmith — metadata and payload hashes only, never raw
+clinical text.</li>
+</ol>
+
+<h3>The contracts that hold across every response</h3>
+<ul>
+<li><strong>Hard filters define membership, not ranking.</strong> Similarity only orders decisions
+that already passed them.</li>
+<li><strong>Outcomes never touch the embedding and never touch the ranking.</strong> They ride the
+response as labelled payload the clinician reads <em>after</em> the analogous decisions have already
+been selected by at-decision similarity.</li>
+<li><strong>No number in any response is written by a language model.</strong> Code computes and
+ranks; the model only narrates.</li>
+<li><strong>Every generated sentence is backed by cited as-of-decision fields, or it is not
+served.</strong></li>
+<li><strong>Hashes pin the inputs and the output</strong> — content hash, model version, validation
+version — so any card summary can be re-derived and audited.</li>
+</ul>
+
+<h3>Nine years of history, replayed in before launch</h3>
+<p>This was not built against an empty world. A private production system had already answered this
+question for roughly nine years, and that corpus is the raw material a precedent panel runs on. The
+platform ships a first-class <strong>hydration pipeline</strong> — a quarantine-first,
+proof-carrying load, not a throwaway backfill. Five properties make it trustworthy rather than
+merely large:</p>
+<ul>
+<li><strong>Event time is not ingestion time.</strong> Each legacy record keeps the real-world
+moment the decision was made; separate fields record when the system learned of it. Collapse the two
+and nine years of decisions look as though they all happened on load day — voiding every as-of
+reconstruction the index depends on. The watermark runs in a distinct hydration mode where a
+nine-year spread of "late" data is expected, then flips to a small live value at cutover.</li>
+<li><strong>Hydrating twice is a no-op.</strong> Content-addressed event ids and conditional writes
+make the load idempotent and resumable; re-running over the same corpus yields an identical spine
+and an identical snapshot-manifest hash. That is an executable proof, not an assurance.</li>
+<li><strong>Nothing is silently coerced.</strong> Each legacy payload-schema version gets an
+upconverter; any row that cannot be mapped to a schema — or to a tenant — is quarantined with a
+reason, never defaulted. A defaulted tenant would be a cross-tenant leak, the exact failure this
+system exists to prevent.</li>
+<li><strong>The same projection code serves history and live.</strong> Otherwise the hydrated graph
+would be a different product from the streaming one and every determinism guarantee would be
+theatre.</li>
+<li><strong>The load is proof-carrying.</strong> Zero-event-loss reconciliation against the source,
+per-tenant and per-class counts, as-of spot checks against known-good historical reports, and a
+golden replay over a historical slice all gate the load before anything downstream is built. A
+fenced cutover then attaches the live stream with a proof of neither gap nor duplicate.</li>
+</ul>
+<p>What that buys this query specifically: enough matured, as-of-embedded decisions that the
+cold-start gate fires far less often, because the comparable cases usually already exist. A
+retrieval service launched against an empty index would suppress most queries on day one.</p>
+
+<h3>Operations: corrections, stampedes, drift</h3>
+<ul>
+<li><strong>A correction event</strong> hits a dependency index — a reverse map from each affected
+entity, at the relevant event sequence, to the cache keys that depend on it — and invalidates every
+dependent Redis key. It atomically marks the affected search documents stale and bumps the
+index-manifest hash; because every serving query carries a mandatory "not stale" filter, a stale
+document is invisible to serving until a priority reindex clears the flag. Target: 95th-percentile (P95) under five
+minutes from correction ingestion to fresh document plus cleared flag plus invalidated keys.</li>
+<li><strong>Out-of-order corrections</strong> are dropped idempotently — each entity tracks the
+sequence of the last applied correction, and anything at or below it is discarded with a metric, so
+a delayed replay cannot clobber a newer fix.</li>
+<li><strong>Cache stampede</strong> on a cold key is handled by a single-flight lock with a random
+owner token and a compare-and-delete unlock. The lock's time-to-live (TTL) is derived from the
+cold-path breaker plus the search timeout plus a margin, with jitter — never a fixed guess. Waiters
+poll the final-result key and fall back to stale-while-revalidate or a deferred response.</li>
+<li><strong>Drift</strong> is caught daily: the index's document count, the eligible-decisions
+count and the graph's embedded-flag count must agree under the current manifest. Divergence means a
+build dropped or double-counted documents.</li>
+<li><strong>Cardinality blow-up</strong> is an explicit alert — a dependency-set lookup returning
+more than about a thousand keys pages, as does any document staying stale beyond about thirty
+minutes.</li>
+</ul>
+
+<!-- ═══════════════ 3 ═══════════════ -->
+<h2><span class="num">03</span>Why did we do what we did?</h2>
+<p class="lede">Each block is a decision, the alternative that was rejected, and the reason. The
+quoted lines are the reasoning as written at the time — those are the sentences to recall under
+pressure, because they are short enough to survive an interruption.</p>
+
+<h3>The shape of the problem</h3>
+
+<div class="dec">
+<h4>The Decision is the retrieval unit, not the Patient</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Patient-level embeddings — one document per patient.</dd>
+<dt>Because</dt><dd>The query asks about an action taken at a point in time. Patient-level retrieval
+returns a similar patient without necessarily returning the matching decision, and one patient
+carries several decisions with different rationales and outcomes.</dd>
+</dl>
+<blockquote><p>"Almost every other choice in the design follows from this one." Getting it wrong —
+patient-level — was the original defect that returned the wrong retrieval grain.</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>Hybrid retrieval: structured filters plus dense-vector similarity</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">A pure SQL cohort query; or a pure vector search with no hard
+filters.</dd>
+<dt>Because</dt><dd>SQL returns a cohort and stops. It cannot rank the most analogous decisions
+inside it, because analogy lives in symptom phrasing, rationale and evidence pattern. A pure vector
+search, conversely, cannot guarantee the stated clinical criteria are met.</dd>
+</dl>
+<blockquote><p>"The spec looks like a database filter with a fuzzy tail. The design's first job is
+to notice that the fuzzy tail is the whole product."</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>The structured filters stay hard, not soft-weighted into the vector</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Soft-weighting protocol, HbA1c band and country into the embedding
+for more flexible matching.</dd>
+<dt>Because</dt><dd>A soft weight would let a very similar protocol-B decision leak into a
+protocol-A request. It also keeps the two halves separable for evaluation: you can measure whether
+the filter is too restrictive (empty-result rate) independently of whether the ranking is good
+(NDCG@10).</dd>
+</dl>
+<blockquote><p>"Clinical filters encode contracts, not preferences." A clinician who asks for
+protocol A never sees protocol B, no matter how similar the embedding.</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>One index shaped for this question, not a general-purpose embedding</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">A single reusable patient-embedding index serving many
+questions.</dd>
+<dt>Because</dt><dd>The index-time and query-time documents must be in the same distribution to be
+comparable. A general-purpose patient embedding blurs the decision grain and pulls in post-decision
+or outcome signal — leaking the future. Scoping the index to the decision-level, context-only shape
+is what lets the acceptance gates mean anything.</dd>
+</dl>
+</div>
+
+<h3>Time, and not describing the past with the future</h3>
+
+<div class="dec">
+<h4>Reconstruct from the append-only spine; never read current graph properties</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Reading the decision's current value map from the graph — cheaper,
+one hop, obvious.</dd>
+<dt>Because</dt><dd>The graph is a projection. If someone edits a rationale or removes an
+evidence edge after the fact, the current value reflects that later edit, and reading it folds a
+future change into a historical document. The spine is immutable, so reading it at the decision's
+event sequence is the only way to recover at-decision truth.</dd>
+</dl>
+<blockquote><p>"The latest recorded BMI is the obvious field to grab" — and it is banned, because
+for a decision made two years ago that BMI was observed long after the clinician acted. This was a
+priority-zero (P0) review finding, now enforced by feature-freshness audit fields carried on every row.</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>Outcomes ride on the card, never inside the embedding</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Embedding the full decision record including its three- and
+six-month outcomes.</dd>
+<dt>Because</dt><dd>Outcomes are post-decision facts by definition. Embedding them would make
+similar-looking decisions cluster by <em>how they turned out</em> rather than by <em>how they looked
+at the time</em> — which is exactly the wrong axis for precedent.</dd>
+</dl>
+</div>
+
+<div class="dec">
+<h4>Graph-relationship freshness is tracked separately from clinical-feature freshness</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">One collapsed as-of timestamp covering everything.</dd>
+<dt>Because</dt><dd>A single number would hide that the evidence edges were, say, fresher than the
+clinical labs — and that distinction is exactly what you need when auditing whether a document
+leaked. Clinical freshness gets one as-of timestamp; rationale, supporting-evidence and
+constraining-policy edges each carry their own sequence field.</dd>
+</dl>
+<blockquote><p>Folding them into one number was itself a reviewer correction in a later
+round.</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>A nightly batch rebuild with a blue-green swap, never an in-place edit</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Indexing decisions as they stream in, updating documents in
+place.</dd>
+<dt>Because</dt><dd>A precedent only becomes eligible once its follow-up window matures — a decision
+made six weeks ago has no six-month outcome — so indexing is a function of time passing, not just of
+the decision arriving. And in-place edits make a bad partial write indistinguishable from a good
+one, and defeat rollback: you cannot atomically revert a document you overwrote.</dd>
+</dl>
+<blockquote><p>Corrections do get a near-real-time targeted reindex, so the nightly cadence is the
+floor for routine maturation, not the ceiling for correctness.</p></blockquote>
+</div>
+
+<h3>Tenancy — where the design is deliberately redundant</h3>
+
+<div class="dec">
+<h4>Five layers of isolation, including a response-time assertion that duplicates the query filter</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Trusting the tenant predicate in the vector query, since it is
+already there.</dd>
+<dt>Because</dt><dd>The filter and the assertion fail differently. A filter can be silently dropped
+by a refactor, a bad alias, or a cache key that lost its prefix. The layers: a traversal wrapper
+injecting tenant scope on every graph read and write; a mandatory tenant filter inside the vector
+query; tenant-prefixed cache keys; a response-time assertion on every returned row, failing closed;
+and per-tenant graph endpoints for tenants in the PHI/regulatory risk tier.</dd>
+</dl>
+<blockquote><p>"It is the difference between 'we intended to filter' and 'we verified every row
+before it left the process.'"</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>A thin candidate pool is never backfilled from another tenant</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Borrowing comparable decisions across tenants to keep the panel
+useful for small clinics.</dd>
+<dt>Because</dt><dd>Pooling across tenants would be a cross-tenant leak — the exact failure the
+whole isolation stack exists to prevent. Thin-pool tenants get the honest empty state, not a diluted
+cross-tenant answer.</dd>
+</dl>
+<blockquote><p>"Privacy is an incident class, not a metric to optimise." Cross-tenant assertion
+failures carry a pre-registered target of zero and a page-out.</p></blockquote>
+</div>
+
+<h3>Latency, caching and determinism</h3>
+
+<div class="dec">
+<h4>The graph database is off the serving path entirely</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Reading the precedent's rationale, evidence and outcomes live from
+the graph at serve time.</dd>
+<dt>Because</dt><dd>The warm path has a sub-200-millisecond P99 budget and must not depend on a
+graph traversal's tail. Every field the panel needs — summary, short rationale, evidence one-liners,
+both outcome objects with status — is denormalised into the search document at index time. The
+consequence is operational, not just fast: if the graph is degraded, the clinician's panel is
+unaffected.</dd>
+</dl>
+<blockquote><p>"The budget is a design constraint that shaped the architecture, not a target bolted
+on afterward."</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>Canonical cache keys pin everything result-affecting; TTL is a backstop, not the correctness mechanism</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">A short TTL as the freshness strategy.</dd>
+<dt>Because</dt><dd>A TTL only bounds how long a stale entry can live; it does nothing to prevent
+serving a wrong answer inside that window, and in clinical use even a short window of stale rationale
+or outcomes is unacceptable. Freshness is enforced structurally: the key includes the version pins
+and the patient's latest event sequence, so a change invalidates by making the key miss.</dd>
+</dl>
+<blockquote><p>"A stale cache entry is unreachable rather than merely unlikely."</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>Dedup to one decision per patient — tracked, not thresholded</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Returning the raw top-K; or setting a fixed acceptable
+suppression rate.</dd>
+<dt>Because</dt><dd>A clinician wants K analogous <em>situations</em>, not K near-duplicate
+decisions from one prolific patient's timeline. But there is no single correct suppression rate — it
+depends on how many multi-decision patients sit in the cohort — so a fixed threshold would be
+arbitrary. The rate is tracked and alerts on a spike, which is the real signal that something
+changed.</dd>
+</dl>
+</div>
+
+<h3>Refusal as a feature</h3>
+
+<div class="dec">
+<h4>Suppress on thin data, and show a plain cohort count instead</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Serving a short, low-confidence ranked list and letting the
+clinician judge.</dd>
+<dt>Because</dt><dd>A ranked similarity list built on thin data is misleadingly confident, whereas a
+structured-filter cohort count is an honest, non-ranked fact the clinician can still use. The
+suppressed response is explicitly labelled as a filter count and explicitly not as vector
+similarity, so the two can never be confused.</dd>
+</dl>
+<blockquote><p>"The panel does not manufacture a thin ranked list to fill the silence. The human
+decides without precedent evidence, and is told that is what is happening."</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>The empty-result rate is itself a first-class metric</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Treating refusal as automatically virtuous.</dd>
+<dt>Because</dt><dd>"An honest gate that fires constantly is still a broken product." The tension is
+made measurable: a pre-registered target under 5% per program, so a gate that suppresses too often
+trips an alert rather than silently frustrating clinicians. If a program's pool is chronically small,
+that surfaces as a data-coverage problem to fix upstream, not a gate to loosen.</dd>
+</dl>
+<blockquote><p>The honest caveat, worth volunteering: for the guidance counsellor sitting with a
+prospective patient, refusal is <em>the common case, not the edge case</em> — there is no decision
+history and no graph neighbourhood for the gate to pass. A floor that is comfortable across a
+doctor's caseload is not automatically comfortable there.</p></blockquote>
+</div>
+
+<h3>The model boundary</h3>
+
+<div class="dec">
+<h4>The language model appears at exactly two edges and nowhere in between</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">LLM re-ranking of candidates; LLM-computed outcome deltas; an
+agent that runs the search.</dd>
+<dt>Because</dt><dd>Similarity search, filtering, dedup and outcome computation must be
+reproducible, auditable and correct. A model at any of those points introduces non-determinism and
+un-auditability into clinical results. So it parses natural language in, and narrates one sentence
+out, and everything between is code.</dd>
+</dl>
+<blockquote><p>"Know when not to use a language model." The summary sentence is optional — the card
+reads fully from its structured fields, and the sentence can be rendered from a deterministic
+template instead. "The model is an enhancement on a short leash, never a dependency."</p></blockquote>
+</div>
+
+<div class="dec">
+<h4>Self-hosted inference in-VPC — not an external provider under a no-retention contract</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">A managed model application programming interface (API) with a contractual no-training, no-retention
+agreement.</dd>
+<dt>Because</dt><dd>Conflating the two is a real error. A no-retention agreement is a legal promise
+about what a provider does <em>after</em> receiving the data; it is not a network-residency control
+and it does not keep clinical text on your network. Production runs self-hosted Llama 3.1 (an 8-
+billion-parameter workhorse with a 70-billion-parameter escalation) and a self-hosted embedder,
+both in-VPC. An external provider is permitted only with de-identified payloads under a signed
+data-processing agreement.</dd>
+</dl>
+</div>
+
+<h3>Evaluation</h3>
+
+<div class="dec">
+<h4>Clinician-graded golden set, not model-graded relevance</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">Using a language model as the relevance grader — far cheaper and
+faster.</dd>
+<dt>Because</dt><dd>Relevance here is a clinical judgement about whether a precedent is genuinely
+analogous in context, evidence and decision intent. "A model grader would encode the same
+distributional priors as the retriever, flattering it." Model grading is permitted only to
+pre-screen candidates. Acceptance labels are two clinicians per query on a 0–3 rubric, with
+adjudication when they disagree by two or more grades or weighted kappa falls below 0.60.</dd>
+</dl>
+</div>
+
+<div class="dec">
+<h4>Per-program Recall@10 floored separately, and lower</h4>
+<dl>
+<dt>Rejected</dt><dd class="alt">A single global recall number.</dd>
+<dt>Because</dt><dd>Small programs have thin candidate pools and get averaged into invisibility, yet
+a clinician in that program experiences <em>its</em> recall, not the platform's. A separate lower
+floor catches segment collapse before launch rather than after. It is a deliberate guard against
+"good on average, broken for you."</dd>
+</dl>
+</div>
+
+<h3>What the design was reviewed against</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Metric</th><th>Pre-registered floor</th><th>Why it is there</th></tr></thead>
+<tbody>
+<tr><td>NDCG@10</td><td>at least 0.75</td><td>The top of the list is what the clinician actually reads.</td></tr>
+<tr><td>Recall@10, overall</td><td>at least 0.80</td><td>The relevant precedent must be in the list at all.</td></tr>
+<tr><td>Recall@10, per program</td><td>at least 0.60</td><td>Averages hide weak segments; every program gets its own floor.</td></tr>
+<tr><td>Warm-path P99 latency</td><td>under 200 ms</td><td>The panel must feel instant inside the clinical workflow.</td></tr>
+<tr><td>Cold-path P99 latency</td><td>around 1.5 s</td><td>A first-ever query defers visibly instead of blocking the room.</td></tr>
+<tr><td>Empty-result rate</td><td>under 5% per program</td><td>An honest gate that fires constantly is still a broken product.</td></tr>
+<tr><td>Cross-tenant assertion failures</td><td>0 · page-out</td><td>Privacy is an incident class, not a metric to optimise.</td></tr>
+<tr><td>Outcome agreement (offline only)</td><td>at least 70%</td><td>Sanity check that the retrieved cluster is clinically coherent.</td></tr>
+</tbody>
+</table>
+</div>
+<p class="lede">All pre-registered before launch, wired into an offline harness, and version-pinned
+to the exact dataset, feature schema, model and index that produced each score — so a number can
+never be quoted without the thing that produced it. Golden set: at least 100 queries (target around
+120 to survive exclusions), stratified across tenant class, country, program, protocol, clinical
+bands, candidate-pool size and outcome maturity.</p>
+
+<h3>The review gauntlet, and what it changed</h3>
+<p>Four adversarial design-review rounds under a Principal-AI-Engineer lens, plus three rounds of
+work-sample review under a hiring-CTO (chief technology officer) lens against the runnable
+prototype. The full audit trail was kept, including the findings that hurt. This design reached
+<strong>approved-with-nits at round four</strong> — the only one of the ten killer queries in the
+suite to reach that bar.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Round</th><th>Finding</th><th>What changed as a result</th></tr></thead>
+<tbody>
+<tr><td class="rnd">Design 1–3</td><td>Future-leakage exposure in feature naming — latest-value lookups where as-of computation was required.</td><td>Every clinical feature recomputed as the latest valid observation at or before <code>decision_ts</code>, enforced by feature-freshness audit fields carried on every row. Rated P0.</td></tr>
+<tr><td class="rnd">Design 1–3</td><td>Incomplete cache keys.</td><td>Key extended to a canonical sorted hash over every result-affecting input — version pins, index manifest, the patient's latest event sequence, the correction epoch, the dedup and maturity rule versions.</td></tr>
+<tr><td class="rnd">Design 1–3</td><td>Outcome-attribution gaps.</td><td>An explicit rule — nearest eligible same-domain decision before the outcome observation wins — persisting the attribution decision id, rule version and distance in days, plus the <code>censored_by_later_decision</code> status.</td></tr>
+<tr><td class="rnd">Design 1–3</td><td>Graph-edge freshness folded into a single timestamp.</td><td>Split into per-relationship sequence fields, separate from the clinical as-of timestamp.</td></tr>
+<tr><td class="rnd">Design 4</td><td>Lock-TTL hardening.</td><td>Single-flight lock TTL derived from the cold-path breaker plus search timeout plus margin, with jitter; owner token and compare-and-delete unlock.</td></tr>
+<tr><td class="rnd">Design 4</td><td>No named correction-invalidation service-level agreement (SLA).</td><td>P95 under five minutes from correction ingestion to fresh document, cleared stale flag and invalidated dependent keys — plus alert conditions for the queue and for documents stuck stale.</td></tr>
+<tr><td class="rnd">Work-sample 2</td><td>The prototype's cold-start gate checked only <strong>2 of the 7</strong> required clinical fields — a real gap between design and code.</td><td>Round 3 aligned the gate to all seven fields; a smoke-script environment defect found in the same round was also fixed. Final verdict: approved.</td></tr>
+<tr><td class="rnd">Platform</td><td>Exporter and snapshot determinism, deferred to the shared backbone.</td><td>Landed at the platform layer: a golden replay now proves that re-exporting the same point-in-time under shuffled spine order, late arrivals and corrections yields identical hashes. This query binds to it.</td></tr>
+<tr><td class="rnd">Platform</td><td>Ambiguous single event timestamp with mixed measured / received / written meaning.</td><td>Landed at the platform layer: a four-field event-time split plus an allowed-lateness watermark. This query absorbed it automatically.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="say">
+<span class="term">Say this when asked about the review process</span>
+<p>"Designs earn approval; they don't declare it. Approved-with-nits is not 'done' — it means the
+design is sound and the remaining items are named tasks rather than unknowns. I kept the findings
+that hurt in the trail, including the one where my own runnable prototype checked two of seven gate
+fields when the design said seven."</p>
+</div>
+
+<h3>What is still honestly open</h3>
+<ul>
+<li><strong>The production vector store.</strong> Elasticsearch <code>dense_vector</code> is the
+default behind an index abstraction; the pgvector / Qdrant / Pinecone bake-off has explicit
+acceptance criteria and is not yet closed.</li>
+<li><strong>Which tenants sit in the PHI/regulatory risk tier</strong> that warrants per-tenant graph
+endpoints — a legal and compliance classification, not an engineering one.</li>
+<li><strong>Whether "country" means the patient's country at decision time</strong> — the design
+commits to that reading, but confirming it against product intent is open. The wrong reading would
+filter on the tenant's registered jurisdiction and silently change the cohort.</li>
+<li><strong>The actual current, 10× and 100× post-filter candidate-pool sizes</strong> that the gate
+thresholds ultimately depend on.</li>
+<li><strong>Which clinicians label the golden set</strong>, and which tenants (if any) have signed
+external-embedding agreements.</li>
+</ul>
+
+<!-- ═══════════════ 4 ═══════════════ -->
+<h2><span class="num">04</span>Architecture</h2>
+<p class="lede">Four diagrams, taken verbatim from the case study. Between them they carry the whole
+system: the spine-to-index chain, the nightly rebuild that enforces as-of correctness, the query
+path with its gates, and the boundary the language model is not allowed to cross.</p>
+
+<h3>Fig 1 — Indexing and serving at a glance</h3>
+<div class="fig">
+<pre class="mermaid">
+flowchart TD
+    DDB[(Append-only&lt;br/&gt;event spine&lt;br/&gt;DynamoDB)] --&gt; LM[Projection] --&gt; NEP[(Decision graph&lt;br/&gt;Neptune)]
+    NEP --&gt; EX[Nightly snapshot&lt;br/&gt;vertices · edges · manifest]
+    EX --&gt; FEAT[Featurise per Decision&lt;br/&gt;context as-of decision_ts&lt;br/&gt;no outcomes · no post-decision evidence]
+    FEAT --&gt; EMB[Embed&lt;br/&gt;self-hosted model in-VPC&lt;br/&gt;cached by content_hash + model_version]
+    EMB --&gt; IDX[(Elasticsearch dense_vector&lt;br/&gt;authoritative serving index&lt;br/&gt;+ denormalised precedent cards)]
+    IDX --&gt; API[Retrieval API&lt;br/&gt;authenticated · tenant-scoped]
+    API --&gt; REDIS[(Redis&lt;br/&gt;two-tier cache)]
+    API --&gt; UI[Clinician panel&lt;br/&gt;warm + deferred cold states]
+    IDX -.-&gt; EVAL[Offline eval harness&lt;br/&gt;NDCG@10 · Recall@10 · P99]
+</pre>
+</div>
+<p class="figcap">Fig 1 · The graph database is never on the serving path</p>
+
+<div class="walk">
+<h4>What flows where</h4>
+<p>Left to right in time, top to bottom on the page. Events land on the <strong>DynamoDB append-only
+spine</strong> — the source of truth, never updated in place. A <strong>projection</strong> keeps the
+<strong>Neptune decision graph</strong> current. A <strong>nightly snapshot</strong> exports
+vertices, edges and a manifest, so the indexer works from a pinned, hashed artefact rather than a
+moving live graph — that pinning is what makes a build reproducible and auditable.</p>
+<p>The <strong>featurise</strong> step is where the leakage control lives: it computes each
+decision's context as-of <code>decision_ts</code>, with no outcomes and no post-decision evidence.
+That context-only document goes to the <strong>self-hosted embedder inside the VPC</strong>, cached
+by <code>content_hash + model_version</code> so a document is embedded once per model version. The
+vector plus the denormalised precedent card land in <strong>Elasticsearch</strong>, which is the
+authoritative serving index. The <strong>retrieval API</strong> is the only thing clinicians touch;
+it fronts <strong>Redis</strong> and the panel. The dashed edge to the <strong>offline eval
+harness</strong> is dashed on purpose: evaluation reads the same index but is never in the request
+path.</p>
+<h4>The gate that is not drawn as a gate</h4>
+<p>Notice what is <em>missing</em>: there is no arrow from Neptune to the retrieval API. That
+absence is the design. The graph is upstream of the index and nowhere near serving.</p>
+<div class="breaks"><b>Without it:</b> the warm path would inherit the graph's tail latency, and the
+sub-200-millisecond P99 budget would be unmeetable in practice. Worse operationally, a degraded
+graph would take the clinician's panel down with it. As drawn, a graph outage costs you audit
+export and deep drill-down — and nothing the clinician sees.</div>
+<div class="breaks"><b>Without the caching key on the embedder:</b> every nightly rebuild would
+re-embed the entire nine-year corpus rather than only what changed, and a model-version change would
+be indistinguishable from a content change.</div>
+</div>
+
+<h3>Fig 3 — The 02:00 nightly refresh</h3>
+<div class="fig">
+<pre class="mermaid">
+flowchart TD
+    CRON[02:00 nightly indexer&lt;br/&gt;pick every Decision whose follow-up&lt;br/&gt;has matured past min_followup_days] --&gt; REPLAY[Replay the append-only spine&lt;br/&gt;up to each decision's source_event_seq&lt;br/&gt;DynamoDB · never current graph state]
+    REPLAY --&gt; FEAT[Compute context as-of decision_ts&lt;br/&gt;clinical fields · rationale · evidence&lt;br/&gt;no outcomes · no post-decision data]
+    FEAT --&gt; DOC[Build context-only doc&lt;br/&gt;+ denormalised precedent card]
+    DOC --&gt; EMBQ{Embedding already cached for&lt;br/&gt;content_hash + model_version}
+    EMBQ -- yes --&gt; UPSERT[Upsert into a fresh versioned ES index&lt;br/&gt;doc keyed by tenant · patient · enrollment ·&lt;br/&gt;decision · decision_ts + all version pins]
+    EMBQ -- no --&gt; EMB[Embed on self-hosted SageMaker&lt;br/&gt;in-VPC · batched]
+    EMB --&gt; UPSERT
+    UPSERT --&gt; OUT[Separate pass stamps outcomes 3m / 6m&lt;br/&gt;only once follow-up matures ·&lt;br/&gt;censoring + attribution rules applied]
+    UPSERT --&gt; SWAP{Blue-green swap&lt;br/&gt;shadow eval on the new index ·&lt;br/&gt;acceptance floors hold}
+    SWAP -- pass --&gt; LIVE[Publish new index manifest ·&lt;br/&gt;serving alias flips]
+    SWAP -- fail --&gt; HOLD([Keep serving yesterday's index ·&lt;br/&gt;page the on-call])
+    LIVE --&gt; INV[Stale cache entries become unreachable —&lt;br/&gt;every key pins index_manifest_hash ·&lt;br/&gt;morning traffic re-warms the cache]
+</pre>
+</div>
+<p class="figcap">Fig 3 · Replay, featurise, embed, blue-green swap — nothing edited in place</p>
+
+<div class="walk">
+<h4>What flows where</h4>
+<p>A cron at 02:00 selects only decisions whose follow-up has <em>newly</em> matured past
+<code>min_followup_days</code> — eligibility is a function of time passing, not of the decision
+arriving. For each, the indexer <strong>replays the spine up to that decision's
+<code>source_event_seq</code></strong>, explicitly not reading current graph state. It computes
+at-decision context, builds two artefacts from it — a context-only document that will be embedded,
+and a denormalised precedent card that will not — and checks the embedding cache.</p>
+<p>The upsert writes into a <strong>fresh versioned index</strong>, keyed by
+<code>tenant · patient · enrollment · decision · decision_ts</code> and carrying every version pin.
+From that upsert two things fan out: a <strong>separate outcome pass</strong> that stamps the three-
+and six-month results with censoring and attribution rules applied, and the <strong>blue-green
+swap</strong>.</p>
+<h4>The three gates</h4>
+<ul>
+<li><strong>The embedding-cache diamond</strong> is a cost and determinism gate: the same content
+under the same model version must never produce two different vectors, and re-embedding nine years
+nightly would be indefensible.</li>
+<li><strong>The blue-green swap diamond</strong> is the safety gate. Shadow evaluation runs the
+golden set and the operational metrics against the new index before any traffic sees it. Pass and
+the alias flips atomically; fail and yesterday's index keeps serving while the on-call is paged.</li>
+<li><strong>The final invalidation node</strong> is not a step so much as a consequence: because
+every cache key pins <code>index_manifest_hash</code>, the alias flip makes every entry keyed to the
+old manifest unreachable. Nothing has to be deleted. Morning traffic re-warms.</li>
+</ul>
+<div class="breaks"><b>Without the replay step</b> (reading current graph properties instead): every
+document would be described using edits and observations that arrived after the decision. Precedents
+would look systematically wiser than they were, and no error would ever be raised.</div>
+<div class="breaks"><b>Without the separate outcome pass:</b> outcomes would end up inside the
+embedding, and decisions would cluster by how they turned out rather than by how they looked at the
+time — matching on the one axis that is unknowable at draft time.</div>
+<div class="breaks"><b>Without blue-green:</b> a bad build would reach clinicians before anyone
+noticed, and there would be no atomic way back — you cannot revert a document you overwrote.</div>
+</div>
+
+<h3>Fig 5 — The query path</h3>
+<div class="fig">
+<pre class="mermaid">
+flowchart TD
+    Q[Clinician requests precedents&lt;br/&gt;for a draft decision] --&gt; AUTH[Auth resolves tenant scope&lt;br/&gt;account · workspace · controlunit ·&lt;br/&gt;no client-side override]
+    AUTH --&gt; GATE{Cold-start quality gate&lt;br/&gt;7 required at-decision fields ·&lt;br/&gt;minimum evidence · minimum 2-hop&lt;br/&gt;neighbourhood · minimum candidate pool}
+    GATE -- fail · suppress --&gt; NOPE([Honest empty state&lt;br/&gt;cohort count only ·&lt;br/&gt;never labeled similarity])
+    GATE -- pass --&gt; CKEY[Canonical cache key —&lt;br/&gt;tenant scope · query · all filters ·&lt;br/&gt;schema + model versions · index manifest ·&lt;br/&gt;event-seq watermark · correction epoch ·&lt;br/&gt;dedup + maturity rule versions]
+    CKEY --&gt; CACHE{Redis final-result hit}
+    CACHE -- yes · warm --&gt; ASSERT[Assert every result belongs&lt;br/&gt;to the caller tenant scope ·&lt;br/&gt;manifest pins match request]
+    CACHE -- no --&gt; EMBQ{Query-embedding&lt;br/&gt;cache hit}
+    EMBQ -- yes --&gt; KNN[Filtered kNN in Elasticsearch&lt;br/&gt;tenant filter + structured filters&lt;br/&gt;on *_at_decision fields]
+    EMBQ -- no · cold --&gt; EMBED[Self-hosted embedder in-VPC&lt;br/&gt;circuit breaker at 1.5s —&lt;br/&gt;defer panel · never block warm path]
+    EMBED --&gt; KNN
+    KNN --&gt; DEDUP[Oversample → dedup&lt;br/&gt;exclude same patient + enrollment ·&lt;br/&gt;max 1 result per patient]
+    DEDUP --&gt; READ[Read precedent card from the ES doc —&lt;br/&gt;no graph call on the serving path]
+    READ --&gt; MATURE[Annotate outcomes 3m / 6m&lt;br/&gt;mature · not_mature · missing ·&lt;br/&gt;censored · censored_by_later_decision]
+    MATURE --&gt; ASSERT
+    ASSERT --&gt; RET([Top-K precedent cards&lt;br/&gt;+ as_of timestamp + version pins])
+</pre>
+</div>
+<p class="figcap">Fig 5 · Refuse early, pin every version, fail closed on tenancy</p>
+
+<div class="walk">
+<h4>What flows where</h4>
+<p>Read it as four bands. <strong>Band one, identity:</strong> auth resolves the three-field tenant
+scope; the client cannot assert its own. <strong>Band two, refusal:</strong> the cold-start gate runs
+<em>before</em> any expensive work — before the cache lookup, before the embedder, before the search.
+<strong>Band three, retrieval:</strong> canonical key, then two cache tiers, then the filtered kNN,
+then dedup, then the card read, then maturity annotation. <strong>Band four, the choke point:</strong>
+every path — warm cache hit and full cold path alike — converges on the same tenant assertion before
+anything is returned.</p>
+<h4>What each gate does</h4>
+<ul>
+<li><strong>The cold-start gate</strong> checks four different ways the answer could be confidently
+wrong: a missing one of seven required at-decision fields means similarity is computed on a partial
+vector; fewer than three evidence items means the case is under-described; a sparse two-hop
+neighbourhood means an unreliable case; and a small candidate pool means similarity is noise. Fail
+any one and the clinician gets a plain cohort count, labelled a count and never a similarity.</li>
+<li><strong>The canonical cache key</strong> is a gate against time: it pins the tenant scope, the
+query, every filter, the schema and model versions, the index manifest, the patient's event-sequence
+watermark, the correction epoch, and the dedup and maturity rule versions. Anything upstream changes,
+the key stops matching.</li>
+<li><strong>The two cache diamonds</strong> are a cost ladder. A final-result hit is the warm path
+and costs milliseconds. A miss can still hit the query-embedding tier and skip the model. Only a true
+cold query pays for an embedding.</li>
+<li><strong>The circuit breaker at 1.5 seconds</strong> on the embedder is a blast wall: if the model
+is slow or throttling, the panel returns in its deferred state with skeleton rows rather than holding
+the request open. A model miss never blocks the warm code path, because the warm path does not call
+the model at all.</li>
+<li><strong>Oversample-then-dedup</strong> retrieves more than K precisely because the next step
+removes the query's own patient and enrollment and collapses to one result per patient. Without
+oversampling, dedup could leave fewer than K.</li>
+<li><strong>The tenant assertion</strong> is the last line. It re-checks what the query filter
+already enforced, and fails closed.</li>
+</ul>
+<div class="breaks"><b>Without the gate running first:</b> a thin case would still burn an embedding
+call and a search, and — much worse — would return a confident-looking ranked list built on a partial
+vector. The whole product's trust budget is spent on results like that.</div>
+<div class="breaks"><b>Without the tenant assertion:</b> the isolation story would rest on a single
+query predicate that a refactor, a bad alias or a cache key missing its prefix could silently drop.
+The assertion is what turns a mis-keyed cache entry into a paged incident instead of a silent
+leak.</div>
+<div class="breaks"><b>Without the maturity annotation:</b> a six-week-old decision would show a
+blank or partial six-month outcome that reads as "no improvement", and an outcome that a later
+intervention may have caused would be credited to this one.</div>
+</div>
+
+<h3>Fig 8 — The language-model boundary</h3>
+<div class="fig">
+<pre class="mermaid">
+flowchart TD
+    FT[Clinician free text] --&gt; P1[LLM · persona 1&lt;br/&gt;precedent-librarian&lt;br/&gt;parses text into a typed QueryCase&lt;br/&gt;structured output · no retrieval]
+    P1 --&gt; DET[Deterministic core&lt;br/&gt;cold-start gate · canonical cache keys ·&lt;br/&gt;filtered kNN · dedup · maturity status ·&lt;br/&gt;every number computed by code]
+    DET --&gt; P2[LLM · persona 2&lt;br/&gt;card-summarizer&lt;br/&gt;one neutral sentence from&lt;br/&gt;as-of-decision fields only]
+    P2 --&gt; GUARD[Leakage guard&lt;br/&gt;rejects any summary containing&lt;br/&gt;post-decision values]
+    GUARD --&gt; OUT[Precedent cards&lt;br/&gt;to the clinician]
+</pre>
+</div>
+<p class="figcap">Fig 8 · Two personas, one guard — the summary sentence is the only field a model writes</p>
+
+<div class="walk">
+<h4>What flows where</h4>
+<p>This is the whole governance story in five boxes, and it is the one to draw first on a whiteboard
+if the interviewer asks about the artificial intelligence (AI) architecture. Free text enters. <strong>Persona 1, the
+precedent-librarian</strong>, converts it into a typed <code>QueryCase</code> — structured output,
+schema-validated, with no retrieval powers of its own. Everything in the middle is the
+<strong>deterministic core</strong>: the gate, the cache keys, the filtered kNN, dedup, maturity
+status. Every number in the response is computed there. <strong>Persona 2, the card-summarizer</strong>,
+writes one neutral sentence per card from as-of-decision fields only, at temperature 0 against a
+pinned model and a pinned system prompt that forbids computing, re-ranking or concluding — it may
+only restate. The <strong>leakage guard</strong> then scans that sentence for any post-decision
+value and a claim grammar decomposes it into templates backed by cited as-of fields, rejecting
+anything it cannot decompose.</p>
+<h4>The shape of the failure</h4>
+<p>On a validation failure the sentence is dropped with failure metadata and <strong>the ranked
+cards, their evidence and their outcomes serve regardless</strong>. That is why the boundary holds:
+the answer never depends on the model. The worst case is a missing sentence, not a wrong clinical
+fact.</p>
+<div class="breaks"><b>Without the typed contract on persona 1:</b> a malformed parse becomes a
+corrupted query that runs silently and returns the wrong cohort. With it, a bad parse is a retry or
+a safe fallback — "no answer or safe default", never "wrong answer".</div>
+<div class="breaks"><b>Without the guard on persona 2:</b> a summary could quietly narrate a
+post-decision value — "the patient's HbA1c later fell to 6.1" — and reintroduce exactly the future
+leakage the entire indexing pipeline exists to prevent, at the very last step.</div>
+<div class="breaks"><b>If the model were moved into the middle box</b> (re-ranking, or computing an
+outcome delta): the ranking would stop being reproducible and the numbers would stop being
+auditable. The honest limit is worth saying out loud: pinning the version, prompt and temperature
+gives drift detection and reproducible auditing, but it does not make generation truly
+deterministic — which is exactly why nothing load-bearing sits there.</div>
+</div>
+
+<!-- ═══════════════ 5 ═══════════════ -->
+<h2><span class="num">05</span>Likely questions</h2>
+<p class="lede">Headline sentence first, every time. Detail only if they ask for it — and in a round
+with seven interruptions and three time warnings, they often will not.</p>
+
+<div class="q">
+<p class="ask">Why is the retrieval unit a decision and not a patient?<span class="pill">the one they always ask</span></p>
+<p class="head"><b>Headline:</b> Because the question is about an action taken at a point in time,
+and a single patient carries several decisions with different rationales and different outcomes.</p>
+<p>Patient-level retrieval returns a similar patient without necessarily returning the matching
+decision — you would surface someone whose profile rhymes but whose clinical fork was different.
+Making the decision the addressable object means the document key is
+<code>tenant · patient · enrollment · decision · decision_ts</code>, and the returned rationale,
+evidence and outcomes all line up with the action the clinician is about to take. It is the most
+consequential decision in the design; the context-only embedding, the denormalised card and the
+outcome-attribution rule all follow from it.</p>
+</div>
+
+<div class="q">
+<p class="ask">You say there is no future leakage. Prove it, don't assert it.</p>
+<p class="head"><b>Headline:</b> Two mechanisms — every row carries auditable freshness fields so a
+replay can check that no feature's freshness postdates its decision, and a leakage guard scans every
+generated sentence for post-decision values.</p>
+<p>The structural control is that features are reconstructed by replaying the immutable spine up to
+the decision's event sequence, never by reading current graph properties — because the graph is a
+projection and a later edit would fold the future into a historical document. Each row then carries
+the as-of timestamp plus per-relationship sequence fields, kept deliberately separate so you can
+see if the evidence edges were fresher than the clinical labs. On top of that, the platform's
+deterministic exporter and its golden replay now prove that re-exporting the same point-in-time
+under shuffled spine order and late arrivals yields identical hashes. The honest part: those are
+audit mechanisms, not a proof of absence — which is why leakage is also a named acceptance concern
+rather than a box that was ticked once.</p>
+</div>
+
+<div class="q">
+<p class="ask">One shared index across tenants. Convince me clinic A can never see clinic B's patients.</p>
+<p class="head"><b>Headline:</b> Five independent layers, any one of which can fail without leaking —
+and a cross-tenant result is treated as a page-out incident with a pre-registered target of zero, not
+as a bug.</p>
+<p>Tenant identity is three fields — account, workspace, control-unit — resolved from the
+authenticated token, never from the request body, so a client cannot widen its own scope. Then: a
+traversal wrapper injects the scope on every graph read and write; the tenant filter lives inside the
+vector query rather than being applied afterwards; cache keys are tenant-prefixed and the tenant
+scope is a field in the canonical hash; a response-time assertion re-checks every returned row and
+fails closed; and tenants in the protected-health-information risk tier get physically separate graph
+endpoints. The assertion looks redundant, and that is the point — a filter can be silently dropped by
+a refactor, a bad alias, or a key that lost its prefix. It is the difference between "we intended to
+filter" and "we verified every row before it left the process." And when a tenant's candidate pool is
+too thin, it is never backfilled from another tenant — the gate refuses instead.</p>
+</div>
+
+<div class="q">
+<p class="ask">A time-to-live is the normal way to keep a cache fresh. Why isn't it enough?</p>
+<p class="head"><b>Headline:</b> A TTL only bounds how long a stale entry can live; it does nothing
+to stop you serving a wrong answer inside that window, and in clinical use even a short window of
+stale rationale is unacceptable.</p>
+<p>Freshness is enforced structurally instead. The cache key is a canonical sorted hash over
+everything that could change the result: tenant scope, query case, draft decision, K, every filter,
+the dedup policy, the feature-schema version, the embedding-model version, the index-manifest hash,
+the patient's latest event sequence, and the correction epoch. Anything upstream changes and the key
+simply stops matching — a stale entry becomes <em>unreachable rather than merely unlikely</em>.
+Upstream corrections additionally push: a dependency index maps affected entities to dependent keys,
+invalidates them, marks the search documents stale and bumps the manifest hash, with a P95 target of
+five minutes. Canonical sorted JavaScript Object Notation (JSON) is what stops field ordering from
+causing accidental misses. The TTL survives as memory hygiene, not as the correctness mechanism.</p>
+</div>
+
+<div class="q">
+<p class="ask">Cosine similarity over an embedding is a black box. Why would a clinician trust the ranking?</p>
+<p class="head"><b>Headline:</b> The clinician isn't asked to trust the similarity number — every
+returned card is fully readable from its structured fields, so they evaluate the precedent, not the
+score.</p>
+<p>The card carries the at-decision clinical values, the rationale, the evidence and both outcome
+windows with explicit maturity status. The score is a retrieval mechanism, and its quality is
+acceptance-gated by clinician-graded floors — NDCG@10 at least 0.75, Recall@10 at least 0.80, and a
+separate per-program floor of 0.60 so a small program cannot be averaged into invisibility. Two
+clinicians label each golden query on a 0–3 rubric with adjudication on disagreement; a model grader
+was explicitly rejected because it would encode the same distributional priors as the retriever and
+flatter it. Trust comes from the gate, not from the score being self-explanatory.</p>
+</div>
+
+<div class="q">
+<p class="ask">Your gate refuses to answer. Isn't a product that frequently says nothing a broken product?</p>
+<p class="head"><b>Headline:</b> Yes — which is why the empty-result rate is itself a first-class
+metric with a pre-registered target under 5% per program, so an over-firing gate trips an alert
+instead of silently frustrating clinicians.</p>
+<p>The gate exists because a wrong-but-plausible precedent can nudge a real clinical choice on a
+false analogy, so suppression beats emission on thin data — and the suppressed state is still useful:
+a plain structured-filter cohort count, explicitly labelled a count and never as vector similarity.
+Nine years of hydrated history is the other half of the answer: with a deep back-catalogue the
+candidate-pool condition is satisfiable for most real queries, so the gate can be tuned to protect
+genuinely thin cases rather than ordinary ones. And there is a caveat I would volunteer rather than
+wait to be caught on: for a guidance counsellor sitting with a prospective patient who has no
+history at all, refusal is the common case, not the edge case. A floor that is comfortable across a
+doctor's caseload is not automatically comfortable there, and where the two meet is a question for
+measured behaviour.</p>
+</div>
+
+<div class="q">
+<p class="ask">Where is the language model, and why isn't it doing the ranking?</p>
+<p class="head"><b>Headline:</b> In exactly two thin gated roles — parsing a request in and writing
+one optional sentence out — because ranking and numbers have to be reproducible and auditable, and a
+model at either point would make them neither.</p>
+<p>Persona 1 turns free text into a typed, schema-validated <code>QueryCase</code>, so a malformed
+parse is a validation retry rather than a corrupted query. Persona 2 writes one neutral sentence per
+card from as-of-decision fields only, at temperature 0 against a pinned model and prompt that forbid
+computing, re-ranking or concluding. A leakage guard and a claim grammar then reject any sentence
+carrying a post-decision value or citing a field not in the card — and on rejection the cards serve
+without it. The sentence is optional by design and can be rendered from a deterministic template
+instead. Everything in between is code: the gate, the cache keys, the filtered kNN, the dedup, the
+maturity status. No number in any response is written by a model. The principle is knowing when
+<em>not</em> to use one.</p>
+</div>
+
+<div class="q">
+<p class="ask">What is the worst realistic failure this design still allows?</p>
+<p class="head"><b>Headline:</b> A subtle featurisation or attribution bug that passes the golden set
+but systematically mis-ranks one thin segment.</p>
+<p>The gates catch gross regressions, and per-program Recall@10 catches a small program collapsing —
+but a narrow, plausible error can survive if the golden set under-samples that stratum. The honest
+mitigation is stratified sampling, per-program floors and human clinician grading, not a claim of
+completeness. That is also why the review verdict is approved-with-nits rather than a declaration
+that the system cannot be wrong. The related honest limit on the product itself: it is an
+observational precedent surface. It shows which prior decisions most resembled this one and what
+observably happened next. It cannot tell a clinician what to do, cannot claim a protocol caused an
+outcome, and refuses outright when the case is too thin. Its value is disciplined analogy, and its
+integrity comes from being explicit about that boundary.</p>
+</div>
+
+<div class="say">
+<span class="term">If you have thirty seconds and one shot</span>
+<p>"It answers, at the moment a clinician drafts a decision, which prior decisions were most
+analogous — with their rationale, the evidence in front of that clinician at the time, and outcomes
+at three and six months. The retrieval unit is the decision, not the patient. Everything embedded is
+reconstructed as-of the moment the decision was made by replaying an append-only spine, so outcomes
+never contaminate the matching. Clinical filters are hard filters, because they encode contracts,
+not preferences. And a language model parses the request in and narrates one optional sentence out —
+it never ranks, never filters and never computes a number."</p>
+</div>
+
+<footer>
+<p><a href="../kq1-precedent-search.html">Full case study</a><a href="../summary.html">Summary</a><a href="../index.html">All case studies</a></p>
+<p style="margin-top:10px">Client and product identifiers anonymised. Every latency, ranking and
+service-level figure on this page is a pre-registered acceptance target the design was reviewed
+against — not an observed result.</p>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

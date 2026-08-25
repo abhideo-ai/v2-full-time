@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decision latency — interview prep</title>
+<meta name="description" content="Interview prep for the decision-latency analytics system: what it is, how it was built, why each decision was made, the architecture diagrams, and the questions an interviewer actually asks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #8A5A00;
+    --amber-soft: #FBF3E2;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 64px 24px 96px; }
+
+  /* ---- type ---- */
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.14; letter-spacing: -0.015em;
+    max-width: 20ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.4rem, 3vw, 1.85rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 16px;
+  }
+  h3 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: 1.14rem; line-height: 1.35;
+    margin: 34px 0 10px;
+  }
+  h4 {
+    font-family: var(--sans); font-weight: 600; font-size: 0.95rem;
+    margin: 0 0 6px;
+  }
+  p { margin: 0 0 16px; max-width: 74ch; }
+  ul, ol { margin: 0 0 16px 20px; max-width: 74ch; }
+  li { margin-bottom: 8px; }
+  strong { font-weight: 600; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--mist); padding: 1px 5px; border-radius: 3px;
+  }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+  .lede { font-size: 1.12rem; color: var(--steel); max-width: 64ch; margin-top: 20px; }
+
+  /* ---- hero ---- */
+  header.hero { padding: 0 0 8px; border-bottom: 1px solid var(--hairline); }
+  .crumbs { font-size: 0.85rem; color: var(--steel); margin: 24px 0 40px; }
+  .crumbs a { margin-right: 4px; }
+  .crumbs span { color: var(--hairline); margin: 0 8px; }
+
+  /* ---- open with this ---- */
+  .opener {
+    margin: 32px 0 0; padding: 24px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .opener .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 12px;
+  }
+  .opener p {
+    font-family: var(--serif); font-size: 1.16rem; line-height: 1.55;
+    margin: 0; max-width: 60ch;
+  }
+  .opener p + p { margin-top: 12px; }
+
+  /* ---- sections ---- */
+  section { margin-top: 76px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+
+  /* ---- cards ---- */
+  .card {
+    background: var(--card); border: 1px solid var(--hairline);
+    border-radius: 6px; padding: 20px 22px; margin: 18px 0;
+  }
+  .card > :last-child { margin-bottom: 0; }
+  .card .kicker {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px;
+  }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 18px 0; }
+  .grid2 .card { margin: 0; }
+
+  /* ---- failure modes ---- */
+  .trap {
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--amber); border-radius: 6px;
+    padding: 18px 20px; margin: 0;
+  }
+  .trap h4 { color: var(--amber); font-family: var(--mono); font-size: 0.74rem;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .trap p { margin-bottom: 0; font-size: 0.96rem; }
+  .trap p + p { margin-top: 10px; }
+
+  /* ---- glossary ---- */
+  .glossary { margin: 24px 0; border: 1px solid var(--hairline); border-radius: 6px; background: var(--card); overflow: hidden; }
+  .glossary h4 {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel);
+    padding: 14px 20px 12px; margin: 0; border-bottom: 1px solid var(--hairline);
+  }
+  .glossary dl { padding: 16px 20px 6px; margin: 0; }
+  .glossary dt { font-weight: 600; font-size: 0.93rem; margin-top: 12px; }
+  .glossary dt:first-child { margin-top: 0; }
+  .glossary dd { margin: 2px 0 0; color: var(--steel); font-size: 0.93rem; max-width: 74ch; }
+
+  /* ---- decision blocks ---- */
+  .decision {
+    background: var(--card); border: 1px solid var(--hairline);
+    border-radius: 6px; margin: 16px 0; overflow: hidden;
+  }
+  .decision > .head {
+    padding: 16px 22px 14px; border-bottom: 1px solid var(--hairline);
+  }
+  .decision > .head h4 { font-size: 1.02rem; margin: 0; }
+  .decision .body { padding: 16px 22px 18px; }
+  .decision .row { display: grid; grid-template-columns: 148px 1fr; gap: 4px 18px; margin-bottom: 12px; }
+  .decision .row:last-child { margin-bottom: 0; }
+  .decision .row .k {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--steel); padding-top: 4px;
+  }
+  .decision .row .v { margin: 0; max-width: 68ch; }
+  .decision .row.rejected .k { color: var(--amber); }
+  @media (max-width: 620px) {
+    .decision .row { grid-template-columns: 1fr; gap: 2px; }
+  }
+
+  blockquote.verbatim {
+    margin: 12px 0 0; padding: 12px 16px;
+    background: var(--amber-soft); border-left: 3px solid var(--amber);
+    border-radius: 0 4px 4px 0;
+    font-family: var(--serif); font-size: 1.02rem; line-height: 1.55; color: var(--ink);
+    max-width: 66ch;
+  }
+  blockquote.verbatim .attrib {
+    display: block; margin-top: 6px; font-family: var(--mono);
+    font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber);
+  }
+
+  /* ---- diagrams ---- */
+  figure.diagram {
+    margin: 26px 0 8px; padding: 22px 18px 14px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    overflow-x: auto;
+  }
+  figure.diagram figcaption {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--steel);
+    letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 4px 2px;
+  }
+  .mermaid { display: flex; justify-content: center; min-width: 320px; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .walk { margin: 0 0 34px; }
+  .walk .wk {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin: 18px 0 8px;
+  }
+  .breaks {
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--amber); border-radius: 6px;
+    padding: 14px 18px; margin: 14px 0 0;
+  }
+  .breaks p { margin: 0; font-size: 0.96rem; }
+  .breaks b { color: var(--amber); }
+
+  /* ---- Q&A ---- */
+  .qa { border-top: 1px solid var(--hairline); padding-top: 22px; margin-top: 26px; }
+  .qa:first-of-type { border-top: 0; }
+  .qa .q {
+    font-family: var(--serif); font-weight: 600; font-size: 1.14rem;
+    line-height: 1.4; margin: 0 0 12px; max-width: 62ch;
+  }
+  .qa .q .num {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    color: var(--teal); letter-spacing: 0.1em; margin-right: 10px; vertical-align: 2px;
+  }
+  .headline {
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+    padding: 14px 18px; margin: 0 0 14px; max-width: 72ch;
+  }
+  .headline .tag {
+    font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 6px;
+  }
+  .headline p { margin: 0; font-weight: 600; font-size: 1.04rem; }
+  .detail { margin-left: 2px; }
+  .detail p { color: var(--steel); }
+  .detail p strong { color: var(--ink); }
+  .detail ul { color: var(--steel); }
+  .detail ul strong { color: var(--ink); }
+
+  /* ---- footer ---- */
+  footer {
+    margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--hairline);
+    font-size: 0.88rem; color: var(--steel);
+  }
+  footer p { max-width: 74ch; }
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">Decision latency</span></p>
+
+  <nav class="crumbs">
+    <a href="../index.html">All case studies</a><span>·</span>
+    <a href="../kq5-decision-latency.html">Full case study</a><span>·</span>
+    <a href="../summary.html">Summary</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Interview prep · Killer query 5</span>
+    <h1>Decision latency — <em>how long until someone decides?</em></h1>
+    <p class="lede">
+      A production analytics service on a chronic-care platform covering 80+ chronic conditions,
+      with roughly nine years of patient history behind it. It measures the time from a high-risk
+      lab result arriving to the treatment decision that answers it — split by clinician, by
+      geography, and by whether artificial intelligence (AI) assisted the decision. Sole owner,
+      design through production.
+    </p>
+
+    <div class="opener">
+      <span class="label">Open with these two sentences</span>
+      <p>
+        “A high-risk lab result lands on a chronic-care platform at two in the morning. Leadership
+        wants one number — how long until a doctor decides something about it — and the dangerous
+        version of that dashboard is one join away.”
+      </p>
+      <p>
+        “I built the honest version: the denominator counts the labs nobody ever answered, every
+        statistic is seeded and replayable, and there is not a single language-model call anywhere
+        in the pipeline.”
+      </p>
+    </div>
+  </header>
+
+  <!-- ============================================================ 1 -->
+  <section id="what">
+    <div class="stage"><b>01</b> What is it?</div>
+    <h2>A subtraction that hides four ways to be confidently wrong</h2>
+
+    <p>
+      Start with the human situation, not the schema. A patient on a chronic-care programme has
+      blood drawn. The result comes back flagged high-risk — a kidney marker moving the wrong way,
+      a glucose reading that needs a medication change. Somewhere on the other side of that result
+      is a clinician who has to <em>decide</em> something: change the drug, escalate, order a
+      follow-up, bring the patient in. The operational question the platform's leadership asks is
+      the obvious one: <strong>how long does that take, and where is it slowest?</strong>
+    </p>
+    <p>
+      The regulator's version of the same question is sharper. A regulator does not want the
+      average; a regulator wants to know about the labs where <em>nobody decided anything</em>,
+      and wants the number traced back to the exact data that produced it. Both audiences are
+      served by one query, written out verbatim in the specification:
+    </p>
+
+    <div class="card">
+      <span class="kicker">The query the system must answer</span>
+      <p style="font-family:var(--mono); font-size:0.9rem; line-height:1.7; margin:0;">
+        “What is the median time between a high-risk lab result received and the corresponding
+        treatment decision? Segmented by doctor, geography, and AI usage.”
+      </p>
+    </div>
+
+    <p>
+      On paper that is one join and one subtraction: pair each high-risk lab with the next
+      treatment decision, subtract two timestamps, take the median, group by clinician. The reason
+      this is a Staff-level problem and not a ticket is that <strong>every clause of that sentence
+      hides a way to ship a confident, wrong number</strong> — and a wrong number here does not
+      look wrong. It looks like a clean dashboard that sends leadership chasing the wrong clinic.
+    </p>
+
+    <h3>The four failure modes a naive implementation produces</h3>
+
+    <div class="grid2">
+      <div class="trap">
+        <h4>1 · “Corresponding” is a clinical judgment</h4>
+        <p>
+          A nearest-in-time join happily pairs a high-risk lab with the next scheduling message,
+          supplement note, or appointment reminder — an action that has nothing to do with the
+          lab. You then report the time to <em>some</em> decision, not the decision the lab
+          demanded.
+        </p>
+      </div>
+      <div class="trap">
+        <h4>2 · Survivorship bias</h4>
+        <p>
+          An inner join silently deletes the labs nobody answered — which are precisely the ones
+          leadership most needs to see. A missing response drops out of the numerator and the
+          denominator at once, so <strong>the platform looks fastest exactly where it is failing
+          worst</strong>.
+        </p>
+      </div>
+      <div class="trap">
+        <h4>3 · The wrong clock</h4>
+        <p>
+          Subtract an ingestion timestamp from a write timestamp and you are measuring the
+          database, not the clinic. Outpatient labs can be resulted days before the platform
+          receives them, so picking the wrong pair of timestamps moves the answer by that entire
+          gap.
+        </p>
+      </div>
+      <div class="trap">
+        <h4>4 · It renders as a scorecard</h4>
+        <p>
+          Per-clinician latency <em>is</em> performance data the instant it draws on screen.
+          Pretending otherwise would be dishonest; the design's job is to make misuse harder,
+          slower, and provable after the fact — not to claim it is impossible.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      Each of those is treated as a first-class problem with a named control, rather than trusted
+      to a one-line query. That framing — four traps, four controls — is the spine of the whole
+      answer, and it is what to fall back on if the interviewer takes the conversation anywhere.
+    </p>
+
+    <div class="glossary">
+      <h4>The vocabulary, defined once — say the expansion the first time</h4>
+      <dl>
+        <dt>Right-censoring</dt>
+        <dd>
+          A statistical way of recording “this had not happened yet when we stopped looking”. A lab
+          with no decision after fourteen days is not dropped and not recorded as “took fourteen
+          days” — it is recorded as <em>at least</em> fourteen days and still open. It is the same
+          treatment a clinical trial gives a patient who has not had the event by the end of the
+          study.
+        </dd>
+        <dt>Kaplan–Meier estimate</dt>
+        <dd>
+          The standard survival-analysis curve that turns a mix of completed and censored
+          observations into a time-to-event estimate. Here the “event” is a treatment decision, so
+          it yields a time-to-decision curve that correctly accounts for the labs still waiting.
+        </dd>
+        <dt>Bootstrap, seeded and clustered</dt>
+        <dd>
+          Resampling the data thousands of times to see how much a statistic wobbles, which gives
+          a confidence interval. <em>Seeded</em> means the random draws come from a fixed seed, so
+          the interval is reproducible. <em>Clustered by enrollment</em> means whole patients are
+          resampled rather than individual rows.
+        </dd>
+        <dt>CI — two different things, watch this one</dt>
+        <dd>
+          <strong>Confidence interval</strong> in the statistics sections; <strong>continuous
+          integration</strong> in the testing sections (“the golden regression fails CI”). Say the
+          full words in an interview; the collision is a real source of confusion.
+        </dd>
+        <dt>P90 / 95th-percentile (P95)</dt>
+        <dd>
+          The 90th and 95th percentiles. P90 latency is the value that 90% of labs beat — it
+          exposes the slow tail a median hides. P95 ≤ 5 minutes is a <em>freshness</em> target on
+          corrections, a different axis entirely.
+        </dd>
+        <dt>As-of reconstruction</dt>
+        <dd>
+          Computing what a field was at a past moment by replaying the event log up to that point,
+          instead of reading today's value. It is what stops a patient who moved country last year
+          from rewriting the geography of a two-year-old measurement.
+        </dd>
+        <dt>Event spine</dt>
+        <dd>
+          The append-only log of everything that happened, in order — the source of truth. Nothing
+          in it is edited; corrections arrive as new events.
+        </dd>
+        <dt>Snapshot manifest</dt>
+        <dd>
+          The record of exactly what frozen state a nightly build read: the as-of watermark, a
+          content hash of the graph's vertices and edges, and the highest source event sequence
+          included.
+        </dd>
+        <dt>Evidence edge</dt>
+        <dd>
+          A link in the decision graph where a clinician's decision explicitly cites a lab result
+          as the evidence for it. This is the single most load-bearing object in the design.
+        </dd>
+        <dt>Tenant, three-field scope</dt>
+        <dd>
+          Who the data belongs to: an account, a workspace, and a control unit. All three travel
+          together, because one account can span workspaces that must not see each other's data.
+        </dd>
+        <dt>Others, expanded</dt>
+        <dd>
+          virtual private cloud (VPC) — virtual private cloud (the client's own isolated network). PHI — protected health
+          information. RBAC — role-based access control. LLM — large language model. application programming interface (API) —
+          application programming interface. user interface (UI) — user interface. TLS — transport layer security.
+          service-level agreement (SLA) — service-level agreement. structured query language (SQL) — structured query language.
+        </dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ 2 -->
+  <section id="how">
+    <div class="stage"><b>02</b> How did we solve it?</div>
+    <h2>Snapshot-only analytics, two upstream feeds, and gates that fire in a fixed order</h2>
+
+    <p>
+      The whole system is a nightly build plus a deliberately boring read path. Nothing a clinician
+      waits on ever touches the live decision graph, and nothing statistical is recomputed at
+      request time.
+    </p>
+
+    <h3>The two feeds — this is the line to lead with</h3>
+    <p>
+      The platform's normal projection materialises an observation only once it attaches to a
+      decision. That is fine for most queries and a quiet catastrophe for this one: labs nobody
+      answered would never enter the data at all. So the system reads a <strong>second, ungated lab
+      feed</strong> that returns every high-risk lab whether or not any decision ever cited it.
+      That feed is the denominator. Everything else in the design is downstream of getting the
+      denominator right.
+    </p>
+
+    <h3>The nightly build, step by step</h3>
+    <ol>
+      <li>
+        <strong>Freeze the graph.</strong> A nightly export writes out the decision graph's
+        vertices and edges at a single as-of watermark, plus a manifest carrying the watermark, a
+        content hash, and the maximum source event sequence included. Every artefact downstream
+        carries that snapshot hash, so any number can be traced to the exact frozen state behind it.
+      </li>
+      <li>
+        <strong>Pair, tenant-scoped, in columnar joins.</strong> The pair builder runs analytical
+        joins over the frozen snapshot in an embedded columnar engine — no per-lab graph traversal
+        — and emits <em>one row per high-risk lab</em>. The join predicates require account,
+        workspace and control unit to match on both sides, so a cross-tenant pair is not even a
+        candidate.
+      </li>
+      <li>
+        <strong>Assign exactly one of three pair methods.</strong> <code>supported_by_edge</code>
+        when the decision explicitly cites the lab as evidence; <code>heuristic_next_relevant</code>
+        when no such edge exists but a clinically relevant decision follows within fourteen days;
+        <code>unpaired</code> when no decision follows at all. The method decides what the row is
+        allowed to do — and only the first may produce a headline number.
+      </li>
+      <li>
+        <strong>Replay the spine for covariates.</strong> Country, programme and phase are
+        reconstructed as of the <em>lab's received time</em>, because that is the context in which
+        the clock started. AI attribution — usage type, the agent event, the human sign-off — is
+        reconstructed as of the <em>decision's own event time</em>, because that is when AI did or
+        did not assist. Each field carries its own as-of timestamp and source event sequence.
+      </li>
+      <li>
+        <strong>Compute the two numbers that matter inside the builder.</strong> The latency is
+        decision event-time minus lab received-time. The row's identity is a stable hash over five
+        inputs: tenant scope, lab id, decision id, pairing-rule version, snapshot-manifest hash.
+        Both are computed off the snapshot, so nothing statistical ever touches the live graph.
+      </li>
+      <li>
+        <strong>Build the metric tables.</strong> Median and P90 on edge-supported pairs only,
+        with confidence intervals from a shared seeded bootstrap — two thousand resamples,
+        clustered by enrollment, seeded from the snapshot manifest hash. Unanswered labs are
+        right-censored at the fourteen-day window and feed a Kaplan–Meier-style time-to-decision
+        estimate plus an explicit unpaired rate. A tenant-local, versioned business-hours latency
+        is computed alongside wall-clock, and the dashboard can toggle between them.
+      </li>
+      <li>
+        <strong>Listen for corrections.</strong> A correction listener maps each spine correction —
+        to a lab, a decision, an evidence edge, an actor, or an AI attribution — through a
+        dependency index to the exact pair rows whose identity depends on it, rebuilds only those,
+        recomputes the affected cells, and bumps a correction epoch so the cache invalidates.
+        Designed against a P95 of five minutes from correction to rebuilt rows.
+      </li>
+    </ol>
+
+    <h3>The read path, and the order it runs in</h3>
+    <p>
+      Serving is deliberately boring, and the <em>ordering is itself the guarantee</em>:
+    </p>
+    <ul>
+      <li>
+        <strong>Audit first, before any data is fetched.</strong> Viewer, target, purpose and time
+        are written before the read, so an access is provable even if the response then fails
+        midway. The access-log id comes back in the response envelope.
+      </li>
+      <li>
+        <strong>Build the canonical cache key.</strong> Three-field tenant scope, query namespace,
+        the split-and-filter shape, pairing-rule version, metric schema hash, snapshot manifest
+        hash, maximum source event sequence, and the correction epoch. Every one of those is
+        something that, if it changed, would change the answer — so all of them are in the key.
+      </li>
+      <li>
+        <strong>Cache hit or miss changes only the recompute, never the governance.</strong> On a
+        miss the API scans the metric table filtered to the caller's tenant partition. On a hit it
+        reads finished cells. Either way the tenant assertion and the pseudonymisation still run.
+      </li>
+      <li>
+        <strong>Branch on role.</strong> Leadership sees all splits including per-doctor; a
+        clinician sees the per-doctor split restricted to their own pseudonym; everyone else gets
+        the per-doctor split stripped out of the response entirely — not blanked, absent.
+      </li>
+      <li>
+        <strong>Two gates, in this order.</strong> First pairing quality: if a segment's
+        evidence-paired share falls below 0.80, that segment's headline is suppressed and only the
+        pair-method breakdown is served. Then sample size: a cell with fewer than 30 supported
+        pairs reports “insufficient data” with its full denominator breakdown. A segment must be
+        <em>trustworthy</em> enough to headline before it can be <em>large</em> enough to headline.
+      </li>
+      <li>
+        <strong>Assert tenant on every cell, then return with provenance pins.</strong> A mismatch
+        fails closed and pages the on-call. The envelope carries snapshot manifest, pairing-rule
+        version, metric schema hash, correction epoch and the access-log id.
+      </li>
+    </ul>
+
+    <h3>Nine years of history, hydrated rather than backfilled</h3>
+    <p>
+      This was never pointed at an empty graph. Roughly nine years of prior labs and treatment
+      decisions already existed and were hydrated through the <em>same</em> append-only spine the
+      live stream writes to — quarantine-first and proof-carrying, not a throwaway backfill. Each
+      legacy payload-schema version gets its own upconverter; anything that cannot be mapped to a
+      known schema or to a single tenant is quarantined with a reason rather than defaulted. Every
+      event gets a content-addressed id and a conditional write, so hydrating twice is a no-op that
+      yields an identical spine and an identical snapshot-manifest hash. Historical events replay
+      through the identical projection and pairing code that serves the live stream. Proof gates —
+      zero-event-loss reconciliation, hydrate-twice hash equality, as-of spot checks, a golden
+      replay — all pass before a single latency table is built, and then a fenced cutover attaches
+      the live stream with a proof of neither gap nor duplicate.
+    </p>
+    <p>
+      Depth of history is not decoration here. It is what gives each segment — clinician,
+      geography, AI-assisted or not — enough supported pairs to clear the thirty-per-cell floor and
+      report a median and a P90 instead of collapsing into a wall of “insufficient data”.
+    </p>
+
+    <h3>Where the language model is: nowhere</h3>
+    <p>
+      Zero language-model calls anywhere in the pipeline, and that is an evaluation criterion
+      rather than an aspiration. Latency is timestamp arithmetic; the quantiles, intervals and
+      censoring-aware estimates are seeded, replayable statistics; the gates and access controls
+      are deterministic code. There is no retrieval-augmented surface either, and that absence is
+      a decision, not a gap: a median is read from a pre-computed cell and served with its
+      confidence interval and pairing-quality caveat already attached, so there is nothing left to
+      fetch and nothing a generated sentence could add. The platform's model seam — a self-hosted
+      Llama 3.1 inside the VPC, used by sibling systems for parsing and narration — sits one layer
+      up, and this service takes no dependency on it.
+    </p>
+    <p>
+      “Segmented by AI usage” means <strong>AI is measured, not used</strong>. The pipeline
+      reconstructs from the spine, as of each decision's moment, whether and how AI assisted that
+      decision, and reports it as an observational split.
+    </p>
+  </section>
+
+  <!-- ============================================================ 3 -->
+  <section id="why">
+    <div class="stage"><b>03</b> Why did we do what we did?</div>
+    <h2>Every significant decision, and the alternative it beat</h2>
+
+    <p>
+      This is the section that separates a Staff answer from a senior one. The mechanism is
+      recallable; the <em>reasoning</em> is what an interviewer probes. Each block below is one
+      decision, the alternative that was rejected, and why.
+    </p>
+
+    <div class="decision">
+      <div class="head"><h4>Only evidence-linked pairs may produce the headline</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">The reported median and P90 are computed only on <code>supported_by_edge</code> rows — pairs where the decision explicitly cites the lab as its evidence in the decision graph. This is enforced in code and checked in evaluation; it is called the headline lock.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">A nearest-in-time join, or folding the heuristic “next clinically relevant decision within fourteen days” into the headline to raise coverage.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Correspondence is a clinical judgment, not a temporal fact. An explicit evidence link is the only signal that a decision actually <em>answered</em> the lab rather than merely followed it. The headline is built on the smallest, strongest evidence set, not the largest available one.</p></div>
+        <blockquote class="verbatim">
+          “The lock is what stops ‘more coverage’ from silently becoming ‘less truth’.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Heuristic pairs stay a diagnostic slice — no confidence weighting</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Heuristic pairs are computed, kept and shown as a separate slice, promotable only when a clinical validation study earns it — and then as a new pairing-rule version, never a silent reweighting.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Folding them into the headline with a confidence weight, which is the sophisticated-sounding option.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Choosing that weight requires knowing how often the next-relevant decision really answered the lab — which is precisely the clinical question the design refuses to guess at.</p></div>
+        <blockquote class="verbatim">
+          “A weight is an unvalidated assumption dressed as rigor.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>A second, ungated lab feed supplies the denominator</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Read a separate ungated feed that returns every high-risk lab, paired or not, rather than the platform's standard projection. Described in the case study as “the single most important line in the design”.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Reusing the standard projection every sibling query reads — cheaper, one less dependency, and structurally wrong here.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">That projection materialises an observation only once it attaches to a decision, so unanswered labs would never enter the data.</p></div>
+        <blockquote class="verbatim">
+          “The platform would look fastest exactly where it is failing worst.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Right-censor the unanswered labs</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Labs with no decision are right-censored at the fourteen-day window and flow into a Kaplan–Meier-style time-to-decision estimate, alongside an explicit unpaired rate reported on every surface. Nothing is deleted; everything is labelled.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Two tempting shortcuts — drop them (survivorship bias, the number flatters itself), or set them all to fourteen days (invents a latency they never had and inflates the tail with a fiction).</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Censoring uses the fact that the lab was unanswered as of the window edge to shape the curve, biasing neither toward optimism nor pessimism — which is exactly why survival analysis exists.</p></div>
+        <blockquote class="verbatim">
+          “Censoring is the honest middle… It is the opposite of avoidance: it forces the unanswered cases into the estimate honestly.”
+          <span class="attrib">Verbatim, answering the sceptic</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Four timestamps kept, exactly two subtracted</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Every event carries four distinct timestamps — when the thing clinically happened, when it was observed, when it reached the platform, when it landed in the store — and the latency definition pins exactly two: decision event-time minus lab received-time.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Collapsing to a single “timestamp” column, the shape most pipelines default to.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Outpatient labs can be resulted days before the platform receives them, so measured-at and received-at differ by hours to days; picking the wrong pair moves the answer by that whole gap. Keeping four and pinning two means the number always means the same thing.</p></div>
+        <blockquote class="verbatim">
+          “Subtract an ingestion timestamp from a write timestamp and you are measuring the database, not the clinic.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Covariates reconstructed as-of, never read from current state</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Replay the append-only spine to recover country, programme and phase as of the lab's received time, and AI attribution as of the decision's event time. Each field carries its own as-of timestamp and source event sequence; ordering breaks ties by sequence, never by write order.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Reading the patient's current record — one join, no replay cost. Also rejected: a single as-of timestamp for the whole pair, for simplicity.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">A patient who later moved country or switched programme would silently rewrite the segment of a two-year-old pair, so the geography split would measure migration as much as clinical speed. And the two sides of a pair genuinely live in different moments — the lab's context is what was true when it arrived; AI assistance is a property of the decision made later. Forcing one timestamp would either backdate the AI attribution to before the decision existed or advance the patient's context past the lab.</p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Snapshot-only, never a live graph traversal at request time</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Freeze the graph once nightly at a single watermark and run the whole build over the frozen copy; the request path reads pre-computed cells.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Per-lab live traversal of the graph at query time.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">A live traversal is non-deterministic under concurrent writes, hard to tenant-partition, and slow enough to be a poor fit for a batch analytics question. Freezing makes the build replayable to a byte-identical result, lets output be partitioned and cached by tenant and snapshot hash, and moves all the graph cost into one nightly job. <strong>The trade is freshness — handled explicitly with staleness tiers rather than by pretending the number is real-time.</strong></p></div>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>A deterministic pair identity over five inputs</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Each row's name is a stable hash of tenant scope, lab id, decision id, pairing-rule version and snapshot-manifest hash — plus a deterministic sort (decision event time, then source event sequence, then decision id) that breaks every tie identically every night.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Surrogate row ids and a full-table rebuild on every correction.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">A full rebuild cannot meet a five-minute correction-freshness target — a corrected lab receipt time would wait for the next nightly pass. Stable ids are what make a targeted rebuild possible, and what let the golden regression demand equality down to the row id.</p></div>
+        <blockquote class="verbatim">
+          “The stable-id investment pays for itself the first time a correction lands.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Every provenance input goes into the cache key</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Tenant scope, query namespace, split-and-filter shape, pairing-rule version, metric schema hash, snapshot manifest hash, event-sequence watermark, correction epoch — all in the key.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">The conventional key of query shape plus a time-to-live.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">The failure being designed against is serving a stale number under a fresh name — the classic cache bug where the data or the rule moved but the key did not. Having the tenant in the key also means a cache hit can never become a cross-tenant read.</p></div>
+        <blockquote class="verbatim">
+          “An under-specified key is worse than no cache, because it fails silently and confidently.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Suppression gates instead of a best-effort number</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Below 0.80 evidence-paired share in a segment, suppress the headline and serve the pair-method breakdown; below 30 supported pairs in a cell, emit “insufficient data” with its full denominator breakdown. Pairing quality gates first, sample size second.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Showing a smooth median with a caveat in a tooltip.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Leadership then sees the data-completeness problem — which is the actionable finding — rather than a confident number that would send them chasing a phantom.</p></div>
+        <blockquote class="verbatim">
+          “A suppressed cell is a visible admission, not a hidden failure; hiding would be emitting the untrustworthy median.”
+          <span class="attrib">Verbatim, answering “aren't the gates just hiding bad numbers?”</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Bootstrap clustered by enrollment, not by row</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Two thousand resamples of whole enrollments, seeded from the snapshot manifest hash, intervals returned for both the median and the P90 — one shared implementation used by every cohort query on the platform.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Resampling individual pair rows, and hand-rolling the bootstrap per query.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">A single patient contributes several correlated pairs; treating each row as independent would understate the uncertainty and produce an interval that is too narrow. Resampling enrollments makes the interval reflect how many independent <em>patients</em> stand behind a cell.</p></div>
+        <blockquote class="verbatim">
+          “It is the difference between an honest interval and a confidently wrong one.”
+          <span class="attrib">Verbatim, on clustering</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Audit written before the read, and governance on the warm path too</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Viewer, target, purpose and time are logged before any data is fetched; the tenant assertion and pseudonymisation run identically on a cache hit and a cache miss; ordering in the per-clinician view is alphabetic and deliberately not rank-sortable.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Logging after a successful response, and letting the warm path skip the checks for speed.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Logging afterwards misses exactly the reads that errored — the ones most worth having a record of. And the warm path skips the recompute, never the governance.</p></div>
+        <blockquote class="verbatim">
+          “A determined misuse is possible but it is deliberate, effortful, and provable after the fact, which is the honest bar for governance of performance data.”
+          <span class="attrib">Verbatim, on whether leadership could just re-rank the data themselves</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Fail closed on tenancy, and page rather than degrade</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">Three redundant layers — a tenant-scoped build, tenant-partitioned files, and a fail-closed assertion on every served cell. A mismatch refuses the response and pages the on-call; the acceptance bar is zero, as a page-out, not a rate to trend down.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Trusting the partition filter alone, and treating cross-tenant leakage as a metric to drive toward zero over time.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">The filter and the assertion fail for different reasons, so trusting only the filter means one query bug is enough to leak. And a single leaked cell is already a breach, not a statistic.</p></div>
+        <blockquote class="verbatim">
+          “The cost of a false alarm is a page; the cost of failing open is a disclosure.”
+          <span class="attrib">Verbatim, on fail-closed</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>A business-hours view alongside wall-clock</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">A tenant-local, versioned business-hours calendar computes an adjusted latency that excludes closed hours; both views ship and the dashboard toggles between them.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Wall-clock only — simpler, and quietly unfair to any clinic in an inconvenient time zone.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">Without it the geography split would partly be measuring time zones and opening hours rather than clinical responsiveness.</p></div>
+        <blockquote class="verbatim">
+          “A lab arriving at midnight is not evidence that the clinic slept on it.”
+          <span class="attrib">Verbatim, from the design</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <div class="decision">
+      <div class="head"><h4>Zero language-model calls, by design and by evaluation</h4></div>
+      <div class="body">
+        <div class="row"><div class="k">Decision</div><p class="v">No model on the request path, none in the build path, and no retrieval-augmented surface — with “zero language-model calls” written as an evaluation criterion so accidental use would show up as a violated invariant rather than a production surprise.</p></div>
+        <div class="row rejected"><div class="k">Rejected</div><p class="v">Using the in-VPC model seam the sibling systems already depend on, for narration or for a natural-language query surface.</p></div>
+        <div class="row"><div class="k">Because</div><p class="v">There is no step here a language model would improve, and every step is one it could quietly degrade. A median read from a pre-computed cell already ships with its interval and its caveat attached.</p></div>
+        <blockquote class="verbatim">
+          “Numbers a regulator may one day audit should not have a language model anywhere in their provenance.”
+          <span class="attrib">Verbatim — the line to land this on</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <h3>The design review this absorbed — and what changed</h3>
+    <p>
+      Before anything shipped, the design went through structured adversarial self-review under a
+      Principal-AI-Engineer lens. The first pass returned <strong>eighteen findings, five of them
+      high-severity in correctness alone</strong>: unstable pairing rules, an undefined notion of
+      the “corresponding” decision, wrong time semantics, missing tenant isolation, the
+      gated-denominator exposure, and the governance finding that per-clinician latency is
+      performance data. The verdict was <strong>ship-with-changes</strong>, and all eighteen were
+      dispositioned.
+    </p>
+
+    <div class="grid2">
+      <div class="card">
+        <span class="kicker">Eleven absorbed into the v2 design — including</span>
+        <ul style="margin-bottom:0;">
+          <li>The pair-method split, with its headline lock</li>
+          <li>Versioned pairing rules and a versioned decision-type allowlist</li>
+          <li>The four-timestamp contract</li>
+          <li>Tenant-scoped build and tenant partitioning</li>
+          <li>Censoring-aware statistics</li>
+          <li>The canonical cache key</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="kicker">Seven routed to shared platform components</span>
+        <ul style="margin-bottom:0;">
+          <li>The tenant-scoped traversal wrapper</li>
+          <li>The correction backbone</li>
+          <li>The ungated observation projection</li>
+          <li>The deterministic exporter</li>
+          <li>The event-time schema</li>
+          <li>The shared bootstrap library</li>
+          <li>The actor-access policy</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>
+      All seven have since landed at the platform layer, and this query now binds to the shared
+      versions rather than the inline stand-ins it was originally wired against — so the sibling
+      cohort queries inherit the fixes instead of reimplementing them.
+    </p>
+
+    <div class="breaks">
+      <p>
+        <b>Say the verdict correctly.</b> “Ship-with-changes” is the outcome of an internal
+        <em>design review</em> — a sign-off on the design, not a deployment status. The service
+        shipped: it runs in production on the client's self-hosted, in-VPC stack, serving governed
+        operations dashboards, after executive sign-off on the design. If an interviewer reads
+        “ship-with-changes” as “not shipped”, correct it in one sentence and move on.
+      </p>
+    </div>
+
+    <h3>What I would do differently — have this ready, it is asked often</h3>
+    <p>
+      Push the ungated-observation-projection and event-time-schema contracts up to the platform
+      <em>before</em> building the query, rather than absorbing them inline and routing them to
+      shared components afterwards. Discovering during review that the standard projection drops
+      unanswered labs — the very denominator this query lives on — meant the fix had to be
+      retrofitted as a platform item mid-design. Sequencing those two contracts first would have
+      let this query and every sibling inherit them from day one.
+    </p>
+
+    <h3>Why this query was built first</h3>
+    <p>
+      It is the simplest cohort-aggregation question the platform needed, which makes it the right
+      place to work out the patterns the whole family shares. Its building blocks — the pair-method
+      split, the canonical cache key, the seeded statistics, the actor-governance pattern — were
+      then reused by five sibling cohort questions rather than reimplemented per query. Solving the
+      hard general problems once, under review, before five other queries depend on them, is the
+      point.
+    </p>
+  </section>
+
+  <!-- ============================================================ 4 -->
+  <section id="architecture">
+    <div class="stage"><b>04</b> Architecture</div>
+    <h2>Four diagrams, each redrawable on a whiteboard</h2>
+
+    <p>
+      These are the diagrams from the case study, unchanged. If there is a whiteboard in the room,
+      draw the first one; if the interviewer pushes on honesty, draw the second; on the clock, the
+      third; on serving and governance, the fourth.
+    </p>
+
+    <!-- FIG 1 -->
+    <figure class="diagram">
+      <pre class="mermaid">
+flowchart TD
+    ES[(Append-only event spine&lt;br/&gt;DynamoDB)] --&gt; PROJ[Projection]
+    PROJ --&gt; NEP[(Decision graph&lt;br/&gt;Neptune)]
+    PROJ --&gt; OBS[(Ungated observation snapshot&lt;br/&gt;every high-risk lab · paired or not)]
+    NEP --&gt; SNAP[Nightly snapshot export&lt;br/&gt;vertices · edges · manifest&lt;br/&gt;as-of watermark + snapshot hash]
+    SNAP --&gt; BUILD[Pair builder&lt;br/&gt;tenant-scoped columnar joins&lt;br/&gt;no per-lab graph traversal]
+    OBS --&gt; BUILD
+    BUILD --&gt; MT[(Metric tables · Parquet&lt;br/&gt;pre-computed cells&lt;br/&gt;partitioned by tenant + snapshot hash)]
+    MT --&gt; API[Latency API · FastAPI&lt;br/&gt;audit-first · role-gated · tenant-asserted]
+    API --&gt; DASH[Governed operations dashboard]
+      </pre>
+      <figcaption>Fig 1 · Architecture at a glance — snapshot-only, with a second ungated feed so unanswered labs still count</figcaption>
+    </figure>
+
+    <div class="walk">
+      <span class="wk">Walkthrough</span>
+      <p>
+        Everything starts at the <strong>event spine</strong> — an append-only log in DynamoDB,
+        the source of truth, never edited. One projection reads it and maintains two things that
+        look similar and are not. The first is the <strong>decision graph</strong> in Neptune,
+        which holds clinical decisions and, critically, the evidence edges linking a decision to
+        the lab it answered. The second is the <strong>ungated observation snapshot</strong>: every
+        high-risk lab, paired or not.
+      </p>
+      <p>
+        Once a night, an exporter freezes the graph — vertices, edges, and a manifest carrying the
+        as-of watermark and a content hash. The <strong>pair builder</strong> then consumes
+        <em>both</em> arrows: the frozen snapshot for the decisions, and the ungated feed for the
+        full population of labs. It runs tenant-scoped columnar joins over files — there is no
+        per-lab call back into the graph. Its output lands in <strong>metric tables</strong> as
+        Parquet files, pre-computed and partitioned by tenant and snapshot hash. The
+        <strong>latency API</strong> reads only those, applying audit, role gates, and tenant
+        assertion, and serves the governed dashboard.
+      </p>
+      <p>
+        The shape to notice on a whiteboard: the arrow from the graph goes <em>up</em> into the
+        nightly export, never sideways into the API. The request path terminates at the metric
+        tables.
+      </p>
+      <div class="breaks">
+        <p>
+          <b>Without the OBS → BUILD arrow</b> the whole thing collapses into the flattering
+          version. Delete that one edge and the builder only ever sees labs that already reached a
+          decision, the denominator becomes “answered labs”, and the dashboard reports its best
+          numbers for the clinics that are answering nothing. <b>Without the SNAP freeze</b>, two
+          identical requests can disagree, the output cannot be partitioned by a stable hash, and
+          the replay guarantee that everything else rests on is gone.
+        </p>
+      </div>
+    </div>
+
+    <!-- FIG 5 -->
+    <figure class="diagram">
+      <pre class="mermaid">
+flowchart TD
+    POP[Every high-risk lab result&lt;br/&gt;in the snapshot window] --&gt; PAIR{How it was paired to a decision}
+    PAIR --&gt;|evidence edge on the graph| SBE[supported_by_edge]
+    PAIR --&gt;|next relevant decision · heuristic| HEU[heuristic_next_relevant]
+    PAIR --&gt;|no decision within 14 days| UNP[unpaired]
+    SBE --&gt; HEAD[Headline median · P90 · CIs&lt;br/&gt;the only numbers shown as the answer]
+    HEU --&gt; DIAG[Diagnostic slice only&lt;br/&gt;held back until clinically validated]
+    UNP --&gt; CENS[Right-censored at 14 days&lt;br/&gt;enters the survival denominator · reported as unpaired-rate]
+      </pre>
+      <figcaption>Fig 5 · The pair-method split — the design's central honesty knob: weak evidence can inform, but never headline</figcaption>
+    </figure>
+
+    <div class="walk">
+      <span class="wk">Walkthrough</span>
+      <p>
+        This is the diagram to draw when someone asks how you know the number is honest. The whole
+        population enters at the top — <em>every</em> high-risk lab in the snapshot window, which
+        is only possible because of the ungated feed in Fig 1. One diamond, three exits, and every
+        lab takes exactly one of them.
+      </p>
+      <p>
+        <strong>Left branch:</strong> an evidence edge exists, so the decision explicitly cited
+        this lab. Only these rows reach the headline median, P90 and confidence intervals.
+        <strong>Middle branch:</strong> no edge, but a clinically relevant decision — defined by a
+        versioned allowlist of decision types, not “any next decision” — followed within fourteen
+        days. These are computed and shown, but in a separate diagnostic slice, held back until a
+        clinical validation study sanctions them. <strong>Right branch:</strong> nothing followed
+        at all. These are right-censored at fourteen days and feed the survival estimate, plus an
+        explicit unpaired rate that is reported on every surface.
+      </p>
+      <p>
+        The gate that polices the split sits one level up and is not drawn here: if any segment's
+        evidence-paired share falls under 0.80, that segment's headline is suppressed and only this
+        three-way breakdown is served.
+      </p>
+      <div class="breaks">
+        <p>
+          <b>Without the split</b> — one arrow from the diamond straight to “headline” — you get a
+          larger N, a smoother median, and a number no reader can distinguish from the honest one.
+          <b>Without the right branch</b> you get textbook survivorship bias. <b>Without the
+          middle branch's quarantine</b>, an unvalidated heuristic silently sets clinical policy.
+        </p>
+      </div>
+    </div>
+
+    <!-- FIG 7 -->
+    <figure class="diagram">
+      <pre class="mermaid">
+flowchart TD
+    A[Lab · event_time] --&gt; B[Lab · observed_at]
+    B --&gt; C[Lab · received_at]
+    C --&gt; D[Lab · written_at]
+    D --&gt; E[Decision · event_time]
+    E --&gt; F[Decision · observed_at]
+    F --&gt; G[Decision · received_at]
+    G --&gt; H[Decision · written_at]
+    C -. the latency subtracts exactly these two .-&gt; E
+      </pre>
+      <figcaption>Fig 7 · Time discipline — four timestamps kept, exactly two subtracted; pick the wrong pair and you measure the database</figcaption>
+    </figure>
+
+    <div class="walk">
+      <span class="wk">Walkthrough</span>
+      <p>
+        Eight boxes, one dotted line, and it is the fastest diagram to draw. Each side of the pair
+        keeps four timestamps in the same order: <em>event_time</em> is when the thing happened in
+        the world — the lab was resulted, the decision was made. <em>observed_at</em> is when it
+        was observed. <em>received_at</em> is when it reached the platform. <em>written_at</em> is
+        when it landed in the store.
+      </p>
+      <p>
+        The dotted line is the entire latency definition: <strong>lab <code>received_at</code> to
+        decision <code>event_time</code></strong>. Received-at on the lab side, because the clock
+        starts when the platform could have acted; event-time on the decision side, because that is
+        when the clinician actually decided. Every other timestamp is kept for provenance and for
+        the guards, and none of them enter the subtraction.
+      </p>
+      <p>
+        The related invariant, from the hydration side of the system: <em>written_at</em> is the
+        only field pinned to the bulk-load fence, and a per-row guard asserts every historical
+        event's real-world time falls strictly before its ingestion time — so a value that
+        accidentally defaulted to the load date fails the load rather than poisoning a distribution.
+      </p>
+      <div class="breaks">
+        <p>
+          <b>Pick the wrong two boxes</b> and you have a plausible dashboard measuring pipeline
+          throughput. Subtract <em>written_at</em> from <em>written_at</em> and nine years of
+          history compresses toward zero, because every hydrated record shares one load date. As
+          the design puts it: <em>the invariant is cheap; the failure it prevents is
+          unrecoverable.</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- FIG 8 -->
+    <figure class="diagram">
+      <pre class="mermaid">
+flowchart TD
+    Q[GET decision-latency&lt;br/&gt;split by country and AI-assist] --&gt; AUDIT[Audit-log entry first&lt;br/&gt;viewer · target · purpose · time&lt;br/&gt;required for any per-doctor split]
+    AUDIT --&gt; CKEY[Build canonical cache key&lt;br/&gt;account + workspace + controlunit · split · filters&lt;br/&gt;pairing-rule + metric-schema + snapshot hashes&lt;br/&gt;event-seq watermark · correction epoch]
+    CKEY --&gt; CACHE{Cache}
+    CACHE --&gt;|hit| TENANT[Assert tenant on every cell]
+    CACHE --&gt;|miss| LOAD[Scan metric table&lt;br/&gt;filtered to the caller's tenant partition]
+    LOAD --&gt; RBAC{Caller role}
+    RBAC --&gt;|leadership| FULL[All splits · including per-doctor]
+    RBAC --&gt;|clinician self| SELF[Per-doctor restricted to own pseudonym]
+    RBAC --&gt;|other| NODOC[Per-doctor stripped · country and AI only]
+    FULL --&gt; PAIRG{Pairing quality per segment gte 0.80}
+    SELF --&gt; PAIRG
+    NODOC --&gt; PAIRG
+    PAIRG --&gt;|below| WARN[Tag low pairing · suppress the latency headline&lt;br/&gt;expose pair-method breakdown only]
+    PAIRG --&gt;|met| NG{Paired count per cell gte 30}
+    WARN --&gt; NG
+    NG --&gt;|below| SUP[Emit insufficient data&lt;br/&gt;with full pair-method breakdown]
+    NG --&gt;|met| EMIT[Emit median · P90 · CIs&lt;br/&gt;survival median · business-hours latency&lt;br/&gt;pseudonymous doctor id unless leadership]
+    EMIT --&gt; TENANT
+    SUP --&gt; TENANT
+    TENANT --&gt; RET[Return with provenance pins · then cache]
+      </pre>
+      <figcaption>Fig 8 · Query path — audit, pin, branch by role, and gate every cell before it may headline</figcaption>
+    </figure>
+
+    <div class="walk">
+      <span class="wk">Walkthrough</span>
+      <p>
+        Read it top to bottom as a fixed order, because the order <em>is</em> the guarantee.
+        A request arrives asking for latency split by country and AI-assist. <strong>Step one, before
+        anything is read:</strong> write the audit entry — viewer, target, purpose, time. Not after
+        the response; before the fetch, so a read that errors halfway still leaves a record.
+      </p>
+      <p>
+        <strong>Step two:</strong> build the canonical cache key from every input that could change
+        the answer — the three-field tenant scope, the split and filters, the pairing-rule version,
+        the metric schema hash, the snapshot hash, the event-sequence watermark, and the correction
+        epoch. <strong>Step three:</strong> the cache diamond. Notice where the hit arrow goes — it
+        skips the scan and the recompute, and rejoins at “assert tenant on every cell”. The warm
+        path never skips governance.
+      </p>
+      <p>
+        <strong>On a miss:</strong> scan the metric table filtered to the caller's tenant
+        partition, then branch on role. Leadership gets all splits. A clinician gets the per-doctor
+        split for their own pseudonym only. Anyone else gets it stripped from the response
+        entirely. All three role branches then converge on the same two gates, in this order:
+        <strong>pairing quality ≥ 0.80 per segment</strong>, then <strong>≥ 30 supported pairs per
+        cell</strong>. Note that the “below” arrow from the pairing gate does not exit — it flows
+        into the size gate too, so a low-pairing segment is <em>also</em> size-checked before
+        anything is emitted.
+      </p>
+      <p>
+        Whatever the outcome — a full emission with median, P90, intervals, survival median and
+        business-hours latency, or an honest “insufficient data” — every path converges on the
+        tenant assertion, and only then returns with its provenance pins and populates the cache.
+      </p>
+      <div class="breaks">
+        <p>
+          <b>Move the audit node below the cache</b> and you stop logging exactly the accesses that
+          failed. <b>Let the cache-hit arrow go straight to “return”</b> and a warm response
+          bypasses the tenant assertion and the pseudonymisation — the single most dangerous edit
+          you could make to this diagram. <b>Swap the two gates</b> and you can emit a
+          large-sample median built on evidence you have already judged untrustworthy. <b>Drop the
+          correction epoch from the key</b> and a surgical rebuild lands in the store while the
+          cache keeps serving the pre-correction number under the same name.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 5 -->
+  <section id="questions">
+    <div class="stage"><b>05</b> Likely questions</div>
+    <h2>Headline first — the first sentence has to land alone</h2>
+    <p>
+      Answer with the bold line, then stop. Expand only if they ask, and expand in the order below.
+    </p>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q1</span>Why isn't this just “join the lab to the next decision, subtract two timestamps, take the median”?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>Because every clause of that sentence hides a way to ship a confident, wrong number.</p>
+      </div>
+      <div class="detail">
+        <p>
+          Four specific ways, each with a named control. <strong>“Next decision”</strong> pairs a
+          lab with an unrelated action, so only decisions that explicitly cite the lab as evidence
+          may headline. <strong>“The median”</strong> silently deletes the labs nobody answered, so
+          the denominator comes from an ungated feed and unanswered labs are right-censored.
+          <strong>“Two timestamps”</strong> can measure the database instead of the clinic, so four
+          timestamps are kept and exactly two are pinned. <strong>“Group by clinician”</strong>
+          renders as a scorecard the instant it draws, so the per-clinician view is pseudonymous,
+          role-gated, audit-logged and deliberately unrankable.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q2</span>Your headline depends on the product attaching evidence links. Isn't that one UI bug away from collapse?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>It is a genuine dependency, and the design treats it as one rather than assuming it away — a pairing-drift monitor watches it, and a segment that falls below the floor degrades to “we can't say”, never to a wrong number.</p>
+      </div>
+      <div class="detail">
+        <p>
+          Evidence-link completeness is tracked per refresh, broken down by clinician, geography,
+          lab type <em>and UI version</em>. The UI-version cut is the important one: a product
+          change that quietly stops citing the lab shows up as drift on that version before it
+          skews a headline, which turns a subtle front-end regression into a pageable analytics
+          signal.
+        </p>
+        <p>
+          The second half matters for fairness. A missing edge is treated as a
+          <strong>data-completeness signal, not a clinician judgment</strong> — if a doctor made the
+          decision but didn't attach the lab, the drift monitor diagnoses it as a product problem
+          rather than pinning it on a person, and the segment's headline is suppressed rather than
+          under-reported.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q3</span>Isn't a per-clinician latency number inherently a scorecard, no matter how you dress it up?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>Yes — it reads as one the moment it renders, and pretending otherwise would be dishonest; that is exactly why governance is a first-class part of the design rather than a footnote.</p>
+      </div>
+      <div class="detail">
+        <p>
+          Concretely: clinicians are pseudonymous by default; the per-clinician split exists in a
+          response only for leadership or the clinician's own view; an audit entry with viewer,
+          target, purpose and time is written before any actor-level read, and another for any
+          drill-in; the ordering is alphabetic and deliberately not rank-sortable; and every
+          surface carries an observational tag.
+        </p>
+        <p>
+          If they push — “couldn't leadership export it and re-rank it themselves?” — the honest
+          answer is yes, and that the controls raise friction and visibility rather than making it
+          physically impossible. A determined misuse is possible, but it is deliberate, effortful,
+          and provable after the fact. <strong>Claiming it can never become a scorecard would
+          overstate what any access control can do.</strong> Conceding this cleanly is stronger
+          than defending it.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q4</span>What do you do with the labs nobody ever answered?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>They are right-censored at the fourteen-day window and carried into a Kaplan–Meier-style time-to-decision estimate, plus an explicit unpaired rate on every surface — nothing is deleted, everything is labelled.</p>
+      </div>
+      <div class="detail">
+        <p>
+          The two alternatives are both wrong in interesting ways. <strong>Dropping them</strong> is
+          survivorship bias: the slow and missing cases vanish and the number flatters itself,
+          worst exactly where performance is worst. <strong>Capping them at fourteen days</strong>
+          invents a latency they never had and inflates the tail with a fiction. Censoring is the
+          honest middle — it uses “unanswered as of day fourteen” to shape the survival curve,
+          biasing neither toward optimism nor pessimism, which is precisely what survival analysis
+          exists for.
+        </p>
+        <p>
+          If a sceptic calls censoring a sophisticated way to avoid admitting labs go unanswered:
+          the unpaired rate is a reported headline fact on every surface, so the unanswered set is
+          not buried. Censoring is the opposite of avoidance — it forces those cases into the
+          estimate.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q5</span>Snapshot-only means the dashboard is stale by construction. How is that acceptable for an operational tool?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>Decision latency is a trend-and-distribution metric, not a real-time alert — what would be unacceptable is <em>silent</em> staleness, so freshness is made visible and bounded rather than eliminated.</p>
+      </div>
+      <div class="detail">
+        <p>
+          <strong>Visible:</strong> freshness tiers — under 24 hours serves normally, 24 to 48
+          hours serves flagged as stale, past 48 hours the tier turns red. Separately, projection
+          lag over thirty minutes flags <em>before</em> the snapshot looks stale, because a lagging
+          projector produces a fresh-looking but incomplete snapshot, which is the most dangerous
+          kind. Two separate signals, deliberately, so incomplete-but-recent cannot pass as healthy.
+        </p>
+        <p>
+          <strong>Bounded:</strong> corrections short-circuit the nightly cadence. A correction
+          listener maps each spine correction through a dependency index to the exact pair rows
+          whose identity depends on it and rebuilds only those, against a P95 five-minute target.
+          That targeted rebuild is only possible because pair identities are deterministic hashes.
+        </p>
+        <p>
+          <strong>When would you choose live instead?</strong> For real-time alerting — “this
+          urgent lab has gone unanswered for six hours, page someone”. That is a different product
+          with a different requirement: immediacy, and no need to be replayable. This one has to be
+          auditable, reproducible and tenant-partitioned, so snapshot-only is the right trade.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q6</span>How do you stop a cross-tenant cell from ever being served?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>Three deliberately redundant layers — a tenant-scoped build, tenant-partitioned files, and a fail-closed assertion on every cell before it leaves the API — because each catches a different class of bug.</p>
+      </div>
+      <div class="detail">
+        <p>
+          Tenancy is a three-field scope — account, workspace, control unit — resolved from the
+          caller's authenticated context, never passed in as a parameter. A single-field check
+          would be insufficient because one account can span workspaces that must not see each
+          other's data.
+        </p>
+        <ul>
+          <li><strong>In the build:</strong> join predicates require all three fields to match on both sides, so a cross-tenant pair is not even a candidate, and a write-time assertion re-checks before the pair table persists.</li>
+          <li><strong>In storage:</strong> Parquet files are partitioned by the three-field scope.</li>
+          <li><strong>At serve:</strong> every cell is re-checked against the caller. A mismatch fails closed and pages the on-call.</li>
+          <li><strong>In the cache:</strong> all three fields are in the canonical key, so a cached cell for one tenant cannot be returned to another — the keys simply do not collide.</li>
+        </ul>
+        <p>
+          The acceptance bar is <strong>zero, as a page-out</strong> — deliberately not a rate you
+          drive down over time, because a single leaked cell is already a breach. The cost of a
+          false alarm is a page; the cost of failing open is a disclosure.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q7</span>You had a self-hosted language model available on the platform and used none. Why?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>Because numbers a regulator may one day audit should not have a language model anywhere in their provenance — and there is no step in this pipeline a model would improve, though several it could quietly degrade.</p>
+      </div>
+      <div class="detail">
+        <p>
+          Latency is timestamp arithmetic. The quantiles, intervals and censoring-aware estimates
+          are seeded, replayable statistics. The gates, suppression rules and access controls are
+          deterministic code. There is no retrieval-augmented surface either, and that absence is a
+          decision rather than a gap: a median is read from a pre-computed cell and served with its
+          confidence interval and pairing-quality caveat already attached, so there is nothing left
+          to fetch and nothing a generated sentence could add.
+        </p>
+        <p>
+          Guarding it: “zero language-model calls” is an <strong>evaluation criterion</strong>, so
+          accidental use would surface as a violated invariant rather than a production surprise.
+          The platform's model seam — a self-hosted Llama 3.1 inside the client's VPC — serves the
+          sibling retrieval and override-analytics systems one layer up; this service is drawn to
+          never touch it.
+        </p>
+        <p>
+          And on the split itself: <strong>the AI in the question is measured, not used.</strong>
+          The pipeline reconstructs from the event spine, as of each decision's moment, whether and
+          how AI assisted — usage type, agent event, human sign-off — and reports it as an
+          observational split.
+        </p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span class="num">Q8</span>Be concrete: what can this system genuinely not answer today?</p>
+      <div class="headline">
+        <span class="tag">Headline</span>
+        <p>Three things, stated on the surface rather than buried — it cannot claim AI assistance <em>causes</em> faster decisions, it cannot give a number for any segment below the pairing or sample-size floor, and it cannot see through a systematic evidence-attachment gap.</p>
+      </div>
+      <div class="detail">
+        <p>
+          <strong>The AI split is association, never effect.</strong> Clinicians reach for AI
+          assistance on different kinds of cases, so any latency difference reflects that selection
+          as much as any effect of the assistance; matching would balance only the covariates that
+          were measured, and unmeasured confounding is never ruled out. The comparison ships with
+          observational caveats and is blocked outright when pairing quality differs materially
+          between the arms — because unequal data completeness between arms would masquerade as an
+          AI effect.
+        </p>
+        <p>
+          <strong>Suppressed is not estimated.</strong> Below the floors, cells say “insufficient
+          data” with their full denominator breakdown. That is a deliberate choice of a smaller,
+          trustworthy denominator over a larger, guessed one — the cost is coverage on segments
+          with poor edge capture.
+        </p>
+        <p>
+          <strong>Two honest open edges.</strong> Many-to-one correspondence — a single review that
+          resolves a batch of labs, or a lab genuinely addressed across several decisions — sits at
+          the edge of the pairing definition; the rule is versioned and deterministic so its
+          behaviour is inspectable, but the clinical definition in those cases is an open question.
+          And the denominator depends on an upstream feed this query does not own: a silent, total
+          outage would shrink it, and while the pairing and unpaired-rate monitors would flag an
+          anomalous shift, that dependency is named plainly rather than hidden.
+        </p>
+        <p class="muted">
+          If they ask “so what did it measure in production?” — the honest answer is that every
+          figure attached to this design is a <strong>pre-registered acceptance target</strong>: the
+          bar the system was designed, reviewed and deployed against. The observed operating
+          numbers are the client's, and are not mine to publish.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      <strong>Scale, for reference:</strong> a chronic-care platform covering 80+ chronic
+      conditions, roughly 10,000 patients, and about nine years of history hydrated into the event
+      spine. Role: sole owner, design through production. Stack: DynamoDB event spine · Neptune
+      decision graph · Parquet + DuckDB · deterministic event pairing with versioned rules · seeded
+      cluster-aware bootstrap intervals · censoring-aware time-to-decision estimation · FastAPI ·
+      self-hosted LangSmith in-VPC · governed RBAC and audit.
+    </p>
+    <p>
+      Client and product identifiers anonymised. Every threshold and quality figure here is a
+      pre-registered acceptance target, not a measured production result.
+    </p>
+    <p style="margin-top:18px;">
+      <a href="../kq5-decision-latency.html">Full case study</a> ·
+      <a href="../summary.html">Summary</a> ·
+      <a href="../index.html">All case studies</a>
+    </p>
+  </footer>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

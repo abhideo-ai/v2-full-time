@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outcome correlation — interview prep</title>
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #8A5A00;
+    --amber-soft: #FBF3E2;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 64px 24px 96px; }
+
+  /* ---- type ---- */
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(2rem, 5vw, 3.1rem);
+    line-height: 1.14; letter-spacing: -0.015em;
+    max-width: 21ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 14px;
+  }
+  h3 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: 1.16rem; line-height: 1.3;
+    margin: 34px 0 10px;
+  }
+  h4 {
+    font-family: var(--sans); font-weight: 600; font-size: 0.98rem;
+    margin: 0 0 6px;
+  }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  strong { font-weight: 600; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+
+  /* ---- hero ---- */
+  header.hero { padding: 0 0 40px; }
+  .hero .sub { font-size: 1.12rem; color: var(--steel); max-width: 64ch; margin-top: 20px; }
+  .backlinks {
+    margin-top: 22px; font-family: var(--mono); font-size: 0.75rem;
+    letter-spacing: 0.04em; color: var(--steel);
+  }
+  .backlinks a { margin-right: 4px; }
+  .backlinks span { margin: 0 8px; color: var(--hairline); }
+
+  .spec-card {
+    margin: 32px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .spec-card .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .spec-card blockquote {
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--ink);
+  }
+
+  /* ---- stat tiles ---- */
+  .tiles {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px; margin: 32px 0 0;
+  }
+  .tile {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 18px 18px 15px;
+  }
+  .tile .value {
+    font-family: var(--sans); font-weight: 600; font-size: 1.9rem;
+    line-height: 1.1; letter-spacing: -0.01em;
+  }
+  .tile .label { font-size: 0.83rem; color: var(--steel); margin-top: 6px; line-height: 1.4; }
+  .fineprint { font-size: 0.8rem; color: var(--steel); margin: 12px 2px 0; max-width: 78ch; }
+  .meta-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px 18px; margin: 22px 0 0; padding: 14px 0 0; border-top: 1px solid var(--hairline);
+    font-size: 0.88rem;
+  }
+  .meta-row b {
+    display: block; font-family: var(--mono); font-weight: 500; font-size: 0.66rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--steel); margin-bottom: 2px;
+  }
+
+  /* ---- sections ---- */
+  section { margin-top: 76px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+
+  /* ---- open-with box ---- */
+  .openwith {
+    margin: 26px 0 34px; padding: 24px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .openwith .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 10px;
+  }
+  .openwith p {
+    font-family: var(--serif); font-size: 1.14rem; line-height: 1.55; margin-bottom: 0;
+    max-width: 62ch;
+  }
+
+  /* ---- callout ---- */
+  .callout {
+    margin: 26px 0; padding: 20px 24px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .callout.warn { border-left-color: var(--amber); background: var(--amber-soft); }
+  .callout .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px;
+  }
+  .callout.warn .label { color: var(--amber); }
+  .callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+
+  /* ---- tables ---- */
+  .tablewrap { overflow-x: auto; margin: 22px 0; border: 1px solid var(--hairline); border-radius: 6px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 11px 16px; vertical-align: top; }
+  thead th {
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel);
+    border-bottom: 1px solid var(--hairline); background: var(--paper);
+  }
+  tbody tr + tr td { border-top: 1px solid var(--mist); }
+  td.term { font-weight: 600; white-space: nowrap; }
+  td.num { font-family: var(--mono); font-size: 0.85rem; white-space: nowrap; }
+
+  /* ---- decision cards ---- */
+  .decision {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 20px 22px; margin: 14px 0;
+  }
+  .decision h4 { font-size: 1.02rem; }
+  .decision dl { margin: 10px 0 0; display: grid; grid-template-columns: 108px 1fr; gap: 6px 14px; }
+  .decision dt {
+    font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); padding-top: 5px;
+  }
+  .decision dd { margin: 0; font-size: 0.95rem; }
+  .decision dd.reject { color: var(--steel); }
+  .decision blockquote {
+    font-family: var(--serif); font-style: italic; font-size: 1rem; line-height: 1.55;
+    border-left: 2px solid var(--mist); padding-left: 14px; margin: 12px 0 0; color: var(--ink);
+    max-width: 66ch;
+  }
+  .decision blockquote::before { content: "\201C"; }
+  .decision blockquote::after { content: "\201D"; }
+  @media (max-width: 600px) {
+    .decision dl { grid-template-columns: 1fr; gap: 2px; }
+    .decision dt { padding-top: 10px; }
+  }
+
+  /* ---- review timeline + stamp ---- */
+  .review-grid { display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; }
+  ol.timeline { list-style: none; margin: 10px 0 0; }
+  ol.timeline li { position: relative; padding: 0 0 18px 26px; max-width: 66ch; }
+  ol.timeline li::before {
+    content: ""; position: absolute; left: 6px; top: 8px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--steel);
+  }
+  ol.timeline li:last-child::before { background: var(--teal); border-color: var(--teal); }
+  ol.timeline li::after {
+    content: ""; position: absolute; left: 9px; top: 20px; bottom: -2px;
+    width: 2px; background: var(--mist);
+  }
+  ol.timeline li:last-child::after { display: none; }
+  ol.timeline .round {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--steel); display: block;
+  }
+  .stamp {
+    font-family: var(--mono); text-transform: uppercase; text-align: center;
+    color: var(--teal); border: 2px solid var(--teal); border-radius: 6px;
+    padding: 14px 20px; transform: rotate(-3deg);
+    box-shadow: 0 0 0 3px var(--card), 0 0 0 4px var(--teal);
+    background: var(--card); max-width: 240px;
+  }
+  .stamp .big { font-size: 1.02rem; font-weight: 500; letter-spacing: 0.1em; display: block; }
+  .stamp .small { font-size: 0.66rem; letter-spacing: 0.14em; display: block; margin-top: 6px; }
+
+  /* ---- diagrams ---- */
+  figure.diagram {
+    margin: 26px 0 8px; padding: 22px 18px 14px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    overflow-x: auto;
+  }
+  figure.diagram figcaption {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--steel);
+    letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 4px 2px;
+  }
+  .mermaid { display: flex; justify-content: center; min-width: 320px; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .walkthrough { margin-bottom: 40px; }
+  .walkthrough h4 {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin: 18px 0 8px;
+  }
+
+  /* ---- Q&A ---- */
+  .qa {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 22px 24px; margin: 14px 0;
+  }
+  .qa .q {
+    font-family: var(--serif); font-weight: 600; font-size: 1.1rem; line-height: 1.35;
+    margin: 0 0 12px; max-width: 62ch;
+  }
+  .qa .headline {
+    font-size: 1.02rem; font-weight: 600; line-height: 1.5;
+    border-left: 3px solid var(--teal); padding-left: 14px; margin: 0 0 14px; max-width: 66ch;
+  }
+  .qa .qnum {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em;
+    color: var(--steel); display: block; margin-bottom: 8px;
+  }
+  .qa p:last-child { margin-bottom: 0; }
+
+  /* ---- lists ---- */
+  ul.tight, ol.tight { margin: 0 0 16px 20px; max-width: 72ch; }
+  ul.tight li, ol.tight li { margin-bottom: 8px; }
+  ul.keyfields { list-style: none; margin: 14px 0 18px; max-width: 72ch; }
+  ul.keyfields li {
+    font-family: var(--mono); font-size: 0.82rem; line-height: 1.5;
+    padding: 5px 0 5px 16px; border-left: 2px solid var(--mist); margin-bottom: 2px;
+  }
+  ul.keyfields li b { color: var(--teal-deep); font-weight: 500; }
+
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--mist); padding: 1px 6px; border-radius: 4px; white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 88px; padding-top: 26px; border-top: 1px solid var(--hairline);
+    font-size: 0.86rem; color: var(--steel); max-width: 72ch;
+  }
+  footer p { margin-bottom: 10px; }
+
+  @media (max-width: 640px) {
+    .review-grid { grid-template-columns: 1fr; }
+    .stamp { transform: rotate(-2deg); margin: 10px auto 0; }
+  }
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">Outcome correlation</span></p>
+
+<header class="hero">
+  <span class="eyebrow">Interview prep · Killer query 2</span>
+  <h1>Did the nutrition protocol help — or did <em>healthier patients just get it?</em></h1>
+  <p class="sub">The outcome-correlation service: the cohort comparison that five other production
+  analytics queries are built on. Sole owner, design through production, on a chronic-care platform
+  covering 80+ chronic conditions and roughly 10,000 patients, with about nine years of patient
+  history hydrated into the event log. It shipped and it is live.</p>
+  <p class="backlinks">
+    <a href="../kq2-outcome-correlation.html">full case study</a><span>·</span>
+    <a href="../summary.html">summary</a><span>·</span>
+    <a href="../index.html">all case studies</a>
+  </p>
+
+  <div class="spec-card">
+    <span class="label">The query the system must answer, verbatim</span>
+    <blockquote>"For patients where medication_started = metformin, what percentage achieved HbA1c
+    reduction &gt;1.0 within 90 days, segmented by whether a concurrent nutrition protocol was
+    applied?"</blockquote>
+  </div>
+
+  <div class="tiles">
+    <div class="tile">
+      <div class="value">0</div>
+      <div class="label">Large language model (LLM) calls anywhere in the pipeline</div>
+    </div>
+    <div class="tile">
+      <div class="value">≥ 30</div>
+      <div class="label">Mature patients per cell, or the number is suppressed</div>
+    </div>
+    <div class="tile">
+      <div class="value">≤ 0.1</div>
+      <div class="label">Covariate imbalance above which a raw rate cannot be a headline</div>
+    </div>
+    <div class="tile">
+      <div class="value">16</div>
+      <div class="label">Adversarial design-review findings, all dispositioned</div>
+    </div>
+  </div>
+  <p class="fineprint">Every threshold and service-level agreement (SLA) on this page is a
+  <strong>pre-registered acceptance gate</strong> the system was designed, reviewed and deployed
+  against. No measured production result appears here, and none should be claimed out loud: he left
+  before the outcome numbers were captured. Say "that is the gate we built to", never "that is what
+  we achieved".</p>
+
+  <div class="meta-row">
+    <div><b>Role</b>Sole owner — design through production</div>
+    <div><b>Status</b>Live in production</div>
+    <div><b>Boundary</b>Entirely inside the client's private network</div>
+    <div><b>Reuse</b>Canonical shape for 5 sibling queries</div>
+  </div>
+</header>
+
+<!-- ============================================================ 1 -->
+<section id="what">
+  <div class="stage"><b>01</b> What is it?</div>
+  <h2>One <code>GROUP BY</code> away from a false conclusion</h2>
+
+  <div class="openwith">
+    <span class="label">Open with these two sentences</span>
+    <p>A clinical operations lead wants one number: of the patients we started on metformin, what
+    share got their blood sugar down, and did adding a nutrition protocol move that share? It looks
+    like a single <code>GROUP BY</code>, and a single <code>GROUP BY</code> would be wrong three ways
+    at once — none of which shows up as a query error.</p>
+  </div>
+
+  <h3>The situation, in plain language</h3>
+  <p>Metformin is the first-line drug for type 2 diabetes. HbA1c — haemoglobin A1c, glycated
+  haemoglobin — is the blood marker that reflects roughly three months of average blood sugar, so a
+  drop of more than 1.0 is a real clinical improvement rather than a good day. A nutrition protocol
+  is a structured dietary programme a care team can run alongside the drug.</p>
+  <p>So the person asking is a clinical operations lead deciding whether to fund the nutrition
+  protocol across a programme, or a reviewer asking the platform to justify a claim it has already
+  made. Both need the same thing: <strong>a comparative rate for each arm, carried with its
+  uncertainty</strong> — not a verdict on whether the protocol works. Everything downstream exists to
+  make that comparison honest rather than merely computable.</p>
+
+  <h3>Why it is genuinely hard</h3>
+  <p>The naive answer is one line of structured query language (SQL) (structured query language): filter to metformin starts,
+  split by whether a nutrition protocol ran alongside, divide responders by the total. Three failure
+  modes ride along with it.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr><th>Failure mode of the naive query</th><th>What actually goes wrong</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="term">Confounded comparison</td>
+          <td>Nobody randomised this. Treatment here is a clinical choice, and the patients who also
+          get a nutrition protocol are systematically different — often more engaged, earlier-stage,
+          better-controlled at baseline. A raw with-versus-without gap measures
+          <strong>who got the protocol</strong> as much as <strong>what it did</strong>.</td>
+        </tr>
+        <tr>
+          <td class="term">False confidence<br>from small cells</td>
+          <td>Split finely enough and some cells hold a handful of patients, where two lucky outcomes
+          read as a confident 100%. The cell looks like every other cell on the dashboard.</td>
+        </tr>
+        <tr>
+          <td class="term">Future leakage</td>
+          <td>Country, programme phase and prior adherence all change over time — often
+          <em>because</em> of the care pathway. Compute them from today's graph and you describe a
+          past decision with facts that arrived after it, quietly inflating the apparent effect.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>There is a fourth, quieter one. <strong>"Within 90 days" is doing two jobs at once.</strong> It
+  is a <em>maturity horizon</em> — a patient whose 90 days have not elapsed by the snapshot has no
+  outcome yet and must not be scored as a failure — and it is an <em>outcome window</em>, which
+  requires deciding which HbA1c reading counts as the 90-day value. Handle either carelessly and the
+  rate is biased before any statistics run.</p>
+
+  <div class="callout">
+    <span class="label">The asymmetry the whole design turns on</span>
+    <p><strong>A false emit costs far more than a false suppress.</strong> A confident headline that
+    should have been withheld can change a clinician's protocol; a withheld number just sends someone
+    to the drill-down. Every gate in the system is therefore tuned to withhold on doubt rather than
+    publish on hope. If an interviewer asks for the single most dangerous failure mode, this is the
+    answer, and it explains every other choice on the page.</p>
+  </div>
+
+  <h3>Why this one query mattered beyond itself</h3>
+  <p>Its shape — filter a cohort, reconstruct covariates as-of the decision, label a matured outcome,
+  gate for balance, report a rate with a seeded confidence interval — is the shape of five sibling
+  cohort queries that differ only in their filters. The controls proven here are the controls
+  everywhere: a fix in one is a fix in all. That is the line that turns "I built a query" into
+  "I set the standard the programme runs on".</p>
+
+  <h3>Glossary — every term this page uses</h3>
+  <p class="muted">Read this once before the round. Nothing below should need decoding mid-sentence.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Term</th><th>What it actually means</th></tr></thead>
+      <tbody>
+        <tr><td class="term">HbA1c</td><td>Haemoglobin A1c, the lab marker reflecting about three months of average blood sugar. The outcome being measured.</td></tr>
+        <tr><td class="term">Cohort</td><td>The set of patients matching the filter — here, everyone with a recorded metformin start.</td></tr>
+        <tr><td class="term">Arm</td><td>One side of the comparison: metformin plus concurrent nutrition protocol, versus metformin alone.</td></tr>
+        <tr><td class="term">Covariate</td><td>A patient fact measured <em>before</em> treatment that could influence both who gets the protocol and who improves — baseline HbA1c, age band, body mass index (BMI), country, programme, phase, prior adherence, prior nutrition exposure.</td></tr>
+        <tr><td class="term">Confounding</td><td>When a covariate drives both the treatment and the outcome, so the observed gap is partly the covariate's doing rather than the treatment's.</td></tr>
+        <tr><td class="term">SMD</td><td>Standardised mean difference: how far apart the two arms sit on one covariate, measured in pooled standard-deviation units. Unlike a p-value, it does not shrink as the sample grows.</td></tr>
+        <tr><td class="term">Propensity matching</td><td>Pairing treated and untreated patients who had a similar modelled probability of receiving the treatment, so the arms become comparable on the measured covariates.</td></tr>
+        <tr><td class="term">IPW</td><td>Inverse-probability weighting: weighting each patient by one over their probability of treatment, so the weighted arms resemble a common covariate distribution. Used on top of matching to absorb residual imbalance.</td></tr>
+        <tr><td class="term">Censoring</td><td>A patient who left before the 90-day horizon — dropout, programme switch, superseded by a later decision — is <em>censored</em>, not counted as a failure. The policy used is Kaplan–Meier, the standard survival-analysis treatment of incomplete follow-up.</td></tr>
+        <tr><td class="term">Bootstrap CI</td><td>A confidence interval (CI) built by resampling the cohort thousands of times and reading off the spread, rather than assuming a formula's distributional assumptions hold.</td></tr>
+        <tr><td class="term">As-of</td><td>Reconstructing a fact as it stood at a named past instant, rather than reading today's value.</td></tr>
+        <tr><td class="term">Event spine</td><td>The append-only log of everything that happened — drug starts, nutrition plans, lab results. The source of truth; nothing is ever edited in place, only appended.</td></tr>
+        <tr><td class="term">Projection</td><td>Code that replays the event log to build a queryable shape from it — here, a decision graph and a separate observation snapshot.</td></tr>
+        <tr><td class="term">Snapshot manifest hash</td><td>A fingerprint of the exact frozen dataset a number was computed from. Two identical hashes mean identical inputs.</td></tr>
+        <tr><td class="term">Source event-seq</td><td>The sequence number of the last event included. Pins <em>how much</em> of the log a number saw.</td></tr>
+        <tr><td class="term">Correction epoch</td><td>A counter bumped whenever an upstream correction forces a rebuild. Present in the cache key, so old cells retire the instant the rebuild lands.</td></tr>
+        <tr><td class="term">PHI</td><td>Protected health information — identifiable patient data, which never leaves the client's network here.</td></tr>
+        <tr><td class="term">virtual private cloud (VPC)</td><td>Virtual private cloud: the client's own isolated network inside the cloud provider. Everything in this system runs inside it.</td></tr>
+        <tr><td class="term">TLS</td><td>Transport layer security — the encryption on the link out to the clinician's browser, which carries only suppressed aggregate cells.</td></tr>
+        <tr><td class="term">95th-percentile (P95)</td><td>The 95th percentile: the value 95% of samples come in under. A P95 SLA is a promise about the slow tail, not the average.</td></tr>
+        <tr><td class="term">TTL</td><td>Time to live — the usual way caches expire entries. Deliberately <em>not</em> how freshness works here.</td></tr>
+        <tr><td class="term">RAG</td><td>Retrieval-augmented generation: fetching documents and having a model narrate them. Deliberately absent here.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Collision to call out before an interviewer does</span>
+    <p>"Balanced" in this system means <strong>the balance gate was applied</strong>, not
+    <strong>residual imbalance was verified afterwards</strong>. The distinction is real and it is
+    documented as an honest gap further down. Naming it yourself is far stronger than being caught
+    on it.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 2 -->
+<section id="how">
+  <div class="stage"><b>02</b> How did we solve it?</div>
+  <h2>Snapshot-only analytics, built overnight from a frozen past</h2>
+
+  <p>Two rules shape everything else. <strong>First, nothing is computed from live graph state:</strong>
+  a nightly snapshot freezes the world at a pinned as-of timestamp, and every number is built from
+  that frozen state plus an as-of replay of the event spine. <strong>Second, the graph database is
+  never on the serving path:</strong> the cohort is assembled with tenant-scoped columnar joins, not
+  per-row graph traversal.</p>
+
+  <h3>Three lanes, three cadences</h3>
+  <p>The clearest way to hold the whole system in your head is as three lanes running at three
+  different speeds, all inside the client's network.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Lane</th><th>When it runs</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="term">One-time hydration</td>
+          <td class="num">once, up front</td>
+          <td>About nine years of legacy records — every drug start, nutrition protocol and HbA1c
+          result the platform had ever seen — normalised, upconverted, quarantined on failure,
+          content-addressed and replayed into the append-only spine, then proved before anything
+          downstream is built.</td>
+        </tr>
+        <tr>
+          <td class="term">Nightly build</td>
+          <td class="num">every night</td>
+          <td>Freeze the snapshot at a pinned as-of, build the cohort, label the matured outcome,
+          gate for balance, route to adjustment where needed, compute seeded intervals, and write
+          <em>every</em> metric cell to columnar files.</td>
+        </tr>
+        <tr>
+          <td class="term">Request path</td>
+          <td class="num">what a clinician waits on</td>
+          <td>The metric application programming interface (API): build a canonical cache key, look
+          it up in an in-process cache, fall back to a columnar scan of the pre-computed metric table
+          on a miss, assert tenancy on every cell, return.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The upstream shape, and the second data path</h3>
+  <p>The event spine sits on DynamoDB — an append-only log of drug starts, nutrition plans and HbA1c
+  labs. One projection library reads it and writes <strong>two</strong> things: the decision graph, on
+  Neptune, and a separate observation snapshot in Parquet columnar files.</p>
+  <p>That second path is the subtle one, and it is worth volunteering unprompted. The default
+  projector emits an observation only when a decision references it. A matured 90-day HbA1c that no
+  follow-up decision ever cited would simply vanish — <strong>biasing the denominator toward
+  "someone responded" cases</strong>. So a second projection writes lab observations to their own
+  snapshot, ungated by decision attachment, and the cohort reads both snapshots.</p>
+
+  <h3>What the cohort builder actually reads</h3>
+  <p>Three sources against one frozen manifest:</p>
+  <ul class="tight">
+    <li>the <strong>decision snapshot</strong>, for metformin starts and structured features;</li>
+    <li>the <strong>ungated observation snapshot</strong>, for the HbA1c outcomes;</li>
+    <li>the <strong>event spine directly</strong>, for as-of covariate reconstruction by source-event
+    sequence.</li>
+  </ul>
+  <p>It joins those into a cohort table partitioned by tenant and snapshot hash, using DuckDB — an
+  embedded columnar query engine — with no live reads and no per-row graph calls. It anchors
+  treatment episodes and de-duplicates restarts, so a patient who stops and restarts metformin is not
+  counted as two independent decisions. Each covariate is read as the latest valid value at or before
+  the decision's event time, and <strong>every field on every row carries three things: its value, its
+  as-of timestamp, and the event sequence it was read at</strong>. That is what makes the leak-free
+  property auditable rather than asserted.</p>
+
+  <h3>The outcome label is a contract, not a boolean</h3>
+  <p>A shared outcome library — not per-query code — labels each cohort member and emits five things:
+  the <strong>status</strong>, the <strong>attribution decision</strong>, the <strong>rule
+  version</strong>, the <strong>distance in days</strong>, and the <strong>censoring reason</strong>.
+  Statuses are explicit: mature, not-mature, missing, dropout, programme-switch,
+  censored-by-a-later-decision. A missing lab is never counted as a zero. A versioned attribution rule
+  — nearest same-domain decision before the outcome — stops two overlapping decisions both claiming
+  the same HbA1c move.</p>
+
+  <h3>The honesty ladder: the order is the design</h3>
+  <p>A raw rate must survive a fixed sequence before it is allowed to be a headline. It reads like a
+  statistician's chain of thought, but it is deterministic code and every exit is explicit.</p>
+  <ol class="tight">
+    <li><strong>Sample-size floor.</strong> Every cell needs at least 30 mature patients. Below the
+    floor the cell reports <code>insufficient_data</code> with its full denominator breakdown, never a
+    rate.</li>
+    <li><strong>Balance gate.</strong> SMD across eight-plus pre-treatment covariates. All within 0.1
+    and the descriptive rate may stand.</li>
+    <li><strong>The branch.</strong> Any covariate above the gate and the cell routes to propensity
+    matching plus IPW, and <em>the adjusted rate becomes the displayed headline</em> while the raw
+    rate drops to a drill-down carrying an observational tag.</li>
+    <li><strong>Window sensitivity.</strong> The same matched cohort is scored through three
+    pre-registered windows. A sign flip or a materially different magnitude withholds the headline.</li>
+    <li><strong>Emit.</strong> Rate plus seeded bootstrap CI, with an observational tag attached that
+    records which path it came down: balance-gated if raw, adjustment-applied if matched.</li>
+  </ol>
+  <p>The ordering is not cosmetic. The floor runs first because a balance statistic on six patients is
+  meaningless. The balance gate runs before any headline rather than sitting in a methods footnote,
+  because that is the difference between a control and a disclaimer.</p>
+
+  <h3>The statistics, pinned</h3>
+  <ul class="tight">
+    <li><strong>Bootstrap:</strong> 2,000 resamples, <strong>clustered by enrollment</strong> rather
+    than by row, <strong>seeded from the snapshot manifest hash</strong>, percentile interval by
+    default. Bias-corrected and accelerated (BCa) intervals are an opt-in, not the default.</li>
+    <li><strong>Windows, pre-registered:</strong> A is −7 to +30 days, B is −14 to +45 days, C is
+    0 to +30 days. Fixed in the statistical plan before any number is computed.</li>
+    <li><strong>Covariates, pre-registered:</strong> baseline HbA1c, age band, BMI, country, programme,
+    phase, prior adherence, prior nutrition exposure — all reconstructed as-of the decision, so the
+    balance check is itself leak-free.</li>
+  </ul>
+
+  <h3>The request path is a gauntlet of refusals</h3>
+  <p>By query time there is almost no statistics left to compute; the cells were built overnight.
+  What remains is a sequence of ways to say no: a complete cache key, a split allowlist, the
+  sample-size floor, the balance gate, and a tenant-scope assertion on every cell, <strong>even on a
+  cache hit</strong>.</p>
+  <p>The canonical cache key is sorted JavaScript Object Notation (JSON) (JavaScript Object Notation) that names every input which
+  can change the answer:</p>
+  <ul class="keyfields">
+    <li><b>account_id · workspace_id · controlunit_id</b> — the three-field tenant scope, resolved from the caller's authenticated token, first in the key by construction</li>
+    <li><b>query namespace · split · filters</b> — what was actually asked</li>
+    <li><b>metric-schema hash</b> — responder rule, attribution rule version, censoring policy, windows, bootstrap settings</li>
+    <li><b>snapshot manifest hash</b> — which frozen world it was computed from</li>
+    <li><b>source event-seq max</b> — how much of the log that world contained</li>
+    <li><b>correction epoch</b> — which generation of corrections it reflects</li>
+  </ul>
+  <p>Library and statistical-plan versions also move a number; those are pinned per deploy and
+  recorded <em>with the result</em> rather than enumerated as key fields. Tenancy is enforced at three
+  layers at once: wrapped at the call site so the scope is injected rather than remembered,
+  partitioned on disk so a job physically reads only its own partition, and asserted at write time and
+  on every served cell. A cross-tenant cell or a partition mismatch fails closed and pages an
+  operator; it is an incident, not a metric.</p>
+
+  <h3>Freshness, and what happens when something moves</h3>
+  <ul class="tight">
+    <li><strong>Snapshot age tiers.</strong> Under 24 hours serves normally; 24–48 hours serves with a
+    visible staleness banner; past 48 hours the service blocks and escalates rather than serve quietly
+    outdated statistics.</li>
+    <li><strong>Projector lag.</strong> Beyond 30 minutes it trips the yellow tier, surfacing
+    staleness well before the 24-hour boundary is even reached.</li>
+    <li><strong>Corrections.</strong> A listener maps each spine correction through a dependency index
+    to exactly the cohort and metric slices that depend on the affected event-sequence range, rebuilds
+    only those, and bumps the correction epoch. Target: P95 under five minutes from correction to
+    fresh cells.</li>
+    <li><strong>Degradation is per cell.</strong> A thin stratum returns <code>insufficient_data</code>
+    with its denominator breakdown while well-populated cells in the same response emit normally.</li>
+  </ul>
+
+  <h3>Hydration: five rules that keep nine years honest</h3>
+  <p>This system was not switched on against an empty world, and that is the part most interviewers
+  have never had to build. Hydration is a first-class, quarantine-first, proof-carrying pipeline.</p>
+  <ol class="tight">
+    <li><strong>Event time is not ingestion time.</strong> Each legacy record carries two real-world
+    moments — <code>event_time_ms</code>, when it actually happened, and <code>observed_at_ms</code>,
+    when its result was observed — while separate received and written stamps record only when the
+    load learned of it. The watermark runs in a distinct <em>hydration mode</em>, because a nine-year
+    spread of "late" data is expected there; the small live-mode value would classify almost the entire
+    corpus as too-late and drop it.</li>
+    <li><strong>Hydrating twice is a no-op.</strong> Content-addressed event identities plus
+    conditional writes make the load idempotent and resumable. Re-running the whole pipeline over the
+    same corpus yields a byte-identical spine and an identical snapshot-manifest hash — an executable
+    proof of determinism, not an assurance.</li>
+    <li><strong>Nothing is silently coerced.</strong> Nine years means many legacy payload-schema
+    versions; each gets an explicit upconverter, and any row that cannot be mapped to a known schema —
+    or to a tenant — is quarantined with a reason, never defaulted.</li>
+    <li><strong>The same projection code runs for history and for live.</strong> Hydration and the live
+    stream are two <em>drivers</em> over one projection library, not two implementations.</li>
+    <li><strong>The load is proof-carrying.</strong> Zero-event-loss reconciliation against the source,
+    per-tenant and per-class counts, as-of spot checks against known-good historical reports, and a
+    golden replay over a historical slice all gate the load before anything downstream is built. A
+    fenced cutover then attaches the live stream with a proof of neither gap nor duplicate at the
+    boundary.</li>
+  </ol>
+  <p>What nine years buys <em>this query specifically</em> is <strong>maturity at scale</strong>. A
+  90-day responder rate needs decisions old enough for the horizon to have closed. With a deep
+  back-catalogue the outcomes arrive already settled — hydrated, not awaited — so per-cell counts clear
+  the thirty-patient floor across programmes and segments instead of collapsing into suppression. A
+  confounder-gated comparison needs both arms populated in every cell it reports.</p>
+
+  <h3>What a served cell looks like</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>An illustrative served cell</th><th>Mature n</th><th>Responder rate · Δ HbA1c &gt; 1.0</th><th>95% CI</th></tr></thead>
+      <tbody>
+        <tr><td class="term">Metformin + concurrent nutrition</td><td class="num">412</td><td class="num">0.58</td><td class="num">[0.53, 0.63]</td></tr>
+        <tr><td class="term">Metformin alone</td><td class="num">217</td><td class="num">0.34</td><td class="num">[0.28, 0.41]</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn">
+    <span class="label">Say the word "illustrative" out loud</span>
+    <p>This is a <strong>response shape</strong>, not a production measurement, and it must be
+    introduced that way — "here is the shape of a cell, with illustrative numbers". Each cell also
+    carries its missing and censored counts. In this shape the difference reads as +24 percentage
+    points, tagged observational and SMD-balanced — a correlation, never a claim of cause.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 3 -->
+<section id="why">
+  <div class="stage"><b>03</b> Why did we do what we did?</div>
+  <h2>Every decision, and the alternative it beat</h2>
+  <p class="muted">This is the section that separates a Staff answer from a Senior one. The
+  architecture is recall; the tradeoffs are judgement. Quotes below are his own reasoning, verbatim
+  from the design record.</p>
+
+  <h3>Data architecture</h3>
+
+  <div class="decision">
+    <h4>Snapshot-only analytics, frozen at a pinned as-of</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Querying live graph state at read time.</dd>
+      <dt>Because</dt><dd>Freezing the world makes every number reproducible and lets every covariate
+      be read as-of the decision. The cost — numbers are up to a day behind — becomes an explicit,
+      surfaced SLA instead of a silent inconsistency.</dd>
+    </dl>
+    <blockquote>Live state moves under you: two identical requests can disagree, and a covariate can change mid-query.</blockquote>
+    <p class="fineprint">Remove the snapshot and <strong>three guarantees collapse at once</strong>:
+    per-row traversal cost returns to the request path, reproducibility goes because live state drifts
+    between calls, and the as-of guarantee goes because covariates silently reflect edits made after
+    the decision.</p>
+  </div>
+
+  <div class="decision">
+    <h4>The graph database feeds the nightly snapshot and nothing else</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Per-row graph traversal on the build path or the read path.</dd>
+      <dt>Because</dt><dd>The graph's job is projection, not query. Assembling the cohort with
+      tenant-scoped columnar joins removes per-row graph cost entirely from both the nightly build and
+      the request. Per-row graph traversal was one of the sixteen review findings.</dd>
+    </dl>
+  </div>
+
+  <div class="decision">
+    <h4>A second, ungated observation projection</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Relying on the default projector, which emits an
+      observation only when a decision references it.</dd>
+      <dt>Because</dt><dd>Without it, a matured outcome that nobody followed up on disappears from the
+      denominator — and the ones nobody follows up on are not a random sample.</dd>
+    </dl>
+    <blockquote>A matured 90-day HbA1c that no follow-up decision ever cited would then vanish, biasing the denominator toward "someone responded" cases.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Pre-compute every cell nightly</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Computing the gates, the match and the bootstrap per request.</dd>
+      <dt>Because</dt><dd>The honest work is expensive and must be deterministic. Doing it offline
+      means the request path only looks up a cell whose gate decisions were already made and pinned,
+      and every served number is a replayable function of the snapshot rather than a fresh,
+      unrepeatable calculation.</dd>
+    </dl>
+    <blockquote>Nothing statistical is computed while a clinician waits.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Embedded columnar engine over Parquet files</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A data warehouse.</dd>
+      <dt>Because</dt><dd>The workload is a bounded nightly batch of columnar joins over a frozen
+      snapshot, not a high-concurrency serving store. An embedded engine over tenant-partitioned
+      columnar files is enough, keeps the whole computation inside the client network, and carries no
+      per-row graph cost. The bias is deliberately toward boring infrastructure that is cheap to reason
+      about and fully reproducible.</dd>
+    </dl>
+  </div>
+
+  <div class="decision">
+    <h4>Event time from the record; receive and write time pinned to a load fence</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Stamping ingestion time, or trusting the loader's wall clock.</dd>
+      <dt>Because</dt><dd>Both the as-of covariate reconstruction and the outcome window key off event
+      time. An assertion enforces the separation on every historical row — event time must fall
+      strictly before receive time — so a bug that quietly defaulted event time to load time fails the
+      load rather than silently redating nine years of decisions.</dd>
+    </dl>
+    <blockquote>Collapse a real-world moment into a load stamp and nine years of decisions would look as though they all happened on load day.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Quarantine anything unmappable, with a reason</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Defaulting an unknown schema or an unknown tenant to something plausible.</dd>
+      <dt>Because</dt><dd>Quarantined rows are counted and reported, so a data defect surfaces as a
+      number rather than as a plausible-looking clinical finding months later.</dd>
+    </dl>
+    <blockquote>A defaulted tenant would be a cross-tenant leak, the one failure this platform treats as unforgivable.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>One projection library with two drivers</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A separate bulk-hydration implementation alongside the streaming one.</dd>
+      <dt>Because</dt><dd>History moves in bulk and the live stream moves through its streaming
+      transport, but both call the exact same projection logic, so there is no second implementation
+      to diverge from.</dd>
+    </dl>
+    <blockquote>Were that a separate library rather than a separate driver, the hydrated graph would be a different product from the streaming one and every determinism guarantee would be theatre.</blockquote>
+  </div>
+
+  <h3>Statistics</h3>
+
+  <div class="decision">
+    <h4>Gate on SMD, not on a balance p-value</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A significance test for covariate balance.</dd>
+      <dt>Because</dt><dd>SMD is independent of sample size, so it flags the imbalance that actually
+      biases the estimate regardless of how many patients are in the cell.</dd>
+    </dl>
+    <blockquote>A p-value for balance shrinks as N grows, so it would wave through large-but-imbalanced cohorts — exactly the ones where confounding bites.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>The adjusted rate becomes the headline</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Showing the raw rate as the headline with the adjustment in a footnote.</dd>
+      <dt>Because</dt><dd>Promoting the propensity-adjusted rate and demoting the raw one to an
+      observational-tagged drill-down makes the honest number the default one seen — which is the whole
+      point of doing the adjustment at all.</dd>
+    </dl>
+    <blockquote>A footnote invites the reader to anchor on the flattering raw number and treat the adjustment as a caveat.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Matching plus IPW</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A regression adjustment, or a full structural causal model.</dd>
+      <dt>Because</dt><dd>Matching and weighting are transparent, deterministic, and easy to audit
+      against a pinned covariate set, which suits a governed clinical surface better than a fitted
+      model whose coefficients drift with the data. A causal model would promise more than observational
+      data here can support and would be harder to defend line by line to a reviewer.</dd>
+    </dl>
+    <blockquote>The design prefers a defensible correlation over an impressive-looking causal claim.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>The matcher lives in a shared library</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Each of the sibling queries carrying its own matcher.</dd>
+      <dt>Because</dt><dd>Copied matchers drift on seed, caliper, replacement policy and covariate
+      hashing, producing divergent matched cohorts and divergent intervals over time. A single matcher
+      emits a match manifest over its inputs, so a sibling reuses a matched set only when every manifest
+      field agrees, and rebuilds otherwise.</dd>
+    </dl>
+  </div>
+
+  <div class="decision">
+    <h4>Cluster the bootstrap by enrollment</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Resampling rows.</dd>
+      <dt>Because</dt><dd>A patient contributes correlated rows — episodes, repeated labs — and
+      row-level resampling treats them as independent, understating the interval. Resampling whole
+      enrollment clusters preserves the within-patient correlation, so the interval reflects the real
+      effective sample size.</dd>
+    </dl>
+    <blockquote>Getting the resampling unit wrong is a quiet way to look more certain than the data warrants.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Seed the bootstrap from the snapshot manifest hash</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Wall-clock randomness, or a hard-coded seed someone could change.</dd>
+      <dt>Because</dt><dd>The same snapshot always yields the same CI and a different snapshot yields a
+      different, correctly attributable one. Because the seed derives from the data, it cannot be
+      shopped for a friendlier draw.</dd>
+    </dl>
+    <blockquote>Reproducibility becomes a property you can rely on in a golden test, not a coincidence you hope for on re-run.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Percentile intervals by default</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">BCa everywhere.</dd>
+      <dt>Because</dt><dd>Percentile is simpler, fully determined by the seed, and adequate for the
+      headline rates here; BCa's bias-and-acceleration correction is an opt-in for the cases that need
+      it. Pinning the default in a shared library is what stops each sibling query drifting to a
+      different interval method and reporting a different CI for the same cohort.</dd>
+    </dl>
+  </div>
+
+  <div class="decision">
+    <h4>Pre-register the windows and the threshold</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Letting an analyst choose an outcome window after seeing the data.</dd>
+      <dt>Because</dt><dd>The windows and the 0.1 threshold are pinned in the metric schema, so changing
+      either moves a version hash and shows up in the golden regression. Any later change is visible and
+      versioned rather than silent.</dd>
+    </dl>
+    <blockquote>Pre-registration exists exactly so that no one can retune the gate after seeing which setting produces the nicer number.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Suppress fragile findings rather than show them with a wide interval</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Emitting the number with a caveat and a wide CI.</dd>
+      <dt>Because</dt><dd>Suppression with a visible denominator refuses the anchor while keeping the
+      underlying data in a drill-down. All three windows stay available, so a genuinely time-dependent
+      pattern remains fully visible to an analyst who reads them.</dd>
+    </dl>
+    <blockquote>A wide interval is still a headline number a reader will anchor on.</blockquote>
+    <p class="fineprint">The one-line rebuttal to "isn't that discarding signal?" —
+    <strong>it withholds the headline, not the data.</strong></p>
+  </div>
+
+  <div class="decision">
+    <h4>Multiple-testing control by design, not by correction</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A false-discovery-rate correction over many comparisons.</dd>
+      <dt>Because</dt><dd>This query reports a small, pre-registered set of cells rather than mining
+      hypotheses, and high-cardinality splits are rejected outright, which bounds the comparison count
+      by construction. The sibling policy-friction query, which genuinely scans many policies, is where
+      explicit false-discovery control lives.</dd>
+    </dl>
+  </div>
+
+  <h3>Serving, tenancy and operations</h3>
+
+  <div class="decision">
+    <h4>An in-process cache, deliberately not Redis</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A distributed cache in front of the metric API. Redis is on
+      the stack and is a tool he uses; it was simply not the right tool for this read path.</dd>
+      <dt>Because</dt><dd>What sits behind the cache is already a pre-computed columnar metric table,
+      so the cache is an in-process convenience over data that is itself cheap and immutable for the
+      life of a snapshot. Adding a network hop and a second store would buy nothing and add a place to
+      go stale. The discipline transfers regardless of the store.</dd>
+    </dl>
+    <blockquote>An in-process or columnar cache can serve a stale or cross-tenant cell just as easily as a distributed one if its key is under-specified.</blockquote>
+    <p class="fineprint">This is a good answer to give confidently: the interviewer is often probing
+    whether you reach for infrastructure reflexively.</p>
+  </div>
+
+  <div class="decision">
+    <h4>A cache key that names every result-affecting input</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Keying on query plus filters and trusting a bare table version.</dd>
+      <dt>Because</dt><dd>Drop the tenant fields and a hit can serve another tenant's cell; drop the
+      snapshot hash or the sequence maximum and you serve yesterday's numbers; drop the metric-schema
+      hash and a definition change silently reuses stale cells. A cache key that omits a result-affecting
+      input is not a performance detail — it is a way to serve a confidently wrong or foreign number.</dd>
+    </dl>
+    <p class="fineprint">This became a <strong>programme-wide requirement</strong>, and it started as a
+    finding in this query's design review.</p>
+  </div>
+
+  <div class="decision">
+    <h4>Correction epoch in the key, not a time-to-live</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Expiring cached cells on a TTL and hoping the window is short enough.</dd>
+      <dt>Because</dt><dd>Every cell built under the old epoch is logically retired the instant the
+      rebuild completes, without scanning or walking the cache.</dd>
+    </dl>
+    <blockquote>Freshness becomes a key comparison rather than a time-to-live guess.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Dependency-targeted rebuilds</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A full rebuild on every correction, or waiting for the next nightly run.</dd>
+      <dt>Because</dt><dd>Re-deriving nine years of cohorts on every correction would blow the freshness
+      budget many times over; ignoring corrections until the next night would serve known-wrong numbers.
+      The dependency index makes each rebuild proportional to the correction rather than to the corpus,
+      which is what lets the system be fresh and correct at the same time.</dd>
+    </dl>
+    <p class="fineprint">If the dependency mapping were ever incomplete, the safe fallback is a broader
+    rebuild. The recorded dependency set keeps the common case narrow; it is not the only thing standing
+    between a correction and a stale cell.</p>
+  </div>
+
+  <div class="decision">
+    <h4>Three-field tenant scope, enforced at three layers</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A single account check, or trusting one query filter.</dd>
+      <dt>Because</dt><dd>Account, workspace and control-unit travel together in every predicate,
+      partition and assertion, so a slip at one layer is caught by another. Tenancy is also first in the
+      cache key by construction, so two tenants can never collide on a cached cell.</dd>
+    </dl>
+    <blockquote>One forgotten predicate leaks cross-tenant rows into a snapshot that then propagates forward into every downstream artifact — the failure is silent and permanent.</blockquote>
+    <p class="fineprint">Why re-assert on a cache hit: the assertion, not the key's correctness, is the
+    last line of defence. And the stance on failure is blunt — <strong>serving nothing is strictly better
+    than serving a single row from the wrong tenant.</strong></p>
+  </div>
+
+  <div class="decision">
+    <h4>Hard block past 48 hours</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Serving a warned, stale number indefinitely.</dd>
+      <dt>Because</dt><dd>For population statistics that inform protocol decisions, a silently stale rate
+      is more dangerous than an absent one, and the 24–48 hour banner already gives a graded warning well
+      before the block. If a client's risk tolerance differed, the tier boundaries are policy.</dd>
+    </dl>
+    <blockquote>Past two days the design chooses a visible outage over an invisible error.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>Evaluate on seeded synthetic cohorts</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Validating against real clinical outcomes.</dd>
+      <dt>Because</dt><dd>The thing under test is the gate logic, and on synthetic data the correct
+      decision of every gate — suppress, adjust, emit — is known by construction. Real data with unknown
+      ground truth cannot prove that the balance gate routes when it should.</dd>
+    </dl>
+    <blockquote>Green means the machinery is correct. It makes no claim that a given correlation is clinically meaningful.</blockquote>
+    <p class="fineprint">Ten pinned golden cells must reproduce within one percentage point across
+    rebuilds, and the fixtures deliberately include late arrivals, corrections and supersede chains —
+    the paths most likely to break silently. The rate band is loose on purpose because floating-point
+    equality across platforms is brittle; the <em>exporter hash</em> test, by contrast, is exact.</p>
+  </div>
+
+  <h3>The boundary: no model, on purpose</h3>
+
+  <div class="decision">
+    <h4>Zero LLM calls anywhere in the pipeline</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Narrating the result, or letting a model summarise the cells.</dd>
+      <dt>Because</dt><dd>Rates, gates, matching, censoring, suppression and confidence intervals are
+      arithmetic and a statistical plan. The platform's self-hosted model seam runs in-network for the
+      three sibling queries that actually generate prose; this one calls into none of it.</dd>
+    </dl>
+    <blockquote>A single paraphrase is all it takes to turn a hedged number into a confident-sounding one.</blockquote>
+    <blockquote>The engineering judgment is to leave a capable model on the shelf because the task does not call for it.</blockquote>
+  </div>
+
+  <div class="decision">
+    <h4>No retrieval layer either</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">A RAG surface over the clinical corpus to give the number context.</dd>
+      <dt>Because</dt><dd>An outcome-correlation cell earns its meaning from the balance gate, the
+      suppression floor and the observational tag the code already stamped on it. There is nothing for a
+      retrieval step to fetch or a model to narrate — it would be surface area without a job, and every
+      new surface is a new place for an ungrounded claim to enter.</dd>
+    </dl>
+  </div>
+
+  <div class="decision">
+    <h4>The number can never become a clinician scorecard</h4>
+    <dl>
+      <dt>Instead of</dt><dd class="reject">Allowing arbitrary split dimensions.</dd>
+      <dt>Because</dt><dd>This query compares treatment arms, not actors. Clinician and site enter only
+      as as-of covariates to balance, never as the headline split; the split allowlist rejects
+      high-cardinality actor splits; the 30-patient floor and the observational tag keep even an
+      authorised drill-down from surfacing a rankable per-actor rate; and no league-table ordering is
+      emitted. These are mitigations that make misuse hard and visible — not a claim that it is
+      impossible.</dd>
+    </dl>
+  </div>
+
+  <h3 id="review">The review gauntlet</h3>
+  <p>Before anything shipped, the design went through a structured adversarial self-review under a
+  Principal-engineer lens. It drew blood.</p>
+
+  <div class="review-grid">
+    <ol class="timeline">
+      <li>
+        <span class="round">Design review · round 1</span>
+        <strong>Ship-with-changes, sixteen findings, and an unambiguous "do not implement as
+        written."</strong> Tenant scoping not fail-closed · current-state country leakage · an ad-hoc
+        outcome label that dropped missing labs · a weak and late confounding gate · repeated decisions
+        treated as independent · unhandled censoring · an arbitrary outcome window · an under-specified
+        bootstrap · per-row graph traversal · split-cardinality explosion · an under-keyed cache.
+      </li>
+      <li>
+        <span class="round">Design revision · v2</span>
+        <strong>Eleven findings absorbed directly into the design:</strong> the snapshot-only builder,
+        tenant assertion at write and at serve, the schema-upconverted drug code, treatment-episode
+        anchoring, as-of covariate reconstruction, pre-registered windows, the SMD gate, the
+        propensity-routed headline, the clustered bootstrap, the canonical cache key, and
+        correction-event invalidation. <strong>Five more were deliberately promoted into shared platform
+        components</strong> — the tenant wrapper, the outcome library, the ungated observation
+        projection, the deterministic exporter replay test, and the four-field event-time schema — so
+        every sibling cohort query inherits the same fixes.
+      </li>
+      <li>
+        <span class="round">Programme impact</span>
+        The review <strong>minted two programme-wide requirements</strong>: canonical cache-key
+        completeness, now standard across the analytics programme, and a shared, seeded bootstrap-CI
+        library, which has since landed at the platform layer. All five promoted components have since
+        landed, and this query binds to the shared version of each.
+      </li>
+      <li>
+        <span class="round">Shipped</span>
+        <strong>The hardened v2 is the design that shipped to production</strong>, after executive
+        sign-off. The final adversarial design-review sign-off re-runs now that the five shared platform
+        components have landed, so approval is earned against the running platform rather than declared
+        on paper.
+      </li>
+    </ol>
+    <div class="stamp">
+      <span class="big">Hardened &amp; shipped</span>
+      <span class="small">16/16 findings dispositioned</span>
+      <span class="small">verdict: ship-with-changes</span>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">Do not let this get garbled</span>
+    <p><strong>"Ship-with-changes" and "approval pending" describe the internal design-review sign-off,
+    not the deployment.</strong> The system is live in production and serving governed clinical-ops
+    dashboards. If an interviewer reads it as "so it never shipped", correct it plainly: it shipped on
+    executive sign-off with all sixteen findings dispositioned, and the remaining gate is a re-run of the
+    design review against the now-landed shared components. Across the whole programme, only the
+    precedent-search query ever reached approved-with-nits — that is how strict the bar was.</p>
+  </div>
+
+  <h3>What to concede first</h3>
+  <p>Volunteering the limits is what makes the rest credible. Four, in the order worth offering them:</p>
+  <ul class="tight">
+    <li><strong>Balance is gated before adjustment, not re-gated after it.</strong> The SMD check decides
+    whether a raw rate may be a headline; a cell that fails routes to matching plus IPW and the adjusted
+    rate is emitted. The pipeline does <em>not</em> re-measure post-adjustment SMD and withhold a cell
+    that matching could not balance. So the balanced tag on an adjusted cell records that adjustment was
+    applied, not that residual imbalance was verified under the threshold. A cell with poor covariate
+    overlap can be adjusted and still emitted.</li>
+    <li><strong>Exporter-versus-projector agreement is structural, not asserted.</strong> One projection
+    library with two drivers means there is no second implementation to diverge from, and the golden
+    replay proves the export path is deterministic — but determinism is not agreement. A projector that
+    diverged deterministically would replay green every time. There is no standing fixture that re-exports
+    as-of and diffs it against live-projector state.</li>
+    <li><strong>Aggregate reconstruction is mitigated, not solved.</strong> The split allowlist and the
+    sample floor make differencing a suppressed cell hard, but this query does not claim formal
+    differential-privacy accounting across correlated reads.</li>
+    <li><strong>It cannot tell you the protocol worked.</strong> Matching balances only the covariates we
+    measured; unmeasured confounding is never ruled out, and no statistical step in the pipeline upgrades
+    a correlation to a cause.</li>
+  </ul>
+  <p>And when asked what would age first: <strong>the pre-registered covariate set and the windows.</strong>
+  They encode today's understanding of what confounds a nutrition-protocol effect. The risk is bounded by
+  versioning — any change moves a schema hash and re-runs the golden regression — but the choice of what to
+  balance is a modelling judgement, and modelling judgements age faster than infrastructure does.</p>
+</section>
+
+<!-- ============================================================ 4 -->
+<section id="architecture">
+  <div class="stage"><b>04</b> Architecture</div>
+  <h2>Four diagrams, and how to redraw each on a whiteboard</h2>
+  <p class="muted">These are the diagrams from the case study, unaltered. Each walkthrough says what
+  flows where, what each gate does, and what breaks without it.</p>
+
+  <h3>Fig 1 · The whole system: three lanes and one boundary</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    BROWSER[Clinician browser&lt;br/&gt;over TLS · suppressed&lt;br/&gt;aggregate cells only]
+    subgraph VPC[Inside the client VPC · PHI never crosses this boundary]
+      subgraph HIST[One-time hydration + pre-seed]
+        CORPUS[Legacy corpus&lt;br/&gt;about 9 years]
+        HYD[Upconvert · quarantine&lt;br/&gt;content-addressed write]
+        SPINE[(Event spine&lt;br/&gt;DynamoDB)]
+      end
+      subgraph NIGHT[Nightly · offline build]
+        EXP[Snapshot exporter&lt;br/&gt;pinned as-of]
+        BUILD[Cohort builder&lt;br/&gt;+ outcome library]
+        AGG[Metric aggregator&lt;br/&gt;SMD gate&lt;br/&gt;+ seeded bootstrap]
+        CORR[Correction listener&lt;br/&gt;targeted rebuild]
+      end
+      subgraph REQ[Request path · what a clinician waits on]
+        API[Metric API · FastAPI&lt;br/&gt;cache key · tenant assertion&lt;br/&gt;· gates]
+        CACHE[(In-process cache)]
+        MT[(Metric table · Parquet&lt;br/&gt;DuckDB scan on a miss)]
+      end
+      NEP[(Decision graph · Neptune&lt;br/&gt;never traversed at read time)]
+      LLM[Self-hosted model seam&lt;br/&gt;in-VPC · never called here]
+    end
+    BROWSER --&gt;|over TLS| API
+    API --&gt; CACHE
+    API --&gt;|on a miss| MT
+    CACHE ~~~ MT
+    API --&gt;|cells and CI| BROWSER
+    CORPUS --&gt; HYD --&gt; SPINE
+    SPINE --&gt; NEP
+    NEP --&gt;|feeds nightly snapshot| EXP
+    EXP --&gt; BUILD
+    SPINE --&gt;|as-of covariate read| BUILD
+    BUILD --&gt; AGG
+    AGG --&gt;|writes| MT
+    CORR -.-&gt; AGG
+    NEP -.-&gt;|not on request path| API
+    LLM -.-&gt;|not called here| API
+    </pre>
+    <figcaption>Fig 1 · When each component runs, and where the trust boundary sits</figcaption>
+  </figure>
+
+  <div class="walkthrough">
+    <h4>What flows where</h4>
+    <p>Draw one big box first: the client's private network. <strong>Everything except the clinician's
+    browser lives inside it.</strong> The only thing crossing the boundary is a suppressed aggregate cell
+    travelling over encrypted transport. No patient row ever leaves.</p>
+    <p>Inside, draw three sub-boxes stacked by cadence. <em>One-time</em>: the legacy corpus flows through
+    upconvert-and-quarantine into the append-only event spine. <em>Nightly</em>: the spine projects into
+    the decision graph, the graph feeds the snapshot exporter at a pinned as-of, the exporter feeds the
+    cohort builder — which <strong>also reads the spine directly</strong> for as-of covariates, and that
+    second arrow is the one people forget — the builder feeds the aggregator, and the aggregator writes
+    the metric table. <em>Request</em>: the browser hits the metric API, which reads its in-process cache
+    and, on a miss, scans the metric table.</p>
+    <h4>What each gate does</h4>
+    <p>Two dotted lines carry the argument. The decision graph has a dotted line to the API labelled
+    <em>not on request path</em>, and the model seam has one labelled <em>not called here</em>. Both are
+    present on the platform; neither is touched by anything a clinician waits on. The correction listener
+    dots into the aggregator, which is how freshness is reclaimed between nightly runs.</p>
+    <h4>What breaks without it</h4>
+    <p>Remove the boundary box and the whole regulatory story goes: PHI would need to leave the network
+    for any external service. Solid-line the graph into the API and you have reintroduced per-row
+    traversal cost on the hot path plus live-state drift. Solid-line the model seam and every number
+    becomes something a paraphrase can soften.</p>
+  </div>
+
+  <h3>Fig 2 · The nightly build, stage by stage</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    S2[Snapshot frozen at the as-of timestamp&lt;br/&gt;vertices · edges · observation snapshot&lt;br/&gt;manifest · snapshot hash · source event-seq max]
+    S3[Cohort builder&lt;br/&gt;tenant-scoped DuckDB joins · no per-row graph queries&lt;br/&gt;covariates reconstructed as-of the decision&lt;br/&gt;treatment-episode anchoring · de-dup restarts]
+    S4[Outcome label · shared outcome library&lt;br/&gt;status + attribution decision + rule version&lt;br/&gt;+ distance in days + censoring reason]
+    S5[Aggregate&lt;br/&gt;SMD gate over 8+ covariates · route propensity if imbalanced&lt;br/&gt;seeded bootstrap CI · clustered by enrollment]
+    S6[Serve · metric API&lt;br/&gt;canonical cache key · tenant assertion per cell]
+    S7[Eval and golden&lt;br/&gt;n_mature gte 30 · golden regression with&lt;br/&gt;late-arrival · correction · supersede fixtures]
+    CORR[Correction-event listener&lt;br/&gt;dependency-targeted rebuild · P95 5 min SLA]
+    S2 --&gt; S3 --&gt; S4 --&gt; S5 --&gt; S6 --&gt; S7
+    CORR -.-&gt; S3
+    CORR -.-&gt; S5
+    CORR -.-&gt; S6
+    </pre>
+    <figcaption>Fig 2 · Reconstruct as-of, label the outcome, gate for balance, pre-compute every cell</figcaption>
+  </figure>
+
+  <div class="walkthrough">
+    <h4>What flows where</h4>
+    <p>A straight chain of five stages with a sixth hanging off the side. The snapshot is frozen at the
+    as-of timestamp and carries three identifiers forward — the manifest, the snapshot hash, and the
+    source event-sequence maximum. Those three travel with every number to the end of the line.</p>
+    <p>The cohort builder joins tenant-scoped columnar data with no per-row graph queries, reconstructs
+    every covariate as-of the decision, anchors treatment episodes and de-duplicates restarts. The
+    outcome library then attaches a five-part label to each member: status, attribution decision, rule
+    version, distance in days, censoring reason. The aggregator gates on SMD over eight-plus covariates,
+    routes imbalanced cells to propensity adjustment, and computes the seeded bootstrap CI clustered by
+    enrollment. Serving reads the result. Evaluation replays golden fixtures that deliberately include
+    late arrivals, corrections and supersede chains.</p>
+    <h4>What each gate does</h4>
+    <p>The dotted correction listener touches <strong>three</strong> stages, not one — the builder, the
+    aggregator, and the serving layer — because a correction has to re-derive the cohort, re-run the
+    statistics on it, and retire the cached cells. Drawing only one dotted arrow is the common mistake.</p>
+    <h4>What breaks without it</h4>
+    <p>Without episode anchoring and restart de-duplication, one patient's stop-and-restart becomes two
+    independent decisions — a review finding in its own right, and it inflates apparent sample size.
+    Without the shared outcome library the labelling drifts per query and a missing lab quietly becomes a
+    zero. Without the correction listener the system is either always a night stale or always rebuilding
+    nine years of cohorts.</p>
+  </div>
+
+  <h3>Fig 3 · The honesty ladder</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    RAW[Raw cohort rate&lt;br/&gt;responders over denominator]
+    RAW --&gt; NFLOOR{Every cell n_mature gte 30}
+    NFLOOR -- no --&gt; SUP1[Suppress · insufficient_data&lt;br/&gt;with full denominator breakdown]
+    NFLOOR -- yes --&gt; SMD{All 8+ covariates SMD lte 0.1}
+    SMD -- yes --&gt; DESC[Descriptive headline rate]
+    SMD -- no --&gt; PROP[Propensity-match + IPW&lt;br/&gt;the adjusted rate becomes the headline]
+    DESC --&gt; WIN{Stable across 3 pre-registered windows}
+    PROP --&gt; WIN
+    WIN -- no --&gt; SUP2[Suppress headline · window_sensitive&lt;br/&gt;sign flip or material shift]
+    WIN -- yes --&gt; EMIT[Emit rate + bootstrap CI]
+    EMIT --&gt; TAG[Attach observational tag&lt;br/&gt;balance-gated if raw · adjustment-applied if matched]
+    </pre>
+    <figcaption>Fig 3 · What a raw rate must survive before it is allowed to be a headline</figcaption>
+  </figure>
+
+  <div class="walkthrough">
+    <h4>What flows where</h4>
+    <p>This is the diagram to draw if you can only draw one. A raw rate enters at the top and meets three
+    diamonds in a fixed order: the sample-size floor, the balance gate, the window-stability check. Two of
+    the three exit sideways into suppression. The balance gate does not suppress — it
+    <strong>branches</strong>, and that asymmetry is the point.</p>
+    <h4>What each gate does</h4>
+    <p><strong>Floor:</strong> fewer than 30 mature patients in any cell and the cell reports
+    insufficient data with its full denominator breakdown. Not a rounded rate, not a rate with an
+    asterisk — no rate. <strong>Balance gate:</strong> if all eight-plus covariates sit within 0.1 SMD the
+    descriptive rate stands; if any exceeds it, the cell routes to propensity matching plus IPW and the
+    adjusted rate becomes the displayed headline, with the raw rate demoted to a tagged drill-down.
+    <strong>Window check:</strong> the finding must agree across three pre-registered windows; a sign flip
+    or a materially different magnitude withholds the headline. Whatever survives is emitted with a
+    bootstrap CI and an observational tag recording which path it came down.</p>
+    <h4>What breaks without it</h4>
+    <p>Drop the floor and a two-patient cohort reports a confident 100%. Drop the balance gate and you are
+    publishing selection effects as treatment effects. Drop the window check and an analyst can quietly
+    publish whichever window told the better story — the agreement gate makes that impossible by
+    construction rather than by policy. Ordering matters too: run balance before the floor and you are
+    computing a balance statistic on six patients.</p>
+    <p class="fineprint">If asked which gate would go under delivery pressure, the answer is the window
+    sweep, because its data survives in the drill-down and its absence degrades to a caveated headline
+    rather than a wrong one. The floor and the balance gate are not negotiable: dropping either produces a
+    confidently wrong number.</p>
+  </div>
+
+  <h3>Fig 4 · Event-time provenance</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    subgraph FROMREC[From the record]
+      REC1[event_time_ms&lt;br/&gt;when it really happened]
+      REC2[observed_at_ms&lt;br/&gt;when the lab result was observed]
+    end
+    subgraph FROMFENCE[Pinned to the load fence]
+      FEN1[received_at_ms]
+      FEN2[written_at_ms]
+    end
+    REC1 --&gt; SORT[As-of order · sort by event_time_ms&lt;br/&gt;then source event-seq as tiebreak]
+    SORT --&gt; ASOF[As-of inclusion · event_time_ms lte as_of_ms&lt;br/&gt;covariates rebuilt at the decision instant]
+    REC2 --&gt; WIN[Outcome window · 90-day HbA1c&lt;br/&gt;measured from observed_at_ms · not a sort key]
+    FEN1 --&gt; GUARD[Guard · event_time_ms below received_at_ms&lt;br/&gt;on every historical row]
+    FEN2 --&gt; GUARD
+    GUARD -.-&gt;|fails| QUAR[Quarantined · load time never becomes event time]
+    </pre>
+    <figcaption>Fig 4 · Two timestamps drive every number; two are provenance and never touch the ordering</figcaption>
+  </figure>
+
+  <div class="walkthrough">
+    <h4>What flows where</h4>
+    <p>Two boxes side by side. On the left, the two timestamps that come <strong>from the record</strong>:
+    when the drug start or lab actually happened, and when the lab result was observed. On the right, the
+    two the loader stamps — received and written — <strong>pinned to a single load-fence constant, not to
+    the wall clock</strong>.</p>
+    <p>Only the left-hand pair does work. Event time drives the as-of sort, with source event-sequence
+    breaking ties, and that ordering drives as-of inclusion: a covariate is rebuilt from the latest value
+    at or before the decision instant. Observed-at drives the 90-day outcome window and
+    <strong>is explicitly not a sort key</strong>. The right-hand pair feeds only a guard.</p>
+    <h4>What each gate does</h4>
+    <p>The guard asserts on every historical row that event time falls strictly before receive time. A row
+    that fails is quarantined. That single assertion is what makes "we preserved event time" a checked
+    property rather than a claim: a bug that silently defaulted event time to load time fails the load
+    instead of redating nine years of decisions to import day.</p>
+    <h4>What breaks without it</h4>
+    <p>Everything this query rests on. Every as-of covariate — baseline HbA1c, programme, prior adherence
+    at the decision — would collapse onto load day, so the confounding controls would be measuring
+    nothing while still returning confident-looking numbers. And the outcome window would start from the
+    wrong origin, so a decade-old decision would be scored against the wrong labs. This is the rule the
+    query cannot survive without, which is why it earns its own picture.</p>
+  </div>
+</section>
+
+<!-- ============================================================ Q -->
+<section id="questions">
+  <div class="stage"><b>05</b> Likely questions</div>
+  <h2>Headline first, detail only if asked</h2>
+  <p class="muted">The bold line is the whole answer. Stop there and let them pull. Everything under it
+  is what you offer if the follow-up comes.</p>
+
+  <div class="qa">
+    <span class="qnum">Q1 · screening</span>
+    <p class="q">Why isn't this just a <code>GROUP BY</code>?</p>
+    <p class="headline">Because nobody randomised who got the nutrition protocol, so a raw
+    with-versus-without gap measures who received it as much as what it did.</p>
+    <p>Two more ways the same query is wrong. Split finely enough and some cells hold a handful of
+    patients where two lucky outcomes read as a confident 100%. And covariates read from today's graph
+    describe a past decision with facts that arrived after it — country, programme phase and prior
+    adherence all change, often because of the care pathway. Three ways to be wrong at once, and none of
+    them shows up as a query error.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q2 · the core mechanism</span>
+    <p class="q">What stops an analyst picking the outcome window that flatters the result?</p>
+    <p class="headline">The three windows are pre-registered before any number is computed, and a finding
+    has to agree across all three or its headline is withheld.</p>
+    <p>The same matched cohort is scored through window A at −7 to +30 days, B at −14 to +45, and C at
+    0 to +30. If the sign flips or the magnitude shifts materially, the cell is marked window-sensitive
+    and no headline is emitted; all three results stay in the drill-down. It withholds the headline, not
+    the data. The threshold and the windows are pinned in the metric schema, so changing either moves a
+    version hash and shows up in the golden regression — a retune after the fact is visible and versioned,
+    never silent.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q3 · adversarial</span>
+    <p class="q">Matching only balances the covariates you measured — so isn't your "balanced" headline
+    still a dressed-up correlation?</p>
+    <p class="headline">Yes, and the system never claims otherwise: every emitted number carries an
+    observational tag, and no statistical step in the pipeline upgrades a correlation to a cause.</p>
+    <p>What the machinery buys is a fairer comparison on known factors, plus reproducibility, plus a
+    refusal to publish where the data cannot support a headline. Unmeasured confounding is never ruled
+    out. I'd also concede the sharper version before you ask it: balance is gated <em>before</em>
+    adjustment, not re-gated after. A cell that fails the gate routes to matching plus IPW and is emitted,
+    but the pipeline does not re-measure post-adjustment SMD, so the balanced tag records that adjustment
+    was applied, not that residual imbalance was verified. A cell with poor covariate overlap can be
+    adjusted and still emitted. A randomised trial answers the causal question this deliberately does not;
+    a target-trial emulation would be the natural next step, and it would have to sit on exactly this
+    substrate.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q4 · systems</span>
+    <p class="q">What's in your cache key, and why does dropping one field become a correctness bug?</p>
+    <p class="headline">Every input that can change the answer is in the key, because a cache key that
+    omits one is not a performance detail — it is a way to serve a confidently wrong or foreign number.</p>
+    <p>The canonical key is sorted JSON: the three tenant fields first — account, workspace, control-unit —
+    then the query namespace, the split, the filters, the metric-schema hash, the snapshot manifest hash,
+    the source event-sequence maximum, and the correction epoch. Drop the tenant fields and a hit can
+    serve another tenant's cell. Drop the snapshot hash or the sequence maximum and you serve yesterday's
+    numbers. Drop the metric-schema hash and a definition change silently reuses stale cells. The
+    correction epoch is what replaces a time-to-live: every cell built under the old epoch is logically
+    retired the instant a targeted rebuild completes, so freshness is a key comparison rather than a guess.
+    Library and statistical-plan versions are pinned per deploy and recorded with the result rather than
+    keyed. And the tenant assertion still runs per cell on a hit, because the assertion — not the key's
+    correctness — is the last line of defence. This became a programme-wide requirement; it started as a
+    finding in this query's review.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q5 · statistics</span>
+    <p class="q">What happens to a patient who drops out at day 60?</p>
+    <p class="headline">They are censored under a Kaplan–Meier policy with an explicit status, never
+    scored as a non-responder.</p>
+    <p>Outcomes carry six statuses — mature, not-mature, missing, dropout, programme-switch,
+    censored-by-a-later-decision — and each cell reports its mature, missing and censored denominators
+    separately. Treating a censored exit as a zero would bias the rate downward; treating a missing lab as
+    a zero would do the same. The choice of denominator is where an observational rate is most quietly
+    manipulated, so all the buckets are surfaced rather than collapsed into one ratio. There's also a
+    versioned attribution rule — nearest same-domain decision before the outcome — so two overlapping
+    decisions cannot both claim the same HbA1c move.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q6 · the boundary</span>
+    <p class="q">You're an artificial intelligence (AI) engineer — why is there no model anywhere in this pipeline?</p>
+    <p class="headline">Because a correlation carried with its confidence interval is already a finished,
+    auditable statement, and a single paraphrase is all it takes to turn a hedged number into a
+    confident-sounding one.</p>
+    <p>Rates, gates, matching, censoring, suppression and intervals are arithmetic and a statistical plan;
+    none of that needs generation. The platform has a self-hosted model seam running inside the network for
+    the three sibling queries that actually produce prose — this one calls into none of it. There's no
+    retrieval layer either, and that's a judgement rather than an omission: an outcome-correlation cell
+    earns its meaning from the balance gate, the suppression floor and the observational tag the code
+    already stamped on it, so there is nothing for a retrieval step to fetch or a model to narrate. If a
+    future dashboard did want narration, it would run on the self-hosted model inside the network boundary;
+    an external provider would be permitted only on a de-identified payload, and a contractual no-retention
+    promise is not a network-residency control.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q7 · operations</span>
+    <p class="q">An upstream correction lands at ten in the morning. Walk me through what happens.</p>
+    <p class="headline">A listener maps the correction through a dependency index to exactly the slices
+    that depend on it, rebuilds only those, and bumps the correction epoch — target P95 under five minutes
+    from correction to fresh cells.</p>
+    <p>Every derived row records the source-event-sequence range and dependency set it was built from,
+    registered in a dependency index. The listener resolves the correction's sequence against that index,
+    the targeted rebuild recomputes cohort and metric for the dependency set only, and the epoch bump
+    retires every cached key carrying the old epoch without walking the cache. The alternative designs are
+    both bad: re-deriving nine years of cohorts on every correction blows the freshness budget many times
+    over, and waiting for the next nightly run serves known-wrong numbers. If the dependency mapping were
+    ever incomplete, the safe fallback is a broader rebuild — the index keeps the common case narrow, it
+    isn't the only thing standing between a correction and a stale cell. Separately, staleness is graded and
+    visible: normal under 24 hours, a banner at 24–48, and past 48 the service blocks and escalates rather
+    than serve quietly outdated statistics.</p>
+  </div>
+
+  <div class="qa">
+    <span class="qnum">Q8 · judgement</span>
+    <p class="q">You're behind schedule. Which gate do you relax?</p>
+    <p class="headline">The window sweep, because its data survives in the drill-down and its absence
+    degrades to a caveated headline rather than a wrong one.</p>
+    <p>The sample-size floor and the balance gate are not negotiable: dropping either produces a
+    confidently wrong number, which is the one failure mode the whole design is built against. Knowing
+    which gate is load-bearing and which merely improves an already-honest answer is the point of the
+    ordering. I'd also want to be explicit about what "behind schedule" cost elsewhere: when the shared
+    platform components weren't ready, the query's contract was wired against stubs returning
+    representative payloads — the tenant wrapper, the outcome and bootstrap libraries, the ungated
+    observation projection, the deterministic exporter — so this query's own logic could be built and
+    tested before those dependencies landed, which they since have. The gating dependencies were named per
+    build step so nothing was quietly assumed present.</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Sources.</strong> This page is derived from the outcome-correlation case study and its
+  question-and-answer companion, in the same directory.
+  <a href="../kq2-outcome-correlation.html">full case study</a> ·
+  <a href="../summary.html">summary</a> ·
+  <a href="../index.html">all case studies</a></p>
+  <p>Client and product identifiers anonymised. The system described was designed, adversarially
+  hardened and deployed to production for a chronic-care platform covering 80+ chronic conditions and
+  roughly 10,000 patients, with about nine years of history hydrated into the event spine. Role: sole
+  owner, design through production.</p>
+  <p><strong>No measured production result appears on this page.</strong> Every threshold, service-level
+  agreement and interval here is a pre-registered acceptance target the system was designed and reviewed
+  against — not an observed outcome. Statistics are observational throughout: a correlation carried with
+  its uncertainty, never a cause.</p>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>

@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI versus clinician — interview prep</title>
+<meta name="description" content="Interview prep for the AI-versus-clinician outcome comparison: what it is, how it was solved, why each decision was made, the real architecture diagrams, and the questions an interviewer will actually ask.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #8A5A00;
+    --amber-soft: #FBF3E2;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 960px; margin: 0 auto; padding: 64px 24px 96px; }
+
+  /* ---- type ---- */
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.14; letter-spacing: -0.015em;
+    max-width: 22ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.35rem, 3vw, 1.7rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 14px;
+  }
+  h3 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: 1.12rem; line-height: 1.3;
+    margin: 34px 0 10px;
+  }
+  h4 {
+    font-family: var(--sans); font-weight: 600; font-size: 0.98rem;
+    line-height: 1.35; margin: 0 0 8px;
+  }
+  p { margin: 0 0 16px; max-width: 74ch; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+
+  /* ---- hero ---- */
+  header.hero { padding: 0 0 40px; }
+  .hero .sub { font-size: 1.1rem; color: var(--steel); max-width: 66ch; margin-top: 20px; }
+  .spec-card {
+    margin: 32px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .spec-card .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .spec-card blockquote {
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--ink);
+  }
+  .meta-row {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px 18px; margin: 22px 0 0; padding: 14px 0 0; border-top: 1px solid var(--hairline);
+    font-size: 0.88rem; color: var(--ink);
+  }
+  .meta-row b {
+    display: block; font-family: var(--mono); font-weight: 500; font-size: 0.66rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--steel); margin-bottom: 2px;
+  }
+  .backlinks {
+    font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em;
+    color: var(--steel); margin-top: 22px;
+  }
+  .backlinks a { margin-right: 4px; }
+  .backlinks span { color: var(--hairline); margin: 0 8px; }
+
+  /* ---- sections ---- */
+  section { margin-top: 68px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+
+  /* ---- callouts ---- */
+  .callout {
+    margin: 26px 0; padding: 20px 24px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .callout .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout.amber { background: var(--amber-soft); border-color: #EBDCBB; border-left-color: var(--amber); }
+  .callout.amber .label { color: var(--amber); }
+  .opener {
+    font-family: var(--serif); font-size: 1.2rem; line-height: 1.5; color: var(--ink);
+    max-width: 62ch;
+  }
+
+  /* ---- vocabulary ---- */
+  .vocab {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px; background: var(--hairline);
+    border: 1px solid var(--hairline); border-radius: 6px; overflow: hidden;
+    margin: 22px 0;
+  }
+  .vocab div { background: var(--card); padding: 14px 18px; font-size: 0.9rem; line-height: 1.55; }
+  .vocab b { display: block; font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.04em; color: var(--teal); margin-bottom: 3px; }
+
+  /* ---- why cards ---- */
+  .why {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 20px 24px; margin: 16px 0;
+  }
+  .why .num {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 6px;
+  }
+  .why dl { margin: 12px 0 0; font-size: 0.94rem; }
+  .why dt {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); margin-top: 12px;
+  }
+  .why dd { margin: 2px 0 0; max-width: 74ch; }
+  .why dd.rejected { color: var(--ink); }
+  .why blockquote {
+    margin: 14px 0 0; padding: 12px 16px;
+    background: var(--paper); border-left: 2px solid var(--teal);
+    font-family: var(--serif); font-size: 0.96rem; line-height: 1.6;
+    border-radius: 0 4px 4px 0;
+  }
+  .why blockquote cite {
+    display: block; font-family: var(--mono); font-style: normal;
+    font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--steel); margin-top: 8px;
+  }
+
+  /* ---- diagrams ---- */
+  figure.diagram {
+    margin: 26px 0 10px; padding: 22px 18px 14px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    overflow-x: auto;
+  }
+  figure.diagram figcaption {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--steel);
+    letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 4px 2px;
+  }
+  .mermaid { display: flex; justify-content: center; min-width: 320px; }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .walkthrough {
+    border-left: 2px solid var(--mist); padding-left: 20px; margin: 18px 0 44px;
+  }
+  .walkthrough h4 { color: var(--teal-deep); }
+
+  /* ---- questions ---- */
+  .q {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 20px 24px; margin: 14px 0;
+  }
+  .q .ask {
+    font-family: var(--serif); font-weight: 600; font-size: 1.06rem; line-height: 1.4;
+    display: block; margin-bottom: 12px;
+  }
+  .q .headline {
+    display: block; padding: 12px 16px; margin: 0 0 12px;
+    background: var(--paper); border-left: 3px solid var(--teal); border-radius: 0 4px 4px 0;
+    font-weight: 600; font-size: 0.98rem; line-height: 1.5;
+  }
+  .q p { font-size: 0.94rem; margin-bottom: 10px; }
+  .q p:last-child { margin-bottom: 0; }
+
+  /* ---- lists & tables ---- */
+  ul.tight { margin: 0 0 16px 20px; max-width: 74ch; }
+  ul.tight li { margin-bottom: 8px; }
+  ol.steps { margin: 0 0 16px 20px; max-width: 74ch; }
+  ol.steps li { margin-bottom: 9px; }
+  .tablewrap { overflow-x: auto; margin: 22px 0; border: 1px solid var(--hairline); border-radius: 6px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.91rem; }
+  th, td { text-align: left; padding: 11px 16px; vertical-align: top; }
+  thead th {
+    font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel);
+    border-bottom: 1px solid var(--hairline); background: var(--paper);
+  }
+  tbody tr + tr td { border-top: 1px solid var(--mist); }
+  td.k { font-weight: 600; }
+
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--mist); padding: 1px 6px; border-radius: 4px; white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 80px; padding-top: 26px; border-top: 1px solid var(--hairline);
+    font-size: 0.86rem; color: var(--steel); max-width: 74ch;
+  }
+  footer p { margin-bottom: 10px; }
+
+  @media (max-width: 640px) {
+    main { padding: 40px 18px 72px; }
+    .why, .q { padding: 18px 18px; }
+  }
+  @media print {
+    body { background: #fff; }
+    .why, .q, figure.diagram, .tablewrap, .callout, .vocab { break-inside: avoid; border-color: #bbb; }
+    figure.diagram { overflow: visible; }
+    figure.diagram .mermaid svg { max-width: 100% !important; max-height: 8.5in; width: auto; height: auto; }
+    section { margin-top: 40px; }
+  }
+
+/* breadcrumb — injected by automation/add_breadcrumbs.py */
+.crumb{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:.72rem;letter-spacing:.06em;
+ color:var(--steel,#51626D);margin:0 0 26px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.crumb a{color:var(--teal-deep,#084F4B);text-decoration:none;border-bottom:1px solid transparent}
+.crumb a:hover{border-bottom-color:var(--teal,#0B756F)}
+.crumb .sep{color:var(--hairline,#D5DFE1)}
+.crumb .here{color:var(--ink,#12222C);font-weight:500}
+</style>
+</head>
+<body>
+<main>
+<p class="crumb"><a href="../../index.html">Full-time JD workspace</a><span class="sep">›</span><a href="../index.html">Case studies</a><span class="sep">›</span><span class="here">Interview prep</span><span class="sep">›</span><span class="here">AI versus clinician</span></p>
+
+<header class="hero">
+  <span class="eyebrow">Interview prep · Killer query 6 · AI vs clinician outcomes</span>
+  <h1>AI versus clinician — <em>what actually happened at 90 days?</em></h1>
+  <p class="sub">A chronic-care platform covering 80+ chronic conditions. Artificial-intelligence (AI)
+  decision support suggests a next action; sometimes the clinician says no and does something else. This
+  is the system that grades those disagreements — propensity-matched, deterministically gated, governed so
+  it cannot become a doctor scorecard, and held dark until the audit trail that makes it honest actually
+  existed. It is live in production. No language model touches a single number.</p>
+
+  <div class="spec-card">
+    <span class="label">The query the system must answer — verbatim</span>
+    <blockquote>"In decisions where AI suggested X and a human rejected it, what was the outcome delta?"</blockquote>
+  </div>
+
+  <div class="meta-row">
+    <div><b>Role</b>Sole owner — design through production</div>
+    <div><b>Archetype</b>Cohort aggregation + propensity match</div>
+    <div><b>Language model in the loop</b>None — deterministic code</div>
+    <div><b>Status</b>Live in production, behind its gates</div>
+  </div>
+
+  <p class="backlinks">
+    <a href="../kq6-ai-vs-human.html">full case study</a><span>·</span><a href="../summary.html">summary</a><span>·</span><a href="../index.html">all case studies</a>
+  </p>
+</header>
+
+<div class="callout">
+  <span class="label">Open with these two sentences</span>
+  <p class="opener">"We had AI decision support recommending a next action for chronic-care patients, and
+  clinicians overruled it sometimes. The product wanted to know whether those overrules led to better or
+  worse outcomes ninety days later — which is the most dangerous <code>GROUP BY</code> in the product,
+  because the careless version of that query is a performance ranking of your doctors on their hardest
+  cases."</p>
+</div>
+
+<div class="callout amber">
+  <span class="label">Two things to get right in the first minute</span>
+  <p><strong>Status.</strong> The system shipped and runs in production. The design review's remaining
+  "approval pending" is an internal design-review sign-off, not deployment status — the upstream contract
+  was signed and the query is live. Say <em>live</em>, never "designed" or "proposed".</p>
+  <p><strong>Numbers.</strong> Every figure on this page is a design threshold or a scale figure — a bar
+  the system was built to clear. There are no measured outcomes: latency achieved, adoption, error
+  reduction, accuracy, cost saved. If asked, the honest line is that the observed results are not his to
+  publish, and he left before capturing them. Never estimate one out loud.</p>
+</div>
+
+<section id="vocab">
+  <div class="stage"><b>00</b> Vocabulary — so nothing needs decoding</div>
+  <div class="vocab">
+    <div><b>Endogenous selection</b>Clinicians do not overrule at random — they overrule on their hardest cases. So the two arms differ by case mix before anything is measured.</div>
+    <div><b>Arm</b>Which group a decision belongs to: the reject arm (clinician overruled the AI) or the accept arm (clinician took the suggestion).</div>
+    <div><b>Propensity matching</b>Pairing each rejected-suggestion decision with the most similar accepted-suggestion decision, so the comparison holds the case mix roughly fixed.</div>
+    <div><b>SMD — standardised mean difference</b>How far apart the two matched arms still are on a covariate, in standard-deviation units. Gate: at most 0.1.</div>
+    <div><b>Covariate</b>A patient or context fact used for matching — age, body mass index (BMI), country, programme, phase, baseline glycated haemoglobin (HbA1c), prior adherence, tenure.</div>
+    <div><b>Pre-treatment</b>Fixed before the decision was made. The only covariates allowed in the match, plus the AI's own confidence.</div>
+    <div><b>Rosenbaum bounds</b>How strong an unmeasured confounder would have to be to overturn the result. Gate: robust to a hidden-bias factor of at least 1.5.</div>
+    <div><b>E-value</b>The same "how strong would it have to be" question, expressed on the risk-ratio scale.</div>
+    <div><b>Negative-control outcome</b>An outcome the AI suggestion could not plausibly affect. If the arms differ on it, the arms were never comparable.</div>
+    <div><b>As-of reconstruction</b>Rebuilding a decision exactly as it stood at the moment it was made, by replaying immutable events up to that point — never by reading today's state.</div>
+    <div><b>Event spine</b>The append-only ledger of everything that happened. History is never overwritten, only superseded by a later event.</div>
+    <div><b>Kaplan–Meier</b>A survival method that handles patients who drop out part-way, instead of scoring them as failures.</div>
+    <div><b>CI — confidence interval</b>The uncertainty band around the delta, computed by a seeded bootstrap so it is reproducible.</div>
+    <div><b>RBAC — role-based access control</b>What the caller's role permits them to see; here it decides whether a by-clinician split is served at all.</div>
+    <div><b>virtual private cloud (VPC) — virtual private cloud</b>The client's private network. All of this runs inside it; protected health information (PHI) never crosses that boundary.</div>
+    <div><b>Suppression</b>Refusing to render a delta when a gate fails, and returning stated diagnostics instead — never a caveated raw rate.</div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="stage"><b>01</b> What is it?</div>
+  <h2>The most dangerous <code>GROUP BY</code> in the product</h2>
+
+  <p><strong>The situation, in plain language.</strong> A clinician is managing a patient with one or more
+  chronic conditions. The platform's AI proposes a next action — a change of programme, a medication
+  adjustment, an escalation — and shows it with a confidence bucket attached and a panel of comparable past
+  cases beside it. Most of the time the clinician takes the suggestion. Sometimes they don't: they look at
+  this patient, decide the model has misread the case, and choose something else. Ninety days later that
+  patient has an outcome.</p>
+
+  <p>Two people want the same number from that. A <strong>model-quality reviewer or clinical leader</strong>
+  asks: is our AI's high-confidence advice actually worth following, or are the clinicians who overrule it
+  right to? A <strong>regulator or a clinical-governance committee</strong> asks a harder version: you have
+  deployed an algorithm that influences patient care — show me the evidence about what happens when
+  humans disagree with it.</p>
+
+  <p>Both are asking for a comparison of two arms. The naive way to produce it is one line of structured
+  query language (SQL): group the decisions by clinician, split by whether the AI was accepted or rejected,
+  and compare 90-day outcome rates. That query is wrong before it is even computed.</p>
+
+  <h3>Why it is genuinely hard</h3>
+  <ul class="tight">
+    <li><strong>Endogenous selection — the comparison is confounded by design.</strong> Clinicians do not
+    reject AI suggestions at random. They reject on their most unusual, highest-stakes, hardest-to-read
+    cases. So the reject arm and the accept arm differ precisely where the decision was hardest, and a raw
+    delta measures the case mix, not the judgment. A naive implementation reports that overruling the AI
+    correlates with worse outcomes, and what it has actually discovered is that hard cases go worse.</li>
+
+    <li><strong>Scorecard misuse — the artefact is dangerous even when the statistics are perfect.</strong>
+    The instant a per-clinician AI-agreement table exists, it reads as a league table. A statistically
+    immaculate number still ends careers if it is presented as a ranking rather than an observation. The
+    naive implementation ships a sortable column and has built a doctor ranking on the most sensitive cases
+    in the product.</li>
+
+    <li><strong>The data to define the comparison did not exist.</strong> This is what made this query
+    different from every other cohort analysis in the programme. There was no trustworthy record of what the
+    AI suggested, whether the human accepted or rejected it, and what they chose instead. The naive
+    implementation infers the arm by comparing payloads — call it a rejection whenever the chosen option
+    differs from the suggested one. That heuristic misfires in five distinct ways: <strong>partial
+    edits</strong> to the payload, <strong>schema drift</strong> between versions, <strong>option
+    up-conversion</strong> to a newer canonical form, <strong>multiple suggestions</strong> attached to one
+    decision, and <strong>rejections that were never logged at all</strong>. Each one makes an accept look
+    like a reject or a reject look like an accept, and no downstream statistic can repair a wrong
+    label.</li>
+  </ul>
+
+  <p>There are three more failure modes a naive build walks into behind those. It reads the
+  <strong>current</strong> graph for a historical decision, so features and even the arm inherit edits made
+  after the fact — hindsight leaking into the comparison. It <strong>recomputes</strong> the confidence
+  bucket with today's model, silently re-bucketing a suggestion the clinician saw under an older one. And it
+  <strong>pools</strong> everything into one headline delta, which hides the confidence interaction that is
+  the only interesting part and invites a Simpson's-paradox reversal, where the pooled number points the
+  opposite way to every bucket inside it.</p>
+
+  <div class="callout">
+    <span class="label">The one-line framing</span>
+    <p>The honest version of this query is not "who was right?" It is: <em>within a single confidence
+    bucket, is the 90-day outcome rate different between rejected-suggestion decisions and their
+    propensity-matched accepted-suggestion twins?</em> — computed only when the cohort survives balance,
+    sensitivity, concentration, power and calibration gates, and labelled observational, never causal.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="stage"><b>02</b> How did we solve it?</div>
+  <h2>A two-party contract, snapshot-only analytics, and an application programming interface (API) built to refuse</h2>
+
+  <h3>Step one: get the inputs that make the comparison honest</h3>
+  <p>Rather than infer the arm, the design specified a formal <strong>producer/consumer event
+  contract</strong> and handed it to the upstream team that owns the next-decision user interface. Five
+  deliverables, drawn as an ownership boundary — one side emits, the other stayed dark until all five were
+  signed and verified:</p>
+  <ol class="steps">
+    <li><strong>AI suggestion emitted</strong> — carries the canonical suggested option, the option-schema
+    version, the raw confidence <em>and</em> the emitted confidence bucket, the model version, the
+    four-field event time, and the source sequence.</li>
+    <li><strong>Human accepted</strong> — references the suggestion, the decision, the actor, and the source
+    sequence.</li>
+    <li><strong>Human rejected</strong> — the same, and additionally carries the canonical
+    <em>human-chosen</em> option, so you know not just that the AI was overruled but what was chosen
+    instead.</li>
+    <li><strong>Schema-parity contract</strong> — the suggested option and the decision's chosen option must
+    normalise to the same canonical representation across schema versions, which is what makes the equality
+    validation meaningful at all.</li>
+    <li><strong>Correction and replay contract</strong> — the cohort, matched and metric tables can be
+    targeted for rebuild when an audit event is later corrected.</li>
+  </ol>
+  <p>A <strong>prerequisite gate</strong> sat above the entire pipeline and blocked every step below it: no
+  snapshot, no cohort, no match, no metric was built for a tenant whose upstream audit trail was absent or
+  unverified. The hardened design existed, fully specified and armed, behind that gate. When the events were
+  verified to attach at decision time, the gate opened and the comparison activated.</p>
+
+  <h3>Step two: the pipeline, and what the data does as it moves</h3>
+  <p>Nothing on the request path ever touches the live graph. The whole thing is snapshot-only, precomputed
+  overnight, and read cheaply.</p>
+  <ol class="steps">
+    <li><strong>Event spine (Amazon DynamoDB, append-only).</strong> The source of truth: decisions, the
+    three audit events, actor edges, policy versions, outcomes. Nothing is overwritten — a correction is a
+    new event that supersedes, never an in-place edit.</li>
+    <li><strong>Decision graph (Amazon Neptune).</strong> Projected off the spine. It feeds the nightly
+    snapshot and is reserved for governed audit and drill-in. It is never queried per row at analytics time
+    and never read live for a historical decision.</li>
+    <li><strong>Snapshot exporter.</strong> Freezes a point-in-time snapshot into Parquet — a columnar file
+    format — with a manifest hash, the maximum source event sequence, and an allowed-lateness bound.
+    Partitioned by the tenant triple and by snapshot hash together, so isolation and reproducibility come
+    from the same physical layout.</li>
+    <li><strong>Cohort builder (DuckDB, an embedded analytical engine).</strong> Tenant-scoped columnar
+    joins, no per-decision graph traversal. <em>The arm is read from the immutable accept-or-reject audit
+    event.</em> Payload equality is still computed — but only as a logged validation flag whose
+    disagreements are monitored, never as the label. Where several suggestions attach to one decision,
+    pairing is ordered deterministically by suggestion event sequence, and the chosen sequence is persisted
+    on the row.</li>
+    <li><strong>As-of reconstruction.</strong> Every pre-treatment covariate, the actor, the outcome edge and
+    the AI's confidence are replayed from the spine at the decision's own event sequence. Each field
+    persists its <code>feature_as_of_ts</code> and <code>source_event_seq</code>, so the reconstruction is
+    auditable on replay rather than asserted. The confidence bucket used is the one that was
+    <em>emitted</em> at suggestion time — never recomputed.</li>
+    <li><strong>Outcome label (shared 90-day library).</strong> Returns a status — mature, not-mature,
+    missing or censored — with an attribution decision id, a rule version, a distance in days, and a
+    censoring reason. Survival is handled by Kaplan–Meier, not a naive 0/1 rate. The window is anchored to
+    the <em>decision's</em> event time plus 90 days, because the decision is the intervention, and a cell
+    only counts a decision once <code>decision time + 90 days ≤ snapshot as-of</code>.</li>
+    <li><strong>Confidence-calibration gate.</strong> A hard cross-query dependency: the high-confidence cell
+    refuses to render unless a sibling calibration query holds a passing artifact for the same model version
+    and the same snapshot.</li>
+    <li><strong>Propensity matcher (shared, seeded binary).</strong> Caliper matching on pre-treatment
+    covariates plus the AI confidence bucket, under a versioned <code>match_manifest_id</code> — a content
+    hash over the covariate schema, snapshot manifest, caliper, replacement policy, tie-break policy, seed
+    and cohort filter. The sibling override-analytics query's matched pairs are reused verbatim only when
+    <em>every</em> manifest field agrees; otherwise the pairs are rebuilt with the same binary.</li>
+    <li><strong>Aggregate.</strong> Per confidence bucket only — there is no pooled headline number at all.
+    Balance gate, then the five-test sensitivity battery, then a seeded cluster-aware bootstrap for the
+    interval: 2000 resamples, seeded from the snapshot manifest hash, resampled by enrollment cluster rather
+    than by row.</li>
+    <li><strong>Serve (FastAPI).</strong> Tenant filter pushed into the scan before load, canonical cache
+    key, RBAC, an audit entry written before anything is read, pseudonymous clinician ids, alphabetic and
+    never-rankable ordering, no "who was right" framing anywhere in the contract.</li>
+    <li><strong>Drift and self-reinforcement monitor.</strong> Accept rate, reject rate, case mix,
+    confidence distribution, calibration status and the deltas themselves — all segmented before versus
+    after the dashboard was exposed.</li>
+    <li><strong>Evaluation and golden regression.</strong> Per-bucket power floor, audit-event correction
+    fixtures, byte-for-byte reproducibility across rebuilds.</li>
+  </ol>
+  <p>A <strong>correction-event listener</strong> sits alongside: every derived artefact records the range of
+  source event sequences it depends on, a dependency index maps sequences to the cohort, matched and metric
+  slices they touch, and a correction — including an audit-event correction — invalidates and rebuilds only
+  the overlapping slices. Target: 95th-percentile latency (P95) under five minutes from correction to fresh
+  metric.</p>
+
+  <h3>Step three: the serve path, in order</h3>
+  <p>The ordering here is the design. Each step exists because doing it later would open a hole.</p>
+  <ol class="steps">
+    <li><strong>Audit first.</strong> Any request touching a by-clinician split writes viewer, target,
+    purpose and time <em>before</em> the response is served, and returns the resulting
+    <code>access_log_id</code> in the response body. There is no window in which data is served without a
+    record of who saw whose data.</li>
+    <li><strong>Canonical cache key.</strong> A sorted encoding of every result-affecting input: the tenant
+    triple (account, workspace, control unit), the query namespace, the split and filters, the confidence
+    bucket and any by-clinician target, the metric schema hash, the matcher, bootstrap and outcome-library
+    versions, the snapshot manifest hash, the maximum source event sequence, and the correction epoch.</li>
+    <li><strong>Role branch.</strong> Leadership scans the metric tables; a clinician viewing themselves
+    scans only their own clinician id; anyone else is denied the by-clinician split and served the
+    confidence-bucket view. In every branch the tenant-partition filter is applied <em>at the scan</em>, so
+    out-of-scope rows are never materialised.</li>
+    <li><strong>The statistical gate ladder</strong> (below).</li>
+    <li><strong>Tenant assertion on every returned cell.</strong> A row outside the caller's exact triple
+    fails the request closed and pages — it is an incident, not a metric.</li>
+    <li><strong>Pseudonymise unless leadership drill-in</strong>, attach the observational tag, return.</li>
+  </ol>
+
+  <h3>The gate ladder — five gates in series, every exit stated</h3>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Gate</th><th>Bar</th><th>What happens on failure</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Calibration (high-confidence cell only)</td><td>Passing sibling artifact for the same model version + snapshot</td><td>Suppress the high-confidence delta, emit a calibration diagnostic</td></tr>
+      <tr><td class="k">Balance</td><td>SMD ≤ 0.1 per bucket</td><td>Suppress the causal-language delta — diagnostics only, never a raw rate</td></tr>
+      <tr><td class="k">Sensitivity battery</td><td>All five tests pass; Rosenbaum robust to γ ≥ 1.5</td><td>Suppress — diagnostics only</td></tr>
+      <tr><td class="k">Concentration</td><td>Top clinician ≤ 0.30 of the reject cohort</td><td><em>Tag</em> concentrated and exclude from generalized conclusions — the one gate that tags rather than exits</td></tr>
+      <tr><td class="k">Power floor</td><td>≥ 30 treated and ≥ 30 control, both matured</td><td>Emit insufficient-data status with the full mature / missing / censored denominator breakdown</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Only a cell that clears all of them emits a delta with its confidence interval, its denominators, a
+  pseudonymous clinician id and an observational tag. The guarantee is enforced in the type system, not by
+  convention: the output contract's validator (Pydantic v2) <strong>raises an exception if an outcome delta
+  is attached to a cell whose gates failed</strong>. Within the bounds the schema enforces, a gate-failing
+  number is not discouraged — it is unrepresentable.</p>
+
+  <h3>What the nine years of history actually did</h3>
+  <p>A private production system had been recording these accept-and-reject decisions for roughly nine
+  years, and that corpus was replayed into the event spine by a first-class, proof-carrying hydration
+  pipeline — not a throwaway backfill. Legacy records were normalised and up-converted with a stamped
+  payload-schema version; anything that could not be mapped to a known schema <em>or</em> to a tenant was
+  quarantined with a reason, counted and reported, never defaulted. Event identifiers are content-addressed
+  and written conditionally, so hydrating twice is a no-op that yields a byte-identical spine and an
+  identical snapshot-manifest hash. History replays through the <em>same</em> projection code that serves
+  the live stream. Proof gates — zero-event-loss reconciliation, the hydrate-twice hash equality, as-of spot
+  checks against known-good historical reports, and a golden replay over a historical slice — must all pass
+  before anything downstream is built, and then a fenced cutover attaches the live stream with a proof of
+  neither gap nor duplicate.</p>
+  <p>Each event carries <strong>four timestamps</strong>: <code>event_time</code> and
+  <code>observed_at</code> come from the source record and are real-world truth;
+  <code>received_at</code> and <code>written_at</code> are pinned to the load fence. Only the real-world
+  pair ever orders the timeline, and a guard asserts <code>event_time &lt; received_at</code> on every row.
+  Collapse those four into one and nine years of decisions all appear to have happened on load day, and
+  every as-of reconstruction behind the comparison is void.</p>
+
+  <div class="callout amber">
+    <span class="label">The honest limit — say this before they find it</span>
+    <p>Nine years of history does <em>not</em> mean nine years of AI-versus-clinician comparisons. The
+    comparison depends on the three audit events, and those only began flowing at contract activation — so
+    the usable cohort starts there, not nine years back. What the deep history buys is mature outcomes and
+    faithful as-of reconstruction for the decisions it can cover. It cannot invent events that were never
+    recorded.</p>
+  </div>
+</section>
+
+<section id="why">
+  <div class="stage"><b>03</b> Why did we do what we did?</div>
+  <h2>Every decision, and the alternative it beat</h2>
+  <p>This is the section to know cold. Each card is one decision, the alternative that was rejected, and the
+  reason — in his own words where the source states it.</p>
+
+  <div class="why">
+    <span class="num">Decision 01</span>
+    <h4>Refuse to serve any delta until the audit trail existed</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Ship a best-effort version now: infer the arm by comparing the chosen option
+      against the suggested option, and iterate once real audit events arrive.</dd>
+      <dt>Reason</dt>
+      <dd>The inference is a heuristic, not a fact, and it misfires five ways. A wrong arm label is
+      unrecoverable downstream — no gate, no sensitivity test and no amount of matching can repair a cohort
+      whose membership is wrong.</dd>
+    </dl>
+    <blockquote>"Because a comparison is only as honest as its inputs, and inferring 'rejected' from an
+    option mismatch misfires in five distinct ways — partial edits, schema drift, option up-conversion,
+    multiple suggestions, unlogged rejects. A best-effort arm would have produced deltas measuring a logging
+    gap rather than a difference in outcomes, and no amount of downstream statistics can repair a wrong
+    label."<cite>his own reasoning, verbatim</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 02</span>
+    <h4>Turn the blocker into a deliverable the other team could sign</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">File the dependency as a blocker on the upstream team and wait.</dd>
+      <dt>Reason</dt>
+      <dd>A vague "someday" dependency never closes. A named ownership boundary with five concrete
+      deliverables does — and it made this design carry its own half of the fix rather than assign
+      blame.</dd>
+    </dl>
+    <blockquote>"No — the alternative was fully in this query's control: it could have shipped a plausible
+    delta off inferred arms, and it chose not to. Rather than assign blame, the design produced a concrete
+    deliverable for the upstream team — three audit events, a schema-parity proof, and a correction/replay
+    contract — so the dependency was defined and actionable rather than a complaint."<cite>on whether
+    block-on-prereq was just blaming a slow team</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 03</span>
+    <h4>Assign the arm from the immutable audit event; keep payload equality only as a flag</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Payload equality as the label — chosen option ≠ suggested option means
+      rejection.</dd>
+      <dt>Reason</dt>
+      <dd>The audit event was written at decision time and is never mutated, so the label cannot drift with
+      later edits: the arm is a fact rather than an inference. Equality is still computed, because a
+      disagreement between the flag and the event is exactly the early-warning signal that an upstream
+      schema has drifted — it surfaces as a rising validation-mismatch metric instead of as silently
+      corrupted deltas.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 04</span>
+    <h4>Snapshot-only analytics; never query the live graph at request time</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Traverse the Neptune decision graph per decision at analytics time.</dd>
+      <dt>Reason</dt>
+      <dd>Three problems at once. A current read of a historical decision returns today's edges and
+      properties — rationale text, confidence, policy alignment, evidence edges and the suggestion
+      attachment can all be edited or re-linked afterwards — so hindsight leaks into both the features and
+      the arm. Per-decision graph queries across a large cohort are an availability and cost liability. And
+      a frozen snapshot with a manifest hash is what makes the same as-of reproduce the same cells on every
+      rebuild. The cost is staleness bounded by the snapshot cadence, surfaced explicitly rather than
+      hidden.</dd>
+    </dl>
+    <blockquote>"Live per-row graph traversal at analytics time would be slow, would couple the dashboard's
+    availability to Neptune's, and — most importantly — would read current graph state for a historical
+    decision, leaking edits made after the fact."<cite>on why snapshot-only</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 05</span>
+    <h4>Trust the confidence bucket as emitted; never recompute it</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Recompute the bucket at analysis time with the current model and thresholds.</dd>
+      <dt>Reason</dt>
+      <dd>Recomputing applies a newer model to a historical suggestion and silently re-buckets it, leaking
+      model evolution into a historical cohort. The emitted bucket is the confidence the clinician actually
+      saw — the only bucket that makes the comparison meaningful.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 06</span>
+    <h4>Anchor the 90-day window on the decision, not the suggestion; exclude long lags from the headline</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Date the outcome from when the suggestion was emitted, and keep every
+      decision.</dd>
+      <dt>Reason</dt>
+      <dd>The decision is the intervention whose consequence is being measured, so suggestion-time anchoring
+      misdates outcomes wherever there was a lag. And a large gap means the decision was probably not a
+      response to that suggestion at all: beyond 72 hours a long-lag flag is set and the row is excluded
+      from the headline and surfaced only as a sensitivity slice, with the lag persisted so the exclusion is
+      transparent and revisable.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 07</span>
+    <h4>Propensity matching — not an instrument, not difference-in-differences, not a randomised trial</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Instrumental variables; difference-in-differences; a randomised comparison that
+      withholds the suggestion from a random subset.</dd>
+      <dt>Reason</dt>
+      <dd>Each fails on its own terms, and the randomised one fails on ethics.</dd>
+    </dl>
+    <blockquote>"There is no clean instrument for 'the clinician rejected the suggestion' — nothing plausibly
+    shifts rejection without also touching the outcome — so instrumental variables are out.
+    Difference-in-differences needs a parallel-trends assumption that reject and accept cohorts do not
+    credibly satisfy on these cases. Given the data, caliper matching on pre-treatment covariates plus a
+    sensitivity battery is the defensible observational choice, and its limits are stated rather than
+    assumed away."<cite>on method choice</cite></blockquote>
+    <blockquote>"A randomised design — withholding the suggestion for a random subset — is the gold standard
+    for causal identification and would dissolve the endogenous-selection problem. It was not an option here
+    because you cannot ethically or operationally randomise whether a clinician sees a decision-support
+    recommendation on real patients."<cite>on why not a trial</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 08</span>
+    <h4>Match on pre-treatment covariates plus AI confidence only — nothing endogenous</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Throw every available variable into the match, on the theory that more balance is
+      better.</dd>
+      <dt>Reason</dt>
+      <dd>More variables is explicitly the wrong instinct. Matching on something that lies on the causal
+      path between the decision and the outcome, or is itself a consequence of the decision, induces
+      collider or post-treatment bias — it can manufacture a delta that isn't there or erase one that
+      is.</dd>
+    </dl>
+    <blockquote>"Balance is only protective when it is balance on pre-treatment confounders."<cite>on
+    covariate selection</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 09</span>
+    <h4>Per confidence bucket only — refuse to compute a pooled headline</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">One pooled top-line number, with per-bucket detail available underneath.</dd>
+      <dt>Reason</dt>
+      <dd>Pooling hides the structure that matters and invites a reversal.</dd>
+    </dl>
+    <blockquote>"Because pooling across confidence buckets hides the most important structure and invites a
+    Simpson's-paradox reversal. Low-confidence rejects followed by bad outcomes are the expected default and
+    say little about judgment; high-confidence rejects are the interesting case. A single pooled delta
+    blends those into a number that means nothing actionable, so the design stratifies by the emitted
+    confidence bucket and refuses to compute a pooled headline at all."<cite>on stratification</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 10</span>
+    <h4>Suppress a failed cell — never downgrade it to a caveated raw rate</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Return the raw rate with a warning tag attached, and let the reader judge.</dd>
+      <dt>Reason</dt>
+      <dd>This is the single most quotable piece of reasoning on the page, because it is about human
+      behaviour rather than statistics.</dd>
+    </dl>
+    <blockquote>"Because a tagged raw rate still renders as a number, and a number gets screenshotted,
+    pasted into a slide, and read without its tag. Suppression removes the artifact that can be misquoted
+    and replaces it with a diagnostic that explains the gate failure, so there is nothing to lift out of
+    context. The design treats 'return a caveated number' as a social control that fails under normal human
+    behaviour, and suppression as the structural control that holds."<cite>on suppress versus
+    downgrade</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 11</span>
+    <h4>Tune the whole system around false emit, not false suppress</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Optimise for coverage — show as many cells as defensibly possible.</dd>
+      <dt>Reason</dt>
+      <dd>The costs are asymmetric. A withheld borderline signal is cheap; an unsupportable one can be read
+      as a clinician verdict. So evaluation is organised around catching failures to <em>suppress</em>, on
+      seeded synthetic cohorts with a planted imbalance, a planted confounder or a single-clinician-dominated
+      reject set, where the correct gate decision is known by construction. The suppression path is tested
+      as a first-class behaviour with its own ground truth — grading only emitted deltas would miss the
+      failure mode the system cares about most.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 12</span>
+    <h4>Depend on a sibling calibration query rather than computing calibration inline</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Compute calibration inside this service.</dd>
+      <dt>Reason</dt>
+      <dd>"High confidence" needs one authoritative definition across the programme; an inline computation
+      creates a second one that can disagree. The cost is a hard cross-query dependency that can veto a
+      cell; the benefit is that a bucket is never called high-confidence in one place and untrustworthy in
+      another.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 13</span>
+    <h4>Re-check calibration at read time, even on a cache hit</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Check calibration once, during the nightly build, and bake the result into the
+      cached cell.</dd>
+      <dt>Reason</dt>
+      <dd>Calibration status is a separate artifact with its own lifecycle — it can flip to not-passing
+      after the cell was cached. Build-time-only checking leaves a window in which a model whose calibration
+      drifted keeps serving a confident-looking delta until the next rebuild. The cache accelerates the
+      statistics; it does not get to answer the governance question.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 14</span>
+    <h4>Event-driven freshness in the cache key — not a time-to-live (TTL)</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">A TTL on cached cells.</dd>
+      <dt>Reason</dt>
+      <dd>A correction can land at any point inside a TTL window, and until the entry expires the cache
+      keeps serving a value the spine has already contradicted. The key carries the maximum source event
+      sequence and a correction epoch; a correction bumps them, so the old entry is no longer addressable.
+      TTL is at best a backstop. The key also pins the matcher, bootstrap and outcome-library versions,
+      because a library bump changes the <em>meaning</em> of a cell even when the data is identical — a
+      library change should be a cache miss.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 15</span>
+    <h4>Bootstrap by enrollment cluster, not by row</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Row-level resampling.</dd>
+      <dt>Reason</dt>
+      <dd>One patient enrollment contributes many decisions and those decisions are not independent.
+      Treating each as an independent draw understates the variance and produces intervals that are too
+      narrow — row-level bootstrap here would systematically make weak evidence look strong. Resampling
+      whole clusters preserves the within-patient correlation. The seed is derived from the snapshot
+      manifest hash and the resample count is fixed at 2000, so the interval is a function of the data and
+      the pinned configuration alone.</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 16</span>
+    <h4>Isolation as a property of the pipeline — three layers, fail closed</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">A single <code>account_id</code> predicate on each hand-written query.</dd>
+      <dt>Reason</dt>
+      <dd>Per-query discipline fails silently, and once is enough: a forgotten predicate puts cross-tenant
+      data into a snapshot and from there into every downstream artefact. Instead: a Parquet partition on
+      the three-field tenant scope (account, workspace, control unit), a scan-time predicate so out-of-scope
+      partitions are never read, and a runtime assertion that every returned row carries the caller's exact
+      scope. All three would have to fail simultaneously. It is the difference between "we didn't return it"
+      and "we never read it."</dd>
+    </dl>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 17</span>
+    <h4>Make the scorecard reading hard and visible — and refuse to claim it is impossible</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">A policy statement that the dashboard must not be used for performance
+      management.</dd>
+      <dt>Reason</dt>
+      <dd>The danger is structural, so the mitigation cannot live in the query alone or in a policy: it
+      lives in pseudonymous clinician ids by default, leadership-or-self RBAC on the by-clinician split, an
+      audit entry written before serving, alphabetic and never-rankable ordering — a sortable column is a
+      league table by construction — per-bucket-only defaults, and a mandatory observational label. Ordering
+      is treated as a governance control, not a user-interface preference.</dd>
+    </dl>
+    <blockquote>"No — 'never' would be an overclaim, and the honest statement is narrower: the controls make
+    the scorecard reading hard and visible rather than impossible… A determined viewer with leadership
+    access and intent could still attempt to read it as a ranking; what the design guarantees is that doing
+    so is constrained, logged, and against the grain — not that it is unachievable."<cite>on whether the
+    scorecard reading can be ruled out</cite></blockquote>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 18</span>
+    <h4>Keep the language model out entirely — and no retrieval layer either</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Use the platform's self-hosted model seam to narrate or explain the cells, or add
+      a retrieval-augmented-generation surface over the supporting documents.</dd>
+      <dt>Reason</dt>
+      <dd>Three things follow from keeping it shut. There is <strong>no prompt to jailbreak</strong> — the
+      neutrality rules, suppression logic and access controls are code and configuration, so they cannot
+      drift with a model update. There is <strong>nothing to hallucinate</strong> — every delta is computed
+      and version-pinned, and no generated sentence carries a claim. And the retrieval absence is a
+      judgment, not a gap: the deliverable is a number the code has already computed and gated, so there is
+      nothing further to retrieve that would make it more true.</dd>
+    </dl>
+    <blockquote>"…a document-fetching narrator could only tempt the reader back toward the who-was-right
+    verdict the whole design refuses to produce."<cite>on the model boundary</cite></blockquote>
+    <p class="muted" style="margin-top:12px;font-size:0.9rem">The platform does run a self-hosted Llama 3.1
+    seam inside the VPC for sibling surfaces that genuinely narrate. The discipline is choosing not to open
+    a door that is one import away.</p>
+  </div>
+
+  <div class="why">
+    <span class="num">Decision 19</span>
+    <h4>Monitor the feedback loop this dashboard creates, rather than deny it</h4>
+    <dl>
+      <dt>Alternative rejected</dt>
+      <dd class="rejected">Treat the metric as an independent observation of clinician behaviour.</dd>
+      <dt>Reason</dt>
+      <dd>Publishing "high-confidence rejects did worse" can nudge clinicians to accept more, which changes
+      both the accept/reject mix and the model's future training distribution. The design does not pretend
+      otherwise — the drift monitor segments every signal before versus after dashboard exposure, so the
+      shift is measured rather than mistaken for a real trend. The honest position is that the metric is a
+      moving target under its own influence.</dd>
+    </dl>
+  </div>
+
+  <h3>The design review, and what it changed</h3>
+  <p>Before anything shipped, the design went through structured adversarial self-review under a
+  Principal-AI-Engineer lens. It returned the hardest verdict in the set: <strong>block-on-prereq</strong> —
+  not "ship with changes", not "redesign", but "you do not yet have the data to answer this honestly, so do
+  not build it." The blocking finding was that the AI-suggestion audit trail did not exist: no producer, no
+  schema, no implementation. Alongside it came <strong>13 local findings</strong> across correctness,
+  statistics and governance.</p>
+  <p>All thirteen were absorbed into a hardened v2 and <em>armed</em> — specified and waiting, activating
+  the moment the contract landed. What changed as a result:</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Finding area</th><th>What the design became</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Arm assignment</td><td>Moved off payload equality onto the immutable accept/reject audit event; equality demoted to a logged validation flag</td></tr>
+      <tr><td class="k">Determinism</td><td>Deterministic pairing by suggestion event sequence, with the chosen sequence persisted on the row</td></tr>
+      <tr><td class="k">Leakage</td><td>As-of reconstruction of every covariate, the actor and the outcome edge, each carrying its own source sequence and as-of timestamp</td></tr>
+      <tr><td class="k">Endogenous selection</td><td>The five-test sensitivity battery, downstream of the match</td></tr>
+      <tr><td class="k">Confidence semantics</td><td>The hard cross-query calibration check, keyed to model version and snapshot</td></tr>
+      <tr><td class="k">Governance</td><td>Actor-level RBAC with pseudonymity by default and audit-before-serve</td></tr>
+      <tr><td class="k">Presentation</td><td>Per-bucket-only aggregation, with no pooled headline computed at all</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The prerequisite has since been met: the upstream contract shipped and was verified, and the query went
+  live behind its gates. Where sibling reviews minted new shared standards, this one confirmed and extended
+  the programme's governance, statistics and cache-key conventions without adding a new cross-query finding.
+  Final design-review sign-off is still open — that is an internal approval waiting on the final review and
+  on the sibling calibration artifacts being in range, not a deployment status.</p>
+</section>
+
+<section id="architecture">
+  <div class="stage"><b>04</b> Architecture</div>
+  <h2>Four diagrams, and how to redraw each one</h2>
+
+  <h3>Fig 1 · The event-contract handoff</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart LR
+    subgraph PROD["Upstream next-decision product team · PRODUCER"]
+      E1[AI suggestion emitted<br/>canonical suggested option + option-schema version<br/>raw confidence + emitted confidence bucket + model version<br/>four-field event time + source sequence]
+      E2[Human accepted<br/>references the suggestion + decision + actor<br/>+ source sequence]
+      E3[Human rejected<br/>additionally carries the canonical human-chosen option]
+      SP[Schema-parity contract<br/>suggested option and decision chosen option<br/>normalize to the same canonical option<br/>across schema versions]
+      CR[Correction and replay contract<br/>cohort · matched · metric tables<br/>can be targeted for rebuild]
+    end
+    subgraph CONS["This case study comparison analytics · CONSUMER"]
+      GATE[Prerequisite gate<br/>held the entire query dark<br/>until the five deliverables verified]
+      DES[Hardened v2 design<br/>13 of 13 local findings absorbed and armed<br/>activated when the contract was signed]
+    end
+    E1 --> GATE
+    E2 --> GATE
+    E3 --> GATE
+    SP --> GATE
+    CR --> GATE
+    GATE -.-> DES
+    </pre>
+    <figcaption>Fig 1 · A two-party ownership boundary — the query stayed dark until the producer signed, then activated</figcaption>
+  </figure>
+  <div class="walkthrough">
+    <h4>Walkthrough</h4>
+    <p><strong>What flows where.</strong> Two boxes. On the left, the upstream product team that owns the
+    next-decision screen; on the right, this analytics service. Five nodes on the left — three audit events
+    plus two contracts — and every one of them points at a single node on the right: the prerequisite gate.
+    One dotted arrow leaves the gate for the hardened v2 design. That dotted line is the whole story: the
+    design was finished, reviewed and armed, and it was <em>not running</em>.</p>
+    <p><strong>What each deliverable does.</strong> <em>Suggestion emitted</em> establishes what the AI said
+    and, critically, the confidence bucket as emitted — without it there is nothing to stratify on.
+    <em>Human accepted</em> and <em>human rejected</em> are the arm labels themselves, written at decision
+    time; the rejected event additionally carries the human-chosen option, which is the difference between
+    knowing the AI was overruled and knowing what happened instead. <em>Schema parity</em> guarantees the
+    suggested option and the chosen option normalise to the same canonical form across schema versions —
+    without it the equality validation flag compares apples to oranges and its mismatch signal is noise.
+    <em>Correction and replay</em> is what lets a later-corrected audit event invalidate exactly the cohort,
+    matched and metric slices that depend on it.</p>
+    <p><strong>What breaks without the gate.</strong> The comparison launches on a half-built feed.
+    Rejections that were never emitted read as acceptances, and the delta measures a gap in the logs rather
+    than a difference in outcomes — a plausible-looking, entirely wrong number that no downstream gate can
+    catch, because the cohort it balances and tests is already wrong.</p>
+    <p><strong>Whiteboard version.</strong> Two rectangles side by side. Five small boxes in the left one,
+    two in the right. Five arrows crossing the boundary into one gate box. One dotted arrow from the gate to
+    the design box.</p>
+  </div>
+
+  <h3>Fig 3 · The full pipeline, gated at the top</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    PREREQ[Prerequisite GATE · upstream audit trail<br/>suggestion emitted + accepted + rejected events on the spine<br/>schema-parity contract + correction and replay contract<br/>BLOCKS every step below]
+    S2[Snapshot frozen at as-of<br/>vertices + edges + manifest<br/>snapshot hash + source sequence max + allowed lateness]
+    S3[Cohort builder<br/>tenant-scoped columnar joins · no per-decision graph traversal<br/>arm from the immutable audit event · not payload equality<br/>deterministic suggestion selection by event sequence]
+    S4[As-of reconstruction<br/>suggested option + confidence + actor + outcome edge<br/>replayed from the append-only spine]
+    S5[Outcome label · shared 90-day library<br/>status + attribution-rule version + censoring reason]
+    S6[Confidence-calibration gate<br/>refuse the high-confidence cell unless the sibling<br/>calibration query is passing for the same model + snapshot]
+    S7[Propensity matcher · shared seeded binary<br/>versioned manifest reused verbatim from the override-analytics query<br/>covariates · pre-treatment + AI confidence only · no endogenous]
+    S8[Aggregate · per confidence bucket only · no pooled headline<br/>balance gate + five-test sensitivity battery<br/>seeded cluster-aware bootstrap]
+    S9[Serve · comparison-analytics API<br/>tenant filter before load · canonical cache key<br/>RBAC + audit · pseudonymous clinician id<br/>no league-table sort · no who-was-right framing]
+    S10[Drift and self-reinforcement monitor<br/>accept-rate + reject-rate + case-mix + confidence + calibration + deltas<br/>segmented before vs after dashboard exposure]
+    S11[Eval and golden regression<br/>per-bucket power floor · audit-event correction fixtures]
+    CORR[Correction-event listener<br/>audit corrections invalidate cohort + matched + metric<br/>targeted rebuild · P95 five minutes]
+    PREREQ --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9 --> S10 --> S11
+    CORR -.-> S3
+    CORR -.-> S7
+    CORR -.-> S8
+    CORR -.-> S9
+    </pre>
+    <figcaption>Fig 3 · One prerequisite gate blocks every step below it; corrections rebuild only the slices they touch</figcaption>
+  </figure>
+  <div class="walkthrough">
+    <h4>Walkthrough</h4>
+    <p><strong>What flows where.</strong> A single vertical chain of ten stages with one gate sitting above
+    all of them, and one listener feeding in sideways. Data enters as a frozen snapshot and leaves as
+    precomputed metric cells that the request path only has to read.</p>
+    <p><strong>Why the order is what it is.</strong> The snapshot must be frozen before the cohort is built,
+    or two rebuilds at the same as-of could disagree. The arm must be assigned before covariates are
+    reconstructed, and both before any outcome is looked at — that is the ordering that keeps hindsight out.
+    The outcome label comes before the matcher because matching pairs decisions that will actually
+    contribute a matured outcome. The calibration gate sits before aggregation so a bucket whose "high
+    confidence" is not earned never becomes a headline. Aggregation is where the balance gate and the
+    five-test battery run, and only then does anything reach the serve stage. The drift monitor and the
+    golden regression sit at the end because they watch the whole chain.</p>
+    <p><strong>The sideways arrow.</strong> The correction listener dots into exactly four stages — cohort,
+    matcher, aggregate, serve — the four stages whose outputs a correction can move. A correction rebuilds only the overlapping slices, targeted through the
+    dependency index, at a P95 target of five minutes. A full nightly-style rebuild could never hit that
+    target.</p>
+    <p><strong>What breaks without each piece.</strong> Without the top gate, deltas are computed off a
+    half-built feed. Without the snapshot freeze, reproducibility is gone and a cached cell cannot be tied
+    to the exact manifest it was computed from. Without the correction listener, a corrected audit event
+    leaves stale cells addressable and the cache keeps serving a value the spine has contradicted. Without
+    the drift monitor, the dashboard quietly changes the population it measures and nobody sees it.</p>
+    <p><strong>Whiteboard version.</strong> One wide box at the top labelled GATE. Ten boxes stacked
+    downward in a single column with straight arrows. One box off to the side with four dotted arrows into
+    the middle four.</p>
+  </div>
+
+  <h3>Fig 6 · The nightly arm-assignment exchange</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+sequenceDiagram
+    autonumber
+    participant Build as Cohort builder
+    participant PQ as Snapshot parquet
+    participant Spine as Event spine
+    participant Outcome as 90-day labeller
+    Note over Build: nightly at as-of · tenant pinned
+    Build->>PQ: scan decisions with a suggestion
+    PQ-->>Build: candidate decisions
+    Build->>Spine: reconstruct emit/accept/reject as-of
+    Spine-->>Build: immutable accept-or-reject event + lag
+    Build->>Build: assign arm from event · equality is a flag
+    Build->>Spine: reconstruct pre-treatment covariates as-of
+    Spine-->>Build: as-of features · each with source_event_seq
+    Build->>Outcome: label the 90-day outcome
+    Outcome-->>Build: status + rule version + censoring
+    Build->>PQ: write cohort · arm + lag + as-of features
+    </pre>
+    <figcaption>Fig 6 · The arm comes from the immutable audit event and the covariates are reconstructed as of the decision instant, so hindsight cannot leak into either</figcaption>
+  </figure>
+  <div class="walkthrough">
+    <h4>Walkthrough</h4>
+    <p><strong>What flows where.</strong> Four participants, one nightly conversation, tenant pinned and
+    anchored at a fixed as-of. The builder scans the snapshot for decisions that have a suggestion attached
+    and gets back candidates. It then asks the spine to reconstruct the emit / accept / reject events as of
+    each decision, and the spine returns the immutable accept-or-reject event together with the
+    suggestion-to-decision lag. The builder assigns the arm from that event — and computes payload equality
+    only as a flag. Then, and only then, it asks the spine for the pre-treatment covariates as of the same
+    instant, each returned with its own source event sequence. The 90-day labeller returns a status with a
+    rule version and a censoring reason. Finally the cohort row is written with arm, lag and as-of
+    features.</p>
+    <p><strong>The load-bearing detail is the ordering.</strong> Arm from the event first, covariates as of
+    the same instant second, outcome last. Reverse any two and the comparison is contaminated: covariates
+    read after the outcome is known would balance on the future, and an arm derived after the fact would be
+    an inference rather than a fact.</p>
+    <p><strong>Why the lag is carried.</strong> It is what powers the 72-hour long-lag exclusion. A decision
+    made three days after the suggestion is a different decision, and mixing it into the headline blurs the
+    exact contrast being measured.</p>
+    <p><strong>What breaks without it.</strong> If arm assignment trusted payload equality, this exchange
+    would collapse the five failure modes into a single silent mislabel — and no downstream gate could
+    recover the truth, because the cohort being balanced and tested would already be wrong.</p>
+    <p><strong>Whiteboard version.</strong> Four vertical lifelines left to right: builder, Parquet, spine,
+    labeller. Ten arrows down the page in order. Draw a small self-loop on the builder at step five — that
+    is where the arm is decided.</p>
+  </div>
+
+  <h3>Fig 8 · The statistical gate ladder</h3>
+  <figure class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    IN[[Entering from the query path · serve path, step 4]]
+    IN --> CALG{Calibration gate passing for high confidence}
+    CALG -- no --> CAL_DIAG[Suppress high-confidence delta<br/>emit calibration diagnostic]
+    CALG -- yes --> SMD{Balance within SMD gate per bucket}
+    SMD -- no --> SUPPRESS[Suppress causal-language delta<br/>diagnostics only · never a raw rate]
+    SMD -- yes --> SENS{Sensitivity battery passes}
+    SENS -- no --> SUPPRESS
+    SENS -- yes --> CONC{Single-clinician share lte 0.30}
+    CONC -- no --> LABEL[Tag concentrated cohort · exclude from generalized conclusions]
+    CONC -- yes --> N{Treated gte 30 AND control gte 30}
+    LABEL --> N
+    N -- no --> SUP[Emit insufficient data with full breakdown]
+    N -- yes --> EMIT[Emit per-bucket delta + CI<br/>mature missing censored denominators<br/>pseudonymous clinician id · observational tag]
+    CAL_DIAG --> OUT[[Tenant assertion · then return]]
+    SUPPRESS --> OUT
+    SUP --> OUT
+    EMIT --> OUT
+    </pre>
+    <figcaption>Fig 8 · Five gates in series — every exit is a stated reason, never a silent drop and never a raw rate</figcaption>
+  </figure>
+  <div class="walkthrough">
+    <h4>Walkthrough</h4>
+    <p><strong>What flows where.</strong> A candidate cell enters from the query path and walks down a spine
+    of five diamonds. Four of the five diamonds route their "no" branch to a single exit node where the tenant
+    assertion runs before anything returns; the concentration gate is the exception and rejoins the flow
+    at the power check. There is no
+    path off this diagram that produces a bare number.</p>
+    <p><strong>What each gate defends.</strong> <em>Calibration</em> is checked first because it is a
+    cross-query veto: if the sibling calibration query does not hold a passing artifact for this model
+    version and snapshot, "high confidence" is a label the model has not earned, and the cell fails toward
+    silence rather than toward a number. <em>Balance</em> (SMD ≤ 0.1) asks whether the matched arms are
+    close enough for the delta to mean anything causal-adjacent. <em>Sensitivity</em> is the five-test
+    battery — the endogenous-selection defence. <em>Concentration</em> asks whether one clinician is more
+    than 30% of the reject cohort. <em>Power</em> requires 30 matured cases in each arm.</p>
+    <p><strong>The one gate that behaves differently.</strong> Concentration <em>tags</em> and continues —
+    note the arrow from the tag node back into the power check rather than out to the exit. A concentrated
+    cohort is not a broken cell; it is a real observation about one clinician's practice pattern that must
+    not be generalised. Everything else suppresses.</p>
+    <p><strong>Why the exits point one way.</strong> Because a false emit costs far more here than a false
+    suppress. A suppressed cell returns the gate that failed and its supporting numbers, so the reader
+    learns something true about the cohort. An insufficient-data cell returns the full mature / missing /
+    censored denominator breakdown, which tells the reader <em>why</em> the cell is quiet — small cohort,
+    immature outcomes, or censoring.</p>
+    <p><strong>What breaks without each rung.</strong> Without Rosenbaum bounds inside the battery, an
+    unmeasured confounder passes unremarked. Without leave-one-clinician-out, one prolific clinician's case
+    mix becomes a population claim. Without the power floor, a handful of cases renders as a confident
+    number. Without the calibration veto, the most-quoted cell on the dashboard rests on a confidence label
+    nobody has checked. No single test covers them all — that is why it is a ladder.</p>
+    <p><strong>Whiteboard version.</strong> Five diamonds down the middle. Draw the "no" branches off to the
+    left, all landing on one suppression box. Draw one exit node at the bottom that everything, including
+    the emit box, funnels into.</p>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="stage"><b>05</b> Likely questions</div>
+  <h2>Headline first, detail only if they ask for it</h2>
+  <p class="muted">The first sentence has to survive being interrupted. Say it, stop, and let them pull the
+  rest out of you.</p>
+
+  <div class="q">
+    <span class="ask">How do you actually know a clinician rejected the AI, rather than just doing something different?</span>
+    <span class="headline">Because the arm comes from an immutable accept-or-reject audit event written at decision time — not from comparing what the AI suggested against what was chosen.</span>
+    <p>Inferring the arm from a payload diff misfires five ways: partial edits, schema drift, option
+    up-conversion across versions, multiple suggestions on one decision, and rejections that were never
+    logged. Each one turns an accept into a reject or the reverse, and a wrong arm label is unrecoverable —
+    every gate downstream would be balancing and testing a cohort whose membership is already wrong.</p>
+    <p>Payload equality is still computed, but only as a logged validation flag. When the flag and the event
+    disagree, that is an early-warning signal that an upstream schema has drifted — it surfaces as a rising
+    mismatch metric rather than as silently corrupted deltas.</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">You are comparing rejects against accepts. Isn't that hopelessly confounded?</span>
+    <span class="headline">It is confounded by design, which is exactly why the delta is matched, gated five ways, and labelled observational rather than causal.</span>
+    <p>Clinicians reject on their hardest cases, so the arms differ by case mix before anything is measured.
+    Each rejected-suggestion decision is matched to the most similar accepted-suggestion decision on
+    pre-treatment covariates plus the AI's own confidence — never on anything endogenous. Then the delta has
+    to survive a balance gate at a standardised mean difference of 0.1 and a five-test sensitivity battery
+    before it renders.</p>
+    <p>Matching only balances what was measured. The clinician's read of a case can encode signal no
+    recorded covariate captures, so unmeasured confounding is never ruled out — the sensitivity battery
+    bounds how strong such a factor would have to be to overturn the result, it does not prove one is
+    absent. Every emitted cell carries the label "matched-cohort observational; not causal; not a clinician
+    performance score."</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">Why didn't you ship a version 1 off inferred arms and improve it later?</span>
+    <span class="headline">Because a wrong arm label is not something a later version fixes — it produces confident deltas that measure a logging gap, and the design chose to stay dark and formalise the missing inputs instead.</span>
+    <p>The design review returned block-on-prereq: "you do not yet have the data to answer this honestly, so
+    do not build it." Rather than treat that as a complaint about a slow upstream team, the design produced
+    a concrete deliverable for them — three audit events, a schema-parity proof, and a correction/replay
+    contract — and held a prerequisite gate above the entire pipeline. Thirteen local review findings were
+    absorbed into a hardened v2 that was armed and waiting.</p>
+    <p>The contract shipped, the events were verified to attach at decision time, and the gate opened. That
+    verification step is not a formality: without it the comparison could have launched on a half-built feed
+    where unemitted rejections read as acceptances.</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">How do you stop this becoming a performance ranking of doctors?</span>
+    <span class="headline">You cannot make it impossible, so the controls make it hard, logged and against the grain — and I would not claim more than that.</span>
+    <p>Pseudonymous clinician ids by default, with re-identification only on an explicit leadership drill-in
+    that is separately audit-logged. RBAC gating on whether the by-clinician split is served at all —
+    leadership with a stated purpose, or a clinician viewing themselves. An audit entry written before the
+    response is served, with the access-log id returned in the body. Alphabetic, never-rankable ordering,
+    because a sortable column is a league table by construction. Per-bucket-only defaults. A mandatory
+    observational tag. No "who was right" label anywhere in the data layer.</p>
+    <p>A determined viewer with leadership access and intent could still try to read it as a ranking. What
+    the design guarantees is that doing so is constrained, logged, and against the grain.</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">Why is there no language model anywhere in this? You built the rest of the platform with them.</span>
+    <span class="headline">This is a deliberate case of knowing when not to use one — the comparison makes zero model calls, and the seam that a sibling query uses is one import away and stays shut.</span>
+    <p>Arm assignment, matching, the gates, suppression, ordering and access control are all deterministic,
+    seeded, replayable code. That buys two properties: there is no prompt to jailbreak, because the
+    neutrality rules and suppression logic are code and configuration that cannot drift with a model update;
+    and there is nothing to hallucinate, because every delta is computed and version-pinned and no generated
+    sentence carries a claim.</p>
+    <p>There is no retrieval-augmented-generation surface either, and that absence is a judgment rather than
+    a gap. The deliverable is a matched, per-bucket delta the code has already computed and gated — nothing
+    further to retrieve would make it more true, and a document-fetching narrator could only tempt the
+    reader back toward the who-was-right verdict the design exists to refuse.</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">Two rebuilds at the same as-of — could they ever produce different numbers?</span>
+    <span class="headline">They must not, and a golden replay test forbids it: the same spine replayed in shuffled order, with corrections and supersede chains injected, has to export a byte-identical hash.</span>
+    <p>The classic source of disagreement is nondeterministic scan order feeding into arm pairing or
+    matching. That is closed by ordering suggestions on their event sequence and tie-breaking on canonical
+    ids, with the chosen sequence persisted on the row. Downstream, the matcher seed, the bootstrap seed
+    (derived from the snapshot manifest hash, 2000 resamples) and deterministic tie handling make every
+    derived cell reproducible.</p>
+    <p>If two rebuilds disagreed, that is a determinism defect the test is designed to fail on — not an
+    accepted tolerance.</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">You hydrated nine years of history. Does that mean nine years of comparisons?</span>
+    <span class="headline">No — and that is the honest limit. The usable cohort starts at contract activation, because the audit events only began flowing then.</span>
+    <p>What the deep history genuinely buys is two things. Mature outcomes: the outcome is measured at 90
+    days, so a decision only contributes once it is at least 90 days old relative to the snapshot, and a
+    long history means most decisions have had time to mature and the cells can clear their power floor
+    rather than suppressing. And faithful as-of reconstruction: every covariate, edge and fact is
+    recoverable from immutable events at the decision's own sequence, so the matcher balances on what was
+    truly known at decision time.</p>
+    <p>That reconstruction rests on the four-field event-time model. Two stamps are real-world truth from the
+    source record and two are pinned to the load fence, and only the real-world pair ever orders the
+    timeline. Collapse them into one — the mistake a throwaway backfill makes — and nine years of decisions
+    all inherit the load date.</p>
+  </div>
+
+  <div class="q">
+    <span class="ask">What is the biggest risk you could not engineer away?</span>
+    <span class="headline">Unmeasured confounding — matching cannot balance what was never measured, and no test proves a hidden factor is absent.</span>
+    <p>The clinician's decision to reject encodes a read of the case that no recorded covariate captures.
+    The sensitivity battery bounds how strong such a factor would have to be to overturn a delta — Rosenbaum
+    bounds robust to a hidden-bias factor of at least 1.5, plus an E-value on the risk-ratio scale — but
+    bounding is not eliminating. So every emitted cell stays observational and says so on the artefact
+    itself.</p>
+    <p>There is a second one worth volunteering: the human arm is not what the word "human" suggests. The
+    clinician decides with the AI's suggestion and a panel of ranked comparable past cases side by side, so
+    this weighs a machine against a human reading evidence, not against unaided judgment. And that panel is
+    itself gated — where a case has no comparable history the panel declares insufficient precedent and the
+    clinician decides on the suggestion alone. The audit events carry no field recording which condition
+    applied, so the cohort cannot split on it. That caveat belongs beside endogenous selection, not behind
+    it.</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Sources:</strong> the full case study and its question-and-answer companion. Diagrams are the
+  originals, copied verbatim. Client and product identifiers are anonymised throughout.</p>
+  <p><strong>Scale and ownership:</strong> a chronic-care platform covering 80+ chronic conditions, roughly
+  10,000 patients, about nine years of history hydrated into the event spine. Role: sole owner — design
+  through production.</p>
+  <p><strong>On numbers:</strong> every threshold, floor and service-level target here is a pre-registered
+  acceptance bar the system was designed and reviewed against. No measured production results appear on this
+  page, and none should be quoted in a room.</p>
+  <p class="backlinks">
+    <a href="../kq6-ai-vs-human.html">full case study</a><span>·</span><a href="../summary.html">summary</a><span>·</span><a href="../index.html">all case studies</a>
+  </p>
+</footer>
+
+</main>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'neutral'});</script>
+</body>
+</html>
