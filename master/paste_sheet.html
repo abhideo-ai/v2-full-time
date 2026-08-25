@@ -18,7 +18,12 @@
 </header>
 
 <div class="tldr">
-  <strong>You should not need to paste any of this</strong>
+  <strong>One button per line — and that is not clutter, it is the only thing that works</strong>
+  upGrad <strong>strips bold from a <code>&lt;ul&gt;/&lt;li&gt;</code> paste</strong>, and pasting
+  several <code>&lt;p&gt;</code> at once collapses them into a single line. A standalone
+  <code>&lt;p&gt;</code> pasted <em>on its own</em> is the one shape that keeps the bold and stays
+  a separate bullet. Click <code>copy</code>, paste, next line.
+  <strong>Better still, do not paste at all —</strong>
   The exporter writes all ten sections itself — <code>_paste_html</code> hands Hiration's Draft.js
   editor real <code>&lt;ul&gt;&lt;li&gt;</code> with <code>&lt;strong&gt;</code> intact, which is
   how v1 carried formatting across at 100%. Build the card skeleton by hand (dates, El Paso,
@@ -57,11 +62,8 @@
     <p class="paste-block-why"><strong>Why:</strong> <strong>His wording, kept.</strong> “Hands-on” in word one pre-empts the single doubt every Staff and Principal job description raised — his most recent role reads as org leadership, so <em>is he still hands-on?</em> The pipe-delimited format also scans better than prose; recruiters scan, they do not read. One addition: <strong>Java + Spring Boot</strong>. ServiceNow's requirement is “deep proficiency in Java”, Okta's seat is literally “Software Architect, Java Backend” — a headline without Java is filtered before a human sees it.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Goes in Hiration's <strong>headline</strong> field — the only field the bot ever writes. Replace the whole line.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> ~194 characters · tagline exception applies, so SaaS, AI, GNN, LLM, HIPAA and ISO 27001 may stay unexpanded <em>here</em> · <strong>GNN confirmed by him 2026-08-25</strong> · ISO 27001 is Deque's certified environment, framed as such in Business &amp; Delivery</p>
-    <div class="paste-area copy-target" id="sec-quick-headline">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-headline" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Hands-on Principal Architect · 19+ yrs · Java + Spring Boot · Multi-tenant SaaS + AI-powered systems · Neptune + GNN · LLM · HIPAA, ISO 27001 · AI-Leveraged Delivery (Claude Code + OpenAI Codex)</li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-headline-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-headline-1" data-copy-html="1">copy</button><p>Hands-on Principal Architect · 19+ yrs · Java + Spring Boot · Multi-tenant SaaS + AI-powered systems · Neptune + GNN · LLM · HIPAA, ISO 27001 · AI-Leveraged Delivery (Claude Code + OpenAI Codex)</p></div></div>
     </div>
   </section>
 
@@ -76,11 +78,8 @@
     <p class="paste-block-why"><strong>Why:</strong> The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of patient history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>. Opener now reads <strong>“Hands-on principal architect”</strong> so the summary matches the headline's framing.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the whole summary. <strong>Bold must survive</strong> — use the Copy button, never a manual selection.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> ~115 words · every acronym expanded on first use in reading order · no "currently" attached to VoltusWave, which ended Apr 2026</p>
-    <div class="paste-area copy-target" id="sec-quick-summary">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-summary" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Hands-on principal architect, <strong>19+ years</strong>, strongest in <strong>Java and Spring Boot</strong> — about <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025. Consolidated per-customer deployments onto shared <strong>multi-tenant</strong> software as a service (SaaS) infrastructure with dedicated isolation for regulated banking customers, and moved every instance onto central single sign-on (SSO) with <strong>zero user disruption</strong>. Then shipped <strong>ten analytics and artificial intelligence (AI) services</strong> for a chronic-care platform on Amazon Web Services (AWS): causal inference and leakage-safe machine learning over <strong>9–10 years of patient history</strong>, deterministic code owning every number, and self-hosted models keeping patient data inside the client boundary. Cut infrastructure cost <strong>25–30%</strong> and deploy time from hours to <strong>under 10 minutes</strong>.</li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-summary-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-summary-1" data-copy-html="1">copy</button><p>Hands-on principal architect, <strong>19+ years</strong>, strongest in <strong>Java and Spring Boot</strong> — about <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025. Consolidated per-customer deployments onto shared <strong>multi-tenant</strong> software as a service (SaaS) infrastructure with dedicated isolation for regulated banking customers, and moved every instance onto central single sign-on (SSO) with <strong>zero user disruption</strong>. Then shipped <strong>ten analytics and artificial intelligence (AI) services</strong> for a chronic-care platform on Amazon Web Services (AWS): causal inference and leakage-safe machine learning over <strong>9–10 years of patient history</strong>, deterministic code owning every number, and self-hosted models keeping patient data inside the client boundary. Cut infrastructure cost <strong>25–30%</strong> and deploy time from hours to <strong>under 10 minutes</strong>.</p></div></div>
     </div>
   </section>
 
@@ -97,46 +96,39 @@
     separate blocks below, never both. The sub-group headings are included; delete them if Hiration
     renders its own.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> 29 lines across 3 groups · short capability labels, not sentences · no number requirement</p>
-    <div class="paste-area copy-target" id="sec-key-skills-all">
-      <button type="button" class="copy-btn" data-copy-target="#sec-key-skills-all" data-copy-html="1">Copy all of Key Skills →</button>
+    <div class="bullet-stack">
         <p class="ks-group"><strong>Technology Leadership &amp; Strategy</strong></p>
-        <ul>
-          <li><strong>Technology Strategy &amp; Architecture</strong></li>
-          <li><strong>Engineering Team Building &amp; Organisational Scaling</strong></li>
-          <li><strong>Product &amp; Platform Strategy</strong></li>
-          <li><strong>Decision-Intelligence Platforms</strong> (Event-Sourced + Graph + AI)</li>
-          <li><strong>Data Platform &amp; Analytics Leadership</strong></li>
-          <li><strong>Cross-Functional Leadership &amp; Stakeholder Alignment</strong></li>
-        </ul>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-tls-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-tls-1" data-copy-html="1">copy</button><p><strong>Technology Strategy &amp; Architecture</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-tls-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-tls-2" data-copy-html="1">copy</button><p><strong>Engineering Team Building &amp; Organisational Scaling</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-tls-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-tls-3" data-copy-html="1">copy</button><p><strong>Product &amp; Platform Strategy</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-tls-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-tls-4" data-copy-html="1">copy</button><p><strong>Decision-Intelligence Platforms</strong> (Event-Sourced + Graph + AI)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-tls-5"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-tls-5" data-copy-html="1">copy</button><p><strong>Data Platform &amp; Analytics Leadership</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-tls-6"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-tls-6" data-copy-html="1">copy</button><p><strong>Cross-Functional Leadership &amp; Stakeholder Alignment</strong></p></div></div>
         <p class="ks-group"><strong>Engineering Excellence</strong></p>
-        <ul>
-          <li><strong>Multi-Tenant SaaS Architecture</strong> (Shared-Schema, Per-Tenant Isolation, Regulated Carve-Outs)</li>
-          <li><strong>Java + Spring Boot Microservices</strong> (Java 8/17, Spring Boot 2.x, JSP &mdash; 11 years across three eras)</li>
-          <li><strong>System Design at Scale</strong> (Distributed Systems + RDBMS + APIs)</li>
-          <li>Cross-Team Technical Leadership (<strong>6 sub-teams</strong>, company-wide standards)</li>
-          <li><strong>Hands-on Player-Coach Delivery</strong> (AI-Leveraged via Claude Code + OpenAI Codex)</li>
-          <li><strong>AI/ML in Product</strong> (GNN on Amazon Neptune, LLM clinical workflows, vector retrieval)</li>
-          <li><strong>Event Sourcing + Command Query Responsibility Segregation</strong> (CQRS) + Snapshot Exporters</li>
-          <li><strong>Statistical Rigor in Production AI</strong> (Propensity Matching, Inverse Probability Weighting, Standardised Mean Difference Balance Gates, Bootstrap CI, Sensitivity Analysis)</li>
-          <li><strong>Leakage-Safe Machine Learning</strong> (As-Of Featurisation, Point-in-Time Correctness, Outcome-Maturity Windows)</li>
-          <li><strong>LLM Productionisation</strong> (Guardrails, Field-Level Claim Grammar, Replay Determinism)</li>
-          <li><strong>Self-Hosted Models In-VPC</strong> (Ollama, Llama 3.1, SageMaker Embeddings, Self-Hosted LangSmith)</li>
-          <li><strong>Vector &amp; Columnar Data Stores</strong> (Elasticsearch dense_vector, DuckDB + Parquet, Redis, Amazon Neptune + Gremlin)</li>
-          <li><strong>Shared Platform APIs</strong> (Contracts, Backward Compatibility)</li>
-          <li><strong>Cloud Infrastructure &amp; Platform Engineering</strong> (AWS &mdash; Kinesis, Lambda, ECS, SageMaker, Aurora, DynamoDB)</li>
-          <li><strong>Identity &amp; Access</strong> (Keycloak to Red Hat SSO, OpenID Connect, OAuth 2.0, RBAC)</li>
-          <li><strong>DevOps &amp; CI/CD Transformation</strong></li>
-          <li><strong>Observability &amp; Reliability Engineering</strong> (Datadog, Amplitude, ELK)</li>
-        </ul>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-1" data-copy-html="1">copy</button><p><strong>Multi-Tenant SaaS Architecture</strong> (Shared-Schema, Per-Tenant Isolation, Regulated Carve-Outs)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-2" data-copy-html="1">copy</button><p><strong>Java + Spring Boot Microservices</strong> (Java 8/17, Spring Boot 2.x, JSP &mdash; 11 years across three eras)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-3" data-copy-html="1">copy</button><p><strong>System Design at Scale</strong> (Distributed Systems + RDBMS + APIs)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-4" data-copy-html="1">copy</button><p>Cross-Team Technical Leadership (<strong>6 sub-teams</strong>, company-wide standards)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-5"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-5" data-copy-html="1">copy</button><p><strong>Hands-on Player-Coach Delivery</strong> (AI-Leveraged via Claude Code + OpenAI Codex)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-6"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-6" data-copy-html="1">copy</button><p><strong>AI/ML in Product</strong> (GNN on Amazon Neptune, LLM clinical workflows, vector retrieval)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-7"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-7" data-copy-html="1">copy</button><p><strong>Event Sourcing + Command Query Responsibility Segregation</strong> (CQRS) + Snapshot Exporters</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-8"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-8" data-copy-html="1">copy</button><p><strong>Statistical Rigor in Production AI</strong> (Propensity Matching, Inverse Probability Weighting, Standardised Mean Difference Balance Gates, Bootstrap CI, Sensitivity Analysis)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-9"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-9" data-copy-html="1">copy</button><p><strong>Leakage-Safe Machine Learning</strong> (As-Of Featurisation, Point-in-Time Correctness, Outcome-Maturity Windows)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-10"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-10" data-copy-html="1">copy</button><p><strong>LLM Productionisation</strong> (Guardrails, Field-Level Claim Grammar, Replay Determinism)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-11"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-11" data-copy-html="1">copy</button><p><strong>Self-Hosted Models In-VPC</strong> (Ollama, Llama 3.1, SageMaker Embeddings, Self-Hosted LangSmith)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-12"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-12" data-copy-html="1">copy</button><p><strong>Vector &amp; Columnar Data Stores</strong> (Elasticsearch dense_vector, DuckDB + Parquet, Redis, Amazon Neptune + Gremlin)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-13"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-13" data-copy-html="1">copy</button><p><strong>Shared Platform APIs</strong> (Contracts, Backward Compatibility)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-14"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-14" data-copy-html="1">copy</button><p><strong>Cloud Infrastructure &amp; Platform Engineering</strong> (AWS &mdash; Kinesis, Lambda, ECS, SageMaker, Aurora, DynamoDB)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-15"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-15" data-copy-html="1">copy</button><p><strong>Identity &amp; Access</strong> (Keycloak to Red Hat SSO, OpenID Connect, OAuth 2.0, RBAC)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-16"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-16" data-copy-html="1">copy</button><p><strong>DevOps &amp; CI/CD Transformation</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-ee-17"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-ee-17" data-copy-html="1">copy</button><p><strong>Observability &amp; Reliability Engineering</strong> (Datadog, Amplitude, ELK)</p></div></div>
         <p class="ks-group"><strong>Business &amp; Delivery</strong></p>
-        <ul>
-          <li><strong>Agile / Scrum Delivery Management</strong></li>
-          <li><strong>Security, Compliance &amp; Data Privacy</strong> (HIPAA Pipelines in an ISO 27001-Certified Environment, Least-Privilege)</li>
-          <li><strong>Performance Optimization &amp; Cost Management</strong></li>
-          <li><strong>Accessibility Compliance</strong> (WCAG 2.2 Level AA)</li>
-          <li><strong>Enterprise Onboarding &amp; Consolidation at Multi-Hundred-Instance Scale</strong></li>
-          <li><strong>Distributed United States&ndash;India Delivery Teams</strong></li>
-        </ul>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-bd-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-bd-1" data-copy-html="1">copy</button><p><strong>Agile / Scrum Delivery Management</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-bd-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-bd-2" data-copy-html="1">copy</button><p><strong>Security, Compliance &amp; Data Privacy</strong> (HIPAA Pipelines in an ISO 27001-Certified Environment, Least-Privilege)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-bd-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-bd-3" data-copy-html="1">copy</button><p><strong>Performance Optimization &amp; Cost Management</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-bd-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-bd-4" data-copy-html="1">copy</button><p><strong>Accessibility Compliance</strong> (WCAG 2.2 Level AA)</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-bd-5"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-bd-5" data-copy-html="1">copy</button><p><strong>Enterprise Onboarding &amp; Consolidation at Multi-Hundred-Instance Scale</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-skills-bd-6"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-skills-bd-6" data-copy-html="1">copy</button><p><strong>Distributed United States&ndash;India Delivery Teams</strong></p></div></div>
     </div>
   </section>
 
@@ -151,20 +143,17 @@
     <p class="paste-block-why"><strong>Why:</strong> One <strong>factual correction</strong> and four new bullets. The RAG bullet claimed the pipeline ran over an Amazon Neptune context graph; KQ1's own stack table names <strong>Elasticsearch</strong> the "Authoritative serving index — dense_vector filtered kNN" and says the graph "serves audit and drill-down only, so serving latency never depends on its tail". KQ9 is the Neptune query — the old bullet collapsed two systems into one. The four new bullets carry the Amura work: adversarial self-review, confounder gates, the relapse model, in-VPC self-hosting.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replaces the whole role. <strong>This is ten bullets and needs trimming to six or seven</strong> for the three-page limit — six are chat-platform work, four are Amura. Which to cut is a per-job call.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> All bullets ≤25 words · <code>Hardened</code>, <code>Extracted</code>, <code>Sequenced</code>, <code>Secured</code> verified free across the whole résumé · <code>Engineered</code> kept on the corrected bullet per Rule 7 · no achieved Amura metric, because none exists</p>
-    <div class="paste-area copy-target" id="sec-quick-vp">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-vp" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</li>
-          <li>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> in burst testing at <strong>P95 under 16 ms</strong>, on a flow firing ~50 calls per message</li>
-          <li>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</li>
-          <li>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</li>
-          <li>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</li>
-          <li>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering first-cut implementation and test scaffolding under review</li>
-          <li>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</li>
-          <li>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</li>
-          <li>Sequenced patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</li>
-          <li>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-1" data-copy-html="1">copy</button><p>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-2" data-copy-html="1">copy</button><p>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> in burst testing at <strong>P95 under 16 ms</strong>, on a flow firing ~50 calls per message</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-3" data-copy-html="1">copy</button><p>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-4" data-copy-html="1">copy</button><p>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-5"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-5" data-copy-html="1">copy</button><p>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-6"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-6" data-copy-html="1">copy</button><p>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering first-cut implementation and test scaffolding under review</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-7"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-7" data-copy-html="1">copy</button><p>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-8"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-8" data-copy-html="1">copy</button><p>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-9"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-9" data-copy-html="1">copy</button><p>Sequenced patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-vp-10"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-vp-10" data-copy-html="1">copy</button><p>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</p></div></div>
     </div>
   </section>
 
@@ -179,16 +168,13 @@
     <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 bullets · unchanged · ~300 instances and 70–80% consolidation are still unconfirmed</p>
-    <div class="paste-area copy-target" id="sec-quick-deque">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-deque" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Implemented multi-tenant isolation across <strong>approximately 300 enterprise instances</strong>, adding an organisation ID to every table and resolving tenant from the <strong>JSON Web Token (JWT)</strong></li>
-          <li>Steered <strong>70–80%</strong> of customers onto shared instances while regulated banks kept dedicated databases, with one codebase serving both deployment models</li>
-          <li>Forged a central authentication service in <strong>Java and Spring Boot</strong>, migrating every instance from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong> with zero user disruption</li>
-          <li>Productized a billing and subscription service consumed by <strong>every product</strong> in the portfolio, porting it from <strong>Node.js/TypeScript</strong> to <strong>Java and Spring Boot</strong></li>
-          <li>Stewarded a <strong>zero-downtime</strong> upgrade from <strong>PostgreSQL 9.6</strong> to <strong>Amazon Aurora PostgreSQL 13.x</strong> across every axe Auditor instance</li>
-          <li>Championed decomposition of a monolith into <strong>10–15 services</strong>, splitting on independent scaling and database ownership rather than on team boundaries</li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-deque-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-deque-1" data-copy-html="1">copy</button><p>Implemented multi-tenant isolation across <strong>approximately 300 enterprise instances</strong>, adding an organisation ID to every table and resolving tenant from the <strong>JSON Web Token (JWT)</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-deque-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-deque-2" data-copy-html="1">copy</button><p>Steered <strong>70–80%</strong> of customers onto shared instances while regulated banks kept dedicated databases, with one codebase serving both deployment models</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-deque-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-deque-3" data-copy-html="1">copy</button><p>Forged a central authentication service in <strong>Java and Spring Boot</strong>, migrating every instance from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong> with zero user disruption</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-deque-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-deque-4" data-copy-html="1">copy</button><p>Productized a billing and subscription service consumed by <strong>every product</strong> in the portfolio, porting it from <strong>Node.js/TypeScript</strong> to <strong>Java and Spring Boot</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-deque-5"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-deque-5" data-copy-html="1">copy</button><p>Stewarded a <strong>zero-downtime</strong> upgrade from <strong>PostgreSQL 9.6</strong> to <strong>Amazon Aurora PostgreSQL 13.x</strong> across every axe Auditor instance</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-deque-6"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-deque-6" data-copy-html="1">copy</button><p>Championed decomposition of a monolith into <strong>10–15 services</strong>, splitting on independent scaling and database ownership rather than on team boundaries</p></div></div>
     </div>
   </section>
 
@@ -203,14 +189,11 @@
     <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged · bugs −50% and sales +20% still unconfirmed · title is Software Engineer III, never "Director"</p>
-    <div class="paste-area copy-target" id="sec-quick-rocket">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-rocket" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Anchored decomposition of <strong>IBM Db2 Configuration Manager</strong> into <strong>Java and Spring Boot</strong> microservices, defining boundaries across <strong>z/OS and Linux, UNIX and Windows</strong> platforms</li>
-          <li>Coached a <strong>5-engineer</strong> team through delivery planning, code review and performance appraisals while remaining hands-on as an individual contributor</li>
-          <li>Surfaced defect hot-spots through <strong>REST</strong> interfaces and service isolation, reducing reported bugs <strong>over 50%</strong></li>
-          <li>Partnered with product to extend platform support to <strong>Windows</strong> and Linux — Ubuntu, CentOS and <strong>Red Hat Enterprise Linux (RHEL)</strong> — raising sales <strong>over 20%</strong></li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-rocket-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-rocket-1" data-copy-html="1">copy</button><p>Anchored decomposition of <strong>IBM Db2 Configuration Manager</strong> into <strong>Java and Spring Boot</strong> microservices, defining boundaries across <strong>z/OS and Linux, UNIX and Windows</strong> platforms</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-rocket-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-rocket-2" data-copy-html="1">copy</button><p>Coached a <strong>5-engineer</strong> team through delivery planning, code review and performance appraisals while remaining hands-on as an individual contributor</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-rocket-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-rocket-3" data-copy-html="1">copy</button><p>Surfaced defect hot-spots through <strong>REST</strong> interfaces and service isolation, reducing reported bugs <strong>over 50%</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-rocket-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-rocket-4" data-copy-html="1">copy</button><p>Partnered with product to extend platform support to <strong>Windows</strong> and Linux — Ubuntu, CentOS and <strong>Red Hat Enterprise Linux (RHEL)</strong> — raising sales <strong>over 20%</strong></p></div></div>
     </div>
   </section>
 
@@ -225,13 +208,10 @@
     <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> 3 line(s)</p>
-    <div class="paste-area copy-target" id="sec-quick-voltuswave-cofounder">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-voltuswave-cofounder" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Co-founded VoltusWave and launched its first <strong>application Platform-as-a-Service (aPaaS)</strong> product for web and Android, winning <strong>8 early enterprise clients</strong></li>
-          <li>Mobilized an engineering organisation from <strong>0 to 35</strong> in 13 months, mentoring freshers and senior engineers while establishing delivery process</li>
-          <li>Helmed development, deployment and operations on <strong>Amazon Elastic Container Service</strong>, setting the architecture roadmap every subsequent product inherited</li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-voltuswave-cofounder-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-voltuswave-cofounder-1" data-copy-html="1">copy</button><p>Co-founded VoltusWave and launched its first <strong>application Platform-as-a-Service (aPaaS)</strong> product for web and Android, winning <strong>8 early enterprise clients</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-voltuswave-cofounder-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-voltuswave-cofounder-2" data-copy-html="1">copy</button><p>Mobilized an engineering organisation from <strong>0 to 35</strong> in 13 months, mentoring freshers and senior engineers while establishing delivery process</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-voltuswave-cofounder-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-voltuswave-cofounder-3" data-copy-html="1">copy</button><p>Helmed development, deployment and operations on <strong>Amazon Elastic Container Service</strong>, setting the architecture roadmap every subsequent product inherited</p></div></div>
     </div>
   </section>
 
@@ -246,14 +226,11 @@
     <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged · <strong>the +65% hotel conversions is the one unresolved claim on this résumé</strong> — your journey document flags it twice and your original contains no 65% conversion claim at all</p>
-    <div class="paste-area copy-target" id="sec-quick-teletext">
-      <button type="button" class="copy-btn" data-copy-target="#sec-quick-teletext" data-copy-html="1">Copy whole section →</button>
-        <ul>
-          <li>Codified a scatter-gather integration across <strong>25 hotel suppliers</strong> on a <strong>MuleSoft enterprise service bus</strong>, succeeding where a prior <strong>.NET 2.0</strong> upgrade had failed</li>
-          <li>Cut operational cost <strong>46%</strong> by retiring a third-party pricing product for an in-house <strong>ELK</strong> cache with a 20-minute time-to-live</li>
-          <li>Reconciled supplier hotel identifiers onto <strong>GIATA MultiCodes</strong>, automating the pipeline on <strong>AWS Lambda</strong> with human approval retained, growing revenue <strong>8% month over month</strong></li>
-          <li>Lifted hotel booking conversions <strong>65%</strong> by widening matched inventory and ranking contracted properties first across <strong>2–3 million daily requests</strong></li>
-        </ul>
+    <div class="bullet-stack">
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-teletext-1"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-teletext-1" data-copy-html="1">copy</button><p>Codified a scatter-gather integration across <strong>25 hotel suppliers</strong> on a <strong>MuleSoft enterprise service bus</strong>, succeeding where a prior <strong>.NET 2.0</strong> upgrade had failed</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-teletext-2"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-teletext-2" data-copy-html="1">copy</button><p>Cut operational cost <strong>46%</strong> by retiring a third-party pricing product for an in-house <strong>ELK</strong> cache with a 20-minute time-to-live</p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-teletext-3"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-teletext-3" data-copy-html="1">copy</button><p>Reconciled supplier hotel identifiers onto <strong>GIATA MultiCodes</strong>, automating the pipeline on <strong>AWS Lambda</strong> with human approval retained, growing revenue <strong>8% month over month</strong></p></div></div>
+        <div class="bullet-row"><div class="paste-area copy-target" id="b-quick-teletext-4"><button type="button" class="copy-btn mini" data-copy-target="#b-quick-teletext-4" data-copy-html="1">copy</button><p>Lifted hotel booking conversions <strong>65%</strong> by widening matched inventory and ranking contracted properties first across <strong>2–3 million daily requests</strong></p></div></div>
     </div>
   </section>
 

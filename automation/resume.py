@@ -176,13 +176,22 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
         hyg = n.get("hygiene") or f"{len(now)} line(s)"
         tag = "Replace:" if diff else "No change:"
         cls = "paste-block" if diff else "paste-block nochange"
-        # ONE button per section. The bot writes all ten sections itself via
-        # _paste_html, which hands Draft.js real <ul><li> with <strong> intact,
-        # so hand-pasting bullet-by-bullet is not the normal path. A button per
-        # bullet was 58 buttons solving a problem the exporter already solves.
-        body = ("<ul>\n          "
-                + "\n          ".join(f"<li>{x}</li>" for x in now)
-                + "\n        </ul>")
+        # ONE <p> PER COPY BLOCK. Both halves of this are load-bearing and
+        # v1 learned them the hard way (v1 CLAUDE.md, bullets_for_upgrad):
+        #
+        #   <ul><li> together  -> upGrad STRIPS THE BOLD
+        #   <p> together       -> collapses into a single line
+        #   <p> one at a time  -> works
+        #
+        # So a bullet section cannot have a whole-section button at all; the
+        # many small buttons ARE the mechanism, not clutter.
+        rows = "\n        ".join(
+            f'<div class="bullet-row">'
+            f'<div class="paste-area copy-target" id="b-{sec_id}-{j}">'
+            f'<button type="button" class="copy-btn mini" data-copy-target="#b-{sec_id}-{j}" '
+            f'data-copy-html="1">copy</button><p>{x}</p></div></div>'
+            for j, x in enumerate(now, 1))
+        body = rows
         blocks.append(f'''<div class="ps-head">
     <h3 class="section-head">{i + 1}. {title}</h3>
     <label><input type="checkbox" class="ps-done" data-sec="{sec_id}" /> pasted</label>
@@ -193,8 +202,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     <p class="paste-block-why"><strong>Why:</strong> {why}</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> {heads}</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> {hyg}</p>
-    <div class="paste-area copy-target" id="sec-{sec_id}">
-      <button type="button" class="copy-btn" data-copy-target="#sec-{sec_id}" data-copy-html="1">Copy whole section →</button>
+    <div class="bullet-stack">
         {body}
     </div>
   </section>''')
@@ -204,9 +212,13 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     ks = [(sid, t.split("— ", 1)[-1]) for sid, t in SECTIONS if sid.startswith("quick-skills-")]
     ks_body = ""
     for sid, sub in ks:
-        ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>\n        <ul>"
-        ks_body += "".join(f"\n          <li>{x}</li>" for x in paragraphs(html, sid))
-        ks_body += "\n        </ul>"
+        ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>"
+        ks_body += "".join(
+            f'\n        <div class="bullet-row">'
+            f'<div class="paste-area copy-target" id="b-{sid}-{j}">'
+            f'<button type="button" class="copy-btn mini" data-copy-target="#b-{sid}-{j}" '
+            f'data-copy-html="1">copy</button><p>{x}</p></div></div>'
+            for j, x in enumerate(paragraphs(html, sid), 1))
     combined = f'''<h3 class="section-head">Key Skills — all three groups, one paste</h3>
 
   <section class="paste-block">
@@ -219,8 +231,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     separate blocks below, never both. The sub-group headings are included; delete them if Hiration
     renders its own.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> {sum(len(paragraphs(html, sid)) for sid, _ in ks)} lines across 3 groups · short capability labels, not sentences · no number requirement</p>
-    <div class="paste-area copy-target" id="sec-key-skills-all">
-      <button type="button" class="copy-btn" data-copy-target="#sec-key-skills-all" data-copy-html="1">Copy all of Key Skills →</button>{ks_body}
+    <div class="bullet-stack">{ks_body}
     </div>
   </section>'''
     blocks.insert(2, combined)
@@ -247,7 +258,12 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
 </header>
 
 <div class="tldr">
-  <strong>You should not need to paste any of this</strong>
+  <strong>One button per line — and that is not clutter, it is the only thing that works</strong>
+  upGrad <strong>strips bold from a <code>&lt;ul&gt;/&lt;li&gt;</code> paste</strong>, and pasting
+  several <code>&lt;p&gt;</code> at once collapses them into a single line. A standalone
+  <code>&lt;p&gt;</code> pasted <em>on its own</em> is the one shape that keeps the bold and stays
+  a separate bullet. Click <code>copy</code>, paste, next line.
+  <strong>Better still, do not paste at all —</strong>
   The exporter writes all ten sections itself — <code>_paste_html</code> hands Hiration's Draft.js
   editor real <code>&lt;ul&gt;&lt;li&gt;</code> with <code>&lt;strong&gt;</code> intact, which is
   how v1 carried formatting across at 100%. Build the card skeleton by hand (dates, El Paso,

@@ -3270,3 +3270,29 @@ section.pasted .paste-area { border-color: var(--good); }
 .paste-area li:last-child { margin-bottom: 0; }
 
 /* (per-bullet copy removed — the exporter writes every section itself) */
+
+/* One copy block per bullet. upGrad strips bold from <ul>/<li> pastes and
+   collapses multiple <p>s into one line, so a standalone <p> pasted alone is
+   the only shape that keeps bold AND stays a separate bullet. v1 learned this;
+   the many small buttons are the mechanism, not clutter. */
+.bullet-stack { margin: 0; }
+.bullet-row { margin: 0 0 6px; }
+.bullet-row:last-child { margin-bottom: 0; }
+.bullet-row .paste-area {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 11px; margin: 0; position: static;
+  background: var(--paper-2); border-radius: 6px; line-height: 1.55;
+}
+.bullet-row .paste-area:hover { background: #fff; box-shadow: var(--shadow); }
+.bullet-row .paste-area > p { margin: 0; flex: 1 1 auto; }
+/* .copy-btn.mini — position:static so it cannot inherit the shared
+   .copy-btn absolute positioning, which would stretch it across the text. */
+.copy-btn.mini {
+  position: static; flex: 0 0 auto; margin-top: 1px;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em;
+  text-transform: uppercase; font-weight: 600;
+  padding: 3px 9px; border-radius: 4px;
+  border: 1px solid var(--rule); background: #fff; color: var(--muted); cursor: pointer;
+}
+.copy-btn.mini:hover { border-color: var(--accent); color: var(--accent); background: #fff; }
+.copy-btn.mini.copied { border-color: var(--good); color: var(--good); background: var(--good-soft); }
