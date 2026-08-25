@@ -331,7 +331,13 @@ a first extraction pass misread the governance state as delivery state and under
 So Amura bullets carry **design and scale markers**, never impact metrics: 80+ conditions,
 a 6-hour cache TTL, a 90-day outcome-maturity window, twenty adversarial-review findings
 absorbed into a hardened v2, 13 of 13 local findings closed. Those are facts from his own
-documents. **Latency achieved, adoption, error reduction, cost saved — he cannot supply these,
+documents. **Add one more, user-supplied and safe to claim: the platform held 9–10 years of
+patient history**, which is why any killer query needing historical data could actually be
+answered. That figure is load-bearing rather than decorative — as-of featurisation,
+leakage-safe labelling, 90-day outcome maturity and sequence mining are only meaningful with
+years of longitudinal data behind them, so it is the number that makes the rest credible.
+
+**Latency achieved, adoption, error reduction, cost saved — he cannot supply these,
 so they are `[fill in metric]` or absent. Never invent one, and never ask him again for a
 number he has already said he does not have.**
 
