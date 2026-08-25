@@ -191,7 +191,12 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
             f'<button type="button" class="copy-btn mini" data-copy-target="#b-{sec_id}-{j}" '
             f'data-copy-html="1">copy</button><p>{x}</p></div></div>'
             for j, x in enumerate(now, 1))
-        body = rows
+        # Section-level copy needs a source with NO wrapper markup, so it gets
+        # its own hidden div holding only the <p>s. copy.js builds the clipboard
+        # from innerHTML, so `hidden` costs nothing and keeps the page clean.
+        hidden_src = ("".join(f"<p>{x}</p>" for x in now))
+        body = (f'<div class="paste-area copy-target sr-src" id="sec-{sec_id}" hidden>'
+                f'{hidden_src}</div>\n        ' + rows)
         blocks.append(f'''<div class="ps-head">
     <h3 class="section-head">{i + 1}. {title}</h3>
     <label><input type="checkbox" class="ps-done" data-sec="{sec_id}" /> pasted</label>
@@ -203,6 +208,10 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> {heads}</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> {hyg}</p>
     <div class="bullet-stack">
+      <p class="stack-head">
+        <button type="button" class="copy-btn wide" data-copy-target="#sec-{sec_id}" data-copy-html="1">Copy whole section →</button>
+        <span class="dim">or copy one line at a time below</span>
+      </p>
         {body}
     </div>
   </section>''')
@@ -211,7 +220,10 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     # is replaced whole when tailoring per job — so it gets a combined block.
     ks = [(sid, t.split("— ", 1)[-1]) for sid, t in SECTIONS if sid.startswith("quick-skills-")]
     ks_body = ""
+    ks_hidden = ""
     for sid, sub in ks:
+        ks_hidden += f"<p><strong>{sub}</strong></p>" + "".join(
+            f"<p>{x}</p>" for x in paragraphs(html, sid))
         ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>"
         ks_body += "".join(
             f'\n        <div class="bullet-row">'
@@ -231,7 +243,12 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     separate blocks below, never both. The sub-group headings are included; delete them if Hiration
     renders its own.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> {sum(len(paragraphs(html, sid)) for sid, _ in ks)} lines across 3 groups · short capability labels, not sentences · no number requirement</p>
-    <div class="bullet-stack">{ks_body}
+    <div class="bullet-stack">
+      <p class="stack-head">
+        <button type="button" class="copy-btn wide" data-copy-target="#sec-key-skills-all" data-copy-html="1">Copy all of Key Skills →</button>
+        <span class="dim">or copy one line at a time below</span>
+      </p>
+      <div class="paste-area copy-target sr-src" id="sec-key-skills-all" hidden>{ks_hidden}</div>{ks_body}
     </div>
   </section>'''
     blocks.insert(2, combined)

@@ -3296,3 +3296,17 @@ section.pasted .paste-area { border-color: var(--good); }
 }
 .copy-btn.mini:hover { border-color: var(--accent); color: var(--accent); background: #fff; }
 .copy-btn.mini.copied { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+
+/* Whole-section copy. The source is a hidden div holding only the <p>s, so the
+   clipboard carries no wrapper markup — the same shape a single-line copy
+   sends, just several of them. */
+.sr-src { display: none !important; }
+.stack-head { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; flex-wrap: wrap; }
+.copy-btn.wide {
+  position: static; font-size: 11px; padding: 6px 14px; border-radius: 5px;
+  background: var(--accent); border: 1px solid var(--accent); color: #fff;
+  font-family: var(--mono); letter-spacing: .06em; text-transform: uppercase;
+  font-weight: 600; cursor: pointer;
+}
+.copy-btn.wide:hover { background: var(--ink); border-color: var(--ink); }
+.copy-btn.wide.copied { background: var(--good); border-color: var(--good); }
