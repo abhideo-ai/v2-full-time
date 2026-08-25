@@ -147,12 +147,49 @@ the master carries **6**.
 
 ---
 
-## In flight at the time of writing
+## ⚠ URGENT — YOUR POSTGRESQL IS ONE RESTART FROM NOT COMING BACK
 
-- **Launcher rebuild off `jobs_tracker`** — background agent adding `automation/jobs_db.py`, a
-  `GET /api/jobs` endpoint in `serve.py`, a search box and score columns, and inserting the four
-  current seats. `jobs_tracker` holds **92** v1 applications while the launcher showed 4 hardcoded
-  cards. `v2_daily` (task state) has **0 rows**.
+**The running server's binaries have been deleted.** Verified 2026-08-25:
+
+- The live process is `/opt/homebrew/opt/postgresql@16/bin/postgres` — **that path no longer exists**
+- Homebrew now has `postgresql@18`; the 16 keg was removed while the 16 server was still running
+- Data lives in `/opt/homebrew/var/postgresql@16` — 96 applications, the daily state, everything
+- **Every `UPDATE` on `applications` already fails** — the `BEFORE UPDATE set_updated_at()` trigger
+  cannot load `$libdir/plpgsql`. `v2_daily` has no triggers so the daily log is unaffected.
+  `jobs_sync.py` works around it by setting `updated_at` explicitly with triggers off.
+
+**A backup was taken while the server was still up:** `~/pg-backup-2026-08-25/all-databases.sql`
+— 1.7 MB, 96/96 application rows, all four databases, no errors.
+
+**Fix:** `brew install postgresql@16`. Until then, do not restart PostgreSQL or reboot without
+expecting to reinstall first.
+
+---
+
+## The launcher now renders from PostgreSQL
+
+`GET /api/jobs` in `serve.py`, backed by `automation/jobs_db.py` (read-only) and
+`automation/jobs_sync.py` (the write side, deliberately a separate module so the one `serve.py`
+imports cannot mutate v1's record). Search box and score columns added; `salary` is never in the
+payload, per the compensation deferral.
+
+**Counts total exactly 96** — building 7 · ready 14 · sent 10 · responded 0 · interviewing 1 ·
+parked 15 · closed 49 · not-selected 0.
+
+⚠ **`recommended_skip` (49 rows) maps to `closed`** — deliberately. In `parked` they would bury the
+few builds he actually paused; in `ready` they would corrupt the ready-and-unsent count, which is
+the backlog gate. `tab_for()` raises rather than dropping a row.
+
+⚠ **The two score columns use different rubrics and are NOT comparable.** v2 seats carry the weighted
+technical score; v1 seats are a rescale of their own five axes. Every row carries `rubric`.
+**This rescale is an agent's interpretation of v1's axes, not his — worth his review.**
+
+⚠ **`serve.py` must be the thing on port 8006.** It was found running as plain
+`python3 -m http.server 8006`, bound to `*:8006`, which is why the daily log had been silently
+falling back to localStorage and `v2_daily` had 0 rows. Restart it with:
+`automation/.venv/bin/python automation/serve.py`
+
+**Re-sync scores after any re-score:** `automation/.venv/bin/python automation/jobs_sync.py --scores`
 
 ---
 
