@@ -3192,3 +3192,17 @@ li.pj-open { list-style: none; margin-left: -20px; }
   white-space: nowrap;
 }
 .pills .pill .n { font-size: inherit; font-weight: 700; margin-left: 4px; }
+
+/* Wide tables must scroll inside their own container, never push the page
+   sideways. Borrowed from the case-studies pages, which already used this
+   shape; now shared so workspace pages can use it too. */
+.tablewrap {
+  overflow-x: auto;
+  margin: 18px 0;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+.tablewrap table { margin: 0; border: 0; min-width: 640px; }
+.tablewrap th, .tablewrap td { padding: 10px 14px; vertical-align: top; }
