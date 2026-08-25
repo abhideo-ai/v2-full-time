@@ -39,12 +39,44 @@ not by wording. Say so plainly rather than implying a rewrite fixes it.
   constraint disappears and the score moves. **Ask him.**
 - **The +65% hotel conversions** — unresolved, stays per the no-scrub rule.
 
-## Next command
+## ⚠ THE THREE WORKSPACES ARE SCORED BUT NOT TAILORED AND NOT EXPORTED
 
+```
+o9-senior-architect-agentic      pdf=no  score=yes  resume=UNCHANGED COPY OF MASTER
+principal-architect-ai-native    pdf=no  score=yes  resume=UNCHANGED COPY OF MASTER
+yes-madam-lead-architect         pdf=no  score=yes  resume=UNCHANGED COPY OF MASTER
+```
+
+Only `master/Abhisheik_Deo_Resume.pdf` exists — 3 pages, ATS 85, verified.
+
+**Do NOT export these as they stand.** Each `upgrad_resume.html` is byte-identical to the master,
+so three exports would produce three identical PDFs — which is precisely the top-of-résumé-only
+tailoring that produced **zero calls in June 2026**.
+
+### The missing step: Rule 7 re-vectoring, per seat, delegated to subagents
+
+VoltusWave carries **ten bullets** and must come down to six or seven for the three-page limit —
+a *different* four dropped for each seat.
+
+| Seat | Lead with | Cut |
+|---|---|---|
+| **AI-Native** | Elasticsearch `dense_vector` retrieval · the LangGraph orchestrator · self-hosted models in-VPC | Kinesis shards, Datadog, patient onboarding |
+| **Yes Madam** | Java + Spring Boot · monolith → 10–15 services · Keycloak → Red Hat SSO · the Go concurrency work | most of the Amura AI bullets |
+| **o9** | data-engineering depth — event spine, Parquet/DuckDB, nine-year hydration — plus SageMaker retraining and drift | the chat-platform bullets |
+
+Then, per workspace:
+```
+automation/.venv/bin/python automation/resume.py sheet --slug <slug>
+UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py \
+    --slug <slug> --no-pause --reset
+```
+The exporter runs serially on one shared browser. It is unblocked and proven end to end.
+
+### Starting a new seat
 ```
 automation/.venv/bin/python automation/resume.py new --slug <slug> --company X --role Y
 ```
-Then delegate the whole build. Master PDF is done: `master/Abhisheik_Deo_Resume.pdf`, 3 pages, ATS 85.
+Then delegate the whole build — jd.md included. **Nothing has been SENT yet.**
 
 ## His read on the vector-DB gap — 2026-08-25, and it stands
 
