@@ -97,7 +97,15 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
         raise SystemExit(f"[resume] {rel}/upgrad_resume.html exists — refusing to overwrite")
     dest_dir.mkdir(parents=True, exist_ok=True)
 
-    shutil.copy(master, dest_dir / "upgrad_resume.html")
+    # The master lives at master/, so its stylesheet href is "../style.css".
+    # A workspace sits at Month-YYYY/DD/<slug>/, three levels down, so a straight
+    # copy leaves a dead link and the résumé renders unstyled when he opens it.
+    # The exporter does not care -- it reads text -- but he reviews these by eye.
+    up = "../" * len(rel.parts)
+    dest = dest_dir / "upgrad_resume.html"
+    dest.write_text(
+        master.read_text(encoding="utf-8").replace('href="../style.css"', f'href="{up}style.css"'),
+        encoding="utf-8")
     (dest_dir / "paste_notes.json").write_text("{}\n")
     title = f"{company} — {role}" if company and role else slug
     (dest_dir / "jd.md").write_text(

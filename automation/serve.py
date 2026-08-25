@@ -11,6 +11,7 @@ tab keeps working. What it adds:
   GET  /api/state          current task state
   POST /api/ops            apply operations, return the new state
   GET  /api/history?limit  recent task events, newest first
+  GET  /api/jobs           every application, its launcher tab and both scores
 
   no-store on HTML/JSON/JS/CSS, so a pinned tab's refresh really does refresh.
 
@@ -19,7 +20,12 @@ writes to a database, so it must not be reachable from the network.
 
 If PostgreSQL is unreachable the API answers 503 and the page falls back to
 localStorage, telling you on the page that it is not saving. Read-only browsing
-of the workspace keeps working either way.
+of the workspace keeps working either way. `/api/jobs` answers 503 the same way
+and the launcher says the list is unavailable rather than rendering nothing,
+which would read as "no applications".
+
+Two databases, never one connection: `db` is `v2_daily` (read-write, the daily
+log), `jobs_db` is `jobs_tracker` (read-only, the launcher).
 """
 import argparse
 import json
@@ -32,6 +38,7 @@ from urllib.parse import parse_qs, urlparse
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import db  # noqa: E402
+import jobs_db  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 MAX_BODY = 1 << 20  # 1 MB; a realistic batch is a few hundred bytes
@@ -83,6 +90,11 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json(200, db.get_state())
             except Exception as exc:                            # noqa: BLE001
                 return self._json(503, {"error": f"database unreachable: {exc}"})
+        if url.path == "/api/jobs":
+            try:
+                return self._json(200, jobs_db.launcher())
+            except Exception as exc:                            # noqa: BLE001
+                return self._json(503, {"error": f"database unreachable: {exc}"})
         if url.path == "/api/history":
             try:
                 limit = min(int(parse_qs(url.query).get("limit", ["100"])[0]), 1000)
@@ -120,8 +132,14 @@ def main() -> None:
         state = db.get_state()
         print(f"[serve] postgresql ok — {len(state['tasks'])} task(s) stored", file=sys.stderr)
     except Exception as exc:                                    # noqa: BLE001
-        print(f"[serve] WARNING: database unreachable ({exc})", file=sys.stderr)
-        print("[serve] the page will fall back to localStorage and say so", file=sys.stderr)
+        print(f"[serve] WARNING: v2_daily unreachable ({exc})", file=sys.stderr)
+        print("[serve] the daily log will fall back to localStorage and say so", file=sys.stderr)
+    try:
+        rows = jobs_db.applications()
+        print(f"[serve] jobs_tracker ok — {len(rows)} application(s)", file=sys.stderr)
+    except Exception as exc:                                    # noqa: BLE001
+        print(f"[serve] WARNING: jobs_tracker unreachable ({exc})", file=sys.stderr)
+        print("[serve] the launcher will say the list is unavailable", file=sys.stderr)
     handler = partial(Handler, directory=str(ROOT))
     with ThreadingHTTPServer((args.host, args.port), handler) as httpd:
         print(f"[serve] http://{args.host}:{args.port}/daily/", file=sys.stderr)

@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wipro — Principal Software Architect · research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> · August 2026 · 25 · wipro-principal-software-architect · research</p>
+
+<header>
+  <p class="eyebrow">Company research · 25 Aug 2026</p>
+  <h1>Wipro — <span class="nowrap">Principal Software Architect</span></h1>
+  <p class="subtitle">An inbound LinkedIn InMail with no job description attached. What is actually known, what is inferred, and what to ask on the call.</p>
+</header>
+
+<div class="meta">
+  <span><b>Source</b> Inbound LinkedIn InMail</span>
+  <span><b>Recruiter</b> Harisri Parthasarathi</span>
+  <span><b>Received</b> 2026-08-25</span>
+  <span><b>Job description</b> none supplied</span>
+  <span><b>Requisition ID</b> none supplied</span>
+  <span><b>Location</b> not stated</span>
+</div>
+
+<div class="banner">
+  <p><b>This seat is not scored, and that is deliberate.</b> A weighted rubric needs criteria to weight, and there is no job description here — no responsibilities, no required technologies, no location, no business unit, no client account. Inventing rubric criteria from a job title is precisely the failure to avoid: at a global information technology (IT) services firm, "architect" spans three genuinely different jobs. <b>The score waits for the requisition.</b></p>
+</div>
+
+<!-- ==================================================================
+     GLOSSARY — concepts, not just expansions. Required by CLAUDE.md
+     for any domain he has not worked in. He has never worked in IT
+     services, so the services-business vocabulary is the unfamiliar
+     part, not the technology.
+     ================================================================== -->
+
+<h2>First, the vocabulary</h2>
+<p class="lede">He has spent his career in product companies and venture-backed startups. The unfamiliar terms below are not technical — they are how a services business runs, and they are the terms that decide what this job would actually be day to day.</p>
+
+<dl class="context-grid">
+  <dt>IT services firm</dt>
+  <dd>A company that sells its engineers' time to other companies. Wipro's revenue comes from client contracts, not from a product it owns. The practical consequence: an engineer's work is generally paid for by a named client, and the client — not Wipro — usually owns the final architecture decision.</dd>
+
+  <dt>Billability and utilisation</dt>
+  <dd>The share of an engineer's hours that a client is invoiced for. It is the core margin lever in services. Staff whose hours cannot be billed are a cost, which is why the next term exists.</dd>
+
+  <dt>The bench</dt>
+  <dd>Staff on payroll who are not currently assigned to a paying client engagement. In Indian IT services this is a normal, temporary state between projects — but it carries a clock, and how long that clock runs is a real question to ask.</dd>
+
+  <dt>Account</dt>
+  <dd>A single client relationship, with its own budget, its own delivery team and its own leadership. "Which account?" is the single most informative question about any services seat, because the account, not the title, determines the work.</dd>
+
+  <dt>Pre-sales / solutioning</dt>
+  <dd>Work done <em>before</em> a contract is signed — writing the technical response to a client's request for proposal (RFP) or request for information (RFI), building demonstrations, presenting to prospective customers. It is architecture work in the sense that it produces designs, but the designs are sales artefacts and many are never built.</dd>
+
+  <dt>Greenfield vs modernisation</dt>
+  <dd>Greenfield is net-new build. Modernisation is taking an existing, usually old system and moving it — to the cloud, off a legacy language, onto new infrastructure. Services revenue skews heavily toward the second. This matters to him specifically: his own record is a mix, so it is a fit question rather than a disqualifier.</dd>
+
+  <dt>DMTS — Distinguished Member of Technical Staff</dt>
+  <dd>Wipro's internal technical-recognition cadre, carried <em>alongside</em> a functional job title rather than instead of it. Wipro engineers publish under bylines like "DMTS — Principal Member &amp; Technology Architect". It appears to be an internal promotion destination, which is why an externally-offered "Principal" title may mean something different from the internal one.</dd>
+
+  <dt>Band</dt>
+  <dd>Wipro's internal grade system (levels such as B1, B2, B3, C1, C2). It sits underneath the job title and is what actually fixes seniority. Two live Wipro job descriptions state the mapping outright: Architect L1 = Band C1.</dd>
+
+  <dt>L0 / L1 / L2</dt>
+  <dd>Wipro's suffix on architect titles, denoting role level rather than band. From Wipro's own postings: L0 and L1 sit around 8–10 years of experience, L2 above 10.</dd>
+
+  <dt>SAP SuccessFactors</dt>
+  <dd>SAP's human capital management (HCM) software suite. Its Recruiting module is an applicant tracking system (ATS) — the software a recruiter works inside all day. <b>A collision worth naming:</b> seeing "SuccessFactors" in a recruiter's headline says nothing about SAP <em>consulting</em>; it says which internal system they operate.</dd>
+
+  <dt>InMail</dt>
+  <dd>LinkedIn's paid direct-message product for recruiters. LinkedIn ships both one-to-one and <em>bulk</em> sending as first-class features, which is why a message's specificity — not its existence — is the signal.</dd>
+
+  <dt>Global Capability Centre (GCC)</dt>
+  <dd>An offshore engineering centre owned by the client company itself rather than by a services vendor. Relevant only as market context: GCCs compete with firms like Wipro for exactly his profile.</dd>
+
+  <dt>Agentic AI</dt>
+  <dd>Artificial intelligence (AI) systems where a large language model (LLM) plans and executes multi-step work using tools, rather than answering a single prompt. His LangGraph orchestration, Model Context Protocol (MCP) servers and retrieval-augmented generation (RAG) pipelines are exactly this category.</dd>
+
+  <dt>Constant currency (cc)</dt>
+  <dd>Revenue growth with exchange-rate movement stripped out. Used below because Wipro reports in US dollars while earning in many currencies; it is the honest number for judging whether the business is actually growing.</dd>
+</dl>
+
+<!-- ================================ VERDICT ================================ -->
+
+<h2>Verdict</h2>
+
+<div class="tldr">
+  <strong>The read</strong>
+  <p><b>The artificial intelligence (AI) framing in her message is real, not recruiter keyword-matching.</b> Wipro has named, audited applied-AI programmes, an Applied AI Center of Excellence for Claude models with Anthropic opened in Bengaluru in June 2026, and live India requisitions that name LangGraph, Model Context Protocol (MCP) and retrieval-augmented generation (RAG) as <em>mandatory</em> — his exact stack, in Wipro's own posted words.</p>
+  <p><b>But "Principal Software Architect" is not a Wipro job title, and at Wipro the architect title does not determine the job.</b> The same grade was posted twice last week: once as hands-on delivery work, once as an explicit pre-sales seat writing responses to requests for proposal. The requisition decides, and there is no requisition here.</p>
+  <p><b>So nothing about this seat can be judged until the job description arrives</b> — and the one genuinely decision-relevant risk is not that Wipro is unstable but that its cost base is under active management: the chief executive is publicly describing bench utilisation as a margin lever, restructuring is now written into the risk factors as standing policy, and every headcount gain for six quarters has been acquired rather than hired.</p>
+</div>
+
+<div class="callout">
+  <p><b>Relocation is not a factor in any of the above.</b> He has confirmed relocation is open, so Bengaluru, Pune or Chennai are neutral, not negatives — and the strongest single seat found in this research (Agentic AI Solution Architecture, an explicitly individual-contributor role) is posted in <b>Hyderabad</b>, where he already lives. Schedule density is likewise not scored. Two things that <em>are</em> worth surfacing separately and asking about out loud: <b>travel cadence</b> to client sites, and whether the seat carries <b>24/7 on-call</b>.</p>
+</div>
+
+<h3>What is actually established, and what is not</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Question</th><th>Status</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><td>Does the exact title exist at Wipro India?</td><td><span class="tag bad">No</span></td><td>All 76 India results for "Principal" on Wipro's own careers site enumerated; the title is absent. Also absent from LinkedIn Jobs, Naukri and every salary aggregator.</td></tr>
+<tr><td>Does that mean the seat is fake?</td><td><span class="tag warn">No — and this must not be over-read</span></td><td>A large share of services requisitions are raised against a specific account and never posted publicly. "Principal Software Architect" is also plausible as a recruiter's descriptive rendering of a band for an external audience.</td></tr>
+<tr><td>Is there real applied-AI work at Wipro for his background?</td><td><span class="tag ok">Yes</span></td><td>Named platforms in the audited annual report; four live requisitions naming his stack; an Anthropic partnership centre.</td></tr>
+<tr><td>Is a Wipro architect seat individual-contributor?</td><td><span class="tag warn">Usually, not always</span></td><td>One posting says "This individual contributor role" outright and a four-job-description sweep found no direct reports — but posting 180479 assigns hiring, appraisals and attrition. <b>Per-requisition, so it has to be asked.</b></td></tr>
+<tr><td>Is personal billability a measured target at Principal grade?</td><td><span class="tag bad">Yes — stated outright</span></td><td>Wipro's own Principal-grade job description: "The Principal Consultant must achieve high personal billability", with "% of Personal Utilisation Achievement" and "No. of RFI/RFPs responses led/supported" as measures. <b>The biggest day-to-day change from product work.</b></td></tr>
+<tr><td>Is the architecture work greenfield or modernisation?</td><td><span class="tag warn">Modernisation-weighted</span></td><td>Wipro's own architect postings: "Application Portfolio Rationalization", "6 R's strategies", "cloud modernization", "Migrate / Rewrite". Its 20-F describes two business lines as "application modernization".</td></tr>
+<tr><td>Is Wipro's leadership stable?</td><td><span class="tag ok">Yes</span></td><td>Chief executive contracted to April 2029; Wipro's statutory filing records exactly one senior-management cessation in the last full financial year.</td></tr>
+<tr><td>Is the business growing?</td><td><span class="tag bad">No</span></td><td>Two consecutive years of constant-currency decline; operating margin at a 15-quarter low with no committed recovery date.</td></tr>
+<tr><td>Is the recruiter verifiably at Wipro?</td><td><span class="tag">Unknown</span></td><td>The only public profile under that name shows a different employer. Three explanations fit equally and public data cannot separate them. <b>Not an accusation</b> — see below.</td></tr>
+<tr><td>Is the seat hands-on or pre-sales?</td><td><span class="tag">Unknown, and unknowable from outside</span></td><td>Same title, same level, opposite jobs, both posted within the last month.</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ================================ RED FLAGS ================================ -->
+
+<h2>Red flags</h2>
+
+<div class="danger">
+  <p><b>1 — The title he was approached with does not exist in Wipro India's vocabulary.</b></p>
+  <p>All 76 India results for the query "Principal" on Wipro's own careers site were enumerated. The site search is full-text across title <em>and</em> body, so any requisition <em>titled</em> "Principal Software Architect" would necessarily have appeared. It did not. What exists instead is Principal Engineer, Principal Scientist, Principal Consultant, Principal Engineering Capability Leader — and a rigid architect taxonomy of <code>&lt;DOMAIN&gt; ARCHITECT L0/L1/L2</code> (Enterprise, Solution, Technology, Application, Integration, Data, Security).</p>
+  <p class="why">Corroborated independently: LinkedIn Jobs returns "We couldn't find a match" for Wipro Principal Software Architect roles in India; AmbitionBox has no Wipro page for the title at all (a nonsense slug was tested as a control, and does not redirect the same way); Glassdoor's page for it is a proven alias whose own heading reads "Wipro Principal Architect Salaries"; levels.fyi lists no such Wipro title. <b>The consequence is practical, not sinister: the job description has to come from her, because no search will find it.</b></p>
+  <p><b>Sources:</b> <a href="https://careers.wipro.com/search/?q=%22Principal%20Software%20Architect%22">careers.wipro.com search</a> · <a href="https://in.linkedin.com/jobs/wipro-architect-jobs">LinkedIn Jobs, Wipro architect roles India</a> · <a href="https://www.themuse.com/search/keyword/principal%20architect/company/wipro/">The Muse (mirrors Wipro postings) — 0 results</a> · <a href="https://www.glassdoor.co.in/Salary/Wipro-Principal-Software-Architect-Salaries-E9936_D_KO6,34.htm">Glassdoor alias page</a></p>
+</div>
+
+<div class="danger">
+  <p><b>2 — At Wipro, the architect title genuinely does not tell you what the job is. This is the most decision-relevant finding on the page.</b></p>
+  <p>Eleven live Wipro architect job descriptions were read in full. The same title at the same level was posted days apart as two opposite jobs:</p>
+  <div class="tablewrap">
+  <table>
+  <thead><tr><th>Live posting</th><th>Posted</th><th>Wipro's own words</th><th>What it actually is</th></tr></thead>
+  <tbody>
+  <tr><td><a href="https://careers.wipro.com/job/ENTERPRISE-ARCHITECT-L1/196217-en_US">Enterprise Architect L1</a>, Bengaluru</td><td>25 Aug 26</td><td>"Assist in all phases of the sales and delivery process", "Prepare technical solution to RFPs and RFIs", "Develop product demonstrations"</td><td><b>Pre-sales</b></td></tr>
+  <tr><td><a href="https://careers.wipro.com/job/TECHNOLOGY-ARCHITECT-L1/195371-en_US">Technology Architect L1</a>, Pune</td><td>25 Aug 26</td><td>"analyse client technology environments, create low-level design inputs, and integrate technology components to existing client environment"</td><td><b>Client delivery.</b> Note what it never says: write code. The architect produces design inputs; developers implement</td></tr>
+  <tr><td><a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT-L2/191139-en_US">Solution Architect L2</a>, Chennai</td><td>2 Aug 26</td><td>Carries a literal "Architect hands on role -" section: "Modify Spring boot microservices… Setup Tekton pipeline and deploy… Rewrite ODM API codes" — <em>and</em> an RFP duty</td><td><b>Both at once</b></td></tr>
+  <tr><td><a href="https://careers.wipro.com/job/Principal-Engineer/192161-en_US">Principal Engineer</a>, Bengaluru</td><td>5 Aug 26</td><td>"a highly hands-on role requiring deep architectural insight, coding proficiency"; "<b>Technical leadership without leaving code</b> — Mentor, review, debug and ship as a true principal engineer"</td><td><b>Internal product engineering</b> — and the only posting in the sweep that promises code-level work as a permanent feature</td></tr>
+  </tbody>
+  </table>
+  </div>
+  <p class="why">The Technology Architect L1 text is Wipro's standard architect boilerplate — found word-for-word identical across <a href="https://careers.wipro.com/job/TECHNOLOGY-ARCHITECT-L1/195371-en_US">a Java posting</a> and <a href="https://careers.wipro.com/job/TECHNOLOGY-ARCHITECT-L1/191795-en_US">an Autosar posting</a>. It is the highest-volume architect posting on the site. <b>An earlier research pass concluded that "a seat carrying RFPs says Pre-sales in its title". That was overruled during this research and is wrong</b> — the 25 August Bengaluru Enterprise Architect L1 carries explicit RFP, sales-process and customer-demonstration duties with the word "Presales" nowhere in its title. Pre-sales work travels into plainly-titled architect seats.</p>
+</div>
+
+<div class="danger">
+  <p><b>3 — Organic headcount is shrinking. Every headcount gain for six quarters has been bought, not hired.</b></p>
+  <p>From Wipro's own quarterly datasheet: 233,346 employees at 31 Mar 2025 → 243,044 at 30 Jun 2026. That looks like growth. It is not. The December 2025 jump of +6,529 coincides with the HARMAN Digital Transformation Solutions acquisition closing on 1 Dec 2025 (5,600+ staff); the Q1 FY27 gain of +888 coincides with Mindsprint (3,200+).</p>
+  <p>Management said so directly on the Q1 FY27 earnings call. Chief executive Srini Pallia: <em>"outside of Mindsprint, the head count has actually gone down by 2,500 people."</em> Chief financial officer Aparna Iyer: <em>"2,500 people, that's correct."</em></p>
+  <p class="why"><b>Two circulating figures are traps and were checked.</b> A headline claiming Wipro "adds 9,812 in Q1 FY27" is the <em>year-on-year</em> number and contradicts its own article body. The "top five IT firms cut ~7,000 jobs in FY26" stories are an <em>aggregate across five firms</em> and do not describe Wipro, which added staff that year, mostly through acquisition.</p>
+  <p><b>Sources:</b> <a href="https://www.sec.gov/Archives/edgar/data/0001123799/000119312526312481/d29463dex995.htm">Wipro quarterly datasheet (SEC Form 6-K, Exhibit 99.5)</a> · <a href="https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf">Q1 FY27 earnings call transcript</a></p>
+</div>
+
+<div class="danger">
+  <p><b>4 — Margin is at a 15-quarter low, the business has declined for two years, and restructuring is now standing policy.</b></p>
+  <ul>
+    <li><b>Q1 FY27</b> (quarter ended 30 Jun 2026): IT Services revenue $2,614.5m, <b>−1.2% quarter on quarter, +0.9% year on year in constant currency</b>. <b>Operating margin 16.0% — the lowest in 15 quarters.</b> Guidance for the following quarter: <b>−1.5% to +0.5%</b> constant currency.</li>
+    <li><b>FY26</b> (year ended 31 Mar 2026): IT Services $10,478.1m, <b>−1.6% year on year in constant currency</b> — a declining year.</li>
+    <li>Pallia declined to date a recovery: <em>"our mission is clearly to go back to the narrow band… 17% to 17.5%… I do not want to predict exactly where, you know, when we will get there."</em></li>
+    <li><b>Restructuring cost ₹5,139m in FY26 against nil in FY25</b>, in two tranches. Pallia on the second: <em>"The restructuring basically has pivoted on <b>obsolete skillsets</b>… One is in Europe, where we have tough labor laws and second is in Capco."</em></li>
+    <li>A <b>new FY26 risk factor</b> makes it permanent: <em>"We have undertaken, and may continue to undertake, restructuring, cost optimization and organizational initiatives… including employee separation costs."</em></li>
+  </ul>
+  <p class="why"><b>One booking figure is a trap.</b> The widely-quoted "+65.1% large-deal growth" in Q4 FY26 is <em>sequential</em>. Year on year, Q4 FY26 large deals <b>fell 18.5%</b> and total bookings fell 13.9%. FY26 bookings were heavily front-loaded.</p>
+  <p><b>Sources:</b> <a href="https://www.wipro.com/newsroom/press-releases/2026/wipro-announces-results-for-the-quarter-ended-june-30-2026/">Q1 FY27 results</a> · <a href="https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/press-release-q1fy27.pdf">Q1 FY27 press release (PDF)</a> · <a href="https://www.sec.gov/Archives/edgar/data/1123799/000119312526253514/wit-20260331.htm">FY26 Form 20-F</a> · <a href="https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2025-2026/q3fy26/q3fy26-earnings-transcript.pdf">Q3 FY26 transcript</a> · <a href="https://www.sec.gov/Archives/edgar/data/1123799/000119312526161792/d92697dex995.htm">FY26 datasheet</a> · <a href="https://www.indiainfoline.com/news/companies/wipro-q1-fy27-results-profit-rises-marginally-margins-fall-to-15-quarter-low-stock-gains-1-77">India Infoline on the 15-quarter margin low</a></p>
+</div>
+
+<div class="warn">
+  <p><b>5 — Wipro publishes no involuntary-separation figure at all.</b></p>
+  <p>Attrition is disclosed and is low and improving — 15.0% at 31 Mar 2025 falling to 13.9% at 30 Jun 2026 (trailing twelve months). But the FY26 Business Responsibility and Sustainability Report footnote states plainly: <em>"Voluntary attrition of IT Services team has only been considered for reporting."</em> <b>Absence of a layoff number is not evidence of an absence of exits.</b></p>
+  <p class="why"><b>Two claims were checked and should not be repeated.</b> There are <b>no United States WARN Act layoff notices for Wipro in 2025 or 2026</b>. And a circulating "12 May 2026 Wipro layoff" item traces to a page whose only embedded citation is an unrelated story about Meta contractors in Ireland — it appears synthesised and should not be used. Separately, the widely-cited <b>35-day bench rule belongs to TCS, not Wipro</b>.</p>
+  <p><b>Sources:</b> <a href="https://www.sec.gov/Archives/edgar/data/1123799/000119312526281757/d141770dex991.htm">FY26 BRSR (SEC)</a> · <a href="https://warnfirehose.com/data/layoffs/company/wipro">WARN Firehose, Wipro</a></p>
+</div>
+
+<div class="warn">
+  <p><b>6 — Bench exposure for an architect hired without an account. Anecdote, and the anecdotes disagree.</b></p>
+  <p>Several independent employee accounts describe architects being hired <em>before</em> a project exists and given an internal clock to find one. <b>The best-sourced one is architect-band and recent:</b></p>
+  <div class="evidence">
+    <strong>Blind review, 17 Jul 2025 — self-identified Technology Architect at Wipro</strong>
+    <p>Pros: <em>"Service based company where you can find different projects based on different skills set"</em></p>
+    <p>Cons: <em>"<b>Only 45 days bench period policy, after 90 days on bench you need to resign that is harsh reality</b>"</em></p>
+    <p><a href="https://www.teamblind.com/company/Wipro-Limited/reviews">Blind — Wipro reviews</a></p>
+  </div>
+  <ul>
+    <li><em>"we should ourself search projects within wipro else they will remove after 45 days"</em> — Solution Architect, Bengaluru, 12 Sep 2025 (<a href="https://www.ambitionbox.com/reviews/wipro-reviews/solution-architect">AmbitionBox</a>)</li>
+    <li><em>"after joining the company, you will be asked to attend client interviews, and based on the successful outcome, you will be placed in a project"</em> — Technical Architect, Hyderabad, 6 Aug 2020 (<a href="https://www.indeed.com/cmp/Wipro/reviews?fcountry=ALL&amp;fjobtitle=Technical+Architect">Indeed</a>)</li>
+  </ul>
+  <p class="why"><b>These remain individual anecdotes and must not be stated as policy. No current journalism documents Wipro's bench policy at all</b> — the only news article found is from July 2020 and describes a pandemic-era one-time exception, not current practice. <b>The contrast with TCS is instructive precisely because TCS's policy <em>is</em> documented:</b> TCS's associate deployment policy of 12 June 2025 requires allocation for "a minimum period of <b>225 business days in the last 12 months</b>" — roughly a 35-business-day annual bench cap — and states that "Long periods of remaining unallocated shall adversely impact associate compensation, career growth… <b>and continuity of employment</b>", with the onus on the associate to find allocation (<a href="https://www.livemint.com/companies/news/tcs-new-deployment-policy-minimum-billing-days-set-bench-period-slashed-to-35-days-how-will-it-impact-employees-11750149937687.html">Livemint</a>, <a href="https://www.outlookbusiness.com/corporate/tcs-caps-bench-time-at-35-days-under-new-deployment-policy">Outlook Business</a>). <b>That is TCS, not Wipro</b> — included to show the mechanism is real and current somewhere in the sector, not to attribute it to Wipro. Wipro management does treat the bench as a lever: Pallia, Q1 FY27, <em>"the bench utilization has been higher… How do you restructure the pyramid"</em>.</p>
+  <p><b>What this is good for is one question, not a conclusion:</b> <em>is this seat attached to a funded account today?</em></p>
+</div>
+
+<div class="warn">
+  <p><b>7 — On applied AI, three analyst firms independently find Wipro capability-rich and proof-poor.</b></p>
+  <p>Wipro is a <b>Major Contender, not a Leader</b>, in Everest Group's AI and Generative AI Services PEAK Matrix 2025 (Leaders: Accenture, Capgemini, Cognizant, Deloitte, IBM, TCS), a <b>Major Player</b> in the IDC MarketScape Worldwide AI Services 2025 — behind every named Indian peer except LTIMindtree — and again a <b>Major Contender</b> in Everest's Agentic Process Automation PEAK Matrix 2026. Neither of the first two appears on Wipro's own newsroom.</p>
+  <p>HFS Research, which rates Wipro <em>well</em> (see green flags), publishes the criticism directly: <em>"Strengthen publicly published agentic proof points: Wipro's agentic AI services messaging emphasizes definitions, capabilities, and examples rather than quantified outcome metrics, <b>which may limit buyer verification at the shortlist stage</b>."</em></p>
+  <p>Wipro also declines to disclose any AI revenue figure. Pallia: <em>"we are not calling out AI revenue separately"</em>. The FY26 Form 20-F contains no AI revenue line of any kind. TCS by contrast publishes a $2.6bn annualised AI run rate.</p>
+  <p class="why">Two Wipro-side numbers deserve their own caveat. WEGA's marketing claims ("up to 60% improvement in velocity", "40% cost leadership") carry <b>Wipro's own disclaimer: "Based on preliminary results in lab conditions."</b> And the $1bn AI investment announced in July 2023 has never been accounted for publicly — that three-year window closed in July 2026, and the 20-F contains zero occurrences of the figure. Accounted research and development spend was ₹4,499m in FY26 (roughly US$53m, about 0.5% of IT services revenue) and has been flat in nominal terms for three years. The $1bn was plainly a commitment envelope covering training, partnerships and platform build, not a verifiable spend.</p>
+  <p><b>Sources:</b> <a href="https://www.accenture.com/content/dam/accenture/final/accenture-com/document-4/Everest-Group-AI-and-Generative-AI-Services-PEAK-Matrix-Assessment-2025-Focus-on-Accenture.pdf">Everest PEAK Matrix 2025 (licensee copy)</a> · <a href="https://www.pwc.com/gx/en/news-room/assets/analyst-citations/idc-worldwide-artificial-intelligence-2025.pdf">IDC MarketScape 2025 (licensee copy)</a> · <a href="https://assets.kpmg.com/content/dam/kpmgsites/xx/pdf/2026/04/hfs-horizons-agentic-services-2026.pdf">HFS Horizons: Agentic Services 2026 (p.50)</a> · <a href="https://analyticsindiamag.com/it-services/wipro-won-big-deals-but-execution-gap-cant-be-overlooked-anymore">Analytics India Magazine on AI revenue disclosure</a> · <a href="https://www.wipro.com/ai/wega-studio/">WEGA Studio (carries the lab-conditions disclaimer)</a> · <a href="https://www.wipro.com/newsroom/press-releases/2023/wipro-launches-wipro-ai360-commits-to-investing-1-billion-in-ai-over-the-next-three-years/">The 2023 $1bn announcement</a></p>
+</div>
+
+<div class="warn">
+  <p><b>8 — Whether the seat carries people is decided by the requisition, not by the title. Two live Wipro architect postings disagree with each other.</b></p>
+  <p><b>Most architect postings are individual-contributor.</b> One says so outright — <em>"As an Enterprise Architect L2 at Wipro Technologies… <b>This individual contributor role</b>…"</em> (<a href="https://careers.wipro.com/job/ENTERPRISE-ARCHITECT/182859-en_US">posting 182859</a>) — and a sweep of four architect job descriptions for direct reports, appraisals, performance management and hiring returned <b>zero hits</b>, with mentoring the only management-adjacent language.</p>
+  <p><b>But at least one live Wipro architect posting assigns people management outright.</b> <a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT/180479-en_US">Solution Architect, posting 180479</a> carries hiring, appraisals, attrition management and <em>"Ensure that the Performance Nxt is followed for the entire team"</em>. <span class="dim">Performance Nxt is Wipro's internal performance-management system.</span></p>
+  <p class="why"><b>This corrects an earlier reading on this page and it matters in both directions.</b> Given the individual-contributor-only rule this workspace runs on, a genuinely IC seat is the point — but the title alone does not guarantee one, and "Principal Software Architect" guarantees even less because it is not a Wipro title at all. <b>Add it to the call: does this seat carry direct reports and appraisals?</b> Supporting anecdote on the difficulty of moving between streams afterwards, from an ex-Wipro project manager: <em>"both management and Architect are two different career streams"</em>, with a second reply warning <em>"once you joined there will be expectation set as per stream and changing stream won't be that easy"</em> (<a href="https://www.quora.com/What-should-I-do-when-I-got-an-offer-from-Wipro-in-C2-but-architect-stream-My-experience-is-in-project-delivery-I-was-informed-after-joining-that-one-can-switch-to-the-correct-stream">Quora, ~5 years old — anecdote</a>).</p>
+</div>
+
+<div class="note">
+  <p><b>9 — The recruiter's public footprint does not corroborate Wipro. This is unresolved, and it is not an accusation.</b></p>
+  <p>Exactly one "Harisri Parthasarathi" is publicly indexed: <a href="https://in.linkedin.com/in/harisri-parthasarathi-791418b1">in.linkedin.com/in/harisri-parthasarathi-791418b1</a>, Chennai, ~15K followers. The employer shown on the logged-out profile is <b>Dexian</b>, not Wipro. All indexed public posts are recruiting for Dexian or Disys. The words "Wipro" and "SAP SuccessFactors" appear nowhere on the visible profile or in any indexed post — though the account is clearly active, carrying a January 2026 certification.</p>
+  <p><b>Three explanations fit the evidence equally, and public data cannot separate them:</b> a different person with the same common name; the same person having recently moved to Wipro with a stale logged-out snapshot and search index; or something else. Recruiters change employers constantly and logged-out LinkedIn snapshots lag by months.</p>
+  <p><b>The ten-second check is his, not ours:</b> the InMail carries the sender's profile link. Compare its slug against <code>harisri-parthasarathi-791418b1</code>. Same slug means the same person and a stale profile — move on. A different slug means a second person entirely and none of the above applies. <span class="dim">The profile was deliberately not opened from his logged-in session, because that would fire a "viewed your profile" notification on his account.</span></p>
+</div>
+
+<!-- ================================ GREEN FLAGS ================================ -->
+
+<h2>Green flags</h2>
+
+<div class="success">
+  <p><b>1 — Wipro has live India requisitions naming his exact stack as mandatory. This is the finding that settles the "is the AI framing real" question.</b></p>
+  <div class="tablewrap">
+  <table>
+  <thead><tr><th>Live requisition</th><th>Location</th><th>Posted</th><th>Named stack</th></tr></thead>
+  <tbody>
+  <tr><td><a href="https://careers.wipro.com/job/CTO-AI-Agentic-Engineer/101996-en_US/">Chief Technology Officer org — Architect, Python AI/ML</a></td><td>Bengaluru + Chennai</td><td>7 Jan 2026</td><td>"<b>langgraph or autogen is mandatory</b>", "Experience in <b>MCP and A2A is required</b>", LangChain, vector databases, "Agentic, LLMs, RAG, <b>Graph RAG</b>"</td></tr>
+  <tr><td><a href="https://careers.wipro.com/job/Hyderabad-Agentic-AI-Solution-Architecture-IND-500032/1365205455/">Agentic AI Solution Architecture</a></td><td><b>Hyderabad</b></td><td>21 Aug 2026</td><td>12–15 years; "<b>Role Type: Individual Contributor</b> / Solution Architect"; LangChain, LangGraph, CrewAI, RAG, vector databases, <b>knowledge graphs</b>, MCP, A2A</td></tr>
+  <tr><td><a href="https://careers.wipro.com/job/CTO-Technical-Architect/101281-en_US/">Chief Technology Officer org — Technical Architect</a></td><td>Bengaluru</td><td>6 Mar 2026</td><td>AutoGen / LangGraph / LangChain; "agentic runtimes capable of orchestrating single/multi-agent workflows with… memory, feedback loops, and long-term learning"; EU AI Act, HIPAA, prompt-injection prevention</td></tr>
+  <tr><td><a href="https://careers.wipro.com/job/Generative-AI-Engineer/187523-en_US">Generative AI Engineer</a></td><td>Bengaluru / Pune / Chennai</td><td>19 Aug 2026</td><td>LangChain, LangGraph, LlamaIndex, MCP, A2A, Agent Developer Kits</td></tr>
+  </tbody>
+  </table>
+  </div>
+  <p class="why"><b>"A2A" is agent-to-agent</b>, an open protocol for agents to call one another — the sibling of MCP, which connects an agent to tools. <b>"Graph RAG"</b> is retrieval-augmented generation where retrieval traverses a knowledge graph rather than only a vector index; it is a close cousin of his Context Graph work. The Hyderabad seat is in his own city, is explicitly individual-contributor, and names knowledge graphs — though note it is scoped as a Quality Engineering architect seat, which is worth checking.</p>
+</div>
+
+<div class="success">
+  <p><b>2 — There is one requisition that is an unusually direct match, and it is hands-on by design.</b></p>
+  <p><a href="https://careers.wipro.com/job/Principal-Engineer/192161-en_US">Principal Engineer, requisition 192161, Bengaluru, posted 5 Aug 2026</a> — Wipro's new <b>AI Technology Innovation Center (TIC)</b>. In Wipro's words: <em>"We are establishing a world class AI research center called 'AI Technology Innovation Center' (TIC) in Bengaluru… The TIC follows a research-to-product operating model."</em> The mandate is <em>"own the end-to-end system architecture and design and delivery of production-grade agentic and Generative AI systems"</em>, <em>"highly hands-on"</em>, <em>"Founding-stage platform ownership"</em>, <em>"Technical leadership without leaving code"</em>.</p>
+  <p>Stack named: Python 3.11+, Semantic Kernel / LangGraph / AutoGen / CrewAI, RAG on AWS Bedrock or equivalent vector platforms (OpenSearch Serverless, Pinecone, <b>Redis</b>), AWS EKS/Bedrock/S3/SQS/SNS/RDS/ElastiCache/Secrets Manager/IAM, <b>OpenTelemetry and Datadog</b> observability, evaluation frameworks (golden sets, A/B, regression suites), reusable software development kits and continuous-integration templates.</p>
+  <p class="why"><b>Two frictions worth naming rather than smoothing over.</b> The posting <em>contradicts itself on experience</em> — the body says 7–10 years (4+ generative AI, 2+ agentic) while the mandatory-skills footer says "Experience: 5-8 Years". Against roughly twenty years that band reads low either way, and the discrepancy is itself worth asking about. It also states <em>"Education: Bachelor's/Master's from a top-tier institute (IIT/Tier-1)"</em> — a preference line rather than a stated must, but written for a different filter than a Master of Science from the University of Houston. <b>Note also this is titled Principal <em>Engineer</em>, not Architect</b> — the closest thing to what he wants is not called Architect at Wipro at all.</p>
+</div>
+
+<div class="success">
+  <p><b>3 — The Anthropic partnership is real, recent, and sits directly adjacent to his own AI-assisted delivery work.</b></p>
+  <p>Wipro opened an <b>Applied AI Center of Excellence for Claude models, powered by Anthropic</b>, in Bengaluru on 16 June 2026, under the new AI-Native unit. Stated scope: <b>10,000 front-line delivery experts certified on Claude over 18 months</b>, and a pool of <b>Forward Deployed Engineers</b> embedded in client environments. It is corroborated in the chief executive's letter in the audited annual report, not only in the press release.</p>
+  <p class="why"><b>Two honest caveats.</b> The 10,000 is a <em>target</em>, not an achieved count. And Wipro is <em>not</em> named among the anchor partners in <a href="https://www.anthropic.com/news/claude-partner-network">Anthropic's own Claude Partner Network announcement</a> of 12 March 2026 — Accenture, Deloitte, Cognizant and Infosys are — while Wipro's own release carries no Anthropic executive quote. Read it as a genuine and unusual partnership, not as a tier-one alliance.</p>
+  <p><b>Source:</b> <a href="https://www.wipro.com/newsroom/press-releases/2026/wipro-advances-enterprise-ai-leadership-with-an-applied-ai-center-of-excellence-for-claude-models-powered-by-anthropic/">Wipro press release, 16 Jun 2026</a></p>
+</div>
+
+<div class="success">
+  <p><b>4 — Wipro's best-evidenced AI claim is the one closest to what she named in her message.</b></p>
+  <p>From the audited FY2025-26 Integrated Annual Report, verbatim: <em>"Across our delivery teams, we have over <b>60,000 associates leveraging AI developer tools</b>, boosting our overall productivity."</em> Against roughly 240,000 headcount that is about a quarter of the workforce. The same filing records 212,663 employees covered by AI-readiness initiatives and 85,219 trained in advanced AI skills.</p>
+  <p>Against peers, Wipro is <b>level, not ahead and not behind</b>: Infosys claims ~80,000 engineers on AI coding tools (chief executive claim, paywalled), Cognizant claims 30% of code AI-generated (no methodology), TCS reports 270k+ with higher AI/ML proficiency (training, not tool use). Wipro and Infosys are the only two publishing a specific count of their own engineers using AI developer tools, and <b>Wipro's is the better-evidenced of the two</b> — an audited filing against a paywalled interview.</p>
+  <p class="why"><b>Two corrections that matter for a room.</b> The "50,000+ Copilot licences" figure attaches to <b>Microsoft 365 Copilot, not GitHub Copilot</b>, and Microsoft published the identical number for Wipro, TCS, Infosys and Cognizant alike — it is a commercial tier, not a differentiator. And there is <b>no evidence of Claude Code specifically</b> at Wipro or any peer; the Anthropic centre is about Claude models in platforms and client workflows. <span class="dim">His own rollout was Claude Code plus OpenAI Codex across a ~20-engineer team. That is a genuinely differentiated story here, and it does not need inflating.</span></p>
+  <p><b>Source:</b> <a href="https://www.sec.gov/Archives/edgar/data/0001123799/000119312526281751/d154883dex991.htm">Integrated Annual Report FY2025-26 (SEC)</a> · <a href="https://news.microsoft.com/source/asia/2025/12/11/cognizant-infosys-tcs-and-wipro-emerge-as-frontier-firms-with-microsoft-deploying-copilot-and-agentic-ai-across-the-enterprise/">Microsoft, 11 Dec 2025</a></p>
+</div>
+
+<div class="success">
+  <p><b>5 — Leadership is settled, and the "Wipro executive churn" narrative is out of date.</b></p>
+  <p>This reverses a premise worth checking. Wipro's FY2025-26 Integrated Annual Report carries the statutory disclosure of senior-management changes required under SEBI (Securities and Exchange Board of India) LODR Regulation 16(1)(d). It records <b>exactly one</b> senior-management cessation across the entire financial year (Jo Debecker, April 2025). The documented Wipro exodus — Jatin Dalal, Stephanie Trautman and others — is <b>2023–24, before this window</b>.</p>
+  <p>Chief executive <b>Srini Pallia is confirmed in post with a five-year term expiring 6 April 2029</b>. Chief financial officer Aparna Iyer has been in post since September 2023 and signs the FY26 accounts. Rishad Premji is Executive Chairman to July 2029. No succession event is pending.</p>
+  <p class="why"><b>Three conflation traps were found and cleared.</b> Independent directors Patrick Ennis and Patrick Dupuis left on 31 Mar 2026 <em>by statutory tenure completion, not resignation</em>. Vineet Agrawal and Kumar Chander belong to <b>Wipro Enterprises</b>, a separate unlisted company, not the listed IT firm. And a circulating snippet claiming <b>"~750 senior executives left" is almost certainly an extraction error and should be treated as false.</b></p>
+  <p><b>Source:</b> <a href="https://www.sec.gov/Archives/edgar/data/1123799/000119312526281751/d154883dex991.htm">FY26 Integrated Annual Report, SEBI LODR disclosure (SEC)</a></p>
+</div>
+
+<div class="success">
+  <p><b>6 — Governance is clean and client concentration is low.</b></p>
+  <ul>
+    <li>FY26 Form 20-F: <em>"we are not party to any pending legal proceedings whose resolution could have a material impact."</em> Deloitte gave an <b>unqualified opinion on both the financial statements and internal control</b>.</li>
+    <li>No SEBI action and no new SEC action. <span class="dim">The $5m SEC penalty sometimes cited is from December 2016 — nine years stale.</span></li>
+    <li>Top-5 clients 14.3% of revenue, top-10 23.7% — low and stable year on year.</li>
+    <li><b>Capco is intact and performing.</b> Acquisition intangibles remain unimpaired with full remaining life; no goodwill impairment in FY26. Pallia: <em>"Capco is a tip of the spear."</em> <span class="dim">The nuance a senior hire should hold: Capco is commercially healthy <em>and</em> was one of the two named restructuring focus areas in December 2025. A separate ₹851m FY26 intangible impairment exists but Wipro does not say which acquisition it attaches to — do not attribute it to Capco.</span></li>
+  </ul>
+  <p class="why">Counter-signals worth holding alongside: active customers fell 1,282 → 1,233 in FY26, clients billing over $100m fell 17 → 16, and Wipro exits the Nifty 50 index effective 30 September 2026 with the stock down roughly 29.5% across CY2026.</p>
+</div>
+
+<div class="success">
+  <p><b>7 — One analyst result is genuinely differentiated, and the chief executive is honest about AI's limits.</b></p>
+  <p>In <b>HFS Horizons: Agentic Services 2026</b> (18 Mar 2026), Wipro is a <b>Horizon 3 Market Leader and one of five "Services-as-Software Stars"</b> out of 36 assessed — alongside Accenture, Cognizant, IBM and Infosys, and <b>ahead of TCS, HCLTech and Capgemini</b> on that axis. Vendor-supplied figures printed in the same report: 300+ agentic clients, 2,000+ AI engagements, 250+ deployable agents, 36,000+ staff upskilled through a "School of Agentic AI".</p>
+  <p>And on the Q1 FY27 call Pallia declined to give a headline productivity number, saying instead: <em>"if it's a pure play greenfield project, which is like a tool like, let's say Python, the productivity is significantly higher. But on the other end of the spectrum, it is a complex code and if you don't have the right target environment, which is lot more legacy… <b>there the productivity comes down significantly.</b>"</em></p>
+  <p class="why">That is a more honest position than any peer's headline number, and it is a good sign for someone who would have to answer for real measurement in a technical round. Wipro's UK AI Lab also won the OpenAI Codex Hackathon, per the same call.</p>
+  <p><b>Source:</b> <a href="https://www.hfsresearch.com/research/hfs-horizons-agentic-services-2026/">HFS Horizons: Agentic Services 2026</a> · <a href="https://www.wipro.com/content/dam/nexus/en/investor/quarterly-results/2026-2027/q1fy27/q1fy27-earnings-transcript.pdf">Q1 FY27 transcript</a></p>
+</div>
+
+<!-- ================================ ANGLE A ================================ -->
+
+<h2>Wipro as an employer for a senior individual contributor</h2>
+
+<p class="lede">Reported quarter at the time of writing: Q1 FY27, ended 30 June 2026, released 16 July 2026. Wipro's financial year FY26 ran April 2025 to March 2026.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Period end</th><th>Headcount</th><th>Voluntary attrition (trailing 12 months)</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>31 Mar 2025</td><td class="num">233,346</td><td class="num">15.0%</td><td></td></tr>
+<tr><td>30 Jun 2025</td><td class="num">233,232</td><td class="num">15.1%</td><td></td></tr>
+<tr><td>30 Sep 2025</td><td class="num">235,492</td><td class="num">14.9%</td><td></td></tr>
+<tr><td>31 Dec 2025</td><td class="num">242,021</td><td class="num">14.2%</td><td>HARMAN Digital Transformation Solutions closed 1 Dec 2025 (5,600+ staff)</td></tr>
+<tr><td>31 Mar 2026</td><td class="num">242,156</td><td class="num">13.8%</td><td></td></tr>
+<tr><td>30 Jun 2026</td><td class="num">243,044</td><td class="num">13.9%</td><td>Mindsprint (3,200+); organic base <b>−2,500</b> on management's own record</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>The read, stated plainly</h3>
+<div class="callout">
+<p><b>The instability thesis is half right, and the halves matter separately.</b></p>
+<p><b>Wrong on leadership.</b> Pallia is contracted to April 2029, the chief financial officer and chairman are settled, and Wipro's own regulatory filing records one senior-management cessation in the last full year. The churn story is 2023–24 history.</p>
+<p><b>Wrong on governance.</b> Clean audit, no material litigation, low client concentration, Capco unimpaired.</p>
+<p><b>Right on the cost base.</b> Revenue has declined in constant currency for two years, margin sits at a 15-quarter low with no committed recovery date, every headcount gain for six quarters has been acquired while the organic base shrinks, restructuring is now a named standing policy that has already touched Europe and Capco on "obsolete skillsets", and Wipro discloses no involuntary-exit numbers whatsoever.</p>
+<p><b>The risk is not company failure or a leadership vacuum. It is joining a cost base the chief executive is publicly describing as a lever, at a firm whose growth is currently bought rather than earned.</b></p>
+</div>
+
+<h3>Acquisitions, deals and market signals</h3>
+<ul>
+  <li><b>Acquisitions, no divestments:</b> HARMAN Digital Transformation Solutions (~$375m, Dec 2025), Mindsprint ($375m, May 2026, tied to a $1bn+/8-year Olam engagement), Alpha Net (up to $70.8m, Jun 2026).</li>
+  <li><b>Named mega-deals:</b> Olam, and Phoenix Group at £500m over 10 years. FY26 bookings $16.4bn (+14%); large-deal bookings $7.8bn (+45.4%) — <b>but revenue is not yet following.</b></li>
+  <li><b>Sector movement, Q1 FY27, constant currency year on year:</b> Technology &amp; Communications +10.8%, banking/financial services/insurance +2.6%, Health −3.0%, energy/manufacturing/resources −8.9%, Americas-2 region −7.3%.</li>
+  <li><b>Market:</b> Nifty 50 exit effective 30 Sep 2026; stock down ~29.5% across CY2026. Analyst consensus deteriorated through 2026 (ICICI Securities to Sell, Motilal Oswal cut, JPMorgan Underweight; consensus Hold).</li>
+  <li><b>No named client loss.</b> Management acknowledged client insourcing hit the banking sector (client unnamed; the chief financial officer says "that is behind us"). A People Matters headline of 3 Aug 2026 reporting Meta cutting its Wipro contract by 25% was <b>verified as a headline only, body not read — treat as a lead, not a fact.</b></li>
+</ul>
+
+<!-- ================================ ANGLE B ================================ -->
+
+<h2>What "Principal Software Architect" would actually mean at Wipro</h2>
+
+<p class="lede">This mattered more than usual going in, and the answer turned out to be structural: <b>the title does not settle the seat, so the seat has to be settled by asking.</b></p>
+
+<h3>The ladder, and where "Principal" sits</h3>
+
+<p>Wipro no longer publishes its DMTS programme description — the old URL now redirects to a generic innovation page with no ladder, no bands and no Fellow grades, and the "Life at Wipro" careers page describes no career tracks either. <b>The often-quoted line about a "four-level technical ladder up to Distinguished Fellow, equivalent to the grade of a chief executive" survives only in search-engine snippets of that dead page. It could not be verified against any working URL and is not asserted here.</b></p>
+
+<p>But DMTS is demonstrably real, and it is <b>a parallel cadre carried alongside a functional title</b>, not a job you are hired into. Every one of these is a wipro.com or Wipro-blog byline:</p>
+
+<ul>
+  <li><em>"<b>Senior Member</b> – Distinguished Member of Technical Staff, Wipro Technologies"</em> — <a href="https://www.wipro.com/blogs/magesh-kasthuri/">Magesh Kasthuri</a></li>
+  <li><em>"<b>DMTS — Principal Member</b> &amp; Technology Architect"</em> — <a href="https://wiprotechblogs.medium.com/the-hidden-landscape-of-everything-as-a-service-820b2251a684">Wipro Tech Blogs</a></li>
+  <li><em>"Distinguished Member of Technical Staff and <b>Lead Enterprise Architect</b>"</em> — <a href="https://www.wipro.com/blogs/dr-gopala-krishna-behara/">Dr Gopala Krishna Behara</a></li>
+  <li><em>"<b>Chief Architect</b> and Distinguished Member of Technical Staff"</em> — <a href="https://www.wipro.com/blogs/vijay-kumar/">Dr Vijay Kumar K</a></li>
+  <li><em>"<b>Wipro Fellow</b>, Chief Technologist"</em> — <a href="https://www.wipro.com/blogs/saji-thoppil/the-ultimate-handbook-for-it-infrastructure-practitioners-in-2020/">Saji Thoppil</a></li>
+</ul>
+
+<p><b>So "Principal Architect" at Wipro reads as <em>DMTS Principal Member who is an architect</em> — an internal promotion destination.</b> One scraped profile shows exactly that arc: 2011–16 "DMTS, Senior Member" → 2016–19 "DMTS, Lead Architect" → 2019–present "DMTS Principal Architect". Eight years inside the cadre to reach Principal. <span class="dim">(Aggregator scrape of a LinkedIn profile, not Wipro's own words — treat as indicative.)</span> That is a strong hint that <b>an external hire offered this title is being slotted by band, not admitted to the DMTS cadre.</b></p>
+
+<div class="evidence">
+  <strong>Band mapping — Wipro's own words</strong>
+  <p>Two live job descriptions carry an explicit band line: <code>Potential Role Name: Solution Architect L1</code> / <code>Potential Band Alignment: C1</code> (<a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT-L1/184659-en_US">posting 184659</a>, also <a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT-L1/182000-en_US">182000</a>), and the same for <a href="https://careers.wipro.com/job/APPLICATION-ARCHITECT-L1/181686-en_US">Application Architect L1</a>.</p>
+  <p><b>Architect L1 = Band C1, stated by Wipro.</b> L2 postings state no band; <b>L2 → C2 is unsourced inference and is flagged as such.</b> Supporting anecdote from a self-identified Wipro architect: <em>"C1 is equivalent to people's manager or architect in technical stream. C2 is a level higher, senior architect/program manager… Typically 10-13 yrs C1, 14-16 yrs C2"</em> (<a href="https://www.fishbowlapp.com/post/what-differentiates-c1-from-c2-at-wipro-roles-responsibilities-can-someone-guide-wipro-which-role-is-better">Fishbowl, ~2021</a>). Note the bands are stream-agnostic — C1 covers both project managers and architects — so band alone tells you nothing about whether a seat carries people.</p>
+</div>
+
+<div class="warn">
+  <p><b>Searched for specifically and not found:</b> any published Wipro architect certification programme, and any "Wipro Technology Council". <b>The evidence for both is absent, not merely thin.</b> If either is raised on the call, it is new information.</p>
+</div>
+
+<h3>Is it individual-contributor? Usually — but not always</h3>
+<p><b>Usually yes</b>, and Wipro states it outright once: <em>"As an Enterprise Architect L2 at Wipro Technologies… <b>This individual contributor role</b> focuses on establishing and enforcing solution governance frameworks"</em> (<a href="https://careers.wipro.com/job/ENTERPRISE-ARCHITECT/182859-en_US">posting 182859</a>, 17 Aug 2026). A related seat is explicit about influence without authority: <em>"Influence multiple engineering organizations <b>without direct reporting authority</b>"</em> (<a href="https://careers.wipro.com/job/Principal-Engineering-Capability-Leader/187205-en_US">Principal Engineering Capability Leader</a>). A sweep of four architect job descriptions for direct reports, appraisals and hiring returned zero hits.</p>
+<div class="warn">
+  <p><b>But not universally, and the exception is a live posting.</b> <a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT/180479-en_US">Solution Architect, posting 180479</a> assigns hiring, appraisals, attrition management and <em>"Ensure that the Performance Nxt is followed for the entire team"</em>. <b>So people-management scope is a per-requisition fact at Wipro, not a property of the architect title.</b> It has to be asked.</p>
+</div>
+
+<!-- ================================ ANGLE C ================================ -->
+
+<h2>Services versus product — what would actually change day to day</h2>
+
+<div class="banner">
+  <p><b>Provenance note, and it is worth reading before the section.</b> The dedicated research pass for this angle returned, then <b>retracted itself as fabricated, then re-verified and withdrew the retraction</b>, finding four genuine errors in its own market figures along the way. Because it proved unreliable about its own bookkeeping twice, this section is built on the <b>Wipro-primary evidence both passes agreed was read directly</b> — Wipro's own regulatory filing and its own live job descriptions — with the four self-identified corrections applied and market-level figures kept to a minimum and labelled. Anything the agent could not re-render on a second fetch has been left out entirely.</p>
+</div>
+
+<h3>Billability is not a cultural observation. It is a stated performance measure at Wipro's Principal grade</h3>
+
+<p>This is the strongest finding in the section, and it comes from Wipro's own documents rather than from commentary.</p>
+
+<div class="evidence">
+  <strong>Wipro Form 20-F, FY2026 — primary filing</strong>
+  <p><em>"If we are not able to mitigate rising employee compensation costs… or <b>maintain high utilization rates for our employees or precisely forecast demand for our services to optimize our bench</b>, our results of operations could be adversely affected."</em></p>
+  <p>And in Wipro's own stated growth strategy: <em>"Delivery operations promoting an <b>employee-led rotation culture, optimizing bench and mobility</b>, accelerating intake and deployment."</em> Margin headwinds listed include <em>"Lower utilization of our resources"</em> — alongside <em>"Investments in consulting talents, <b>domain architects</b>, deep subject-matter experts."</em></p>
+  <p><a href="https://www.sec.gov/Archives/edgar/data/1123799/000119312526253514/wit-20260331.htm">SEC EDGAR — Wipro FY2026 Form 20-F</a></p>
+</div>
+
+<div class="danger">
+  <p><b>And Wipro's live Principal-grade job description names personal billability as a measured target.</b></p>
+  <p><a href="https://careers.wipro.com/job/PRINCIPAL-CONSULTANT-TECH-&amp;-IMPL-L1/192491-en_US">PRINCIPAL CONSULTANT – TECH &amp; IMPL L1</a>, verbatim:</p>
+  <ul>
+    <li><em>"<b>The Principal Consultant must achieve high personal billability.</b>"</em></li>
+    <li><em>"Ensures high levels of <b>individual utilisation achievement</b> in line with the levels expected as part of the goal setting process"</em></li>
+    <li><em>"Continually delivers all Wipro admin in a timely manner (<b>timesheets</b>, appraisals expenses, etc.)"</em></li>
+  </ul>
+  <p>Its measures table reads: <em>"% Revenue Achievement (actual vs. target) · <b>% of Personal Utilisation Achievement (against target)</b> · <b>No. of RFI/RFPs responses led/supported</b> · No. of strategic advisory and transformation engagements delivered · No. of referenceable clients, testimonials · Average CSAT, PCSAT across projects"</em></p>
+  <p class="why"><b>Scope caveat, and it is a real one:</b> this is Wipro's Global Consulting Group track, <em>not</em> the Technology Services architect track. It is nonetheless Wipro's own Principal-grade template, and it shows what gets measured at that grade — <b>revenue achievement, personal utilisation and a count of requests-for-proposal responses, ahead of anything technical.</b> Coming from product companies where the measure is the product, this is the single biggest day-to-day change on the page.</p>
+</div>
+
+<p>The employee-side version of the same point, and it is one person's view from four years ago rather than evidence of a pattern:</p>
+<div class="evidence">
+  <strong>Employee review — anecdote</strong>
+  <p><em>"Your skills, competency and experience is 2nd to billing… It's typical body shopping"</em> — self-identified Solution Architect, 18 Jul 2022 (<a href="https://www.indeed.com/cmp/Wipro/reviews?fcountry=ALL&amp;fjobtitle=Solution+Architect">Indeed</a>)</p>
+</div>
+
+<h3>The account decides the work, and the account can change</h3>
+<ul>
+  <li><em>"after joining the company, you will be asked to attend client interviews, and based on the successful outcome, you will be placed in a project"</em> — Technical Architect, Hyderabad, 6 Aug 2020 (<a href="https://www.indeed.com/cmp/Wipro/reviews?fcountry=ALL&amp;fjobtitle=Technical+Architect">Indeed</a>). <b>Note what this describes: the client interviews the vendor's architect.</b> That is a normal services mechanic and a genuinely unfamiliar one coming from product companies.</li>
+  <li><em>"It is good if you get good client."</em> Cons: <em>"Slow growth"</em> — Solution Architect, Bengaluru, current employee, 26 Jun 2026 (<a href="https://www.glassdoor.co.in/Reviews/Wipro-Solution-Architect-Reviews-EI_IE9936.0,5_KO6,24.htm">Glassdoor</a>) — the most recent account found, and it makes the account-lottery point in six words.</li>
+  <li>Cons: <em>"Not giving work as per role"</em>; Work Details: <em>"This is a desk job."</em> — Technical Architect, Gurugram, 23 Sep 2025 (<a href="https://www.ambitionbox.com/reviews/wipro-reviews/technical-architect">AmbitionBox</a>)</li>
+  <li>Working pattern on a United States account: <em>"I start at 9:30 AM with a DSM meeting and as we have been serving a US client we do have back to back meetings in evening till 8:30 PM"</em> — Technical Architect, 29 Jun 2023 (<a href="https://www.indeed.com/cmp/Wipro/reviews?fcountry=ALL&amp;fjobtitle=Technical+Architect">Indeed</a>). <span class="dim">Recorded as a fact about timezone overlap, not as a negative — schedule density is explicitly not scored in this workspace. It is the kind of thing worth knowing before the offer rather than after.</span></li>
+</ul>
+
+<h3>Greenfield versus modernisation — Wipro's own postings answer this plainly</h3>
+
+<p>No Indian major discloses a development-versus-maintenance revenue split any more. Wipro's FY26 Form 20-F, and the equivalent Infosys filing, report revenue by geography and business line but never by that split. <b>The last time an Indian major published it was Infosys in July 2004</b>, and the shape then is worth knowing:</p>
+
+<div class="evidence">
+  <strong>Infosys Q1 FY2005 earnings call, July 2004 — verified on SEC EDGAR</strong>
+  <p><em>"When you look at service offerings, <b>development is at 26.1%</b> compared to 25.6% in the last quarter… Consequently the <b>maintenance has come down from 29.9% to 28.8%</b>… Testing now contributes 5.3% of revenue… package implementation… is 15% of revenues."</em></p>
+  <p><a href="https://www.sec.gov/Archives/edgar/data/1067491/000095013404010245/f00287exv99w5.htm">SEC EDGAR — Infosys Q1 FY2005</a>. <span class="dim">Twenty-two years old and quoted only because it is the last such disclosure that exists. At that point maintenance (28.8%) exceeded development (26.1%).</span></p>
+</div>
+
+<p><b>Far more useful is what Wipro says its own architects will do.</b> These are live postings, and they are unambiguous:</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Posting</th><th>Wipro's own wording</th></tr></thead>
+<tbody>
+<tr>
+  <td><a href="https://careers.wipro.com/job/ENTERPRISE-ARCHITECT-L2/192604-en_US">Enterprise Architect L2</a><br /><span class="dim">12–15 years</span></td>
+  <td>"Lead comprehensive <b>Application Portfolio Rationalization</b>" · "cloud readiness assessments to evaluate <b>legacy systems</b>" · "formulate precise <b>Retain, Retire, Rehost, Replatform, Refactor, and Replace (6 R's) strategies</b>" · "secure key cloud funding programs such as Microsoft Moonshot, Azure funding, <b>AWS Migration Acceleration Program</b>"</td>
+</tr>
+<tr>
+  <td><a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT-L2/191139-en_US">Solution Architect L2</a><br /><span class="dim">Chennai, named client Ford, 2 Aug 2026</span></td>
+  <td>"Help define the to-be state Architecture for applications identified for <b>cloud modernization</b>" · "<b>Migrate / Rewrite MQ components to Pub / Sub</b>" · "<b>Migrate / Rewrite Shell script and Java components from on prem OCP to GCP</b>" · "Ensure cutover &amp; roll back plan is created"</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Wipro's own 20-F describes its Industry Cloud &amp; Digital line as <em>"enterprise transformation, <b>application modernization</b>, quality engineering, testing, and cloud-native platform services"</em>, and its Enterprise Applications line as guiding clients <em>"towards <b>application modernization</b>."</em> Note also what Wipro <em>Engineering</em> — the greenfield-adjacent arm — actually is: <em>"VLSI and System Design," "Mobility Engineering &amp; Product Testing," "Connectivity."</em> <b>That is silicon, embedded and device work, not enterprise-software greenfield.</b></p>
+
+<p class="why"><b>The one market-level figure kept here, with its caveat.</b> ISG's published index shows application development and maintenance contracting — annual contract value $8.5bn in the first half of 2026, <b>down 12%</b>. ISG's own chairman Steve Hall cautions against reading the headline "new scope" growth as new demand: <em>"Much of this activity appears to reflect <b>work moving between providers and changing operating models</b> rather than entirely new outsourcing demand,"</em> and the same release states <em>"<b>Application development and maintenance (ADM) services remained under pressure</b>, as AI-led work ate into the ACV of labor-based models."</em> (<a href="https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/Global-Tech-Services-Market-Grows-at-Fastest-Pace-Ever-in-Q2-Propelled-by-Soaring-AI-Demand-ISG-Index/default.aspx">ISG press release, 9 Jul 2026</a>). <span class="dim">ISG counts contract awards at or above $5m annual contract value, not revenue or headcount, and does not split development from maintenance inside that number.</span></p>
+
+<h3>Autonomy over technical direction, and how much is pre-sales</h3>
+<p>The evidence here is the job descriptions themselves rather than commentary, which makes it stronger than the review material. The standard high-volume architect template has the architect producing <em>"low-level design inputs"</em> which developers then implement — it never says the architect writes code. The <a href="https://careers.wipro.com/job/SOLUTION-ARCHITECT/180479-en_US">Solution Architect posting 180479</a> uses consistently advisory verbs: <em>"Provides technical and strategic input during the project planning phase in the form of technical architectural designs and <b>recommendation</b>"</em>, <em>"<b>Support pre-sales team</b> while presenting the entire solution design… to the client"</em>, <em>"act as a <b>trusted advisor</b>."</em></p>
+<p>Meanwhile the Bengaluru Enterprise Architect L1 posted on 25 August carries explicit request-for-proposal, sales-process and customer-demonstration duties without "Presales" appearing in its title — plus <em>"Work with <b>multiple Accounts</b> to support opportunity qualification process"</em> and <em>"<b>Travel to customer sites world wide</b>."</em> <a href="https://careers.wipro.com/job/Solution-Architect-L1/171061-en_US">Solution Architect L1</a> is the same shape: <em>"<b>Provide solutioning of RFP's received from clients</b> and ensure overall design assurance."</em></p>
+<div class="callout">
+  <p><b>Two things follow.</b> First, <b>both shapes are live under architect titles right now</b>, which is why question 3 on the call is worth its place. Second, <b>the worldwide client-travel line is the concrete form of the travel-cadence axis</b> — it appears in the pre-sales-flavoured posting and not in the hands-on one, so travel and pre-sales load appear to move together. Worth asking as one question rather than two.</p>
+</div>
+
+<h3>Does the seat stay hands-on? The mechanism named is atrophy, not policy</h3>
+<p>The most pointed Wipro-specific account is from an architect who rated the company <em>positively</em> overall, which is what makes the cons line worth reading:</p>
+<div class="evidence">
+  <strong>Blind review, 11 Sep 2025 — self-identified Cloud Architect at Wipro, rated 5.0</strong>
+  <p>Cons: <em>"Meagre or No hikes. A lot of juggling is required at work. <b>The less technical work the more the experience</b>."</em></p>
+  <p><a href="https://www.teamblind.com/company/Wipro-Limited/reviews">Blind — Wipro reviews</a></p>
+</div>
+<p><b>But "Wipro architects don't code" is not what the evidence says, and it would be wrong to write it down.</b> Hands-on architect seats at Wipro demonstrably exist — the Solution Architect L2 posting on the Ford account carries a literal section headed <em>"Architect hands on role -"</em> instructing the holder to modify Spring Boot microservices, set up Tekton pipelines and rewrite APIs. <b>Which one a given offer is, is the question to ask — not whether Wipro architects code.</b></p>
+
+<h3>Counter-evidence, deliberately sought</h3>
+<p>The picture is not one-sided, and the aggregate rating is better than the individual complaints suggest:</p>
+<ul>
+  <li><b>Glassdoor rates Wipro Solution Architect 3.7 out of 5 across 262 reviews, with 57% saying they would recommend</b> — above Wipro's overall company rating of 3.6 (<a href="https://www.glassdoor.co.in/Reviews/Wipro-Solution-Architect-Reviews-EI_IE9936.0,5_KO6,24.htm">Glassdoor</a>). That is a materially larger sample than any single quote on this page, and it points the other way.</li>
+  <li><em>"Leadership is very supportive. Get many opportunities to work on what you want."</em> Cons: <em>"Work load can sometimes not allow learning"</em> — Solutions Architect, Bengaluru, 10+ years, 21 May 2026 (same source).</li>
+  <li><b>Breadth is named as the genuine advantage, specifically for architects:</b> a practitioner argues that solution architecture in services makes you better <em>"because of the diversity of solutions/problems you'll need to solution"</em>.</li>
+</ul>
+<p>And the structural counter-evidence is stronger than any review: the AI Technology Innovation Center requisition promises <em>"Founding-stage platform ownership"</em> and <em>"Technical leadership without leaving code"</em>. <b>Wipro's platform side is a different job from Wipro's account side</b>, and the whole services-versus-product question resolves differently depending on which one this seat sits in.</p>
+
+<div class="callout good">
+  <p><b>The fork that actually matters, and it has a clean test.</b> On the <b>account side</b>, artificial-intelligence work is delivered on the <em>client's</em> stack, so his specific LangGraph and MCP experience may be incidental — the durable transferable asset there is the architecture (retrieval design, agent decomposition, evaluation, guardrails, multi-tenancy), not the library. On the <b>platform side</b> — WEGA, WINGS, the AI Technology Innovation Center, the AI-Native unit — Wipro chooses and owns the stack, and <b>his framework experience transfers directly</b>. Same company, two different jobs, two different résumé emphases. <b>Question 4 in the list below is the test.</b></p>
+</div>
+
+<!-- ================================ ANGLE D ================================ -->
+
+<h2>The AI angle — is there a real seat, or is it pattern-matching?</h2>
+
+<p class="lede">Her message named his AI-assisted delivery work specifically. That phrase has a concrete referent inside Wipro, which is the single strongest reason to take the call.</p>
+
+<h3>What Wipro actually has</h3>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Programme</th><th>What it is</th><th>Marketing or delivery?</th></tr></thead>
+<tbody>
+<tr><td><b>Wipro Intelligence™</b></td><td>The current umbrella brand, three pillars: Run AI (WINGS), <b>Build AI (WEGA — "agentic platform for all build &amp; transform")</b>, Reimagine AI</td><td><span class="tag ok">Delivery</span> — named in the audited FY26 Form 20-F</td></tr>
+<tr><td><b>WEGA</b></td><td>Agent-native software development life cycle platform. Factory.ai "Droids" integrated Jan 2026</td><td><span class="tag warn">Mixed</span> — appears in named client wins, but its headline metrics carry Wipro's own "lab conditions" disclaimer</td></tr>
+<tr><td><b>AI-Native Business &amp; Platforms Unit</b></td><td>Launched 1 Apr 2026 under chief executive Nagendra Bandaru; a fifth global business line alongside Consulting, Technology Services, Engineering and Business Process Services</td><td><span class="tag ok">Structural change, real</span> — but <b>no headcount, investment or revenue target disclosed anywhere</b>, including the 20-F</td></tr>
+<tr><td><b>AI Technology Innovation Center</b></td><td>New Bengaluru research centre on a "research-to-product operating model"</td><td><span class="tag ok">Delivery</span> — hiring against it right now</td></tr>
+<tr><td><b>Google Cloud — 200 production-ready AI agents</b></td><td>Stated as completed and listed on Google Cloud Marketplace (13 Aug 2025)</td><td><span class="tag ok">Shippable artefact</span> — no client named, but a marketplace listing is more than an announcement</td></tr>
+<tr><td><b>NVIDIA AI-DC · ServiceNow agentic workflows</b></td><td>Partnership announcements, Mar and May 2026</td><td><span class="tag bad">Announced only</span> — no client names, no numbers, no deployment evidence</td></tr>
+<tr><td><b>Wipro ai360</b></td><td>The 2023 platform brand</td><td><span class="tag">Retired as a platform brand</span> — <code>wipro.com/ai360/</code> returns 404; survives in the FY26 20-F only as a skilling and strategy word</td></tr>
+<tr><td><b>Wipro Holmes</b></td><td>2016-era cognitive automation</td><td><span class="tag">Legacy</span> — still present-tense on the consulting site, but appears <b>zero times</b> in the FY26 20-F or annual report</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="danger">
+  <p><b>⚠ Lab45 no longer exists. Do not reference it as a target, and do not let it appear in any application or conversation as current.</b></p>
+  <p>Six independent confirmations: <code>wipro.com/lab45/</code> returns HTTP 200 but serves a <b>"Wipro Innovation Network"</b> page with zero occurrences of "Lab45"; <code>lab45.wipro.com</code> does not resolve in DNS; <b>zero mentions in the FY2026 Form 20-F and zero in the FY2026 Integrated Annual Report</b> (the FY2025 20-F had five); the FY2025 text <em>"Through Wipro Lab45, our innovation lab…"</em> became <em>"we launched the global <b>Wipro Innovation Network</b>"</em> in FY2026; the LinkedIn showcase page returns 404; and the last Wayback capture of the Lab45 page is 22 May 2025.</p>
+  <p>The clincher: a live requisition dated 29 Apr 2026 carries the old Lab45 boilerplate with the name find-and-replaced, <b>typo included</b> — <em>"Wipro <b>Innoivation</b> networks is a visionary space developing ground-breaking solutions"</em> — recruiting for <em>"our Wipro Innoivation networks <b>AI Platform Team</b>"</em>, which the expired requisition called <em>"The <b>Lab45</b> AI Platform Team"</em>. Same team, new name.</p>
+  <p class="why">It split two ways: research went to the Wipro Innovation Network under the chief technology officer, and productised assets went to Wipro Intelligence and the AI-Native unit. Its flagship Lab45 AI Platform (Jun 2024) claimed "over 1,000 GenAI agents" but named exactly one production user — Topcoder, itself a Wipro company.</p>
+</div>
+
+<h3>The honest reading</h3>
+<div class="callout">
+  <p><b>The evidence supports a genuine platform-engineering seat existing inside a much larger consulting-and-packaging business.</b></p>
+  <ul>
+    <li><b>Consulting and advisory packaging is the largest share by volume.</b> Wipro's own strategy language is "consulting-led, AI-powered", repeated across filings; most industry "platforms" are solution packages sold into verticals, and the AI-and-automation page routes to a consulting mailbox.</li>
+    <li><b>Model reselling with a services wrapper is real but not the whole story.</b> Wipro explicitly leverages "advanced LLMs from frontier labs such as Anthropic, OpenAI, and Google" — models are rented, not built, and there is no Wipro foundation model. Worth knowing: <b>Wipro has zero public GitHub repositories</b>, so this is not an open-source engineering culture.</li>
+    <li><b>Genuine platform engineering exists and is identifiable.</b> WEGA and WINGS plus the AI Technology Innovation Center are products with roadmaps, agent marketplaces, orchestration runtimes and multi-tenancy requirements. The FY26 20-F names an "Agentic Operating System", agentic marketplaces and agentic commerce as strategic bets. <b>That work needs agent-orchestration engineers, not consultants.</b></li>
+  </ul>
+  <p><b>Bottom line: the AI framing is not recruiter-side pattern-matching. Whether <em>this seat</em> touches the real platform work is the open question, and it is question 4 below.</b></p>
+</div>
+
+<!-- ================================ ANGLE E ================================ -->
+
+<h2>The recruiter, and what the outreach supports</h2>
+
+<p class="lede">Assessed as a question about pipeline type, not about the person's competence. The distinction is deliberate.</p>
+
+<h3>What "SAP SuccessFactors" in the headline actually denotes</h3>
+<p>This turned out to be more informative than expected, and in a way that slightly favours the outreach being genuine. SuccessFactors Recruiting is an applicant tracking system, and <b>SAP's own published customer story confirms Wipro runs SuccessFactors for its own workforce</b> — over 230,000 employees across 65 countries, with SuccessFactors Recruiting deployed in six months, quoted by Wipro's Chief Employee Experience Officer (<a href="https://www.sap.com/sea/asset/dynamic/2025/08/d4f03b04-177f-0010-bca6-c68f7e60039b.html">SAP customer story</a>).</p>
+<p>Further, <b>careers.wipro.com is itself the SuccessFactors career-site product</b> — inferred strongly from its URL grammar and from the site footer's own link being an Outlook safelink stamped with an <code>@sap.com</code> address, meaning SAP staff built and maintain it.</p>
+<div class="insight">
+  <p><b>So the headline reads, plainly: "I run recruiting inside Wipro's SuccessFactors instance."</b> It names the system of record, not a technology domain. That is the vocabulary of talent-acquisition operations rather than of a technical recruiter, who would name stacks — Java, Kubernetes, cloud.</p>
+</div>
+<p><b>Where the evidence stops, and it stops earlier than it looks.</b> Nothing sourced establishes that naming an applicant tracking system <em>predicts</em> shallow technical depth. What it supports is narrower: expect the first conversation to be a screen rather than a technical discussion, and expect the job description to arrive from her rather than from a search. <b>That is a signal about pipeline type. It is not a competence judgement and should not be treated as one.</b></p>
+
+<h3>Templated or targeted? The honest answer is "cannot tell, and here is why"</h3>
+<ul>
+  <li><b>Bulk InMail is a shipped, first-class LinkedIn Recruiter feature</b>, not a workaround. LinkedIn's own help text refers to disabling a recruiter's "bulk InMail service" during a restriction (<a href="https://www.linkedin.com/help/recruiter/answer/a413271">LinkedIn Help</a>). <span class="dim">A correction worth carrying: LinkedIn does <em>not</em> "explicitly prohibit" bulk InMail, as is sometimes claimed. It prohibits untargeted mass sending while shipping a bulk-send product.</span></li>
+  <li>LinkedIn polices volume senders by response rate — a floor of <b>13% response on 100+ InMails per rolling 14-day period</b> before a warning period begins (<a href="https://www.linkedin.com/help/recruiter/answer/a414226/">LinkedIn Help</a>). The existence of that machinery is itself evidence that high-volume templated sending is routine.</li>
+  <li><b>But brevity is not bulk.</b> LinkedIn's own outcome data, drawn from tens of millions of InMails: individually-sent InMails outperform bulk by ~15%, and the <em>shortest</em> InMails (under 400 characters) outperform average by 22% while the longest underperform by 11% (<a href="https://www.linkedin.com/business/talent/blog/talent-strategy/these-inmails-get-best-response-rates">LinkedIn Talent Blog</a>). <b>A brief, unspecific opener is exactly what competent one-to-one outreach looks like too.</b></li>
+</ul>
+<div class="callout">
+  <p><b>The signals that actually discriminate, none of which cost anything to observe:</b> does the reply name a <b>requisition ID</b>, a client account or a location? Does it reference anything specific to his profile — the Amura programme, the axe Monitor multi-tenant consolidation, the graph neural network? Does the job description arrive attached, or only after he asks twice? <b>Speed and specificity of the reply are worth more than any inference from the first message.</b></p>
+</div>
+
+<h3>Is the seat real and open?</h3>
+<p>Checked across Wipro's own careers site (all 76 India "Principal" results enumerated), LinkedIn Jobs, and Naukri. <span class="dim">A method note for anyone re-running this: careers.wipro.com is a JavaScript-rendered single-page application, so plain HTTP fetching returns <b>zero job rows</b>. Anyone checking with <code>curl</code> will wrongly conclude "no results". It has to be driven with a real browser and paginated.</span> Naukri's "wipro architect" results are dominated by <b>Wipro PARI</b> — the industrial-automation group company, not Wipro Limited IT services — plus staffing-agency reposts (284 "Consultant Jobs" against 27 "Company Jobs").</p>
+
+<div class="warn">
+  <p><b>The caveat that must travel with the "title not found" finding, every time it is repeated.</b> <b>Absence of a public posting is not proof the seat is fake.</b> Wipro is a services business; a large share of its architect requisitions are raised against a specific client account or a specific win, staffed from internal supply or a recruiter's own pipeline, and never appear on the public careers site. Separately, Wipro maps titles onto internal bands with L0–L2 role levels, so "Principal Software Architect" is entirely plausible as a recruiter's <em>descriptive</em> rendering of a band for an external audience. Both are ordinary and unremarkable. <b>What the finding supports, and no more: the title will not resolve to a public URL, so the job description has to come from her.</b></p>
+</div>
+
+<!-- ================================ FORCING QUESTIONS ================================ -->
+
+<h2>Forcing questions</h2>
+
+<p class="lede">Sharp, answerable on a first call, and ordered so that the three that most quickly reveal whether this is worth his time come first. Each one is written so a vague answer is itself informative.</p>
+
+<div class="panel">
+<h3>The three that matter most</h3>
+<ol>
+  <li>
+    <p><b>"What's the requisition ID, and can you send me the careers.wipro.com link?"</b></p>
+    <p class="why">Every genuine Wipro requisition carries a numeric ID. This single question resolves the title finding, the "is it posted" question and the legitimacy question at once, and it costs nothing to ask. <b>If the answer is that there is no requisition yet, that is the answer</b> — it means pipeline-building, and the rest of the call can be shorter.</p>
+  </li>
+  <li>
+    <p><b>"Is this seat attached to a funded account today, or is it a pipeline hire? And which business line — the AI-Native unit or the AI Technology Innovation Center, or a client account?"</b></p>
+    <p class="why">This is the account-versus-platform fork, and it is the whole decision. It also surfaces the bench question without asking about the bench — which reads better and gets a straighter answer. A funded, named account or a named internal platform is a real seat; "we're building a pool" is a different conversation.</p>
+  </li>
+  <li>
+    <p><b>"What share of the role is responses to requests for proposal, solutioning and customer demonstrations, versus building?"</b></p>
+    <p class="why">The 25 August Bengaluru Enterprise Architect L1 posting proves an architect title at Wipro can be substantially pre-sales without saying so anywhere in the title. This is the question the title cannot answer, and a recruiter who knows the hiring manager will have a number.</p>
+  </li>
+</ol>
+</div>
+
+<h3>The rest, in order of value</h3>
+<ol start="4">
+  <li><b>"Whose stack would I be working on — Wipro's own platform, or the client's?"</b> <span class="why">The clean test for whether his LangGraph, MCP and vector-retrieval experience transfers directly or is incidental. WEGA, WINGS and the AI Technology Innovation Center mean Wipro owns the stack; an account seat usually means the client does.</span></li>
+  <li><b>"Does this seat write code? What's the last thing the person in the adjacent seat actually shipped?"</b> <span class="why">The second half is the one that works. "Hands-on" is in every job description; a specific shipped thing is not fakeable on a phone call.</span></li>
+  <li><b>"Does the seat carry direct reports and appraisals, or is it pure individual contributor?"</b> <span class="why">Not rhetorical, and not answerable from the title. One live Wipro architect posting is explicitly "This individual contributor role"; another assigns hiring, appraisals and attrition management outright. Both are current.</span></li>
+  <li><b>"How is performance measured in this seat — is personal utilisation a target, and are requests-for-proposal responses counted?"</b> <span class="why">Wipro's own Principal-grade template names both as measures, ahead of anything technical. If the answer is yes, that is the job; if the answer is no, this is a genuinely different seat and worth knowing which.</span></li>
+  <li><b>"What band and role level does this map to, and is it in the DMTS technical cadre or a band placement?"</b> <span class="why">Architect L1 is Band C1 in Wipro's own postings. This question also tests whether she is working from a real requisition or a description.</span></li>
+  <li><b>"Is the requisition title literally 'Principal Software Architect'?"</b> <span class="why">It is not Wipro India's public vocabulary. A straight "no, internally it's X" is a good sign — it means she is translating rather than improvising.</span></li>
+  <li><b>"What does the interview process look like, and who does the technical round?"</b> <span class="why">Whether an architect or a delivery manager runs it tells him what the seat is really being hired for.</span></li>
+  <li><b>"What's the travel cadence to client sites, and does the seat carry 24/7 on-call?"</b> <span class="why">Both are separate axes from location and schedule density, and neither is scored — but both are much easier to establish now than after an offer.</span></li>
+</ol>
+
+<div class="tip">
+  <p><b>Where these go, and where they do not.</b> Per this workspace's recruiter-reply rule, a written reply answers exactly what was asked, in the order asked, then puts a call on the table — <b>with no added questions</b>, however useful they look. Every extra written question is one more thing standing between him and a phone call. <b>All ten of the above belong on the call cheat-sheet and get asked out loud.</b> The single exception worth considering is question 1: a requisition ID is a small, normal thing to ask for in writing, and it saves a call if the answer is that there is no requisition. That is his call to make, not this page's.</p>
+</div>
+
+<!-- ================================ LIMITS ================================ -->
+
+<h2>Limits of this research</h2>
+
+<div class="panel">
+<ul>
+  <li><b>Compensation was researched and then deliberately excluded from this page</b> at his instruction on 2026-08-25 — it will be handled when a conversation reaches that stage. No band findings, aggregator figures or comparisons appear anywhere above.</li>
+  <li><b>Several mainstream Indian business publications are hard-blocked</b> to the tools used (Moneycontrol, Mint, Reuters, Economic Times, Times of India, BusinessLine, Zee Business). A handful of items are headline-and-date only and are labelled as such above — chiefly the reported Meta contract reduction.</li>
+  <li><b>Could not be verified:</b> any 2026 credit-rating action; the identity of two FY26 mega-deals above $500m; which acquisition the ₹851m FY26 intangible impairment attaches to; a successor for the Americas-2 region; whether the Chief Growth Officer role was formally abolished; a reported Axis Capital downgrade citing Capco synergies (<b>single unverified snippet — do not use</b>).</li>
+  <li><b>The Everest and IDC band placements come from competitor-licensed copies</b> of paywalled reports (Accenture, Cognizant, PwC, KPMG hosting their own excerpts). Figures were cross-checked across multiple licensees, but this is not the analyst firm's own distribution.</li>
+  <li><b>Employee reviews are individual anecdotes</b>, several of them years old, and are labelled as such at every point of use. They are used to generate questions, never to establish patterns.</li>
+  <li><b>⚠ The services-versus-product research pass required a correction cycle and should be read with that in mind.</b> It reported, then retracted itself as fabricated, then re-verified and withdrew the retraction — identifying four genuine errors in its own market-level figures in the process. Its bookkeeping about its own state was wrong twice. <b>That section has therefore been rebuilt on the Wipro-primary evidence both passes agreed was read directly</b> (Wipro's Form 20-F, its live job descriptions, the Infosys 2004 filing, and named Blind and Glassdoor architect reviews). Market-size tables it could not re-render — and one aggregator block that failed a second fetch — were dropped entirely rather than carried at reduced confidence.</li>
+  <li><b>Two corrections were applied to claims that had already been written onto this page</b> as a result of that pass: the assertion that Wipro architect seats carry no people has been narrowed (posting 180479 assigns hiring and appraisals), and the greenfield-versus-modernisation section now exists where it previously said the data was unsourced.</li>
+  <li><b>Not established by any source, and worth knowing that no one has published it:</b> any rotation-cadence figure for architects at these firms; any percentage-of-week figure for architect pre-sales load; and whether architect pre-sales time is billable at the Indian majors. <b>Anyone quoting such a number is guessing.</b></li>
+  <li><b>Wipro requisitions expire quickly.</b> Several postings fetched during this research had already gone dark. Every careers.wipro.com link above was live on 2026-08-25 and may not be by the time he reads it.</li>
+</ul>
+</div>
+
+<p class="signoff">Research compiled 2026-08-25 · six parallel research passes, adjudicated against Wipro's own filings where they exist · no compensation content by instruction · <b>seat not scored — awaiting the job description</b></p>
+
+</main>
+</body>
+</html>
