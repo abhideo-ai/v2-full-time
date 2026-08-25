@@ -146,8 +146,11 @@ initiative; surface them in every technical-round prep artefact and leave the r�
 alone until he decides. The journey doc *asks* several of these questions, so it cannot resolve
 them for you.
 
-- The **graph neural network** — shipped, or still in training? Never upgrade it to
-  shipped-and-serving.
+- ~~The graph neural network~~ — **SETTLED 2026-08-25: he confirmed it is real and it is in the
+  headline.** It attaches to the Context Graph, which the ten killer-query case studies do not
+  document — absence there was never absence in production. **Prep consequence:** it is now in
+  word-position four of his headline, so "walk me through the graph neural network architecture"
+  is a certainty in any technical round.
 - The **27 ms / P95 16 ms** pairing — P95 below mean is a strength *if he names the tail*.
 - Whether the **large language model narrative guardrails** actually shipped.
 - **"hand-coded"** vs **"spearheaded"**.
@@ -649,11 +652,9 @@ the JDs; we build. The bot exports serially on one shared browser, and he has ac
   *"screens lading time was improved by 60-70%"* at innRoad, in his own handwriting.
 - **VoltusWave carries 10 bullets** — six chat-platform, four Amura — and will not fit three pages.
   Trimming is per-job, not a master edit.
-- **The graph neural network.** Zero occurrences of "graph neural network" or "GNN" across all 22
-  case-study files; KQ4's ladder is logistic → PrefixSpan → Transformer. Deliberately absent from
-  this master, still on his live card. It attaches to the Context Graph, which those ten do not
-  document, so absence there is not absence in production.
-- **ISO 27001** — on his live card, nowhere in his source documents.
+- ~~ISO 27001~~ — **SETTLED 2026-08-25: Deque's certification, and the environment he delivered
+  in.** Written as "HIPAA pipelines in an ISO 27001-certified environment", never as a credential
+  he personally holds.
 - **Confirm-or-reject:** ~300 customers vs instances; the 70–80% consolidation; two Rocket metrics
   (bugs −50%, sales +20%); 8% month-over-month sustained or one-time; the 100,000-concurrent
   wording, currently written as burst testing.

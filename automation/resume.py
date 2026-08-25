@@ -172,7 +172,10 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
         tag = "Replace:" if diff else "No change:"
         cls = "paste-block" if diff else "paste-block nochange"
         body = "\n        ".join(f"<p>{p}</p>" for p in now)
-        blocks.append(f'''<h3 class="section-head">{i + 1}. {title}</h3>
+        blocks.append(f'''<div class="ps-head">
+    <h3 class="section-head">{i + 1}. {title}</h3>
+    <label><input type="checkbox" class="ps-done" data-sec="{sec_id}" /> pasted</label>
+  </div>
 
   <section class="{cls}">
     <h3 class="paste-block-title"><span class="num">{NUMS[i]}</span><span class="label">{tag}</span> {title}</h3>
@@ -196,7 +199,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="{up}style.css" />
 </head>
-<body>
+<body data-sheet="{H.escape(label)}">
 <main class="page" id="main">
 
 <p class="breadcrumb"><a href="{up}index.html">Full-time JD workspace</a> · {H.escape(label)} · paste sheet</p>
@@ -219,9 +222,49 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
   <code>automation/resume.py sheet</code>. Which sections changed is derived by diffing against <code>{H.escape(since)}</code>, so it cannot go stale. Do not edit this page — edit the résumé and regenerate.
 </div>
 
+<div class="ps-bar">
+  <span id="ps-count">0/10 pasted</span>
+  <button type="button" id="ps-reset">reset</button>
+  <span class="dim">Ticks survive a reload, and the tab title shows your progress.</span>
+</div>
+
 <h2 class="quick-paste-title">Section by section</h2>
 
   {"".join(chr(10) + chr(10) + "  <!-- ============================================================ -->" + chr(10) + "  " + b for b in blocks)}
+
+<h2>Card-only — hand-edit these in Hiration</h2>
+<p class="lede">The bot never writes any of this. It is in
+<a href="{H.escape(src.name)}">the résumé</a> in full; the ones that bite are here.</p>
+<ul class="checks">
+  <li><strong>Dates.</strong> VoltusWave must read <strong>Apr 2026</strong> (Mar 2025 – Apr 2026).
+  Deque Dec 2019 – Feb 2025. Verify after cloning — do not assume the clone kept them.</li>
+  <li><strong>El Paso → Senior Java Developer</strong>, JSP and Java Enterprise Edition, Tennessee
+  Gas Pipeline. The v1 card calls it <strong>.NET</strong>, which hides four of the eleven Java
+  years. This is the single highest-value correction on the card.</li>
+  <li><strong>Personal Information modal</strong> — Hyderabad · phone · email · LinkedIn slug
+  <strong>abhisheikdeo</strong>, not <code>abhideo</code>, which is the email domain.</li>
+  <li><strong>Sections 11–15</strong> — CURA, innRoad, McDonald&#39;s, El Paso, LyntonWeb.</li>
+</ul>
+
+<h2>Then export</h2>
+<div class="paste-area copy-target" id="sec-export">
+  <button type="button" class="copy-btn" data-copy-target="#sec-export">Copy command →</button>
+  <p><code>UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py --slug {H.escape(label)} --no-pause --reset</code></p>
+</div>
+<p class="dim">Run from the repo root — the persistent browser profile lives there, so the working
+directory matters. The bot runs serially on one shared browser.</p>
+
+<h2>Verify the PDF</h2>
+<ul class="checks">
+  <li>Dates correct — VoltusWave ended <strong>Apr 2026</strong></li>
+  <li>Bold renders visibly <strong>heavier</strong>, not just a different font</li>
+  <li>Contact details, and the LinkedIn slug <strong>abhisheikdeo</strong></li>
+  <li>No <code>[fill in metric]</code> anywhere</li>
+  <li><strong>At most 3 pages</strong></li>
+  <li>Content matches this sheet</li>
+</ul>
+<p class="dim">Ignore the applicant tracking system &ldquo;Resume Review&rdquo; score — it moves on
+hygiene, not on fit.</p>
 
 <footer class="signoff">
   <p><a href="{H.escape(src.name)}">The résumé</a> · regenerate with
@@ -230,6 +273,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
 
 </main>
 <script src="{up}static/copy.js" defer></script>
+<script src="{up}static/paste.js" defer></script>
 </body>
 </html>
 ''')

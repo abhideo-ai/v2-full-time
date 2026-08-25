@@ -1,11 +1,11 @@
 {
   "quick-headline": {
-    "why": "The old headline led with multi-tenant SaaS and ended on a generic \"production AI on AWS\". Five drafts were scored by three independent judges — a recruiter lens, a hiring-engineer lens, an honesty auditor — and all three picked this one, <strong>46, 47 and 47 out of 50</strong>. It is the only draft that puts Java in the first content slot <em>and</em> says something about the AI work almost no other candidate can say.",
+    "why": "<strong>His wording, kept.</strong> “Hands-on” in word one pre-empts the single doubt every Staff and Principal job description raised — his most recent role reads as org leadership, so <em>is he still hands-on?</em> The pipe-delimited format also scans better than prose; recruiters scan, they do not read. One addition: <strong>Java + Spring Boot</strong>. ServiceNow's requirement is “deep proficiency in Java”, Okta's seat is literally “Software Architect, Java Backend” — a headline without Java is filtered before a human sees it.",
     "heads_up": "Goes in Hiration's <strong>headline</strong> field — the only field the bot ever writes. Replace the whole line.",
-    "hygiene": "20 words · tagline exception applies, so SaaS and AI may stay unexpanded here · no leadership framing"
+    "hygiene": "~194 characters · tagline exception applies, so SaaS, AI, GNN, LLM, HIPAA and ISO 27001 may stay unexpanded <em>here</em> · <strong>GNN confirmed by him 2026-08-25</strong> · ISO 27001 is Deque's certified environment, framed as such in Business &amp; Delivery"
   },
   "quick-summary": {
-    "why": "The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of patient history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>.",
+    "why": "The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of patient history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>. Opener now reads <strong>“Hands-on principal architect”</strong> so the summary matches the headline's framing.",
     "heads_up": "Replace the whole summary. <strong>Bold must survive</strong> — use the Copy button, never a manual selection.",
     "hygiene": "~115 words · every acronym expanded on first use in reading order · no \"currently\" attached to VoltusWave, which ended Apr 2026"
   },
@@ -22,6 +22,15 @@
   "quick-teletext": {
     "hygiene": "4 bullets · unchanged · <strong>the +65% hotel conversions is the one unresolved claim on this résumé</strong> — your journey document flags it twice and your original contains no 65% conversion claim at all"
   },
-  "quick-deque": { "hygiene": "6 bullets · unchanged · ~300 instances and 70–80% consolidation are still unconfirmed" },
-  "quick-rocket": { "hygiene": "4 bullets · unchanged · bugs −50% and sales +20% still unconfirmed · title is Software Engineer III, never \"Director\"" }
+  "quick-deque": {
+    "hygiene": "6 bullets · unchanged · ~300 instances and 70–80% consolidation are still unconfirmed"
+  },
+  "quick-rocket": {
+    "hygiene": "4 bullets · unchanged · bugs −50% and sales +20% still unconfirmed · title is Software Engineer III, never \"Director\""
+  },
+  "quick-skills-bd": {
+    "why": "One line changed: HIPAA pipelines now read “in an <strong>ISO 27001</strong>-certified environment”. That is Deque's certification and the environment he delivered in — deliberately not worded as a credential he personally holds.",
+    "heads_up": "Replaces the <strong>whole</strong> block.",
+    "hygiene": "6 lines · ISO 27001 framed as environment, per his confirmation 2026-08-25"
+  }
 }
