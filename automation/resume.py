@@ -193,6 +193,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{H.escape(label)} — section-by-section paste</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="{up}style.css" />
 </head>
 <body>
