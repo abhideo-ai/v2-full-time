@@ -53,15 +53,52 @@ document.addEventListener("click", async (e) => {
     .replace(/\n[ \t]+/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
-  const useRich = btn.dataset.copyHtml === "1" && window.ClipboardItem && navigator.clipboard.write;
+  // Rich copy, three paths, best first. The middle one matters: ClipboardItem
+  // is absent in Firefox and older Safari, and WITHOUT this fallback the code
+  // silently dropped to writeText() — plain text, every <strong> gone, with no
+  // error to notice. Bold loss does not surface until the exported PDF.
+  const wantsRich = btn.dataset.copyHtml === "1";
+
+  // Select real DOM and let the browser put rich text on the clipboard itself.
+  // Works everywhere execCommand does, which is everywhere.
+  const richCopyViaSelection = () => {
+    const holder = document.createElement("div");
+    holder.setAttribute("contenteditable", "true");
+    holder.innerHTML = html;
+    // Off-screen but still selectable: display:none or visibility:hidden would
+    // make the range empty and copy nothing at all.
+    holder.style.cssText =
+      "position:fixed;left:-9999px;top:0;white-space:normal;opacity:0;";
+    document.body.appendChild(holder);
+    const range = document.createRange();
+    range.selectNodeContents(holder);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch { ok = false; }
+    sel.removeAllRanges();
+    holder.remove();
+    return ok;
+  };
+
   try {
-    if (useRich) {
+    let done = false;
+    if (wantsRich && window.ClipboardItem && navigator.clipboard?.write) {
       await navigator.clipboard.write([new ClipboardItem({
         "text/html":  new Blob([html], { type: "text/html"  }),
         "text/plain": new Blob([text], { type: "text/plain" }),
       })]);
-    } else {
+      done = true;
+    }
+    if (!done && wantsRich) done = richCopyViaSelection();
+    if (!done) {
+      // Plain text is the last resort and LOSES BOLD, so say so rather than
+      // reporting success and letting it surface in the PDF.
       await navigator.clipboard.writeText(text);
+      btn.classList.add("copied");
+      btn.textContent = "Copied (plain text — bold lost)";
+      return;
     }
     // Persistent "Copied" state: stays marked so you can track which blocks
     // you've pasted while working top-to-bottom. Re-clicking re-copies and
