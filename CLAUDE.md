@@ -86,8 +86,15 @@ If it is not in the journey document and not user-confirmed, do not write it. A 
 metric is `[fill in metric]`, never an invented number.
 
 **Never claim:** Kafka (he has **Amazon Kinesis**, confirmed in production), MongoDB,
-ClickHouse, Azure, Google Cloud Platform, Redis, SOC 2, Spring Cloud, Spring WebFlux,
+ClickHouse, Azure, Google Cloud Platform, SOC 2, Spring Cloud, Spring WebFlux,
 Spring Batch. Only **Spring Boot** is his.
+
+**Redis was removed from that list on 2026-08-25, by him.** The Amura case studies place it
+in the production request path of systems he owned — KQ4's per-tenant-namespaced risk cache
+(TTL 6h) and KQ10's canonical keyed cache, both `FastAPI + Redis`. He confirmed the entry was
+stale. **Redis is claimable.** Note KQ2 explicitly *declined* Redis ("it is an in-process
+cache… no per-request Redis layer for this query") — that is a deliberate engineering choice
+worth telling, not a contradiction.
 
 **MySQL is historical, not banned.** The master résumé already carries *"Ported the data model
 from Microsoft SQL Server to MySQL"* (Cura, 2015), and the journey doc corroborates it. Never
@@ -313,6 +320,20 @@ automation/.venv/bin/python automation/daily.py     # regenerate the page from d
 `killer-query-case-studies/` is **v1**, complete and committed (46227bd). Ten killer-query case
 studies plus Q&A companions, ~198,000 words: what was implemented for Amura, a chronic-care
 platform covering 80+ conditions.
+
+**Everything in v1 SHIPPED — he confirmed it 2026-08-25.** Do not let an extraction downgrade
+it. The documents say *"the contract was signed and the query is live"*; what several pages
+record as *"approval pending"* is an internal **design-review sign-off**, not deployment
+status. Shipped and approved are different things and the source keeps them apart correctly —
+a first extraction pass misread the governance state as delivery state and under-claimed.
+
+**⚠ He does NOT have the outcome numbers. He left VoltusWave before he could capture them.**
+So Amura bullets carry **design and scale markers**, never impact metrics: 80+ conditions,
+a 6-hour cache TTL, a 90-day outcome-maturity window, twenty adversarial-review findings
+absorbed into a hardened v2, 13 of 13 local findings closed. Those are facts from his own
+documents. **Latency achieved, adoption, error reduction, cost saved — he cannot supply these,
+so they are `[fill in metric]` or absent. Never invent one, and never ask him again for a
+number he has already said he does not have.**
 
 **Do NOT wait for v2. Finish everything on v1.** Bullets, workspaces, prep artefacts — all of it
 gets built from v1 now. v2 needs a few more points and is **days-to-weeks away**; holding work
