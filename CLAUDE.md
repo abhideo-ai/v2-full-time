@@ -131,6 +131,12 @@ frame PostgreSQL↔MySQL as transferable.
   React (web), a measured Claude Code / Codex rollout, Datadog. Metrics: hotel conversions
   **+65%**, ELK cost **−46%**, 8 early clients, and **25 hotel suppliers integrated through a
   MuleSoft enterprise service bus** — all four user-supplied and safe to claim.
+- **User-confirmed 2026-08-25, safe to claim: infrastructure cost cut 25–30%, and deploy time
+  from hours to under 10 minutes.** Neither appears in `professional-journey.md` or the
+  original — an earlier pass flagged them as unsourced and he corrected it. The rule is
+  "journey doc **or** user-confirmed", not journey-doc-only; he was there and the record is
+  incomplete, not the claim. **Do not re-flag these.** Open only: which role they attach to —
+  his live card places them beside the VoltusWave second stint.
 
 **Open claims — HE settles these, not us.** Never rewrite them in either direction on your own
 initiative; surface them in every technical-round prep artefact and leave the résumé wording

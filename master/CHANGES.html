@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Master — what changed</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · what changed</p>
+
+<header>
+  <p class="eyebrow">Change log · 25 Aug 2026</p>
+  <h1>What changed in <code>master/</code>, and why</h1>
+</header>
+
+<div class="callout good">
+  <b>Bottom line: no résumé content has changed.</b> Not one bullet, headline, summary or skills
+  line in <code>upgrad_resume.html</code> or <code>master_paste.html</code> has been edited. The
+  only change to either file is a single line — the favicon path — and it is cosmetic. Everything
+  else below is either <strong>new supporting material</strong> or a <strong>proposal awaiting your
+  decision</strong>.
+</div>
+
+<h2>1 · Files actually changed</h2>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>File</th><th>Change</th><th>Why</th></tr></thead>
+<tbody>
+<tr>
+  <td><code>upgrad_resume.html</code></td>
+  <td><span class="pill fact">1 line</span> favicon path</td>
+  <td><code>../static/favicon.svg</code> → <code>favicon.svg</code>. All five workspace pages
+  shared one icon, so pinned browser tabs were indistinguishable — a pinned tab shows only the
+  favicon, no title text. <strong>Zero résumé content touched.</strong></td>
+</tr>
+<tr>
+  <td><code>master_paste.html</code></td>
+  <td><span class="pill fact">1 line</span> favicon path</td>
+  <td>Same change, same reason. <strong>Zero résumé content touched.</strong></td>
+</tr>
+<tr>
+  <td><code>favicon.svg</code></td>
+  <td><span class="pill green">new</span></td>
+  <td>A teal “M” tile so master pages are tellable apart from the launcher and the daily log when
+  pinned.</td>
+</tr>
+<tr>
+  <td><code>staged_additions.html</code></td>
+  <td><span class="pill green">new</span></td>
+  <td>Copy-ready proposals drawn from the VoltusWave · Amura case studies. <strong>Nothing in it
+  has been applied.</strong> See section 3.</td>
+</tr>
+<tr>
+  <td><code>CHANGES.html</code></td>
+  <td><span class="pill green">new</span></td>
+  <td>This page.</td>
+</tr>
+<tr>
+  <td><code>upgrad_resume.template.html</code><br /><code>README.md</code></td>
+  <td><span class="pill fact">untouched</span></td>
+  <td>No commits this session.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h2>2 · Why nothing was applied</h2>
+<p>The standing rule is that you author the master by hand — I stage paste-ready content and never
+ship on your behalf. Three of the proposed changes also depend on decisions only you can make, so
+applying them would have pre-empted you. Those decisions are in section 5.</p>
+
+<h2>3 · What is proposed, and the evidence behind it</h2>
+<p>All of this lives in <a href="staged_additions.html">staged_additions.html</a>, copy-ready.</p>
+
+<h3>3.1 · A factual correction — not an improvement</h3>
+<div class="diff-pair">
+  <p class="diff-label">On the master today</p>
+  <div class="diff-old">
+    <p>Engineered a <strong>RAG</strong> pipeline over dense vectors and an <strong>Amazon
+    Neptune</strong> context graph spanning <strong>80+ chronic conditions</strong>…</p>
+  </div>
+</div>
+<p><strong>Why it is wrong:</strong> KQ1's own stack table names <strong>Elasticsearch</strong> as
+the “Authoritative serving index — dense_vector filtered kNN”, and says the graph database “serves
+audit and drill-down only, so serving latency never depends on its tail.” The vectors are in
+Elasticsearch; Neptune is <em>deliberately</em> off the serving path. KQ9 is the Neptune query. The
+bullet collapses two different systems into one, and describes a system that does not exist as
+written.</p>
+<p><strong>Why it matters more than a tidy-up:</strong> the truth is the better bullet. “RAG over a
+graph” is a claim anyone can make. “Denormalised precedent cards into the search index so serving
+latency never depends on the graph's tail” is a decision with a reason behind it — and
+Elasticsearch is already on your safe-to-claim list.</p>
+
+<h3>3.2 · Five new skills lines</h3>
+<p>Proposed for <code>quick-skills-ee</code>. Skills lines carry <strong>no number
+requirement</strong> — that rule applies to experience bullets — so none of this depends on metrics
+you cannot supply.</p>
+<ul class="checks">
+  <li><strong>Causal inference on observational data</strong> — propensity matching, inverse
+  probability weighting, standardised-mean-difference balance gates, caliper stability, seeded
+  bootstrap intervals</li>
+  <li><strong>Leakage-safe machine learning</strong> — as-of featurisation, point-in-time
+  correctness, outcome-maturity windows, right-censoring, calibration</li>
+  <li><strong>Deterministic, replayable systems</strong> — append-only event sourcing, frozen
+  snapshots, byte-deterministic replay, canonical cache keys</li>
+  <li><strong>DuckDB and Parquet</strong>, <strong>Elasticsearch dense_vector</strong>,
+  <strong>Redis</strong>, <strong>Amazon Neptune</strong> with Gremlin</li>
+  <li><strong>Self-hosted models inside the virtual private cloud</strong> — Ollama, Llama 3.1,
+  SageMaker embeddings, self-hosted LangSmith, Pydantic v2</li>
+</ul>
+<p><strong>Why:</strong> a gap analysis against the ten case studies found this technology named
+repeatedly in your own documents and <em>entirely absent</em> from the résumé — DuckDB and Parquet
+in 8 studies each, Redis in 7, Ollama in 6, self-hosted LangSmith in 9. For a Principal artificial
+intelligence or machine-learning seat the technique list is the real differentiator: plenty of
+candidates list LangChain, almost none can say they built a gate that makes an unbalanced
+comparison unrepresentable in the output type.</p>
+
+<h3>3.3 · Six candidate experience bullets</h3>
+<p>Leading verbs <code>Hardened</code>, <code>Extracted</code>, <code>Sequenced</code>,
+<code>Secured</code>, <code>Bridged</code>, <code>Seeded</code> — every one checked for same-root
+collisions across the <em>whole</em> master, not just against other leading words.
+<code>Built</code> was rejected because <em>Build</em>-versus-buy already appears in your skills
+block.</p>
+<div class="callout warn">
+  <b>You cannot take all six.</b> VoltusWave already carries six bullets about the chat platform,
+  and this is a second, separate body of work at the same company. Twelve bullets in one role will
+  not survive the three-page limit. Three or four, chosen for the seat.
+</div>
+
+<h2>4 · Rulebook changes that affect the master</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Change</th><th>Effect on the résumé</th></tr></thead>
+<tbody>
+<tr><td><strong>Redis removed from never-claim</strong></td>
+    <td>You confirmed it. The case studies place it in the production request path — KQ4's
+    per-tenant risk cache at 6-hour time-to-live, KQ10's canonical keyed cache. Now claimable.</td></tr>
+<tr><td><strong>Everything in v1 shipped</strong></td>
+    <td>An extraction pass read “approval pending” as “not deployed”. Your documents keep those
+    apart correctly — “the contract was signed and the query is live” — and the pending item is an
+    internal design-review sign-off. No bullet may describe this work as merely designed.</td></tr>
+<tr><td><strong>No Amura outcome metrics exist</strong></td>
+    <td>You left before capturing them, and every figure in that corpus is a pre-registered
+    acceptance target. Bullets use scale and design markers only — 80+ conditions, 9–10 years of
+    history, ten services, twenty review findings.</td></tr>
+<tr><td><strong>25–30% infrastructure cost and hours → under 10 minutes deploy time</strong></td>
+    <td><span class="pill green">confirmed by you</span> An earlier pass flagged these as
+    unsourced. The rule is “journey doc <em>or</em> user-confirmed”, not journey-doc-only — the
+    record is incomplete, not the claim. They will go into the new summary.</td></tr>
+<tr><td><strong>9–10 years of patient history</strong></td>
+    <td>New, user-supplied, and load-bearing: as-of featurisation and leakage-safe labelling only
+    mean something with years of longitudinal data behind them.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>5 · Open — waiting on you</h2>
+<ul class="checks strikes">
+  <li><strong>The +65% hotel conversions.</strong> On the master today. Your journey document flags
+  it twice as unresolved and your original contains no 65% conversion claim at all. Meanwhile
+  “screens lading time was improved by 60-70%” <em>is</em> in your handwriting for innRoad and is
+  not on the résumé. Swap, confirm, or cut — it has already gone out on submitted applications.</li>
+  <li><strong>Which three or four of the six bullets.</strong></li>
+  <li><strong>Four claims live on the master, unconfirmed</strong> — Rocket bugs −50% and sales
+  +20%, Deque ~300 instances and 70–80% consolidation.</li>
+  <li><strong>Which role the 25–30% and deploy-time metrics attach to.</strong> Your live card
+  places them beside the VoltusWave second stint.</li>
+  <li><strong>The graph neural network.</strong> Your live Hiration card carries “Neptune + GNN”
+  and “GNN models in production”. The phrase appears <strong>zero times</strong> across all 22
+  case-study files, and KQ4's ladder is logistic baseline → PrefixSpan → Transformer. Still yours
+  to settle — it attaches to the Context Graph, which these ten do not document.</li>
+  <li><strong>ISO 27001.</strong> On your live card; appears nowhere in your source documents.</li>
+</ul>
+
+<h2>6 · Not in this directory, but bearing on it</h2>
+<p>Your <strong>live Hiration card differs from this master</strong> and is still the v1 leadership
+version: “Engineering Leader” in the headline, “Engineering Manager” opening the summary, and no
+Java anywhere in either. The master here is already individual-contributor-framed and Java-forward.
+A replacement headline and summary — individual-contributor framing, Java prominent, the Amura
+depth added, the graph neural network out — is being drafted and judged now, and will be staged
+here rather than applied.</p>
+
+<footer class="signoff">
+  <p><a href="staged_additions.html">Staged additions</a> ·
+     <a href="upgrad_resume.html">Parsed source</a> ·
+     <a href="master_paste.html">Paste sheet</a> ·
+     <a href="README.md">Parser contract</a></p>
+</footer>
+
+</main>
+<script src="../static/copy.js" defer></script>
+</body>
+</html>
