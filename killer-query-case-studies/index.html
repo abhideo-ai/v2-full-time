@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Studies · ML & AI System Design</title>
+<meta name="description" content="Portfolio case studies: production-grade ML and AI system design in regulated, multi-tenant domains — retrieval, statistics, and agent orchestration with LLMs kept at the edges.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 1.02rem; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 820px; margin: 0 auto; padding: 72px 24px 96px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.5vw, 2.7rem); line-height: 1.16; letter-spacing: -0.015em;
+  }
+  .sub { font-size: 1.1rem; color: var(--steel); max-width: 60ch; margin-top: 16px; }
+  .list { margin-top: 48px; display: grid; gap: 16px; }
+  a.study {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 24px 26px; transition: border-color 120ms ease;
+  }
+  a.study:hover { border-color: var(--teal); }
+  a.study .tag {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 8px;
+  }
+  a.study h2 {
+    font-family: var(--serif); font-weight: 600; font-size: 1.3rem;
+    line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 8px;
+  }
+  a.study p { color: var(--steel); font-size: 0.95rem; max-width: 66ch; }
+  a.study .open {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--teal);
+    display: inline-block; margin-top: 12px;
+  }
+  .soon {
+    border: 1px dashed var(--hairline); border-radius: 6px; padding: 24px 26px;
+    color: var(--steel); font-size: 0.95rem; background: transparent;
+  }
+  .soon .tag {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; display: block; margin-bottom: 8px;
+  }
+  .context {
+    margin-top: 56px; padding: 28px 30px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .context h2 {
+    font-family: var(--serif); font-weight: 600; font-size: 1.25rem;
+    line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 14px;
+  }
+  .context p { color: var(--steel); font-size: 0.95rem; max-width: 68ch; margin-bottom: 14px; }
+  .context p:last-child { margin-bottom: 0; }
+  .context strong { color: var(--ink); font-weight: 600; }
+  .tablewrap { overflow-x: auto; margin: 20px 0 4px; border: 1px solid var(--hairline); border-radius: 6px; background: var(--card); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
+  th, td { text-align: left; padding: 9px 14px; vertical-align: top; }
+  thead th {
+    font-family: var(--mono); font-size: 0.66rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel);
+    border-bottom: 1px solid var(--hairline); background: var(--paper);
+  }
+  tbody tr + tr td { border-top: 1px solid var(--mist); }
+  td.comp { font-weight: 600; color: var(--ink); }
+  td.status { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; }
+  td.status.open { color: var(--teal-deep); }
+  td.status.landed { color: var(--teal); }
+  .qa { margin-top: 56px; }
+  .qa h2 {
+    font-family: var(--serif); font-weight: 600; font-size: 1.4rem;
+    line-height: 1.3; letter-spacing: -0.01em;
+  }
+  .qa .lead { color: var(--steel); font-size: 0.95rem; max-width: 68ch; margin: 12px 0 22px; }
+  .qa-list {
+    list-style: none; display: grid; gap: 0;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px; overflow: hidden;
+  }
+  .qa-list li + li { border-top: 1px solid var(--hairline); }
+  .qa-list a {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    text-decoration: none; color: inherit; padding: 14px 20px;
+    transition: background 120ms ease;
+  }
+  .qa-list a:hover { background: var(--mist); }
+  .qa-list .kq {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--teal); margin-right: 10px;
+  }
+  .qa-list .topic { color: var(--ink); font-size: 0.98rem; }
+  .qa-list .pairs {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--steel); white-space: nowrap;
+  }
+  footer {
+    margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--hairline);
+    font-size: 0.86rem; color: var(--steel); max-width: 66ch;
+  }
+  @media print { body { background: #fff; } }
+</style>
+</head>
+<body>
+<main>
+  <span class="eyebrow">Portfolio · Case studies</span>
+  <h1>ML &amp; AI systems that hold up where being wrong is expensive</h1>
+  <p class="sub">Design-and-build engagements in regulated, multi-tenant domains. The common discipline:
+  deterministic cores, language models only at gated edges, pre-registered evaluation floors, and
+  structured adversarial review before anything is called done.</p>
+
+  <div class="list">
+    <a class="study" href="kq1-precedent-search.html">
+      <span class="tag">Healthcare · Retrieval · 2026</span>
+      <h2>Precedent search for clinical decisions</h2>
+      <p>A leakage-safe, multi-tenant retrieval system over a decision graph for a chronic-care platform
+      covering 80+ conditions: as-of featurisation, hybrid filtered kNN, two-tier caching, a cold-start
+      quality gate, and a four-round adversarial review trail to approval.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq3-override-intelligence.html">
+      <span class="tag">Healthcare · Decision analytics · 2026</span>
+      <h2>Override analytics with propensity matching</h2>
+      <p>The most politically charged query in the same platform: when clinicians override protocol,
+      what happens? Propensity-matched comparisons behind a four-rung statistical gate ladder (balance,
+      sensitivity, power, seeded bootstrap CIs), governance designed to resist scorecard use — and
+      a language model that never touches a number.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq10-cross-domain.html">
+      <span class="tag">Healthcare · Multi-agent orchestration · 2026</span>
+      <h2>Multi-Agent Orchestration for Cross-Domain Analytics</h2>
+      <p>A production cross-domain analytics service for a chronic-care platform (80+ conditions),
+      answered by a deterministic multi-agent orchestrator on LangGraph that joins finance, adherence,
+      and operations signals behind statistical-honesty gates — with a language model allowed only to
+      narrate numbers the code already computed, and only after every gate passes. It absorbed a
+      twenty-finding adversarial design review ("do not implement as written") into a hardened v2, and
+      ships as a runnable LangGraph state graph that runs offline in CI. The only query in the programme
+      whose orchestrator is runnable code.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq2-outcome-correlation.html">
+      <span class="tag">Healthcare · Cohort analytics · 2026</span>
+      <h2>Confounder-Gated Outcome Correlation</h2>
+      <p>A production outcome-correlation service for a chronic-care platform covering 80+ conditions —
+      cohort comparisons behind deterministic confounding gates (SMD balance check, then propensity +
+      IPW), small-cell suppression, and correlation-not-causation discipline, with no language model
+      anywhere on the numbers. Every rate, confidence interval, and suppression decision is computed by
+      seeded, replayable code. It absorbed a sixteen-finding adversarial design review into the hardened
+      v2 that shipped to production. The shared platform components it depended on have since landed; the
+      final design-review sign-off is the remaining step, and components landing does not by itself convert
+      a review verdict.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq4-early-signal-detection.html">
+      <span class="tag">Healthcare · Sequence mining · 2026</span>
+      <h2>Sequence-Model Early Warning for Patient Relapse</h2>
+      <p>An early-warning system that mines the event sequences preceding patient relapse for a
+      chronic-care platform covering 80+ conditions. It is built on label-maturity discipline,
+      leakage-safe windowing, and deterministic scoring — and it went through a 23-finding adversarial
+      design review whose headline call was to wait for the outcome labels to mature before training a
+      model. It also shows the judgment to keep the language model well away from the numbers.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq5-decision-latency.html">
+      <span class="tag">Healthcare · Cohort analytics · 2026</span>
+      <h2>Time-to-treatment latency, with an honest denominator</h2>
+      <p>Design and production rollout of a decision-latency analytics service for a chronic-care platform
+      covering 80+ conditions: it measures how long a high-risk lab waits for the treatment decision that
+      answers it, and counts the labs nobody answered as right-censored observations instead of dropping
+      them. Every statistic is seeded and replayable, zero language-model calls touch the pipeline, and
+      the per-clinician view is governed to resist scorecard use. An eighteen-finding
+      adversarial design review was absorbed into the shipped v2, and its pattern set seeded five sibling
+      cohort-analytics questions.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq6-ai-vs-human.html">
+      <span class="tag">Healthcare · Cohort aggregation · 2026</span>
+      <h2>Gated AI-vs-Clinician Outcome Analytics</h2>
+      <p>A production cohort-analytics service that grades AI recommendations against the decisions
+      clinicians actually made — propensity-matched behind deterministic statistical gates and governed
+      to resist use as a doctor scorecard. Its distinctive move: the comparison is wired to refuse
+      to run until an upstream team ships the audit trail that makes it honest, and the structured design
+      review returned a block-on-prereq verdict the page tells proudly. Every number is deterministic,
+      seeded, and replayable; the language model is kept away from the arithmetic.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq7-confidence-calibration.html">
+      <span class="tag">Healthcare · Cohort statistics · 2026</span>
+      <h2>Confidence-calibration analytics</h2>
+      <p>A production service that checks clinicians' self-reported decision confidence against 90-day
+      outcomes, behind deterministic statistical gates and actor governance built to resist scorecard
+      use — with no language model anywhere near the numbers. Its first structured review came back
+      with a one-word verdict, redesign, and eight required changes; the version shown is that redesign,
+      absorbed and shipped. Delivered as a design packet, a review audit trail, and a live in-VPC
+      deployment.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq8-policy-friction.html">
+      <span class="tag">Healthcare · Cohort statistics · 2026</span>
+      <h2>Policy-friction analytics for clinical governance</h2>
+      <p>Design and in-VPC production deployment of a deterministic, matched-cohort analytics service that
+      ranks which platform rules clinicians override most — and whether those overrides are associated with
+      better or worse outcomes — with zero
+      language-model calls on any path. Every figure is seeded and replayable; the data layer emits only
+      neutral zone codes, never a verdict on a policy or a clinician. A 17-finding adversarial design
+      review returned ship-with-changes; the hardened v2 shipped, with the design-review approval held
+      open on the record until its platform-closure gate clears.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+
+    <a class="study" href="kq9-causal-path.html">
+      <span class="tag">Healthcare · Graph traversal · 2026</span>
+      <h2>Auditable Clinical Decision-Chain Reconstruction</h2>
+      <p>A production system that reconstructs the full decision chain behind a patient's treatment plan
+      on a chronic-care platform covering 80+ conditions. A structured adversarial self-review said one
+      pipeline could not serve both a clinician at the bedside and a regulator's audit — so the shipped v2
+      is that redesign: two products from one seed contract, a fast bounded live view and a deterministic,
+      byte-replayable spine export, with a language model kept to an optional narrator that may emit only
+      cited sentences. Covers the design, the redesign, and the in-VPC production deployment.</p>
+      <span class="open">Read the case study →</span>
+    </a>
+  </div>
+
+    <section class="context">
+    <h2>The loop three of these queries sit inside</h2>
+
+    <p>The ten queries are not ten unrelated dashboards. At the moment a decision is made, the person on the
+    call — a guidance counsellor with a prospective patient, a doctor with an existing one, a health coach on a
+    minor ailment — has two things side by side. An <strong>AI recommender</strong>, a separate suggestion
+    service, proposes an option and carries a confidence with it. The <strong>precedent panel</strong> (KQ1)
+    supplies ranked comparable past decisions and what observably happened to them. The panel emits no option
+    and no confidence of its own: it is evidence, not advice, and its job is to make accepting the suggestion —
+    or departing from it — an informed judgment rather than a gut call. It does not decide, and it does not
+    record the decision either.</p>
+
+    <p>The human decides, and the decision is captured on the append-only spine as <strong>first-class
+    events</strong> — what the AI suggested, whether a human accepted or rejected it, and, where rejected, what
+    they chose instead. Those events are what make the AI-versus-clinician comparison (KQ6) answerable at all.
+    Confidence calibration (KQ7) sits on the other side of the same loop — did a stated confidence track the
+    outcome that followed — and what the two of them find is what improves what gets proposed next time.</p>
+
+    <p>Two properties of that loop are worth stating plainly. The comparison could not be answered honestly
+    before those events existed, so the design refused to guess: it specified the missing inputs as a contract
+    with the upstream team and wired the query to refuse to run until they arrived. That is the
+    <em>block-on-prereq</em> verdict KQ6 carries — the contract was signed and the query is live, and its final
+    design-review approval is still pending. And the evidence surface is allowed to <em>refuse</em>. A
+    prospective patient has no decision history and no graph neighbourhood, so for a guidance counsellor the
+    cold-start gate commonly returns an honest "insufficient comparable precedents" state — a plain cohort
+    count, explicitly labelled as a filter count and explicitly not as vector similarity — rather than a thin
+    ranked list dressed up as precedent. The human then decides without precedent evidence. Which means KQ6's
+    human arm is an evidence-<em>assisted</em> one, and sometimes an unassisted one: a real constraint on how
+    that comparison may be read, and naming it is what makes the comparison defensible rather than less so.</p>
+  </section>
+
+  <section class="qa">
+    <h2>Deep-dive Q&amp;A — the questions a CTO would ask</h2>
+    <p class="lead">Each system was interrogated the way a skeptical CTO would in a design review — roughly a
+    hundred questions apiece, answered against the design of record, including the ones with no good answer.
+    The pages below collect those exchanges, one per query, in the same order as the case studies above.</p>
+    <ul class="qa-list">
+      <li><a href="kq1-precedent-search-qa.html"><span><span class="kq">KQ1</span><span class="topic">Precedent search for clinical decisions</span></span><span class="pairs">102 pairs</span></a></li>
+      <li><a href="kq3-override-intelligence-qa.html"><span><span class="kq">KQ3</span><span class="topic">Override analytics with propensity matching</span></span><span class="pairs">109 pairs</span></a></li>
+      <li><a href="kq10-cross-domain-qa.html"><span><span class="kq">KQ10</span><span class="topic">Multi-agent orchestration for cross-domain analytics</span></span><span class="pairs">103 pairs</span></a></li>
+      <li><a href="kq2-outcome-correlation-qa.html"><span><span class="kq">KQ2</span><span class="topic">Confounder-gated outcome correlation</span></span><span class="pairs">102 pairs</span></a></li>
+      <li><a href="kq4-early-signal-detection-qa.html"><span><span class="kq">KQ4</span><span class="topic">Sequence-model early warning for patient relapse</span></span><span class="pairs">101 pairs</span></a></li>
+      <li><a href="kq5-decision-latency-qa.html"><span><span class="kq">KQ5</span><span class="topic">Time-to-treatment latency, with an honest denominator</span></span><span class="pairs">102 pairs</span></a></li>
+      <li><a href="kq6-ai-vs-human-qa.html"><span><span class="kq">KQ6</span><span class="topic">Gated AI-vs-clinician outcome analytics</span></span><span class="pairs">105 pairs</span></a></li>
+      <li><a href="kq7-confidence-calibration-qa.html"><span><span class="kq">KQ7</span><span class="topic">Confidence-calibration analytics</span></span><span class="pairs">101 pairs</span></a></li>
+      <li><a href="kq8-policy-friction-qa.html"><span><span class="kq">KQ8</span><span class="topic">Policy-friction analytics for clinical governance</span></span><span class="pairs">102 pairs</span></a></li>
+      <li><a href="kq9-causal-path-qa.html"><span><span class="kq">KQ9</span><span class="topic">Auditable clinical decision-chain reconstruction</span></span><span class="pairs">100 pairs</span></a></li>
+    </ul>
+  </section>
+
+  <section class="context">
+    <h2>Scale, ownership, and what is deliberately not shown</h2>
+
+    <p><strong>Scale.</strong> The platform served roughly <strong>10,000 patients</strong> across 80+ chronic
+    conditions, over about <strong>nine years of history</strong> hydrated into the append-only event spine.
+    That depth is what makes the ten queries answerable at all: matured outcome labels, enough overridden
+    decisions per policy version to match on, and a decision chain a regulator can reconstruct years later.</p>
+
+    <p><strong>Ownership.</strong> Sole owner, design through production — architecture, the statistical and
+    governance contracts, the implementation, and the deployment. Where a query depended on another team
+    (an upstream audit-event contract, for instance), the case study says so and describes the contract that
+    was negotiated rather than claiming the work.</p>
+
+    <p><strong>Method.</strong> Built on LangChain and LangGraph, with a self-hosted Llama 3.1 in-VPC so patient
+    data never leaves the network. The adversarial review loops these pages describe were run with frontier
+    LLM agents — a Principal-engineer lens on each design, a hiring-CTO lens on the runnable code — in
+    cumulative rounds whose findings are carried forward with an explicit disposition until the reviewer
+    signs off. The full audit trail exists; the pages report its verdicts without softening them.</p>
+
+    <p><strong>What is not here.</strong> <strong>No measured production numbers.</strong> Every latency,
+    recall, precision and interval on these pages is a <em>pre-registered acceptance target</em> — the bar the
+    system was designed, reviewed and deployed against — not an observed result. The observed figures belong
+    to the client and are not mine to publish. Rather than dress a target as an outcome, the portfolio says
+    plainly which is which, on every page. Treat that as the sample of how these systems get built: the
+    number you cannot defend does not ship.</p>
+  </section>
+
+  <section class="context">
+    <h2>The shared-platform ledger</h2>
+    <p>Seven of the ten queries began by inlining their own copy of an isolation, statistics or
+    correction contract, and each design review promoted the reusable ones into <strong>shared platform
+    components</strong> so a sibling query inherits the fix rather than re-implementing it. Because every
+    page names the subset it depends on, the names drifted; this is the single canonical inventory and its
+    current status. All but one have landed at the platform layer — the queries now bind to the shared
+    version. The exception is stated as an exception.</p>
+    <p>Scope: this table lists only contracts <em>promoted to the platform layer</em> for reuse across queries.
+    Design contracts that stay local to one query — KQ9's seed-derivation and bounded-walk specs, for instance —
+    live in that query's design packet and are not platform components. Where a case study names a dependency,
+    it is one of the rows below; where a page and this table disagree, this table is current.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Shared component</th><th>Status</th><th>What it standardises</th></tr></thead>
+        <tbody>
+          <tr><td class="comp">Tenant-scoped access / traversal wrapper</td><td class="status landed">landed</td><td>Injects the three-field scope (account · workspace · control-unit) at the scan or traversal entry point, so isolation is one enforced choke point rather than a per-query predicate.</td></tr>
+          <tr><td class="comp">Outcome-maturity &amp; censoring library</td><td class="status landed">landed</td><td>One definition of a matured outcome and of right-censoring, shared by every cohort query.</td></tr>
+          <tr><td class="comp">Seeded cluster-aware bootstrap library</td><td class="status landed">landed</td><td>Reproducible confidence intervals, seeded from the snapshot manifest and clustered by enrollment.</td></tr>
+          <tr><td class="comp">Propensity-matcher binary + manifest</td><td class="status landed">landed</td><td>One matcher, emitting a versioned match manifest, so two dashboards cannot disagree about the same cohort.</td></tr>
+          <tr><td class="comp">Correction-event backbone</td><td class="status landed">landed</td><td>Decision-write invalidation: a correction on the spine expires exactly the derived cells built from it.</td></tr>
+          <tr><td class="comp">Deterministic exporter + golden replay</td><td class="status landed">landed</td><td>Re-exporting a point-in-time under shuffled spine order, late arrivals and corrections yields identical hashes.</td></tr>
+          <tr><td class="comp">Four-field event-time schema</td><td class="status landed">landed</td><td>The event / observed / received / written split — <code>event_time_ms</code> and <code>observed_at_ms</code> read from the record, <code>received_at_ms</code> and <code>written_at_ms</code> pinned at the load fence — plus an allowed-lateness watermark, in place of one ambiguous timestamp.</td></tr>
+          <tr><td class="comp">Ungated observation projection</td><td class="status landed">landed</td><td>A read path that returns raw observations without a policy gate, for the queries that must see the uncensored view.</td></tr>
+          <tr><td class="comp">Actor-access &amp; audit policy</td><td class="status landed">landed</td><td>Shared actor-RBAC, pseudonymity and audit-before-serve, so the scorecard-resistance controls are identical across dashboards.</td></tr>
+          <tr><td class="comp">Metric-cache-key completeness contract</td><td class="status landed">landed</td><td>The rule that every result-affecting <em>data</em> input is in the canonical key, with computation versions carried as provenance stamps where a query does not key on them — now standard across the analytics programme.</td></tr>
+          <tr><td class="comp">Spine indexing for the regulator path</td><td class="status landed">landed</td><td>The indexed read path the deterministic regulator export depends on, so a point-in-time reconstruction is bounded rather than a full scan.</td></tr>
+          <tr><td class="comp">Deterministic single-patient chain artifact</td><td class="status landed">landed</td><td>One typed, hash-validated reconstruction of a single patient's decision chain, reused by the cross-domain drill-in rather than reimplemented, so one patient's chain is rebuilt one way.</td></tr>
+          <tr><td class="comp">As-of edge-reconstruction backbone</td><td class="status landed">landed</td><td>One way to rebuild the graph as it stood at a cutoff, so a cohort query reads the state of the world at decision time rather than today's.</td></tr>
+          <tr><td class="comp">Snapshot-versus-live SLA contract</td><td class="status landed">landed</td><td>The staleness bound a snapshot-backed answer may carry, and when a query must fall back to the live path instead.</td></tr>
+          <tr><td class="comp">Narrative-guardrail contract</td><td class="status open">pending</td><td>The shared claim-grammar the KQ9 and KQ10 narrators would run under. Until it is signed the synthesis narrator ships <em>off by default</em>; the structured answer is unaffected.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>One review verdict turns on this ledger and is stated as pending on its own page: <strong>KQ6's
+    final design-review approval</strong> is still held — now on final review and confidence-calibration in
+    range, no longer on the backbone, which has landed. Of the rest: two — confidence calibration and decision-chain
+    reconstruction — came back <em>redesign</em>, and the versions shown here <em>are</em> those redesigns; the
+    remaining six shipped <em>ship-with-changes</em>. Components landing does not convert a review verdict.</p>
+  </section>
+
+  <footer>
+    <p>Client and product identifiers are anonymised throughout. Each case study states explicitly which
+    figures are pre-registered acceptance targets; none reports a measured production result.</p>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KQ8 · Policy-friction analytics — Questions &amp; Answers</title>
+<meta name="description" content="A deep-dive Q&amp;A on the policy-friction analytics system for a chronic-care platform: which platform rules generate the most clinician overrides, which of those overrides are associated with better or worse outcomes, and how the design stays observational, tenant-isolated, deterministic, and free of any verdict on a policy or a clinician. About 100 questions a Senior Principal engineer or CTO would actually ask, answered honestly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --rust: #9C4A21;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 2.9rem);
+    line-height: 1.15; letter-spacing: -0.015em;
+    max-width: 24ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  strong { font-weight: 600; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+
+  header.hero { padding: 64px 0 8px; }
+  .hero .sub { font-size: 1.08rem; color: var(--steel); max-width: 66ch; margin-top: 20px; }
+  .backlink { display: inline-block; margin-top: 22px; font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.02em; }
+
+  /* verbatim query callout */
+  .spec-card {
+    margin: 30px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .spec-card .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .spec-card blockquote {
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--ink);
+  }
+
+  /* table of contents */
+  nav.toc {
+    margin: 40px 0 8px; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  nav.toc .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 14px;
+  }
+  nav.toc ol {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 26px;
+  }
+  nav.toc li { display: flex; gap: 10px; align-items: baseline; font-size: 0.94rem; }
+  nav.toc li .n { font-family: var(--mono); font-size: 0.74rem; color: var(--steel); min-width: 1.4em; }
+  nav.toc a { text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  section.theme { margin-top: 60px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+  .theme > p.lede { color: var(--steel); font-size: 0.96rem; margin: 8px 0 20px; }
+
+  /* Q&A accordion */
+  details {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    margin: 0 0 10px; overflow: hidden;
+  }
+  details[open] { border-color: var(--teal); }
+  summary {
+    list-style: none; cursor: pointer; padding: 15px 18px;
+    display: flex; gap: 12px; align-items: baseline;
+    font-family: var(--serif); font-weight: 500; font-size: 1.04rem; color: var(--ink);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--teal-deep); }
+  summary .qmark { font-family: var(--mono); color: var(--steel); font-size: 0.82rem; flex: none; }
+  details[open] summary { border-bottom: 1px solid var(--mist); }
+  details .body { padding: 4px 18px 18px 18px; }
+  details .body p { font-size: 0.98rem; margin: 12px 0 0; max-width: 74ch; }
+  details .body p:first-child { margin-top: 8px; }
+
+  .chip {
+    font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 4px; flex: none; align-self: center;
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .chip.screening { color: var(--teal-deep); background: #E1EEEC; border-color: #BFE0DB; }
+  .chip.deep { color: #2A3B45; background: var(--mist); border-color: var(--hairline); }
+  .chip.adversarial { color: var(--rust); background: #F6E7DD; border-color: #E7C9B4; }
+
+  code {
+    font-family: var(--mono); font-size: 0.84em;
+    background: var(--mist); padding: 1px 6px; border-radius: 4px; white-space: nowrap;
+  }
+
+  /* honest gaps */
+  .callout {
+    margin: 60px 0 0; padding: 26px 28px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--rust); border-radius: 6px;
+  }
+  .callout .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--rust); display: block; margin-bottom: 10px;
+  }
+  .callout h2 { margin-bottom: 12px; }
+  .callout ul { margin: 12px 0 0 20px; }
+  .callout li { margin-bottom: 10px; max-width: 74ch; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hairline);
+    font-size: 0.86rem; color: var(--steel); max-width: 74ch;
+  }
+  footer p { margin-bottom: 10px; }
+
+  @media (max-width: 640px) {
+    header.hero { padding-top: 44px; }
+    summary { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+  <span class="eyebrow">Deep-dive Q&amp;A · Policy-friction analytics</span>
+  <h1>Which rules do clinicians keep overriding — <em>and do those overrides track better or worse outcomes?</em></h1>
+  <p class="sub">For a chronic-care platform covering 80+ chronic conditions, this is the policy-friction
+  analytics system in question-and-answer form: how it counts overrides per platform rule, compares
+  outcomes against a matched control arm, and reports the result as a neutral friction map — without a
+  language model anywhere in the pipeline and without ever issuing a verdict on a policy or a clinician.
+  Every answer below is the kind a Senior Principal engineer or CTO tends to ask on a design review; the
+  uncomfortable ones are answered honestly, including where the design has no clean answer.</p>
+  <a class="backlink" href="kq8-policy-friction.html">← Read the case study</a>
+
+  <div class="spec-card">
+    <span class="label">The query the system must answer</span>
+    <blockquote>"Which policy constraints most frequently trigger overrides? Which correlate with worse
+    outcomes?"</blockquote>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Themes">
+  <span class="label">Twelve themes · about 100 questions</span>
+  <ol>
+    <li><span class="n">1</span><a href="#t1">The question, and why it is hard</a></li>
+    <li><span class="n">2</span><a href="#t2">Architecture and data flow</a></li>
+    <li><span class="n">3</span><a href="#t3">As-of correctness and future leakage</a></li>
+    <li><span class="n">4</span><a href="#t4">Tenancy and isolation</a></li>
+    <li><span class="n">5</span><a href="#t5">The core mechanism — matching</a></li>
+    <li><span class="n">6</span><a href="#t6">Statistics, gates and suppression</a></li>
+    <li><span class="n">7</span><a href="#t7">Caching, determinism and versioning</a></li>
+    <li><span class="n">8</span><a href="#t8">Nine years of history — what it buys</a></li>
+    <li><span class="n">9</span><a href="#t9">Governance, PHI and the LLM boundary</a></li>
+    <li><span class="n">10</span><a href="#t10">Failure modes, degradation and ops</a></li>
+    <li><span class="n">11</span><a href="#t11">Evaluation and acceptance criteria</a></li>
+    <li><span class="n">12</span><a href="#t12">Tradeoffs and what I would do differently</a></li>
+  </ol>
+</nav>
+
+<!-- ============ THEME 1 ============ -->
+<section class="theme" id="t1">
+  <div class="stage"><b>Theme 1</b> The question, and why it is hard</div>
+  <h2>A count that must never become a verdict</h2>
+  <p class="lede">It looks like one <code>GROUP BY</code> over the rulebook. It is one bad label away from putting rules — and the clinicians who break them — on trial.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What question is this system actually built to answer?</span></summary>
+    <div class="body">
+      <p>For every platform policy, it counts the decisions that referenced the rule and the decisions that overrode it, then compares patient outcomes when the rule was followed against when it was broken. The output is a per-policy friction map: an override rate plus an outcome delta against a matched control. The verbatim brief is "which policy constraints most frequently trigger overrides, and which correlate with worse outcomes."</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What is a "policy override," concretely?</span></summary>
+    <div class="body">
+      <p>A decision carries a recorded alignment against each platform rule it was constrained by. When that alignment reads <code>overridden</code>, the clinician acted against the rule and logged it — for example prescribing past a dose ceiling the platform flagged. The override is not inferred from text or behaviour; it is an explicit field on the decision, reconstructed from the event spine as of when the decision was made.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Why isn't this just a <code>GROUP BY</code> over the rulebook?</span></summary>
+    <div class="body">
+      <p>The count is trivial; the trap is what the count implies. Three failure modes are built into the naive version: confounding (overrides land on atypical patients), false confidence at scale (dozens of rules scored at once, some damning by chance), and verdict misuse (a label like "policy too strict" reads as a machine's ruling). Each is treated as a first-class problem with a named control, which is most of the engineering.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why is confounding baked into this comparison by design?</span></summary>
+    <div class="body">
+      <p>Clinicians override on their sickest and most atypical patients — that is what clinical judgement is for. So the followed and overridden groups differ in baseline risk before any rule is even evaluated. A naive followed-versus-overridden outcome delta therefore measures patient mix, not the rule. That is why each override is compared only against a propensity-matched control on the same policy family, and why every surface stays observational rather than causal.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why is this query more dangerous than its decision-indexed sister?</span></summary>
+    <div class="body">
+      <p>The sister query indexes the same overrides by individual decision; this one indexes them by rule. A per-rule signal is exactly the shape that triggers a policy revision or a model retraining. A wrong signal here rewrites the rulebook for everyone, so the bar to emit a zone is deliberately higher: more gates, harder suppression, and no verdict string anywhere near the data layer.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What does "which correlate with worse outcomes" commit you to — and what does it not?</span></summary>
+    <div class="body">
+      <p>It commits to an observational association measured on matched cohorts: among comparable patients, overriding this rule was associated with a better or worse 90-day outcome. It does not commit to causation. The verb in the brief is "correlate," and that is honoured literally throughout — no surface says a rule "caused" anything, because matching balances only measured covariates and cannot rule out unmeasured ones.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Isn't the honest answer for most policies simply "we don't know"?</span></summary>
+    <div class="body">
+      <p>Yes, and the system is built to say so out loud. Most policy versions fall below the thirty-per-arm floor, or their outcome interval crosses zero, or they wobble under the sensitivity sweep — all of which suppress the cell. A sparse friction map with a handful of trustworthy cells is the expected, correct output, not a failure of the query.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>If a policy has a high override rate, doesn't that alone prove it's a bad rule?</span></summary>
+    <div class="body">
+      <p>No. A high override rate paired with a positive outcome delta and one paired with a negative delta are different zones, and neither is a verdict. Override rate on its own is a popularity count of dissent — it tells you clinicians disagree, not whether they were right. Only the matched outcome comparison distinguishes a rule worth revisiting from a healthy guardrail that clinicians happen to chafe against.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 2 ============ -->
+<section class="theme" id="t2">
+  <div class="stage"><b>Theme 2</b> Architecture and data flow</div>
+  <h2>Snapshot-only analytics, indexed by policy version</h2>
+  <p class="lede">The pipeline never touches the live graph at query time; a nightly snapshot and the append-only spine do all the work.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What are the moving parts, end to end?</span></summary>
+    <div class="body">
+      <p>A nightly snapshot feeds a cohort builder that reconstructs each override as of when it happened. A control arm is borrowed from the sister query or rebuilt. A shared outcome library labels both arms. An aggregation step gates on balance, sensitivity, and sample size, then a classifier maps each surviving cell to one of six neutral zone codes, which an API serves behind a cache. A correction-event listener rebuilds only the cells a correction touches.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Does the query ever touch the live graph?</span></summary>
+    <div class="body">
+      <p>No. There is no per-policy graph traversal at query time. The live graph is read only by the projector that builds the nightly snapshot; the analytics run entirely over frozen columnar files plus targeted reads of the append-only spine. That is what makes a governance number replayable to the exact bytes.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why snapshot-only rather than a live per-policy traversal?</span></summary>
+    <div class="body">
+      <p>A governance figure has to be reproducible and isolated from live latency. A live per-policy traversal would return a slightly different answer on every run as the graph mutates, and would couple the report's latency to graph load. Freezing state at an <code>as_of</code> with a manifest hash means the same inputs always give the same friction map, and a reviewer months later can regenerate the identical number.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Where does the override fact actually come from — the graph or the spine?</span></summary>
+    <div class="body">
+      <p>From the append-only spine, reconstructed as of the decision's own event time at its source sequence position — the alignment flag, the constrained-by policy edge, the policy version id, and the policy text hash. Current graph properties are not trusted for a historical decision, because a rule edited later would otherwise bleed backward into a decision that predates the edit.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the columnar analytical layer doing?</span></summary>
+    <div class="body">
+      <p>It runs vectorized per-policy joins over partitioned columnar files — policy facts, policy zones, and zone history — using an embedded analytical engine rather than a warehouse round-trip. Per-version metrics are pre-computed at build time and served from a cache keyed on every result-affecting input. The serving path does no statistics; it looks up an already-gated cell and asserts the tenant scope.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How does this query relate to its decision-indexed sister at the data level?</span></summary>
+    <div class="body">
+      <p>They are the same overrides viewed through different indexes. The sister query indexes by decision; this one reindexes the identical matched cohort by policy version. Rather than re-derive matches, it consumes the sister's matched-control artifact when the manifests are identical, so "same overrides, two indexings" is a provable claim rather than two pipelines that happen to look alike.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why index by policy version rather than by policy?</span></summary>
+    <div class="body">
+      <p>A rule's text changes over time under a stable id — a threshold moves, an exception is added. Grouping by the mutable id would pool distinct rules into one cell and smear their override rates together. Grouping by <code>policy_version_id</code> plus the immutable <code>policy_text_hash</code> keeps each rule text a separate cell, so editing a rule tomorrow cannot rewrite yesterday's history.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Isn't reusing the sister query's matched cohort a hidden coupling that will rot?</span></summary>
+    <div class="body">
+      <p>It is an explicit, versioned contract, not a hidden one. Reuse happens only when all seven manifest fields match exactly; on any mismatch the cohort is fully rebuilt with the same matcher binary and stamped with a new manifest id and a rebuild reason. The coupling fails loudly and self-heals rather than silently serving stale matches — which is the failure the design deliberately removed.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>What happens if the snapshot and the spine disagree?</span></summary>
+    <div class="body">
+      <p>The cohort scan comes from the snapshot while override facts are reconstructed from the spine, and both are pinned to the same manifest — every derived row records its source-sequence range and the snapshot manifest hash. A genuine disagreement is therefore detectable rather than silent, and a correction-driven targeted rebuild reconciles the affected cells. If they could drift apart undetectably, the whole determinism story would collapse; the manifest pinning is what prevents that.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 3 ============ -->
+<section class="theme" id="t3">
+  <div class="stage"><b>Theme 3</b> As-of correctness and future leakage</div>
+  <h2>Every fact computed as of the moment it happened</h2>
+  <p class="lede">The covariates are reconstructed as-of; the outcome label is a gated future window. Confusing the two is the classic leak.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What is "as-of reconstruction," in one sentence?</span></summary>
+    <div class="body">
+      <p>Compute every historical fact using only what was true at or before the decision's own event time, never current state — so an override is always scored against the world as it stood when the clinician made the call.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What specifically leaks if you read current graph state for a historical override?</span></summary>
+    <div class="body">
+      <p>A rule retexted after the decision, an alignment flag flipped by a later correction, or a policy exception added months on would all bleed backward. The override would be scored against a rule that did not exist when it was made, and the friction map would blame a version of the rulebook nobody was working under. Reconstructing from immutable spine events at the decision's sequence position closes that door.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How is the policy version that was "in force" at decision time determined?</span></summary>
+    <div class="body">
+      <p>A dedicated reconstruction resolves the policy version id and policy text hash from the spine's rule-creation and rule-revision events as of the decision's event time. The override is then attributed to the exact rule text that was live at that instant, not to whatever version is current. That resolution is what lets the classifier group strictly by version.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Isn't the outcome measured after the decision — how is that not leakage?</span></summary>
+    <div class="body">
+      <p>The outcome window is intentionally forward-looking, and that is a different role from a covariate. Covariates must be as-of because they are inputs to the comparison; the label is a gated future window that is only allowed to count once it has fully matured before the snapshot's <code>as_of</code>. So the comparison is "as-of inputs, matured future label" — leakage would be letting a future value influence an input, which the as-of rule forbids.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the policy text hash for, beyond being an id?</span></summary>
+    <div class="body">
+      <p>It is the content address of the rule text. Two versions that share an id but differ in text get different hashes and stay separate cells; two that are byte-identical collapse to the same hash. It is the immutable key that makes "the same rule" provable across replays, so a cosmetic re-save that does not change the text does not fracture the history, and a real edit does.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>If a correction rewrites a decision's alignment retroactively, doesn't history change?</span></summary>
+    <div class="body">
+      <p>Yes — and that is intended. A correction is a first-class spine event, not an edit in place. The affected policy-version cells are invalidated and rebuilt within the correction SLA, and the prior value is retained in zone history at its prior snapshot hash. So history is correctable, but the change is versioned and auditable rather than a silent overwrite.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Could a late-arriving legacy event change a policy cell months later?</span></summary>
+    <div class="body">
+      <p>It can. The snapshot manifest carries an allowed-lateness watermark, and each derived row records its source-sequence range, so a late arrival resolves to exactly the cells it affects and triggers a targeted rebuild of only those. The cell is not frozen forever; it is versioned, so a late fact updates it without invalidating everything around it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>How do you know the reconstruction is genuinely as-of and not accidentally reading current state?</span></summary>
+    <div class="body">
+      <p>Not by the golden replay alone — and it is worth being precise, because conflating the two is how future leakage survives a green test suite. Golden replay shuffles the spine order, injects late arrivals, corrections and supersedes chains, exports twice at the same <code>as_of</code>, and requires byte-identical output. That proves <em>determinism</em>: the same inputs yield the same answer regardless of load order. It does not prove as-of correctness, because a reconstruction that reads current state can do so deterministically — replay reproduces a future-leaking bug exactly as faithfully as it reproduces a correct result.</p>
+      <p>As-of correctness needs a test whose expected result changes only if the cutoff is being honoured. Two do that here. The first is metamorphic: take a fixture, append events measured <em>after</em> the <code>as_of</code>, re-export at the same <code>as_of</code>, and assert the output does not move. Any read of post-cutoff state changes the answer and fails. The second is a set of known-good historical spot checks — hand-reconstructed states at chosen dates, asserted field by field — which catches an as-of that is self-consistent but wrong. Determinism is the floor; those two are what turn "we intend it to be as-of" into "it is."</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 4 ============ -->
+<section class="theme" id="t4">
+  <div class="stage"><b>Theme 4</b> Tenancy and isolation</div>
+  <h2>A three-field scope, filtered before load</h2>
+  <p class="lede">On a governance surface, a single forgotten predicate is a cross-tenant leak — so isolation is structural, not per-query discipline.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What is the tenant identity here?</span></summary>
+    <div class="body">
+      <p>A three-field scope — <code>account_id</code>, <code>workspace_id</code>, and <code>controlunit_id</code> — resolved together from the caller's auth on every request. It is never a single-field check; all three travel as one unit through partitioning, the build, and the response assertion.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Where is the tenant filter applied?</span></summary>
+    <div class="body">
+      <p>At the columnar scan, before load — not as a filter after the join. Data is partitioned by the three-field scope, so the wrong tenant's bytes are never read into the working set in the first place. Post-filtering would rely on remembering a predicate on every query; scan-time partitioning enforces it in the storage layout.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why filter at scan rather than after the join?</span></summary>
+    <div class="body">
+      <p>An aggregate is computed over whatever rows enter the query. If a foreign tenant's rows are loaded and a predicate is later forgotten on one branch, they contaminate a sum or a rate silently and then propagate into every downstream table. Scanning only the caller's partitions means a forgotten predicate cannot leak a tenant, because those bytes were never in scope to begin with.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the fail-closed assertion doing?</span></summary>
+    <div class="body">
+      <p>After the cohort is built and again before rows are served, it asserts that every row's three-field scope equals the caller's. A single mismatched row fails the build or the response rather than being filtered out and served anyway. The stance is that one cross-tenant row is a leak to be stopped, not a nuisance to be trimmed — so the safe failure is to serve nothing.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Some rules are shared across tenants — how are cross-tenant comparisons handled?</span></summary>
+    <div class="body">
+      <p>Cross-tenant pooling is a separately authorized governance decision, never a default view. When it is granted, the response emits a per-tenant heterogeneity report and suppresses any cell small enough to identify a tenant. The default is strictly single-tenant; seeing across tenants is something a person authorizes and that leaves an audit trail.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why gate cross-tenant pooling even for a genuinely shared policy?</span></summary>
+    <div class="body">
+      <p>Override behaviour and case mix differ by tenant, so a pooled override rate can be driven almost entirely by one tenant while looking like a shared property of the rule. The heterogeneity report forces that structure to be visible, and the authorization makes pooling a decision someone owns rather than an accident of a broad query. Without the gate, a shared-rule view would quietly average away exactly the differences that matter.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Doesn't inheriting the sister query's matched cohort risk importing its tenant scope?</span></summary>
+    <div class="body">
+      <p>Reuse is gated on manifest equality that includes the cohort-filter hash and the snapshot manifest hash, both of which are tenant-scoped. A scope difference changes the manifest, which forces an in-tenant rebuild rather than adoption. So a foreign-tenant cohort cannot be silently borrowed — the manifest that authorizes reuse is itself tenant-bound.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Where is the single-field shortcut that will eventually leak?</span></summary>
+    <div class="body">
+      <p>There isn't one by design, and that is deliberate. The scope is always the three fields together. A single-field check on the account alone would merge separate workspaces or control units under one account into a shared view — which is precisely the cross-boundary leak the three-field partition exists to prevent. The one place a single-field habit could creep in is a hand-written query, which is why the partition and the fail-closed assertion both enforce all three independently.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 5 ============ -->
+<section class="theme" id="t5">
+  <div class="stage"><b>Theme 5</b> The core mechanism — matching</div>
+  <h2>Borrow or rebuild the control arm — never blend</h2>
+  <p class="lede">Every override is compared to a like-for-like non-override, and the matched cohort is either reused verbatim or fully rebuilt.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What is the control arm, in plain terms?</span></summary>
+    <div class="body">
+      <p>For each override, the control arm is a comparable non-override decision on the same policy family, chosen by propensity matching so the two patients look alike on measured baseline covariates. The outcome delta is then computed within these matched pairs rather than across the raw populations.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Why match at all instead of comparing all overrides to all non-overrides?</span></summary>
+    <div class="body">
+      <p>Because overrides are selected onto sicker and more atypical patients. Comparing the whole overridden group to the whole followed group measures that case-mix gap, not the rule's effect. Matching each override to a baseline-similar control removes the measured imbalance, so the remaining outcome difference is a cleaner (though still observational) read on the rule.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What does "borrow or rebuild" the control arm mean?</span></summary>
+    <div class="body">
+      <p>If the sister query already produced a matched cohort under an identical manifest, this query reuses it verbatim. If any manifest field differs, it rebuilds the full matched cohort with the same shared matcher binary and emits a fresh manifest id plus a rebuild reason. It is strictly one or the other — there is no partial adoption.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What are the seven manifest fields that must all match for reuse?</span></summary>
+    <div class="body">
+      <p>The covariate schema hash, the snapshot manifest hash, the cohort-filter hash, the seed, the caliper, the replacement policy, and the tie-break policy. Every one must be equal. Identical inputs across all seven guarantee the matcher produces identical pairs, which is the only condition under which borrowing is provably the same as rebuilding.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why was the "fresh fallback for unmatched rows" path removed?</span></summary>
+    <div class="body">
+      <p>An earlier design borrowed most matches and freshly computed fallback matches for rows the borrowed set missed. That produces a cohort that is neither the sister's cohort nor a clean rebuild, so its confidence intervals are unverifiable and the two queries can silently diverge. The rule is now binary — full verbatim reuse or full rebuild — so a cell's provenance is always exactly one thing.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What eligibility constraints does the control pool inherit?</span></summary>
+    <div class="body">
+      <p>A control has to be a plausible counterfactual, so candidates are restricted to the same archetype, the same policy family, the same program and phase, the same tenant, and pre-treatment-only records. A non-override from an unrelated program or a post-treatment window is not a valid comparison even if its covariates happen to line up. Common support is then checked so the two arms actually overlap.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How is decision-to-policy multiplicity handled in matching?</span></summary>
+    <div class="body">
+      <p>A single decision can be constrained by several policies at once. Each such decision produces one row per policy it references, keyed by the decision id plus the policy-edge sequence, so it appears under multiple policy cells. The confidence intervals then do not treat those rows as independent observations, because they share an underlying decision — otherwise multiplicity would fake precision.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Reused matches were computed for the sister query's question — are they valid for yours?</span></summary>
+    <div class="body">
+      <p>Only when the manifest is identical, and that condition is exactly what makes them valid. The manifest pins the covariate schema, the snapshot, the filter shape, the seed, the caliper, the replacement policy, and the tie-break. Under identical inputs the matcher is deterministic, so the borrowed pairs are the same pairs a rebuild would produce, cell for cell. When they would not be, the manifest differs and the arm is rebuilt.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>What if no adequate control exists for an override — do you drop it quietly?</span></summary>
+    <div class="body">
+      <p>Not quietly. If a policy version cannot field a matched control arm that clears the thirty-per-arm floor and the common-support check, the cell is marked insufficient data with a denominator breakdown — references, overrides, matched, unmatched, censored. The design never fabricates a match or borrows an ill-fitting one to fill a cell; it suppresses the cell and reports why.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 6 ============ -->
+<section class="theme" id="t6">
+  <div class="stage"><b>Theme 6</b> Statistics, gates and suppression</div>
+  <h2>A cell earns a zone; it is not assigned one by default</h2>
+  <p class="lede">Balance, sensitivity, sample size, and a confidence interval that excludes zero must all hold before any zone code is emitted.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What must be true before a policy gets a zone code?</span></summary>
+    <div class="body">
+      <p>Four things together: standardized differences balanced between arms, the point estimate stable under the sensitivity sweep, both arms at or above the sample floor, and an outcome confidence interval that excludes zero. Miss any one and the cell becomes uncertain, borderline, or insufficient — never a zone.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What is the sample-size floor?</span></summary>
+    <div class="body">
+      <p>At least thirty treated and at least thirty control per policy version, plus a common-support check and explicit counts of unmatched and censored rows. Thirty is a pre-registered minimum below which nothing is emitted; it is a floor, not a proof of sufficiency.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How are the confidence intervals computed, and why clustered?</span></summary>
+    <div class="body">
+      <p>Through a shared bootstrap library with fixed defaults: two thousand resamples, a seed derived from the snapshot manifest hash, the percentile method, and resampling clustered by enrollment rather than by row. Clustering matters because multiple decisions within one enrollment are correlated; resampling rows independently would treat them as independent evidence and produce intervals that are too narrow.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the sensitivity battery, and what does failing it mean?</span></summary>
+    <div class="body">
+      <p>Each cell is recomputed under threshold tweaks at plus-or-minus twenty percent and plus-or-minus fifty percent, and under matcher calipers at strict, base, and loose settings. If the sign flips or the interval band shifts materially across any of these, the cell is tagged borderline and no conclusive read is offered. The battery exists because the override-rate and outcome-delta thresholds are judgement calls, and a finding that survives only at one exact threshold is not a finding.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why test the whole map for multiplicity, and how?</span></summary>
+    <div class="body">
+      <p>Dozens of policy versions are scored at once, so a few will look damning by chance alone even if every rule were neutral. The response reports how many policies were tested, insufficient, borderline, and uncertain, and carries a false-discovery-rate figure. Any ordering is labelled exploratory rather than presented as a ranked verdict, so multiplicity is disclosed instead of quietly inflating the count of "significant" rules.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the difference between an uncertain zone and a borderline zone?</span></summary>
+    <div class="body">
+      <p>They flag different failures. An uncertain zone means the outcome confidence interval crosses zero — there is no distinguishable delta to report. A borderline zone means the point estimate is unstable under the sensitivity sweep — a delta exists at the base setting but does not survive perturbation. Both suppress the zone label and emit diagnostics only, but they tell a reviewer different things about why.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why is the ranking "exploratory" rather than a sorted list?</span></summary>
+    <div class="body">
+      <p>A rank-sortable league table invites reading position as a verdict, and with multiplicity and wide intervals the order is genuinely noisy — the third and eighth cells may be statistically indistinguishable. Labelling the ranking exploratory, and never offering a sort that implies a leaderboard, keeps the map an evidence surface instead of a scoreboard the eye trusts more than the intervals warrant.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>With false-discovery control and wide intervals, won't almost everything be suppressed — is the map even useful?</span></summary>
+    <div class="body">
+      <p>First, a correction to the premise: the false-discovery figure does not suppress anything. The q-value is computed and returned with every cell; it is not a rung in the gate. The suppression comes from the power floor, the balance gate, the sensitivity battery, and intervals that cross zero — all unadjusted for multiplicity, which is precisely why the ranking is labelled exploratory and the q-value is put in front of the reader rather than applied on their behalf.</p>
+      <p>With that said: often most cells are suppressed, and that is the honest state of the evidence, not a defect. The value is not a full grid of colours; it is the small number of well-powered, sensitivity-stable cells whose signal you can actually stand behind in front of a governance board. A map that lit up every cell would be the untrustworthy one.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Bootstrap intervals assume the resampling unit is right — what if enrollment clustering is wrong?</span></summary>
+    <div class="body">
+      <p>Clustering by enrollment is the conservative default because decisions within an enrollment are clearly correlated. If the true unit were coarser still — the same patient across multiple enrollments — the intervals could remain slightly optimistic. That residual risk is exactly why a single interval never stands alone: the sensitivity battery and the exploratory label backstop the CI choice so no zone rests on one resampling assumption.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Isn't a fixed thirty-per-arm floor arbitrary — some effects need far more?</span></summary>
+    <div class="body">
+      <p>Yes. Thirty is a floor, not a sufficiency guarantee, and it is chosen to reject the obviously under-powered rather than to certify power. Above it, the confidence-interval width and the sensitivity sweep still decide whether a zone is assigned, so a cell with thirty-one per arm and a huge interval is suppressed just the same. The floor gates entry; it does not bless what clears it.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 7 ============ -->
+<section class="theme" id="t7">
+  <div class="stage"><b>Theme 7</b> Caching, determinism and versioning</div>
+  <h2>Reproducible per manifest — not a promise the number never moves</h2>
+  <p class="lede">Determinism comes from a seeded structured pipeline; hashes detect drift rather than create determinism.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Is any output cached, and keyed on what?</span></summary>
+    <div class="body">
+      <p>Yes. A canonical cache key spans the three-field tenant scope, the query namespace, the endpoint, the program, the policy version id, the threshold version, the metric schema hash, the match manifest id, the snapshot manifest hash, the maximum source-event sequence, and the correction epoch. The key is a sorted canonical serialization of every result-affecting <em>data</em> input, not a TTL. Note the boundary honestly: the library versions that also move a number — the matcher binary, the outcome library, the bootstrap — are <em>not</em> key fields here. They are pinned per deploy and stamped on every result and its audit record, so a disagreeing number is traceable after the fact; this page does not claim that a library upgrade by itself mints a new key. KQ3's key, which pins the matcher binary and statistical-plan versions explicitly, is the stronger form.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Why so many fields in the cache key?</span></summary>
+    <div class="body">
+      <p>Because each one changes the result. Drop the threshold version and a re-thresholded map serves under the old key; drop the correction epoch and a cell computed before a correction serves after it; drop the tenant scope and you risk a cross-tenant hit. Time-to-live expiry is not freshness — only keying on every input that can move the number is.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What makes this pipeline deterministic without any language model?</span></summary>
+    <div class="body">
+      <p>A seeded bootstrap, a deterministic exporter, canonical tie-breaks in the matcher, and manifest-addressed inputs. Given the same <code>as_of</code> over the same spine, the export produces identical columnar hashes and the classifier produces identical zones. There is no generative step anywhere, so there is nothing that could return different text on identical inputs — the determinism is a property of the structured chain, not of any narrator.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What role do the hashes play — do they make anything deterministic?</span></summary>
+    <div class="body">
+      <p>Hashes detect drift; they do not create determinism. The snapshot manifest hash, policy text hash, and metric schema hash let a replay prove it saw identical inputs and produced identical outputs. If a number changes, comparing hashes tells you whether an input changed. Determinism itself comes from the seeded, structured computation; the hashes are how you audit that it held, not the mechanism that enforces it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How does threshold versioning work when governance changes a threshold?</span></summary>
+    <div class="body">
+      <p>The threshold version is owned by the governance team. Changing an override-rate or outcome-delta threshold mints a new version id, and the previously computed zones stay queryable at their prior threshold version. So a re-thresholding never silently rewrites past cells; both the old and new interpretations remain addressable, and a reviewer can see exactly which threshold produced which zone.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the correction epoch, and why is it in the cache key?</span></summary>
+    <div class="body">
+      <p>It is a monotone marker that advances whenever a correction lands. Including it in the key means a cell cached before a correction cannot be served after one, because the key no longer matches. The epoch is the freshness dimension the other hashes miss — a correction may not change the snapshot manifest for an unrelated program, but it must still invalidate the cells it touches.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>"Deterministic" sounds like marketing — where does it actually break?</span></summary>
+    <div class="body">
+      <p>It holds only for a fixed snapshot and fixed library versions. Upgrade the matcher, the outcome library, or the bootstrap library, or land a correction, and the output legitimately changes with it. Be precise about the mechanism, because it is easy to get wrong: a correction moves the correction epoch, which <em>is</em> a key field. A library upgrade does <em>not</em> move the manifest hash — the seven manifest fields hash the matcher's <em>inputs</em>, not the matcher's code — so it is traced through the library versions stamped on every result and its audit record, not through the key. The honest claim is reproducibility per manifest <em>and</em> per pinned library version: the same inputs on the same libraries always give the same answer, and any change in the answer traces to a named change in one of the two — not that the number is frozen forever.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>If two library versions disagree on the same cohort, which one is right?</span></summary>
+    <div class="body">
+      <p>Neither is declared right by fiat. Each result is stamped with its library versions and its manifest, so the two are distinguishable rather than conflated. The parity fixture and the golden replay are what decide whether a version change is a fix or a regression — the framework makes the disagreement visible and testable instead of letting a silent upgrade quietly move production numbers.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 8 ============ -->
+<section class="theme" id="t8">
+  <div class="stage"><b>Theme 8</b> Nine years of history — what it buys</div>
+  <h2>Depth is what makes a per-version cell exist at all</h2>
+  <p class="lede">Roughly nine years of prior decisions, rule versions, and outcomes were hydrated through the same spine before the first friction map was drawn.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Why does this query need nine years of history at all?</span></summary>
+    <div class="body">
+      <p>A policy-version cell only reaches the thirty-per-arm floor if enough overrides — and enough comparable controls — accrued against that exact rule text over time. Rule versions rotate, and a single recent quarter rarely accumulates thirty overrides against one version. Without years of depth, most cells fall below the floor and the map returns mostly empty.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Was the system switched on against an empty graph?</span></summary>
+    <div class="body">
+      <p>No. Roughly nine years of prior decisions, every rule version, and the outcomes that followed were hydrated through the same append-only spine before the first friction map was ever computed. Hydration was treated as a first-class, quarantine-first, proof-carrying pipeline, not a throwaway backfill.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why must hydration preserve real event time rather than load time?</span></summary>
+    <div class="body">
+      <p>Because grouping is by the rule version live at each decision's own event time. If event time collapsed into load day, every historical override would appear to have happened at once, the as-of grouping this query depends on would be void, and nine years of distinct policy versions would smear into a single undifferentiated cell. So the load preserves each record's real event and observed times and pins only received and written times to the load fence.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How does hydration avoid creating a different product than the live stream?</span></summary>
+    <div class="body">
+      <p>The replayed history is projected through the exact same code that serves the live stream. If history ran through a separate backfill path, the hydrated graph would be a subtly different artifact from the streaming one, and every determinism guarantee downstream would be theatre. Running the live code over history is what lets a nine-year-old override and yesterday's be compared on the same footing.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What proves the hydration did not drop or duplicate events?</span></summary>
+    <div class="body">
+      <p>A layered gate: zero-event-loss reconciliation against the source, per-tenant and per-class counts, as-of spot checks against known-good historical reports, a golden replay over a historical slice, and a fenced cutover that proves neither gap nor duplicate at the boundary where the live stream attaches. Nothing downstream — no policy cell — is built until those gates pass.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What buys reproducibility across a re-hydration?</span></summary>
+    <div class="body">
+      <p>Every event carries a content-addressed identifier and is written conditionally, so re-running the load over the same corpus yields a byte-identical spine and an identical snapshot manifest hash. Idempotency here is an executable proof rather than a promise: hydrate twice, get the same hash, or the load has a bug. That property is what lets the whole snapshot chain claim determinism.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Nine years of schema drift — how do you avoid silently coercing old payloads?</span></summary>
+    <div class="body">
+      <p>Each legacy payload generation gets an explicit up-converter, and any row that cannot be mapped to a known schema — or to a tenant — is quarantined with a reason and counted, never defaulted. A defaulted tenant would be a cross-tenant leak baked permanently into history, which on a governance surface is unacceptable. Coercion is refused precisely where it would be most tempting.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Doesn't a nine-year late-arrival window mean cells never settle?</span></summary>
+    <div class="body">
+      <p>The wide window is scoped to hydration mode, where a nine-year spread of "late" data is expected and correct. In steady state the allowed-lateness watermark is small, and a late arrival triggers a targeted rebuild of only the affected cells rather than reopening the whole map. So cells do settle in normal operation, while remaining correctable when a genuinely late fact appears.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 9 ============ -->
+<section class="theme" id="t9">
+  <div class="stage"><b>Theme 9</b> Governance, PHI and the LLM boundary</div>
+  <h2>Neutral codes, governed copy, and no model in the loop</h2>
+  <p class="lede">The data layer emits codes, not verdicts; the mitigations make misuse hard and visible, not impossible.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Is there a language model anywhere in this pipeline?</span></summary>
+    <div class="body">
+      <p>No. The entire query is deterministic, seeded statistics — counting, matching, gating, classifying. This is a case where the right engineering answer is to not use a language model at all, because there is no natural-language task on the path and a generative step would only add nondeterminism to a number that has to be auditable.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What does the data layer emit — a verdict or a code?</span></summary>
+    <div class="body">
+      <p>A neutral code only: one of six — high or low override rate crossed with positive or negative delta, plus uncertain and borderline. It also emits the numbers and diagnostics. Any interpretive wording lives in governed UI copy that a human owner signs off on and that carries an observational label; the code itself never reads as a judgement.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why are conclusory labels forbidden in the data layer specifically?</span></summary>
+    <div class="body">
+      <p>Because a string like "policy too strict" or "clinicians ignoring evidence," emitted by code, reads as a machine's verdict and can directly fire a governance action. Keeping those words out of the data layer and confining interpretation to governed copy puts a named human between the number and the decision. The layer that computes the statistic is not allowed to also editorialize about it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What governance mitigations are actually enforced, concretely?</span></summary>
+    <div class="body">
+      <p>An access-log entry written before a result is served; the six neutral codes with conclusory strings banned; an observational label on every cell; a threshold version owned by a named governance team; an exploratory, never rank-sortable ordering; and a zone history for monthly audit and quarter-over-quarter review. These are mitigations that make misuse harder and traceable — not a claim that misuse is impossible.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Does any patient text or clinical free-text leave the platform?</span></summary>
+    <div class="body">
+      <p>No. The decision's rationale free-text is read as an as-of field during reconstruction, but it is never sent anywhere and never fed to a model — there is no external call in the pipeline. Because nothing leaves the network, the de-identification-versus-network-residency question that governs an external model call simply does not arise for this query.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Does this query put clinicians on a scoreboard?</span></summary>
+    <div class="body">
+      <p>Not here. The unit of analysis is the policy version, not the doctor; this query produces no per-clinician breakdown. The platform's actor-performance governance — pseudonymous ids, leadership-and-self-view access, per-request audit, alphabetic non-rankable ordering — applies to the sister queries that do surface individual actors, and this one is deliberately not one of them.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>If the platform uses a language model elsewhere, what boundary would you hold it to?</span></summary>
+    <div class="body">
+      <p>A model sits only at the edges, gated, never on a deterministic analytics path. Its production deployment is a single explicit path — self-hosted, in the platform's own network — and an external provider is permitted only on a de-identified payload; a contractual no-retention agreement is not a substitute for network residency and the two are not interchangeable. None of that is exercised by this query, which has no model at all, but that is the standard the rest of the platform is held to.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Can you guarantee a zone code never becomes a scorecard?</span></summary>
+    <div class="body">
+      <p>No — and claiming an absolute guarantee would be dishonest. Nothing in the pipeline can stop a human downstream from reading a code as a verdict. What the design does is make that reading harder and traceable: the verdict strings are forbidden at the source, every cell is labelled observational, the ordering is exploratory rather than ranked, and every access is logged. Misuse becomes a visible, attributable choice, not a default the surface nudges you toward.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>A pinned model at temperature zero is deterministic, so why not just narrate the map?</span></summary>
+    <div class="body">
+      <p>Temperature zero does not make a model's output deterministic. Pinning the model, prompt, and temperature and hashing inputs and outputs gives you drift detection and reproducible auditing — the ability to notice when the text changed — but not generation determinism. A narrated verdict could therefore drift while the audit reports "same inputs," which on a governance surface is worse than no narration. So this query keeps generated narration out entirely and lets the structured, seeded cells speak for themselves.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 10 ============ -->
+<section class="theme" id="t10">
+  <div class="stage"><b>Theme 10</b> Failure modes, degradation and ops</div>
+  <h2>Staleness degrades visibly; scope violations fail closed</h2>
+  <p class="lede">The map tells you when it is stale, rebuilds only what a correction touches, and refuses rather than leak.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What happens when the snapshot goes stale?</span></summary>
+    <div class="body">
+      <p>Degradation is tiered and surfaced: under 24 hours old is green, 24 to 48 hours is yellow, over 48 hours is red, and a projector lag over 30 minutes also flips yellow. Green and yellow are served, with the yellow tier carrying a visible staleness banner so a reader never mistakes an aging friction map for a current one. Red is not served: past 48 hours the service blocks and escalates rather than hand over quietly outdated statistics, which is the same freshness contract the sibling cohort queries run under.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>How fast does a correction propagate to a fresh cell?</span></summary>
+    <div class="body">
+      <p>The target is a P95 of five minutes from a policy, decision, edge, or outcome correction landing to a freshly rebuilt policy-zones artifact for the affected cells. That is a pre-registered SLA the design is gated against, not a measured figure.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How does a correction rebuild only what it touches rather than everything?</span></summary>
+    <div class="body">
+      <p>Every derived row records its source-event sequence range and a dependency set indexed by policy version id. When a correction lands, it resolves through that dependency index to exactly the cells whose inputs changed, and only those are rebuilt. Rebuilding the whole map on every correction would blow the SLA and waste compute; the dependency index bounds the blast radius to the touched versions.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What degrades gracefully versus what fails closed?</span></summary>
+    <div class="body">
+      <p>Staleness degrades in graded steps and then stops: green serves, yellow serves with a visible marker because an aging but correct map is more useful than none, and red — past 48 hours — blocks and escalates. A tenant-scope mismatch or a manifest-equality violation fails closed immediately — rebuild or refuse — because serving cross-tenant or blended-cohort data is strictly worse than serving nothing. The split is deliberate: freshness degrades gracefully up to a bound and then fails closed too, while isolation and provenance have no graceful tier at all.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is observable about the map's health?</span></summary>
+    <div class="body">
+      <p>Zone-change events per refresh, per-policy sample-size availability, the distribution of borderline and uncertain cells, snapshot age and projector lag, and rebuild counts after corrections. Crucially, the map's own sparsity is a monitored signal: a sudden collapse in the number of cells clearing the gates points at an upstream data problem, not at policies suddenly becoming uninteresting.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What happens on a manifest mismatch during a nightly refresh?</span></summary>
+    <div class="body">
+      <p>The borrowed control arm is rejected and the full matched cohort is rebuilt with the same matcher binary; a new match manifest id and a rebuild reason are persisted on the affected rows, and the run continues. A mismatch is a normal, logged event — usually the sister query re-ran under new inputs — not an outage. The rebuild reason is what lets a later reviewer see why a given night borrowed versus rebuilt.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>A correction storm hits many policies at once — does the five-minute SLA survive?</span></summary>
+    <div class="body">
+      <p>The SLA is per-affected-artifact at P95, and the dependency index bounds each rebuild to the cells it touches, so a broad correction fans out into many small targeted rebuilds rather than one giant one. The pressure point under a storm is throughput, not correctness: some cells stay marked stale longer while the queue drains, but no cell is served fresh-looking before its rebuild completes.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>What is the worst silent failure this design still permits?</span></summary>
+    <div class="body">
+      <p>A covariate that matters but was never measured. Matching balances only the covariates that were measured, so an unmeasured confounder can move an outcome delta with every gate showing green — balanced, stable, well-powered, interval excluding zero — and nothing in the pipeline will flag it. That is precisely why every cell stays observational and no zone is ever a causal claim; the honest limit is stated rather than engineered away.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 11 ============ -->
+<section class="theme" id="t11">
+  <div class="stage"><b>Theme 11</b> Evaluation and acceptance criteria</div>
+  <h2>The two indexings must agree, cell for cell</h2>
+  <p class="lede">A cross-query parity fixture and a golden regression encode the exact hard cases that break naive as-of code.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What is the cross-query parity fixture?</span></summary>
+    <div class="body">
+      <p>Replay the same spine and the same manifest fields through both this query and its decision-indexed sister, and require identical policy cells per policy version. Since the two are the same overrides under different indexes, they must never disagree on the same rule; the fixture is what enforces that as a hard test rather than an assumption.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>What are the headline acceptance gates?</span></summary>
+    <div class="body">
+      <p>The thirty-per-arm floor with common support, standardized-difference balance, sensitivity stability across thresholds and calipers, an outcome interval excluding zero for any zone, strict manifest reuse or full rebuild, and the parity fixture passing for every policy version. These are pre-registered gates the design was reviewed and deployed against.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What did the initial parity fixture catch?</span></summary>
+    <div class="body">
+      <p>A sign-flip on one policy version, where the two queries reported opposite-signed outcome deltas on the same references and the same overrides. It was wired in as an initially-failing golden fixture that had to be driven to passing before ship — a deliberate red test proving the two indexings genuinely reconcile rather than merely looking consistent on the happy path.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why is a sign-flip between the two queries a ship-blocker rather than a nit?</span></summary>
+    <div class="body">
+      <p>Because the two are supposed to be the same overrides reindexed, so opposite signs mean one of them mis-joined outcomes or matched differently. If the per-decision and per-policy views can disagree on the direction of an effect for the same rule, no downstream reading of either is trustworthy. Reconciling them is a correctness precondition, not a polish item.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What does the golden regression pin beyond parity?</span></summary>
+    <div class="body">
+      <p>Policy text-change corrections, late arrivals, supersedes chains, and shuffled spine order all replaying to identical columnar hashes. Those fixtures encode the exact edge cases that break naive as-of code: a rule retext that must fracture a cell, a late event that must rebuild one, a superseded version that must not double-count. Pinning them means a refactor that quietly reintroduces a leak fails the suite.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>How is "the borrowed arm was actually identical" tested rather than assumed?</span></summary>
+    <div class="body">
+      <p>The reuse path is exercised against a rebuild under an identical manifest, and the two are required to produce identical cells. If they differ, the conclusion is not "reuse is fine anyway" but "the manifest is incomplete" — some result-affecting input is missing from the seven fields. That test is what keeps the manifest honest, since a manifest that permits divergent reuse is itself the bug.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Green gates on fixtures — how do you know they generalize to real policies?</span></summary>
+    <div class="body">
+      <p>You don't, fully, and the design is explicit about that. The fixtures prove the mechanics — as-of correctness, determinism, parity, tenant isolation — but no fixture can certify that an unmeasured confounder is absent from a real cohort. That residual gap is the reason the verdict is observational and the ranking exploratory; the tests bound the engineering risk, not the epistemic one.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Are the numbers in the example payloads measured results?</span></summary>
+    <div class="body">
+      <p>No. Every figure on any surface — override rates, deltas, sample sizes — is either a pre-registered acceptance target or an illustrative fixture value, never a measured production metric. No measured production numbers are published for this system, by design; the payloads exist to show the shape of the contract, not to report an outcome.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ THEME 12 ============ -->
+<section class="theme" id="t12">
+  <div class="stage"><b>Theme 12</b> Tradeoffs and what I would do differently</div>
+  <h2>The machinery exists so a count never becomes a verdict</h2>
+  <p class="lede">The honest ceiling is observational; the design's job is to make that ceiling visible rather than to pretend past it.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span><span>Why not just let an analyst run this query ad hoc?</span></summary>
+    <div class="body">
+      <p>An ad-hoc query has no as-of reconstruction, no manifest pinning, no suppression gates, and no audit trail. It would produce a plausible, unreproducible, and potentially verdict-shaped number against a live, mutating rulebook — the exact artifact this system exists to prevent. The pipeline is the difference between a defensible governance input and a spreadsheet nobody can regenerate.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why reuse the sister query's matcher instead of an independent one?</span></summary>
+    <div class="body">
+      <p>Two independent matchers guarantee divergent cohorts and divergent intervals over time, and they make the "same overrides, two indexings" claim unverifiable. A single shared binary with a manifest is the only way the per-decision and per-policy views can be provably the same evidence. Independence here would buy nothing and cost the one property — cross-query consistency — that the parity fixture is built to defend.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>Why per-version aggregation instead of a single model of override versus outcome?</span></summary>
+    <div class="body">
+      <p>A single model would hide the per-rule evidence and the suppression logic behind a fitted surface and invite a causal reading of its coefficients. The map keeps each rule's evidence, power, and stability legible to a governance owner, cell by cell, and makes suppression a visible outcome rather than a smoothed-over one. Legibility to a human decision-maker is worth more here than predictive compression.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What is the cost of the observational stance — what can't you deliver?</span></summary>
+    <div class="body">
+      <p>You can never hand governance "this rule caused worse outcomes, change it." You can only hand a matched-cohort association with caveats, which leaves the decision with a human. That is a deliberate ceiling, not a missing feature — an observational design that claimed causation would be lying — but it does mean the map informs a judgement rather than making one.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span><span>What would you change first if you extended this?</span></summary>
+    <div class="body">
+      <p>Make the unmeasured-confounding limit quantitative instead of only textual. A formal robustness figure per cell — how strong an unmeasured confounder would have to be to explain away the observed delta — would let a governance reader weigh a signal's fragility numerically, rather than reading a blanket "observational" caveat that is easy to discount. It turns the honest limit from a disclaimer into a reported metric.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>Isn't all this machinery overkill for "count the overrides"?</span></summary>
+    <div class="body">
+      <p>The counting is trivial and would be a day's work. Every other part — as-of reconstruction, matched controls, suppression gates, neutral codes, audit, parity — exists to stop the count from becoming a verdict. The naive one-query version is not simpler in the ways that matter; it is the dangerous version, because its confident-looking output can rewrite the rulebook on a confounded signal.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>What is the strongest argument that this query shouldn't ship?</span></summary>
+    <div class="body">
+      <p>That no observational design can rule out unmeasured confounding, so any outcome delta it reports is contestable and could be acted on wrongly. The design's answer is not to claim it solved that — it can't — but to refuse to emit a verdict, gate hard, label everything observational and exploratory, and keep a named human owner. That is mitigation of a real limitation, not a resolution of it, and the honest gaps say so.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>If governance ignores the caveats and acts on a red cell anyway, whose fault is the design?</span></summary>
+    <div class="body">
+      <p>Partly the design's, if it made the caveat easy to ignore — which is why the mitigations are structural rather than cosmetic. The verdict strings are forbidden at the source, the observational label is on every cell, the ordering is exploratory rather than ranked, and every read is logged. Acting against the caveats then becomes a visible, attributable choice by a person, not a default the surface quietly encouraged.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span><span>What's the honest one-line verdict on this system's maturity?</span></summary>
+    <div class="body">
+      <p>A ship-with-changes design running in production whose move to a final approved design state now turns on the sibling system emitting its match manifest and the cross-query parity fixture passing for every policy version. The shared platform components it depended on have landed; landing them did not by itself convert the verdict, which remains a review outcome. Solid mechanics, real platform dependencies, and honest limits — which is exactly what the closing gaps below spell out.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ HONEST GAPS ============ -->
+<div class="callout">
+  <span class="label">Honest gaps</span>
+  <h2>What this query cannot answer today, and what has since landed at the platform layer</h2>
+  <p>The design-review verdict for this query is <strong>ship-with-changes</strong>: its second revision absorbed the seventeen items its first review raised, and it runs in production, but it has not been signed off as an approved design and is not claimed to be. Across the whole program, only the precedent-retrieval query ever reached approved-with-nits; this one has not, and unlike that query, its decision-indexed sister, and the orchestration query, it ships no runnable code sample.</p>
+  <ul>
+    <li><strong>It cannot make a causal claim.</strong> Every zone is a matched-cohort association. Matching balances only the covariates that were measured, and unmeasured confounding is never ruled out — so the map informs a governance judgement, it does not deliver a ruling that a policy caused an outcome.</li>
+    <li><strong>It cannot tell you why a clinician overrode.</strong> There is no free-text understanding and no language model on the path; the rationale text is reconstructed as an as-of field but never interpreted. The map shows that overrides cluster on a rule and how their outcomes compare, not the reasoning behind them.</li>
+    <li><strong>Most policies get no zone.</strong> Below the thirty-per-arm floor, or with an interval crossing zero, or with an unstable sensitivity sweep, a cell is suppressed. A sparse map is the correct output, and the design does not manufacture signal to fill it.</li>
+    <li><strong>Its move from ship-with-changes to approved was platform-gated.</strong> It depended on shared components — the shared propensity-matcher binary emitting a match manifest id, the shared outcome and bootstrap libraries, the as-of edge-reconstruction backbone, the snapshot-versus-live SLA contract, the correction-event backbone, the deterministic exporter with its golden replay, and the metric-cache-key and tenant-isolation envelopes — which have since landed at the platform layer, and the query now binds to the shared versions. What still holds the verdict at ship-with-changes is the sibling system emitting its match manifest and the cross-query parity fixture passing for every policy version; landing the components did not by itself move the verdict, which remains a review outcome, not a component state.</li>
+  </ul>
+</div>
+
+<footer>
+  <p><strong>Anonymisation.</strong> This page describes a real production system for a chronic-care platform covering 80+ chronic conditions; the client and any internal system names are withheld. Endpoints are described in words rather than by their internal paths.</p>
+  <p><strong>Scale and ownership.</strong> The platform served roughly 10,000 patients across 80+ conditions over about nine years of hydrated history. Role: sole owner — design through production.</p>
+  <p><strong>No measured production numbers.</strong> Every figure here — thresholds, sample floors, SLAs, sensitivity bands, resample counts — is a pre-registered acceptance target or an illustrative fixture value. No measured production metrics are published.</p>
+</footer>
+
+</main>
+</body>
+</html>

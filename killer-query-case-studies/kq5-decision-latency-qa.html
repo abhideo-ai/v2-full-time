@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KQ5 · Decision latency — Questions &amp; Answers</title>
+<meta name="description" content="A deep-dive Q&A on a production decision-latency analytics service for a chronic-care platform: how a high-risk lab is paired to the treatment decision that answers it, why the denominator counts the labs nobody answered, how per-clinician views are governed against scorecard use, and where the design is deliberately honest about what it cannot yet prove. Roughly 100 questions a senior engineer would actually ask.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #9A6B00;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 2.9rem);
+    line-height: 1.15; letter-spacing: -0.015em;
+    max-width: 24ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  strong { font-weight: 600; }
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--mist); padding: 1px 5px; border-radius: 4px;
+    overflow-wrap: anywhere;
+  }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+
+  header.hero { padding: 64px 0 8px; }
+  .hero .sub { font-size: 1.1rem; color: var(--steel); max-width: 64ch; margin-top: 20px; }
+  .backlink { margin-top: 20px; font-size: 0.92rem; }
+
+  .kq-card {
+    margin: 34px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .kq-card .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .kq-card blockquote {
+    font-family: var(--serif); font-size: 1.08rem; line-height: 1.55; color: var(--ink);
+  }
+
+  /* ---- table of contents ---- */
+  nav.toc {
+    margin: 40px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  nav.toc .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 12px;
+  }
+  nav.toc ol {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 6px 24px; counter-reset: toc;
+  }
+  nav.toc li { counter-increment: toc; font-size: 0.94rem; }
+  nav.toc li::before {
+    content: counter(toc, decimal-leading-zero); font-family: var(--mono);
+    font-size: 0.74rem; color: var(--teal); margin-right: 10px;
+  }
+
+  /* ---- theme sections ---- */
+  section.theme { margin-top: 66px; scroll-margin-top: 20px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+  section.theme > p.intro { color: var(--steel); font-size: 0.98rem; margin-bottom: 8px; }
+
+  /* ---- Q&A ---- */
+  details {
+    border: 1px solid var(--hairline); border-radius: 6px;
+    background: var(--card); margin: 10px 0; overflow: hidden;
+  }
+  details[open] { border-color: var(--mist); box-shadow: 0 1px 0 var(--hairline); }
+  summary {
+    cursor: pointer; list-style: none; padding: 15px 18px;
+    display: flex; gap: 12px; align-items: baseline;
+    font-weight: 500; color: var(--ink);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--teal-deep); }
+  summary .qtext { flex: 1; }
+  details[open] summary { border-bottom: 1px solid var(--mist); }
+  .chip {
+    font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 4px; white-space: nowrap;
+    flex: none; position: relative; top: -1px;
+  }
+  .chip.screening { color: var(--teal-deep); background: #E1EEED; }
+  .chip.deep { color: #234; background: var(--mist); }
+  .chip.adversarial { color: var(--amber); background: #F4ECDA; }
+  .answer { padding: 4px 18px 18px; }
+  .answer p { font-size: 0.98rem; margin: 12px 0 0; max-width: none; }
+  .answer p:first-child { margin-top: 4px; }
+
+  /* ---- honest gaps ---- */
+  .gaps {
+    margin: 66px 0 0; padding: 26px 28px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--amber); border-radius: 6px;
+  }
+  .gaps .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 10px;
+  }
+  .gaps h2 { margin-bottom: 12px; }
+  .gaps ul { margin: 0 0 4px; padding-left: 20px; }
+  .gaps li { margin: 0 0 10px; max-width: 72ch; }
+
+  footer {
+    margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--hairline);
+    font-size: 0.82rem; color: var(--steel);
+  }
+  footer p { max-width: 78ch; margin: 0 0 10px; }
+  footer .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 20px; margin: 14px 0; }
+  footer b { display: block; font-family: var(--mono); font-weight: 500; font-size: 0.64rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--steel); }
+</style>
+</head>
+<body>
+<main>
+
+  <header class="hero">
+    <span class="eyebrow">Deep-dive Q&amp;A · Decision latency</span>
+    <h1>How long does it take to answer a <em>high-risk lab</em> — and how do you measure that honestly?</h1>
+    <p class="sub">A decision-latency analytics service for a chronic-care platform covering 80+ chronic conditions. It measures the time from a high-risk lab result arriving to the treatment decision that answers it, split by clinician, geography, and AI usage. This page collects roughly a hundred of the questions a senior engineer or CTO asks when they stop reading the summary and start pressure-testing the design: the pairing rule, the denominator, the clock, the statistics, the governance, and the parts that are still honestly unfinished.</p>
+    <p class="backlink"><a href="kq5-decision-latency.html">← Read the case study</a></p>
+  </header>
+
+  <div class="kq-card">
+    <span class="label">The query the system must answer — verbatim</span>
+    <blockquote>"What is the median time between a high-risk lab result received and the corresponding treatment decision? Segmented by doctor, geography, and AI usage."</blockquote>
+  </div>
+
+  <nav class="toc" aria-label="Themes">
+    <span class="label">Twelve themes</span>
+    <ol>
+      <li><a href="#t1">The question and why it is hard</a></li>
+      <li><a href="#t2">Architecture and data flow</a></li>
+      <li><a href="#t3">As-of correctness and future leakage</a></li>
+      <li><a href="#t4">Tenancy and isolation</a></li>
+      <li><a href="#t5">The pairing mechanism</a></li>
+      <li><a href="#t6">Statistics, gates and suppression</a></li>
+      <li><a href="#t7">Caching, determinism and versioning</a></li>
+      <li><a href="#t8">Historical hydration — nine years</a></li>
+      <li><a href="#t9">Governance, PHI and the LLM boundary</a></li>
+      <li><a href="#t10">Failure modes, degradation and operations</a></li>
+      <li><a href="#t11">Evaluation and acceptance criteria</a></li>
+      <li><a href="#t12">Tradeoffs and what I would do differently</a></li>
+    </ol>
+  </nav>
+
+  <!-- ===================== THEME 1 ===================== -->
+  <section class="theme" id="t1">
+    <div class="stage"><b>Theme 01</b> The question and why it is hard</div>
+    <h2>A subtraction that hides four ways to be confidently wrong</h2>
+    <p class="intro">On paper this is one join and one subtraction. Every clause of that sentence is a trap.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What does this query actually measure?</span></summary>
+      <div class="answer">
+        <p>It measures elapsed time from the moment a high-risk lab result reaches the platform to the treatment decision that answers that lab, then reports the median and the 90th-percentile of that latency, split three ways: by clinician, by geography, and by whether AI assisted the decision. The unit is time, the population is high-risk labs, and the segmentation is what makes it operationally useful. The hard part is not the arithmetic — it is deciding which decision "answers" a lab, and which labs to count.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Why isn't this just "join lab to next decision, subtract two timestamps, take the median"?</span></summary>
+      <div class="answer">
+        <p>Because every clause of that sentence hides a way to ship a confident, wrong number. "Next decision" pairs a lab with an unrelated action; the median silently deletes the labs nobody answered; "two timestamps" can measure the database instead of the clinic; and a per-clinician median renders as a scorecard the instant it draws. The design treats each of those as a first-class problem with a named control, rather than trusting a one-line SQL.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why is "the corresponding decision" the hardest word in the specification?</span></summary>
+      <div class="answer">
+        <p>Because correspondence is a clinical judgment, not a temporal fact, and a nearest-in-time join happily pairs a high-risk lab with the next scheduling, messaging, or supplement decision that has nothing to do with it. The design only lets a pair make the headline when the decision explicitly cites the lab as evidence in the decision graph, and a versioned allowlist defines which decision types even qualify. Get this wrong and the latency you report is the time to <em>some</em> decision, not the decision that the lab demanded.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why is survivorship bias the most consequential trap here?</span></summary>
+      <div class="answer">
+        <p>Because the labs that never received a decision are precisely the ones leadership most needs to see, and an inner join deletes them silently. If you compute the median only over answered labs, the platform looks fastest exactly where it is failing worst — a slow or missing response drops out of the numerator and the denominator at once. The design builds the denominator from an ungated lab feed and carries unanswered labs as right-censored observations, so "nobody answered this" is a reported number, not an absence.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why does the choice of clock change the answer, not just refine it?</span></summary>
+      <div class="answer">
+        <p>Subtract an ingestion timestamp from a write timestamp and you are measuring how fast the pipeline moved bytes, not how fast a clinician acted. Outpatient labs can be resulted days before the platform receives them, so "measured-at" and "received-at" can differ by hours to days, and picking the wrong pair inflates or deflates the latency by that whole gap. Every row preserves four distinct timestamps and the latency definition pins exactly which two are subtracted, so the number always means the same thing.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Isn't a per-clinician latency number inherently a scorecard, no matter how you dress it up?</span></summary>
+      <div class="answer">
+        <p>Yes — it reads as one the moment it renders, and pretending otherwise would be dishonest. That is exactly why governance is a first-class part of the design rather than a footnote: clinicians are pseudonymous by default, the per-clinician split exists in a response only for leadership or the clinician's own view, every actor-level read writes an audit entry first, and the ordering is alphabetic and deliberately not rank-sortable. Those are mitigations that make misuse harder and visible after the fact; they do not turn performance data into something it isn't.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Why build this query first, before the rest of the cohort-analytics family?</span></summary>
+      <div class="answer">
+        <p>It is the simplest cohort-aggregation question the platform needs, so it is the right place to work out the patterns the whole family shares. Once lab-to-decision latency is honest, its building blocks — the pair-method split, the canonical cache key, the seeded statistics, the actor-governance pattern — carry over to the sibling cohort questions as reusable pieces rather than per-query reinventions. Starting here means the hard, general problems get solved once, under review, before five other queries depend on them.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">If the result is observational anyway, why invest this much in correctness?</span></summary>
+      <div class="answer">
+        <p>Because an observational number that is also <em>wrong</em> is worse than no number: it gives leadership false confidence exactly where the truth is uncomfortable. Observational means you cannot claim AI <em>caused</em> a speed-up; it does not license a biased denominator, an ambiguous clock, or a pairing rule that drifts between builds. The correctness work is what earns the right to show the number at all; the observational framing is about what you may then conclude from it.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 2 ===================== -->
+  <section class="theme" id="t2">
+    <div class="stage"><b>Theme 02</b> Architecture and data flow</div>
+    <h2>Snapshot-only analytics with a second, ungated feed</h2>
+    <p class="intro">Nothing a clinician waits on ever touches the live graph, and the denominator comes from its own feed.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What is the pipeline end to end?</span></summary>
+      <div class="answer">
+        <p>An append-only event spine feeds a projection that maintains the decision graph and, separately, an ungated snapshot of every high-risk lab. A nightly export freezes the graph at a single as-of watermark; a pair builder runs analytical joins over that frozen snapshot to pair each high-risk lab with its treatment decision; covariates and AI attribution are reconstructed by replaying the spine; and everything downstream is pre-computed into columnar metric tables served by an embedded analytical engine behind an API. The clinician's request reads pre-computed cells and nothing more.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Does a dashboard request ever touch the live decision graph?</span></summary>
+      <div class="answer">
+        <p>No. The graph is queried only during the nightly snapshot export; at request time the API reads pre-computed metric tables and never issues a graph traversal. Nothing statistical is recomputed on the read path, which is what keeps the request cheap, deterministic, and free of per-row graph calls.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why snapshot-only rather than traversing live Neptune per lab?</span></summary>
+      <div class="answer">
+        <p>A per-lab live traversal is non-deterministic under concurrent writes, hard to tenant-partition, and slow enough to be a poor fit for a batch analytics question. Freezing a snapshot at one watermark makes the whole build replayable to a byte-identical result, lets the output be partitioned and cached by tenant and snapshot hash, and moves all the graph cost into one nightly job instead of thousands of request-time calls. The trade is freshness, which the design handles explicitly with staleness tiers rather than by pretending the number is real-time.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why are there two upstream feeds instead of one?</span></summary>
+      <div class="answer">
+        <p>The platform's normal projection materialises an observation only once it attaches to a decision — fine for most queries, a quiet catastrophe for a latency question, because labs nobody answered would never enter the data at all. So this system reads a second, ungated lab feed that returns every high-risk lab whether or not a decision ever cited it. That feed is the denominator; without it, the platform would look fastest precisely where it is failing worst.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What does the pair builder do, and where does it run?</span></summary>
+      <div class="answer">
+        <p>It runs tenant-scoped analytical joins over the frozen snapshot in an embedded columnar engine — no per-lab graph traversal — to emit one row per high-risk lab, tagged with how it was paired to a decision and carrying its latency, its covariates, and a deterministic identity. It joins the ungated lab feed against the snapshot's evidence edges for the headline-eligible pairs, then replays the spine to reconstruct covariates and AI attribution as of the right moment. The two numbers that matter most — the latency and the row's stable id — are computed inside the builder so nothing statistical touches the live graph.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Why pre-compute metric tables instead of aggregating on read?</span></summary>
+      <div class="answer">
+        <p>Pre-computing means the request path only scans finished cells and runs governance — audit, tenant assertion, role filtering — over a small result, keeping reads fast and predictable. Aggregating on read would put bootstrap resampling and survival estimation in the request's critical path and reintroduce a chance for two identical requests to diverge. The heavy statistics happen once per nightly build, are pinned to a snapshot hash, and are served, not recomputed.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Snapshot-only means the dashboard is stale by construction — how is that acceptable for an operational tool?</span></summary>
+      <div class="answer">
+        <p>Decision latency is a trend-and-distribution metric, not a real-time alert: a clinician does not act on tonight's median, and a leader reading it weekly is not harmed by a nightly cadence. What would be unacceptable is <em>silent</em> staleness, so the design surfaces freshness tiers — normal under a day, flagged stale for the next day, red past two — and correction events short-circuit the nightly cadence for urgent fixes. Staleness is made visible and bounded rather than eliminated, which is the honest trade for determinism and replayability.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the snapshot manifest, and why does every derived artifact carry its hash?</span></summary>
+      <div class="answer">
+        <p>The manifest records the exact frozen state a build read: the as-of watermark, a content hash of the vertices and edges, and the maximum source event sequence included. Stamping that hash onto every pair row and metric cell means any reported number can be traced to the precise snapshot that produced it, and any two builds off the same manifest must agree. It is also what lets the cache tell a fresh number from a stale one, because the hash is part of the key.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">If the projection falls behind, do you quietly serve wrong numbers?</span></summary>
+      <div class="answer">
+        <p>Projector lag over thirty minutes flags the build yellow before the snapshot itself goes visibly stale, so the risk surfaces ahead of the symptom rather than after it. The freshness tiers and the lag flag are separate signals precisely so a lagging projector — which produces a fresh-looking but incomplete snapshot — cannot masquerade as healthy. It does not make the lag impossible; it makes it impossible to hide.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 3 ===================== -->
+  <section class="theme" id="t3">
+    <div class="stage"><b>Theme 03</b> As-of correctness and future leakage</div>
+    <h2>Every covariate is reconstructed to the moment it was true</h2>
+    <p class="intro">Read a segment from current state and a patient's later life silently rewrites their old pairs.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What does "as-of reconstruction" mean here?</span></summary>
+      <div class="answer">
+        <p>It means a covariate is computed as it was at the relevant historical moment by replaying the append-only spine to that point, rather than read from the patient's current record. The spine is the ordered log of everything that happened, so replaying it to a timestamp recovers the state the world was actually in then. Every reconstructed field is stamped with the timestamp and the event sequence it was resolved at, so the reconstruction is auditable and repeatable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Which covariates are reconstructed, and to which moment?</span></summary>
+      <div class="answer">
+        <p>The segmentation covariates — country, programme, and phase — are reconstructed as of the lab's received time, because that is the context in which the clock started. The AI-attribution fields are reconstructed as of the decision's own event time, because that is when AI did or did not assist. Each field carries its own as-of timestamp and source event sequence, so the two sides of the pair can honestly sit in different moments.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Concretely, what breaks if you read country from current state?</span></summary>
+      <div class="answer">
+        <p>A patient who later moved country or switched programme would silently rewrite the segment of a pair from two years ago, so the geography split would attribute old latencies to wherever the patient lives now. The by-geography comparison would then be measuring migration as much as clinical speed. The as-of replay is the single thing keeping a two-year-old pair labelled the way it actually was when the lab arrived.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Why not just use one as-of timestamp for the whole pair and keep it simple?</span></summary>
+      <div class="answer">
+        <p>Because the two sides of the pair genuinely live in different moments: the lab's context is what was true when it arrived, and AI assistance is a property of the decision made later. Forcing both to a single timestamp would either backdate the AI attribution to before the decision existed or advance the patient's context past the lab — either way mislabelling which arm the pair belongs to. The small extra bookkeeping of per-field as-of timestamps is what keeps the split truthful.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How is future leakage prevented inside the pairing window itself?</span></summary>
+      <div class="answer">
+        <p>A candidate decision must fall strictly after the lab's received time and within the fourteen-day window, so a decision that predates the lab can never be paired to it. Ordering is by event time and event sequence, never by the order rows happened to be written, so replay cannot smuggle a later-written-but-earlier event into a pair. The window bounds how far forward the pairing may reach, and the strict inequality bounds it backward.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why persist a source event sequence alongside the as-of timestamp?</span></summary>
+      <div class="answer">
+        <p>Timestamps collide — two events can share a millisecond — so a timestamp alone is not a deterministic cursor into the log. The source event sequence is a total order the replay can seek to exactly, and breaking timestamp ties by sequence makes every as-of read reproducible across rebuilds. It is also the anchor the correction machinery uses to decide which rows a late edit actually affects.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Doesn't replaying the spine for every field make the build ruinously expensive?</span></summary>
+      <div class="answer">
+        <p>The replay happens once per nightly build, off the frozen snapshot, not on any request path, so it never touches a clinician's wait. And because every pair row has a deterministic identity tied to the events it depends on, a later correction rebuilds only the affected rows rather than replaying the whole history again. The cost is real but bounded and amortised; it buys correctness that a current-state read simply cannot provide.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How does as-of correctness hold up for pairs built from decade-old events?</span></summary>
+      <div class="answer">
+        <p>A lab resulted years ago is subtracted using its own era's domain clocks, recovered from the historical record, so it is a same-era subtraction indistinguishable in kind from one computed today. A per-row guard asserts every historical event's real-world time falls strictly before its ingestion time, catching any old record whose event time accidentally defaulted to the bulk-load date. Old pairs are therefore first-class, not a degraded approximation bolted onto a system built for the live stream.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 4 ===================== -->
+  <section class="theme" id="t4">
+    <div class="stage"><b>Theme 04</b> Tenancy and isolation</div>
+    <h2>A three-field scope, asserted on every cell that leaves the service</h2>
+    <p class="intro">Isolation is enforced at build, at partition, and again at serve — fail-closed.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">How is a tenant identified in this system?</span></summary>
+      <div class="answer">
+        <p>Tenant identity is a three-field scope — an account, a workspace, and a control unit — resolved from the caller's authenticated context, not passed in as a free parameter. Every lab, decision, pair row, and metric cell carries all three fields, and they travel together through the whole pipeline. A single-field check would be insufficient, because the same account can span workspaces and control units that must not see each other's data.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Where is tenant isolation actually enforced?</span></summary>
+      <div class="answer">
+        <p>In three places, deliberately redundant: the build runs tenant-scoped so a pair can only form from same-tenant rows, the parquet files are partitioned by the three-field scope, and a fail-closed assertion checks every served cell against the caller before it leaves the API. Each layer would catch a different class of bug — a bad join, a mis-partitioned file, a query that reached across partitions. Defense in depth here is intentional, because a cross-tenant leak in healthcare is an incident, not a metric.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why assert tenant on every served cell if the partition filter already restricts the scan?</span></summary>
+      <div class="answer">
+        <p>Because the partition filter and the assertion fail for different reasons, and trusting only the filter means one query bug is enough to leak. The serve-time assertion is the last line: it re-checks that every cell about to be returned carries the caller's exact three-field scope, and a mismatch pages the on-call rather than being smoothed over. It costs almost nothing per request and converts a silent data leak into a loud, contained incident.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">The builder joins labs and decisions — how do you prevent a cross-tenant pair from ever forming?</span></summary>
+      <div class="answer">
+        <p>The join predicates require the account, workspace, and control unit to match on both sides, so a lab from one tenant cannot pair with a decision from another — the join simply produces no row. Because the whole build is scoped to one tenant context at a time, there is no path where a cross-tenant pair is even a candidate. The write-time assertion then re-checks the invariant before the pair table is persisted, so a bug in the predicate would fail the build rather than ship a leak.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How does the tenant scope enter the result cache?</span></summary>
+      <div class="answer">
+        <p>All three tenant fields are part of the canonical cache key, alongside the query namespace, so a cached cell for one tenant can never be returned to another — the keys simply do not collide. Without the tenant scope in the key, a cache hit would be a cross-tenant read, which is the worst possible failure for this class of system. The cache is treated as another surface that must respect isolation, not a shortcut around it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Fail-open or fail-closed — which did you choose, and why?</span></summary>
+      <div class="answer">
+        <p>Fail-closed: a tenant-assertion mismatch or a partition mismatch stops the response and pages, rather than degrading to a best-effort answer. For most metrics you optimise a rate; a cross-tenant cell is not a rate to optimise, it is a breach to prevent, so the design refuses to serve rather than risk serving wrong. The cost of a false alarm is a page; the cost of failing open is a disclosure.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Is a runtime assertion real isolation, or just security theater over a shared store?</span></summary>
+      <div class="answer">
+        <p>On its own an assertion would be weak, which is why it is one of several layers — scoped build, partitioned storage, write-time and serve-time checks — rather than the only control. It is also honest that the fully shared enforcement layer, a tenant-scoped traversal wrapper at the platform, is a shared-platform dependency this query inherits rather than reimplements, and is tracked as such. Within this service the isolation is defense-in-depth; the platform-level wrapper is what makes it uniform across every sibling query.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Is the tenant check the same across the sibling cohort queries?</span></summary>
+      <div class="answer">
+        <p>Yes — the three-field scope and its enforcement pattern are a shared platform contract, so the sibling cohort queries use the same isolation rather than each rolling their own. That uniformity is one reason this query was built first: getting the tenant contract right here means the rest of the family inherits it. The shared enforcement layer is a tracked platform item, and this query is one of its first consumers.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 5 ===================== -->
+  <section class="theme" id="t5">
+    <div class="stage"><b>Theme 05</b> The pairing mechanism</div>
+    <h2>Which rows are allowed to make the number</h2>
+    <p class="intro">Three pair methods, one headline lock: weak evidence can inform, but never headline.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What are the three pair methods?</span></summary>
+      <div class="answer">
+        <p>Every high-risk lab in the window is assigned exactly one method: <code>supported_by_edge</code> when the decision explicitly cites the lab as evidence, <code>heuristic_next_relevant</code> when no such edge exists but a clinically relevant decision follows within fourteen days, and <code>unpaired</code> when no decision follows at all. The method a lab lands in decides what it is allowed to do downstream. Nothing is deleted; every lab is labelled with how it was — or was not — paired.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Which method may make the headline, and why only that one?</span></summary>
+      <div class="answer">
+        <p>Only <code>supported_by_edge</code> pairs make the headline median and P90, because an explicit evidence link is the only signal that the decision actually answered <em>that</em> lab rather than merely following it. Heuristic pairs are held in a separate diagnostic slice until a clinical validation study sanctions them, and unpaired labs feed the censoring denominator. The headline is deliberately built on the smallest, strongest evidence set, not the largest available one.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the "headline lock" and what would break without it?</span></summary>
+      <div class="answer">
+        <p>The headline lock is the rule that the reported median and P90 are computed only on edge-supported rows, enforced in code and checked in evaluation. Without it, an implementer could quietly fold noisy heuristic pairs into the headline and produce a smoother, larger-N, and wrong number that no reader could distinguish from the honest one. The lock is what stops "more coverage" from silently becoming "less truth".</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How is "clinically relevant decision" defined for the heuristic path?</span></summary>
+      <div class="answer">
+        <p>By a versioned allowlist of decision event types, so "relevant" is an explicit, reviewable set rather than an implicit "any next decision" that would pair a high-risk lab with a scheduling or messaging action. The allowlist can evolve, but only as a new named version — the change is diffable against the old rule and never a silent rewrite of history. The version is persisted on every row, so you always know which definition produced a given pair.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How is a pair made identical across rebuilds?</span></summary>
+      <div class="answer">
+        <p>Two mechanisms: a deterministic sort — by decision event time, then source event sequence, then decision id — that breaks every tie the same way every night, and a pair identity that is a stable hash over the tenant scope, the lab id, the decision id, the pairing-rule version, and the snapshot manifest hash. Together they mean a rebuild reproduces byte-identical rows down to their ids. That determinism is what makes the golden regression able to demand exact equality, and what makes corrections surgical.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">The headline depends on the UI attaching evidence edges — isn't that one product bug away from collapse?</span></summary>
+      <div class="answer">
+        <p>It is a genuine dependency, and the design treats it as one rather than assuming it away. Evidence-link completeness is monitored per refresh by clinician, geography, lab type, and UI version, so a product change that stops citing evidence shows up as drift before it skews a headline. And when a segment's edge-paired share falls below the pre-registered floor, that segment's headline is suppressed rather than quietly under-reporting — the failure degrades to "we can't say", not to a wrong number.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">If a doctor made the decision but didn't attach the lab, you undercount them — doesn't that unfairly flatter or punish clinicians?</span></summary>
+      <div class="answer">
+        <p>That risk is real, which is why a missing edge is treated as a data-completeness signal, not a clinician judgment. The evidence-paired share is surfaced per segment, and a low share suppresses the headline for that segment instead of reporting a biased median as if it were sound. The pairing-drift monitor breaks completeness down by clinician and UI version precisely so a systematic attachment gap is diagnosed as a product problem rather than pinned on a person.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why not fold heuristic pairs into the headline with a confidence weight?</span></summary>
+      <div class="answer">
+        <p>Because a weight is an unvalidated assumption dressed as rigor: choosing it requires knowing how often the next-relevant decision really answered the lab, which is exactly the clinical question the design refuses to guess. Keeping heuristic pairs as a separate, visible slice lets analysts study them without letting them move the reported number. If a clinical validation study later quantifies their reliability, they can be promoted deliberately — as a new pairing-rule version, not a silent reweighting.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why take exactly one decision per lab rather than all qualifying decisions?</span></summary>
+      <div class="answer">
+        <p>The question is time-to-<em>the</em>-decision, so a lab is paired to the first qualifying decision in deterministic order and that pair defines the latency. Counting every downstream decision would multiply-count a single lab and inflate the denominator with follow-ups that did not start the clock. The deterministic tie-break is what makes "first" reproducible when two candidate decisions share a moment.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">What about a decision that answers two labs at once, or a lab answered across several decisions over time?</span></summary>
+      <div class="answer">
+        <p>The evidence edge is what defines correspondence, so a decision that cites two labs legitimately pairs with both, and the deterministic first-match handles the case of a lab with several downstream decisions by taking the one that started the clock. Genuine many-to-one clinical realities — a single review that resolves a batch of labs — are a definitional edge the design flags rather than pretends to have fully settled, and it is named in the honest gaps. The safeguard is that whatever the rule, it is versioned and deterministic, so its behavior is inspectable rather than emergent.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 6 ===================== -->
+  <section class="theme" id="t6">
+    <div class="stage"><b>Theme 06</b> Statistics, gates and suppression</div>
+    <h2>Censoring-aware, seeded, and willing to say "insufficient data"</h2>
+    <p class="intro">The statistics exist to keep an honest number from being quietly replaced by a flattering one.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Why report both a median and a P90?</span></summary>
+      <div class="answer">
+        <p>The median describes the typical case and hides the tail; the P90 exposes the slow decisions that a median would smooth away. A fast median with a bad P90 is a real and common operational pattern — most labs answered quickly, a dangerous minority left waiting — and only showing both makes it visible. Reporting the median alone would let a long tail of unanswered urgency disappear behind a reassuring middle.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How are labs that were never answered handled statistically?</span></summary>
+      <div class="answer">
+        <p>They are right-censored at the fourteen-day window and fed into a Kaplan–Meier-style time-to-decision estimate — the same survival math a clinical trial uses for patients who have not yet had the event — alongside an explicit unpaired rate reported on every surface. Censoring says "this lab had not been answered by day fourteen" without pretending it took exactly fourteen days or that it never happened. Nothing is dropped and nothing is fabricated; the not-yet-answered set is carried as information.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why is right-censoring better than either dropping unpaired labs or setting them to a 14-day ceiling?</span></summary>
+      <div class="answer">
+        <p>Dropping them is survivorship bias — the slow and missing cases vanish and the number flatters itself. Setting them all to fourteen days invents a latency they never had and inflates the tail with a fiction. Censoring is the honest middle: it uses the fact that the lab was unanswered as of the window edge to shape the survival curve, biasing neither toward optimism nor pessimism, which is exactly why survival analysis exists.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How are the confidence intervals computed?</span></summary>
+      <div class="answer">
+        <p>By a shared seeded bootstrap: two thousand resamples, clustered by enrollment rather than by row, seeded from the snapshot manifest hash so the interval is reproducible, with intervals returned for both the median and the P90. Using one shared implementation across every cohort query means they all compute uncertainty the same way, rather than each hand-rolling a subtly different bootstrap. The seed makes the CI a deterministic function of the frozen data, not a number that wobbles between runs.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why cluster the bootstrap by enrollment instead of resampling individual rows?</span></summary>
+      <div class="answer">
+        <p>Because a single patient contributes several correlated pairs, and treating each row as independent would understate the true uncertainty — the interval would come out too narrow and imply more precision than the data supports. Resampling whole enrollments preserves the within-patient correlation, so the CI reflects how many <em>independent</em> patients stand behind a cell, not how many rows. It is the difference between an honest interval and a confidently wrong one.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What are the two suppression gates, and in what order do they fire?</span></summary>
+      <div class="answer">
+        <p>First the pairing-quality gate: if a segment's evidence-paired share falls below the pre-registered floor, the headline for that segment is suppressed and only the pair-method breakdown is served. Then the sample-size floor: a cell with fewer than the minimum supported pairs reports "insufficient data" with its full denominator breakdown rather than a point estimate. The order matters — a segment must first be trustworthy enough to headline, and only then large enough to headline.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Aren't these suppression gates just a way to hide bad numbers from leadership?</span></summary>
+      <div class="answer">
+        <p>They do the opposite: instead of a smooth median resting on sparse or low-quality evidence, the dashboard shows the pair-method breakdown and says the quality is too low. Leadership sees the data-completeness problem — which is the actionable finding — rather than a confident number that would send them chasing a phantom. A suppressed cell is a visible admission, not a hidden failure; hiding would be emitting the untrustworthy median.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why compute a business-hours-adjusted latency alongside wall-clock?</span></summary>
+      <div class="answer">
+        <p>A lab that arrives at midnight and is answered at nine the next morning is not evidence the clinic slept on it, but wall-clock latency would count those nine hours as delay. A tenant-local, versioned business-hours calendar computes an adjusted latency that excludes closed hours, and both views ship with a toggle. Without it, the geography split would partly measure time zones and opening hours rather than clinical responsiveness.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Isn't "AI-assisted vs not" a causal comparison wearing an observational label?</span></summary>
+      <div class="answer">
+        <p>It is explicitly observational and the design is careful never to phrase it causally. Clinicians reach for AI assistance on different kinds of cases, so any latency difference between the arms reflects that selection as much as any effect of the assistance — matching would balance only the covariates that were measured, and unmeasured confounding is never ruled out. The comparison ships with observational caveats and is blocked entirely when pairing quality differs materially between the arms, because unequal data completeness would masquerade as an AI effect.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 7 ===================== -->
+  <section class="theme" id="t7">
+    <div class="stage"><b>Theme 07</b> Caching, determinism and versioning</div>
+    <h2>A stale number can never be served under a fresh name</h2>
+    <p class="intro">Determinism here comes from the structured chain, not from any model.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What is in the canonical cache key?</span></summary>
+      <div class="answer">
+        <p>The three-field tenant scope, the query namespace, the split-and-filter shape, the pairing-rule version, the metric schema hash, the snapshot manifest hash, the maximum source event sequence, and the correction epoch. Every one of those is something that, if it changed, would change the answer — so all of them are in the key. A cell can only be reused when every input that produced it is identical.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What specific failure does the full cache key prevent?</span></summary>
+      <div class="answer">
+        <p>Serving a stale number under a fresh name — the classic cache bug where the underlying data or rule moved but the key did not, so yesterday's answer is returned as today's. Because every provenance input is in the key, any change to snapshot, rule, schema, or corrections moves the key and forces a recompute rather than a false hit. An under-specified key is worse than no cache, because it fails silently and confidently.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">When you say "deterministic," do you mean the model or the pipeline?</span></summary>
+      <div class="answer">
+        <p>The pipeline — there is no model anywhere in it. Determinism comes from the structured chain: the same frozen snapshot and the same pairing-rule version replay to byte-identical pair rows, down to each row's stable identity hash. There is no generative step whose output could vary, so reproducibility is a property of the deterministic joins and seeded statistics, not of any narration.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How does a single upstream correction propagate through the system?</span></summary>
+      <div class="answer">
+        <p>A correction listener maps each spine correction — to a lab, a decision, an evidence edge, an actor, or an AI attribution — through a dependency index to the exact pair rows whose identity depends on it, and rebuilds only those. The affected metric cells are then recomputed and the correction epoch is bumped so the cache invalidates. The whole path is designed against a P95 five-minute freshness target from correction to rebuilt rows.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Why not just rebuild the whole table nightly and skip the dependency index?</span></summary>
+      <div class="answer">
+        <p>Because a full rebuild cannot meet a five-minute correction-freshness target — a corrected lab receipt time would wait for the next nightly pass, which for an operational tool is too slow to be honest. The deterministic pair identity is precisely what makes a targeted rebuild possible: you can find every row a correction touches and rebuild only those. The stable-id investment pays for itself the first time a correction lands.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the correction epoch, and why is it in the cache key?</span></summary>
+      <div class="answer">
+        <p>It is a counter that advances whenever corrections are applied, giving the cache a cheap, monotonic signal that the underlying data has changed without having to re-hash the entire corrected dataset. Including it in the key means a targeted rebuild automatically invalidates the affected cached cells, because their key no longer matches. It is the bridge between the surgical rebuild and the cache, keeping the two consistent.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How does a pairing-rule change avoid rewriting history?</span></summary>
+      <div class="answer">
+        <p>The pairing-rule version is persisted on every row and is part of the output partitioning, so a new rule writes a new, separately identified set of rows rather than overwriting the old ones. The previous rule's pairs remain intact and diffable against the new version, which turns a rule change into an inspectable migration instead of a silent redefinition. You can always ask "which rule produced this number" and get an exact answer.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">If everything is cached and pre-computed, how do you know the cache isn't quietly wrong?</span></summary>
+      <div class="answer">
+        <p>A golden regression replays pinned fixtures — including late arrivals, corrections, and supersede chains — and demands that rebuilt pair rows and metrics come out byte-identical, down to the deterministic pair identities. A cache or pipeline that had drifted from a fresh build would fail that equality check in CI rather than ship. Determinism is not just a nicety here; it is what makes "the cache is correct" a testable proposition instead of a hope.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 8 ===================== -->
+  <section class="theme" id="t8">
+    <div class="stage"><b>Theme 08</b> Historical hydration — nine years</div>
+    <h2>The load must prove it did not poison the clocks</h2>
+    <p class="intro">A latency question is built entirely on timestamps — exactly what a careless load destroys.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Was this built on an empty graph or on existing history?</span></summary>
+      <div class="answer">
+        <p>On existing history — roughly nine years of prior labs and treatment decisions already existed and were hydrated into the same append-only spine that the live stream writes to. The load is a first-class, quarantine-first, proof-carrying pipeline, not a throwaway backfill. That depth of history is what lets the segmentation report real numbers instead of collapsing to "insufficient data".</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why is a latency query especially sensitive to how history is loaded?</span></summary>
+      <div class="answer">
+        <p>Because it depends on nothing but timestamps and pairing depth, and both are exactly what a careless bulk load destroys. Get the clocks wrong on load and every latency is wrong; lose or duplicate events and the pairing counts drift. A query that measured, say, a categorical outcome would tolerate a sloppy load far better than one whose entire output is a subtraction of two recovered timestamps.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the single most dangerous thing a nine-year load can do here?</span></summary>
+      <div class="answer">
+        <p>Quietly stamp every historical record with the date it was loaded. If that happens, every as-of reconstruction and every latency subtraction reads the load date instead of the real event time, and nine years of latencies compress toward zero. It is the one failure that would look plausible while being catastrophically wrong, so the design forbids it structurally rather than trusting the load to be careful.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How is that failure prevented structurally rather than by discipline?</span></summary>
+      <div class="answer">
+        <p>Event time is recovered from each legacy record's own domain fields — when the lab was resulted, when the decision was made — while only the write-into-the-new-spine timestamp is pinned to a single load-fence constant. A per-row guard then asserts every event's real-world time falls strictly before its ingestion time, so any value that defaulted to the load date fails the load rather than poisoning a distribution. The invariant is cheap; the failure it prevents is unrecoverable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why does hydration run under a nine-year late-arrival watermark?</span></summary>
+      <div class="answer">
+        <p>Because during hydration the "late" data spans nine years, not the minutes-to-days window the live stream tolerates, so the watermark has to admit genuinely old events without treating them as anomalies to reject. Reuse the live stream's tight watermark and the load would discard most of the history as impossibly late. Sizing the watermark to the load is what lets a decade of events flow into the spine and still be ordered by their real event time.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How do you know the load didn't lose or double-count events?</span></summary>
+      <div class="answer">
+        <p>Every event gets a content-addressed identifier and a conditional write, so hydrating the same corpus twice is a no-op that yields an identical spine and an identical snapshot-manifest hash. That equality is an executable proof of idempotence, not an assurance, and it is backed by a zero-event-loss reconciliation against the source with per-tenant and per-class counts. Losing or duplicating events would break the hash equality or the reconciliation, and the load would fail before anything is built on top of it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Nine legacy schema versions — how do you avoid silently coercing old payloads into the new shape?</span></summary>
+      <div class="answer">
+        <p>Each legacy payload-schema version gets its own upconverter, and any row that cannot be mapped to a known schema — or to a tenant — is quarantined with a reason rather than defaulted. A defaulted tenant would be a cross-tenant leak and a coerced timestamp would poison exactly the latency numbers this system exists to protect, so both are refused rather than guessed. Quarantine-first means the load would rather hold a row back than admit a silently wrong one.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What does the depth of history actually buy this particular query?</span></summary>
+      <div class="answer">
+        <p>Support. A latency median is only honest when the cell behind it has enough real pairs, and nine years of resulted labs and their decisions give each segment — clinician, geography, AI-assisted or not — enough supported pairs to clear the per-cell floor and report a median and a P90. Depth of history is what keeps the segmentation from suppressing itself into a wall of "insufficient data".</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 9 ===================== -->
+  <section class="theme" id="t9">
+    <div class="stage"><b>Theme 09</b> Governance, PHI and the LLM boundary</div>
+    <h2>The purest "know when not to use an LLM" case</h2>
+    <p class="intro">Zero language-model calls, PHI inside the VPC, and per-clinician views governed to resist misuse.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">How many language-model calls are in this pipeline?</span></summary>
+      <div class="answer">
+        <p>Zero. Latency is timestamp arithmetic; the quantiles, confidence intervals, and censoring-aware estimates are seeded, replayable statistics; and the gates, suppression rules, and access controls are deterministic code. There is no step where a language model would improve the answer, and several where it could quietly degrade it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why deliberately keep the LLM out, when the platform has one available?</span></summary>
+      <div class="answer">
+        <p>Because numbers a regulator may one day audit should not have a language model anywhere in their provenance. Every step of this pipeline is exact and reproducible, and inserting a generative component would trade that auditability for nothing the question needs. The through-line of the whole portfolio is knowing when <em>not</em> to reach for an LLM, and this is the clearest instance of it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">If no LLM runs, what does "segmented by AI usage" even mean?</span></summary>
+      <div class="answer">
+        <p>It means AI is measured, not used. The pipeline reconstructs from the event spine, as of each decision's moment, whether and how AI assisted that decision — the usage type, the agent event, the human sign-off — and reports it as an observational split. The "AI" in the question is a property of the historical decisions being analysed, not a component of the analytics.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How are per-clinician views governed against scorecard misuse?</span></summary>
+      <div class="answer">
+        <p>Through a stack of concrete controls: clinicians are pseudonymous by default, the per-clinician split is visible only to leadership or the clinician's own view, an audit entry with viewer, target, purpose, and time is written before any actor-level read, and the ordering is alphabetic and deliberately not rank-sortable. These are mitigations that make misuse harder and leave it visible — not a claim that the data can never be misread. The honest framing is what is enforced, not an absolute guarantee about intent.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Can't leadership just export the pseudonymous data and re-rank it themselves?</span></summary>
+      <div class="answer">
+        <p>The controls raise the friction and the visibility rather than making it physically impossible: the ordering is unrankable in the product, the ids are pseudonymous, and every actor-level access — including any drill-in — is logged with who looked, at whom, why, and when. So a determined misuse is possible but it is deliberate, effortful, and provable after the fact, which is the honest bar for governance of performance data. Claiming it "can never become a scorecard" would overstate what any access control can do.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why write the audit entry before serving rather than after?</span></summary>
+      <div class="answer">
+        <p>So that an access is provable even if the response fails midway — audit-before-read means the record exists the instant the intent to read does. Logging after the fact would miss exactly the reads that errored, which are the ones most worth having a record of. The access id is then returned in the response envelope, so the request itself is traceable to its audit entry.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Does PHI ever leave the network?</span></summary>
+      <div class="answer">
+        <p>No. Every component — spine, graph, snapshot, builders, metric tables, API, governance — lives inside the client VPC, and the only thing outside it is the clinician's browser, which receives aggregated, pseudonymised cells over TLS and never any PHI. The trust boundary is drawn at the VPC edge, and the request path is designed so nothing patient-identifying crosses it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Sibling systems do use a language model — how do you guarantee this one never accidentally calls it?</span></summary>
+      <div class="answer">
+        <p>The service takes no dependency on the model seam at all: it is not on the request path, not in the build path, and the "zero language-model calls" property is an evaluation criterion rather than an aspiration. The model seam sits one layer up, serving the retrieval and override-analytics siblings, and this pipeline is drawn to never touch it. Accidental use would show up as a violated invariant in evaluation, not as a surprise in production.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Where, on this platform, would an external LLM provider ever be allowed?</span></summary>
+      <div class="answer">
+        <p>The production path for the sibling systems is a single explicit one: a self-hosted model inside the VPC. An external provider is permitted only with a de-identified payload — and a contractual no-retention agreement is not a substitute for keeping clinical text on the network, so the two are not interchangeable options. This latency query uses neither; it is raised only to be clear that "in-VPC" is the residency control, not a vendor promise.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 10 ===================== -->
+  <section class="theme" id="t10">
+    <div class="stage"><b>Theme 10</b> Failure modes, degradation and operations</div>
+    <h2>Every way this dashboard could mislead has a named control</h2>
+    <p class="intro">Degradation is made visible and bounded, not silently absorbed.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What happens when the snapshot behind the numbers goes stale?</span></summary>
+      <div class="answer">
+        <p>Freshness tiers govern it: under a day old the snapshot serves normally, between one and two days it serves but is flagged stale, and past two days the tier turns red. The staleness is always on the surface, so a reader knows how old the data behind a number is. The tiers turn "the dashboard is quietly out of date" into an explicit, visible state.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How is projector lag surfaced before it corrupts the numbers?</span></summary>
+      <div class="answer">
+        <p>Projection lag over thirty minutes flags before the snapshot itself looks stale, because a lagging projector produces a fresh-looking but incomplete snapshot — the most dangerous kind. Separating the lag signal from the age signal means an incomplete-but-recent snapshot cannot pass as healthy. Operators see the risk while it is still a lag, not after it has become a wrong number.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What does the pairing-drift monitor watch, and why break it down by UI version?</span></summary>
+      <div class="answer">
+        <p>It tracks evidence-link completeness per refresh across clinician, geography, lab type, and UI version. The UI-version cut is the key one: a product change that quietly stops citing the lab as evidence would drop the pairing rate for that version, and the monitor catches it as drift before it skews a headline. It turns a subtle front-end regression into a pageable analytics signal.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">A segment's pairing rate drops below the floor overnight — what does a user actually see?</span></summary>
+      <div class="answer">
+        <p>That segment's headline median and P90 are suppressed, and the dashboard serves only the pair-method breakdown with a "pairing quality too low" state instead of a smooth number built on guesswork. The user is told the evidence is incomplete rather than shown a confident figure they would act on. The failure degrades to an honest "we can't say for this segment", which is the safe direction to fail.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the correction-freshness target, and how is it met?</span></summary>
+      <div class="answer">
+        <p>A P95 of five minutes from a spine correction landing to the affected pair rows being rebuilt, met by a dependency-index targeted rebuild rather than waiting for the nightly pass. A correction to a lab receipt time, an evidence edge, or an actor attribution rebuilds only the rows that depend on it, so the cost scales with the correction, not the table. The deterministic pair identity is what makes that targeting exact.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the operational consequence when a cross-tenant assertion fires?</span></summary>
+      <div class="answer">
+        <p>It fails closed and pages the on-call as an incident — a cross-tenant cell is treated as a potential disclosure, not a metric to smooth over. The response is refused rather than degraded, because the cost of serving a leaked cell is categorically worse than the cost of a false page. That asymmetry is why the assertion is a page-out criterion rather than a soft warning.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">If the ungated lab feed breaks, doesn't the denominator silently shrink and flatter the number?</span></summary>
+      <div class="answer">
+        <p>That is the exact failure the design worries about, and it is mitigated rather than eliminated: the pairing and unpaired rates are monitored per refresh, so a collapsing denominator shows up as drift. But a silent, total outage of the upstream feed is a real residual risk — the monitors would flag an anomalous shift, yet the honest answer is that the query's denominator is only as trustworthy as the feed that supplies it. That dependency is named plainly rather than hidden.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">How does the AI-versus-non-AI comparison degrade safely under uneven data quality?</span></summary>
+      <div class="answer">
+        <p>If the evidence-paired share differs materially between the AI-assisted and non-AI arms, the headline comparison is blocked rather than shown. The reason is that unequal data completeness between arms would produce an apparent latency gap that is really a pairing-quality gap — an artifact masquerading as an AI effect. Refusing the comparison in that case is safer than shipping a difference the reader would misattribute.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 11 ===================== -->
+  <section class="theme" id="t11">
+    <div class="stage"><b>Theme 11</b> Evaluation and acceptance criteria</div>
+    <h2>Fifteen ways for a build to fail before it may serve</h2>
+    <p class="intro">Several criteria page the on-call rather than failing quietly, and no score is quotable without its build.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">How is a build judged fit to serve?</span></summary>
+      <div class="answer">
+        <p>Against a fifteen-criteria evaluation contract that a nightly build and the serving path must clear, covering tenant safety, the headline lock, determinism, statistical discipline, and pairing-completeness among others. Several of the criteria page the on-call rather than fail quietly, because some failures — a cross-tenant cell, for instance — are incidents, not test regressions. The contract is the gate between "a build ran" and "a build may be trusted".</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What does the golden regression guarantee?</span></summary>
+      <div class="answer">
+        <p>That the pipeline is deterministic under the messy realities of real data. Pinned fixtures replay late arrivals, corrections, and supersede chains, and the rebuilt pair rows and metrics must come out byte-identical — down to the deterministic pair identities — or CI fails. It is the executable proof that replay is exact, which is what makes the cache, the corrections, and the audit trail trustworthy.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What do the golden cohort checks add beyond the golden regression?</span></summary>
+      <div class="answer">
+        <p>The golden regression proves the pipeline is deterministic; the golden cohort checks prove the aggregation is <em>correct</em>. A set of hand-verified cohort-and-metric pairs guards the math itself, so a change that keeps the pipeline byte-stable but computes the wrong median is caught by a drift threshold. Determinism and correctness are different properties, and each needs its own guard.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is the tenant-safety acceptance bar?</span></summary>
+      <div class="answer">
+        <p>Zero — no cross-tenant cells and no partition mismatches, with any occurrence a page-out rather than a metric to trend. It is deliberately not a rate you drive down over time, because a single leaked cell is already a breach. Making it a binary page-out criterion encodes that this is one place where "mostly correct" is not acceptable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Are the numbers shown on the dashboard measured production results?</span></summary>
+      <div class="answer">
+        <p>No. Every latency and quality figure attached to this design is a pre-registered acceptance target — the bar the system was designed, reviewed, and deployed against — not a measured production metric. The observed operating numbers are the client's and are not published here. What is public is the target and the machinery built to meet it, never a claimed result.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">How do you evaluate a system whose ground truth — the true latency for every lab — you can't fully observe?</span></summary>
+      <div class="answer">
+        <p>You evaluate the machinery rather than claim an accuracy number: determinism via golden replay, aggregation correctness via hand-verified cohorts, denominator honesty via pairing-rate and unpaired-rate monitors, and isolation via the tenant page-out. The target is a trustworthy <em>process</em> — one whose numbers are reproducible, whose denominator counts the unanswered, and whose failures are visible — not a claimed closeness to an unobservable truth. That reframing is the honest way to acceptance-test a metric like this.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why pin every evaluation criterion to the artifacts that produced it?</span></summary>
+      <div class="answer">
+        <p>Because a number without its provenance is unfalsifiable: you cannot check a median unless you know the snapshot, pairing rule, and metric schema behind it. Pinning each criterion to those artifacts means no score can be quoted without the exact build that produced it, and any disputed number can be reproduced. It closes the gap between "the dashboard said X" and "here is precisely how X was computed".</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Two thousand bootstrap resamples — is that really enough for a stable P90 confidence interval?</span></summary>
+      <div class="answer">
+        <p>Two thousand is the pre-registered default, and the honest safeguard is not the count alone but the CI-width alert: a tail interval that comes out wide is surfaced rather than hidden, so the P90 is always reported with its uncertainty attached. A P90 on a thin cell is inherently less certain than a median, and the design shows that rather than papering over it. If a segment's tail interval is too wide to be useful, the width says so.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== THEME 12 ===================== -->
+  <section class="theme" id="t12">
+    <div class="stage"><b>Theme 12</b> Tradeoffs and what I would do differently</div>
+    <h2>Where the design chose a smaller honest number over a larger noisy one</h2>
+    <p class="intro">The uncomfortable questions, answered plainly — including the ones with no fully good answer.</p>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">What is the single biggest deliberate limitation of this design?</span></summary>
+      <div class="answer">
+        <p>The headline depends on evidence-edge completeness: where the product did not cite the lab as the decision's evidence, that segment's headline is suppressed rather than estimated. It is a deliberate choice to prefer a smaller, trustworthy denominator over a larger, guessed one. The cost is coverage on segments with poor edge capture; the benefit is that every headline number rests on a real evidence link.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Why not make the heuristic pairing the headline to raise coverage?</span></summary>
+      <div class="answer">
+        <p>Because coverage bought with unvalidated matches is false precision — a larger N that is quietly wrong. The next-relevant-decision heuristic is noisy, and folding it into the headline would inflate the reported population with pairs that may not correspond at all. The design chooses a smaller honest denominator and keeps the heuristic visible as a diagnostic, promotable only when a clinical validation study earns it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Snapshot-only trades freshness for determinism — when would you choose live instead?</span></summary>
+      <div class="answer">
+        <p>For a real-time alerting use case — "this urgent lab has now gone unanswered for six hours, page someone" — where the value is in the immediacy and the record need not be replayable. For a latency trend metric that must be auditable, reproducible, and tenant-partitioned, snapshot-only is the right trade. The two are different products, and this system is deliberately the second one, with correction events covering the urgent-fix case.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">A skeptic says right-censoring is just a sophisticated way to avoid admitting labs go unanswered — respond.</span></summary>
+      <div class="answer">
+        <p>The unpaired rate is reported explicitly on every surface, so the unanswered set is a headline fact, not something censoring buries. What censoring adds is a principled way to <em>quantify</em> time-to-decision that neither drops those labs (which would flatter the number) nor pretends they took exactly the window length (which would inflate the tail). It is the opposite of avoidance: it forces the unanswered cases into the estimate honestly.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">What is fully designed in this query versus what was routed to the platform layer?</span></summary>
+      <div class="answer">
+        <p>The query-local mechanisms are in the design: the pair-method split with its headline lock, the versioned pairing rules, the four-timestamp contract, the censoring-aware statistics, and the canonical cache key. Seven items were shared-platform dependencies tracked by id — the tenant wrapper, the correction backbone, the ungated observation projection, the deterministic exporter, the event-time schema, the shared bootstrap library, and the actor-access policy — so the sibling queries inherit the fix rather than reimplement it. All seven have since landed at the platform layer, and the query now binds to the shared versions rather than the stand-ins it was wired against.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip screening">screening</span><span class="qtext">Why build this as a reusable starter rather than a one-off?</span></summary>
+      <div class="answer">
+        <p>Because its building blocks — the pair-method split, the canonical cache key, the seeded statistics, the actor-governance pattern — are exactly what the sibling cohort questions need, so solving them once here saves reimplementing them five times. Treating the first query as a template means later ones inherit hardened patterns rather than repeating the same review findings. The value of the query is as much in the pattern it establishes as in the number it reports.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">If you rebuilt this today, what would you change?</span></summary>
+      <div class="answer">
+        <p>I would push the ungated-observation-projection and event-time-schema contracts up to the platform <em>before</em> building the query, rather than absorbing them inline and routing them to shared components afterward. Discovering during review that the standard projection drops unanswered labs — the denominator this query lives on — meant the fix had to be retrofitted as a platform item mid-design. Sequencing those contracts first would let this query and every sibling inherit them from day one instead of after a review.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip deep">deep</span><span class="qtext">Where does this pattern transfer outside healthcare?</span></summary>
+      <div class="answer">
+        <p>To any turnaround-time question where the event that starts the clock and the event that stops it must be paired honestly, and where dropping the unanswered cases would flatter the number: support-ticket response SLAs, incident detection-to-mitigation, underwriting queue latency, order-to-fulfilment. The reusable discipline is an ungated denominator, a versioned pairing rule, and weak matches that can inform but never headline. Swap "lab" and "decision" for "ticket" and "resolution" and the design carries over intact.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip adversarial">adversarial</span><span class="qtext">Be concrete: what can this query genuinely not answer today?</span></summary>
+      <div class="answer">
+        <p>It cannot say that AI assistance <em>causes</em> faster decisions — only that the assisted and unassisted arms differ, on the covariates that were measured, with unmeasured confounding never ruled out. It cannot give a trustworthy median for any segment below the pairing floor or the sample-size floor; those are suppressed, not estimated. And it can only measure latency where the product captured an evidence edge, so a systematic attachment gap is a blind spot the monitors flag but the headline cannot see through. These limits are stated on the surface, not buried.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===================== HONEST GAPS ===================== -->
+  <div class="gaps" id="gaps">
+    <span class="label">Honest gaps · the real verdict</span>
+    <h2>What this query cannot answer today, and what has since landed at the platform layer</h2>
+    <p>This design's structured self-review verdict was <strong>ship-with-changes</strong>. The first pass returned eighteen findings, five of them high-severity in correctness alone — an unstable pairing rule, an undefined notion of the "corresponding" decision, wrong time semantics, missing tenant isolation, the gated-denominator exposure, and the governance finding that per-clinician latency is performance data. The v2 described here absorbed eleven of them directly and routed seven to shared platform components. It is not, and does not claim to be, an "approved" design — its seven platform dependencies have since closed at the platform layer, but that closing is not itself what would move the verdict to approved.</p>
+    <ul>
+      <li><strong>The verdict is ship-with-changes, not approved.</strong> Its seven platform dependencies — the tenant wrapper, the correction backbone, the ungated observation projection, the deterministic exporter, the four-field event-time schema, the shared bootstrap library, and the actor-access policy — have since closed at the platform layer, and the query now binds to the shared versions rather than the inline stand-ins it was wired against. Their landing does not by itself move the verdict past ship-with-changes, which remains a review outcome; several controls that were inherited-in-principle are now platform-uniform.</li>
+      <li><strong>The headline is only as complete as the evidence edges.</strong> Where the product did not cite the lab as a decision's evidence, that segment is suppressed rather than estimated. A systematic attachment gap — say, a UI regression that stops citing evidence — is caught as pairing drift, but the headline itself cannot see through it, and the true latency for those cases is genuinely unknown to this query.</li>
+      <li><strong>The AI split is association, never effect.</strong> "Segmented by AI usage" describes which decisions had AI assistance, not what that assistance did. Any matching would balance only the covariates that were measured; unmeasured confounding is never ruled out, and the comparison is blocked outright when pairing quality differs between the arms.</li>
+      <li><strong>Many-to-one correspondence is not fully settled.</strong> A single review that resolves a batch of labs, or a lab genuinely addressed across several decisions, sits at the edge of the pairing definition. The rule is versioned and deterministic so its behavior is inspectable, but the clinical definition of correspondence in those cases is an open question rather than a solved one.</li>
+      <li><strong>The denominator depends on an upstream feed.</strong> A silent, total outage of the ungated lab feed would shrink the denominator; the pairing and unpaired-rate monitors would flag an anomalous shift, but the query's honesty ultimately rests on a feed it does not own.</li>
+      <li><strong>No measured results are published, and there is no runnable code sample for this query.</strong> Every figure here is a pre-registered acceptance target; the observed operating numbers are the client's and not mine to publish. Runnable, offline example code exists for a small number of sibling queries, not for this one — what is shared here is the design, its adversarial review, and the reasoning behind each control.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>Client and product identifiers are anonymised throughout: this describes a decision-latency analytics service for a chronic-care platform covering 80+ chronic conditions, not any named vendor. Endpoints, internal service names, and repository paths are described in words rather than reproduced.</p>
+    <div class="row">
+      <div><b>Scale</b> ~10,000 patients · 80+ chronic conditions · ~9 years of hydrated history</div>
+      <div><b>Role</b> Sole owner — design through production</div>
+      <div><b>Numbers</b> No measured production metrics are published</div>
+    </div>
+    <p>Every latency, threshold, and quality figure on this page is a pre-registered acceptance target — the bar the system was designed, reviewed, and deployed against — not a measured production result. The observed operating metrics belong to the client and are not published here. <a href="kq5-decision-latency.html">← Read the case study</a></p>
+  </footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KQ10 · Cross-domain orchestration — Questions &amp; Answers</title>
+<meta name="description" content="A client-facing deep-dive Q&amp;A on the cross-domain interaction query for a chronic-care platform: a deterministic multi-agent orchestrator that joins finance, adherence, and operations signals behind statistical honesty gates, with a language model allowed only to narrate numbers the code already computed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #9A6A00;
+    --amber-soft: #FBF4E4;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 820px; margin: 0 auto; padding: 0 24px 96px; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  strong { font-weight: 600; }
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--mist); padding: 1px 5px; border-radius: 4px;
+    word-break: break-word;
+  }
+
+  /* ---- header ---- */
+  header.hero { padding: 60px 0 34px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 16px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.4vw, 2.8rem);
+    line-height: 1.16; letter-spacing: -0.015em; max-width: 24ch;
+  }
+  .hero .sub { font-size: 1.1rem; color: var(--steel); max-width: 64ch; margin-top: 20px; }
+  .backlink { display: inline-block; margin-top: 22px; font-family: var(--mono); font-size: 0.82rem; }
+
+  /* ---- killer-query callout ---- */
+  .kq-card {
+    margin: 30px 0 0; padding: 20px 24px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .kq-card .label {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .kq-card blockquote {
+    font-family: var(--mono); font-size: 0.88rem; line-height: 1.7; color: var(--ink);
+  }
+
+  /* ---- table of contents ---- */
+  nav.toc {
+    margin: 40px 0 8px; padding: 22px 24px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  nav.toc .title {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); margin-bottom: 14px;
+  }
+  nav.toc ol { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 22px; }
+  nav.toc li { display: flex; gap: 10px; font-size: 0.92rem; align-items: baseline; }
+  nav.toc .num { font-family: var(--mono); font-size: 0.74rem; color: var(--steel); min-width: 20px; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { color: var(--teal); text-decoration: underline; }
+
+  /* ---- theme sections ---- */
+  section.theme { margin-top: 56px; scroll-margin-top: 18px; }
+  section.theme > .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  section.theme > .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  section.theme > .stage b { color: var(--teal); font-weight: 500; }
+  section.theme > h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.3rem, 2.8vw, 1.6rem); line-height: 1.24;
+    letter-spacing: -0.01em; margin: 0 0 18px; max-width: 34ch;
+  }
+
+  /* ---- Q&A pairs ---- */
+  details {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    margin: 10px 0; padding: 0 20px;
+  }
+  details[open] { border-color: var(--mist); box-shadow: 0 1px 0 rgba(18,34,44,0.03); }
+  summary {
+    cursor: pointer; list-style: none; padding: 15px 0; font-weight: 500;
+    display: flex; gap: 12px; align-items: baseline; line-height: 1.45;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; margin-left: auto; color: var(--steel);
+    font-family: var(--mono); font-weight: 400; flex-shrink: 0;
+  }
+  details[open] summary::after { content: "\2013"; }
+  details .body {
+    padding: 0 0 18px; color: var(--ink); max-width: 68ch;
+    border-top: 1px solid var(--mist); padding-top: 14px;
+  }
+  details .body p { margin: 0 0 12px; }
+  details .body p:last-child { margin-bottom: 0; }
+
+  .depth {
+    display: inline-block; font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px;
+    border: 1px solid var(--hairline); flex-shrink: 0; transform: translateY(-1px);
+  }
+  .d-screening { background: #EAF3F2; border-color: #BEDAD7; color: var(--teal-deep); }
+  .d-deep { background: #EAF1F1; border-color: #C3D3D4; color: #2C4A54; }
+  .d-adversarial { background: var(--amber-soft); border-color: #E6D3A6; color: var(--amber); }
+
+  /* ---- honest gaps ---- */
+  .gaps {
+    margin: 60px 0 0; padding: 26px 28px;
+    background: var(--amber-soft); border: 1px solid #E6D3A6; border-radius: 8px;
+  }
+  .gaps h2 {
+    font-family: var(--serif); font-weight: 600; font-size: 1.4rem;
+    margin-bottom: 12px; color: var(--ink);
+  }
+  .gaps p { margin: 0 0 12px; max-width: 68ch; }
+  .gaps ul { margin: 6px 0 12px 20px; }
+  .gaps li { margin: 5px 0; }
+
+  /* ---- footer ---- */
+  footer {
+    margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--hairline);
+    font-size: 0.82rem; color: var(--steel);
+  }
+  footer p { margin: 0 0 10px; max-width: 74ch; }
+  footer .stack { font-family: var(--mono); font-size: 0.74rem; line-height: 1.7; }
+
+  @media print {
+    details { break-inside: avoid; }
+    details > .body { display: block !important; }
+    summary::after { display: none; }
+    nav.toc { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <span class="eyebrow">Deep-dive Q&amp;A · Cross-domain orchestration</span>
+    <h1>When three subsystems fail at once, what did the platform actually do next?</h1>
+    <p class="sub">The questions a Senior Principal engineer or CTO asks about the cross-domain interaction query for a
+      chronic-care platform covering 80+ chronic conditions — a deterministic multi-agent orchestrator that joins
+      finance, adherence, and operations signals behind statistical honesty gates, with a language model allowed only
+      to narrate numbers the code already computed. Answers are grounded in the design of record; where the honest
+      answer is "the design cannot say that," it says so.</p>
+    <a class="backlink" href="kq10-cross-domain.html">&larr; Read the case study</a>
+  </header>
+
+  <div class="kq-card">
+    <span class="label">The query the system must answer</span>
+    <blockquote>"Among patients who received refund exceptions, had poor early adherence, and escalated complaints,
+      what care decisions followed and what were the outcomes?"</blockquote>
+  </div>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="title">Twelve themes</div>
+    <ol>
+      <li><span class="num">01</span><a href="#t1">The question and why it is hard</a></li>
+      <li><span class="num">02</span><a href="#t2">Architecture and data flow</a></li>
+      <li><span class="num">03</span><a href="#t3">As-of correctness and future leakage</a></li>
+      <li><span class="num">04</span><a href="#t4">Tenancy and isolation</a></li>
+      <li><span class="num">05</span><a href="#t5">The core mechanism: cross-domain orchestration</a></li>
+      <li><span class="num">06</span><a href="#t6">Statistics, gates and suppression</a></li>
+      <li><span class="num">07</span><a href="#t7">Caching, determinism and versioning</a></li>
+      <li><span class="num">08</span><a href="#t8">Historical hydration and what it buys this query</a></li>
+      <li><span class="num">09</span><a href="#t9">Governance, PHI and the LLM boundary</a></li>
+      <li><span class="num">10</span><a href="#t10">Failure modes, degradation and operations</a></li>
+      <li><span class="num">11</span><a href="#t11">Evaluation and acceptance criteria</a></li>
+      <li><span class="num">12</span><a href="#t12">Tradeoffs, alternatives, and what I would change</a></li>
+    </ol>
+  </nav>
+
+  <!-- ================= THEME 1 ================= -->
+  <section class="theme" id="t1">
+    <div class="stage"><b>Theme 01</b> The question and why it is hard</div>
+    <h2>Why joining three domains is the architecture's strongest proof and its most dangerous surface</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What business question does this query actually answer?</summary>
+      <div class="body">
+        <p>It finds the patients whose financial, adherence, and support signals all went wrong inside one window,
+          then reports what care decisions followed and how those patients fared. Concretely: a granted refund
+          exception, a collapse in early adherence, and an escalated complaint, all for the same patient, followed by
+          the follow-up care decisions and a 90-day outcome. The point is not any single domain but the intersection —
+          the patients no single-domain dashboard would ever surface.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> Why is this called the architecture's hardest proof?</summary>
+      <div class="body">
+        <p>The platform's defining bet is that decision traces compound across domains — that finance, adherence, and
+          operations are not separate silos but one timeline per patient. This query is the single strongest argument
+          for building a context graph at all, because it is only answerable when three subsystems' events share one
+          identity, one clock, and one snapshot. It is also the most prone to producing misleading numbers, which is
+          why almost all of the design is guardrails rather than joins.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What are the three domains and their qualifying signals?</summary>
+      <div class="body">
+        <p>Finance: a refund exception granted within a trailing 365-day lookback. Adherence: an early adherence score
+          below 0.50 within the patient's first 30 days of enrollment. Operations: an escalated complaint within 365
+          days. Each threshold is a pre-registered design parameter, not a tuned result, and each event is read from a
+          frozen snapshot rather than a live system.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Done naively, what are the four distinct ways this query fails at once?</summary>
+      <div class="body">
+        <p>Coincidence dressed as a pattern: three events that merely happened within a year are not a cross-domain
+          episode, so without a window rule you manufacture cohorts from unrelated timelines. Confounding by design:
+          patients whose finances, adherence, and support all break down are sicker and more complex, so a raw
+          comparison is confounded before it starts. Cross-domain identity collisions: joining three subsystems on a
+          loose key silently mixes the wrong people, and across tenants that is a reportable incident. Blame framing:
+          "what happened to the patients who complained and missed doses" reads as a service-quality scorecard the
+          moment the table exists. Each of the four is treated as a first-class requirement with a named control.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why can't one SQL join across three tables answer this?</summary>
+      <div class="body">
+        <p>A raw join gives you co-occurrence within a lookback, not a cross-domain episode: it has no window rule, so
+          it admits unrelated timelines; no as-of reconstruction, so it leaks values observed after the fact; no tenant
+          identity discipline, so it collides across scopes; and no matched control, so any outcome it reports is
+          confounded. The query is 10% intersection and 90% the machinery that makes the intersection honest — overlap
+          predicate, snapshot pinning, identity key, propensity matching, and the suppression gates. The join is the
+          easy part and the least of the risk.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is this cohort a "help-seeking population by construction," and why does that matter?</summary>
+      <div class="body">
+        <p>Every patient in the cohort is there precisely because they generated friction — a refund exception, a low
+          adherence score, a complaint. That is a selection process, not a random sample, so the cohort differs
+          systematically from the average patient on severity, complexity, and engagement. It matters because any naive
+          outcome comparison against non-cohort patients is confounded by the very thing that defined the cohort, which
+          is why the design forces a propensity-matched control and labels every surface observational.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Isn't this just a dashboard? Why call it multi-agent orchestration?</summary>
+      <div class="body">
+        <p>The orchestration is a declared, deterministic state graph, not a chat loop: three narrow finder personas
+          fan out across the three domains, a barrier fans them in and intersects their candidate sets, a per-patient
+          pipeline drills in, and a gated reduce runs the statistics. Calling it multi-agent is accurate about the
+          coordination structure, but the honest framing is the opposite of hype — the agents are cheap, blind, and
+          allowed only to propose candidates. Every join, the intersection, and every statistic are deterministic code,
+          so the "dashboard" is the output of orchestration you could audit edge by edge.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> If the interesting patients are rare, is the query even worth building?</summary>
+      <div class="body">
+        <p>Rarity is expected and is exactly why the statistical-reliability floor exists — most as-of values produce a
+          small cohort that returns descriptive facts only. The value is twofold: the cross-domain window itself, which
+          no single-domain view can construct, and the proof that decision traces compound across domains, which is the
+          whole architecture's thesis. A query that admits "this cohort is too small to make a confident claim" is more
+          valuable than one that manufactures a confident claim from a handful of complex patients.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 2 ================= -->
+  <section class="theme" id="t2">
+    <div class="stage"><b>Theme 02</b> Architecture and data flow</div>
+    <h2>Two stages: a nightly snapshot cohort screen, then an on-demand per-patient chain walk</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What are the two stages and how do they differ?</summary>
+      <div class="body">
+        <p>Stage A is a cohort screen: a nightly, snapshot-only pass that finds the patients whose finance, adherence,
+          and ops signals all broke inside one 90-day window, using tenant-scoped analytical joins over frozen columnar
+          files. Stage B is a per-patient drill-in: when a reviewer opens a single patient, the service delegates to a
+          deterministic single-patient chain service with an explicit 90-day window. Stage A is pre-computed nightly;
+          Stage B is on-demand only and never pre-walked.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> Which part does a user actually wait on?</summary>
+      <div class="body">
+        <p>The request path is the only thing a clinician waits on, and it is deliberately cheap: the service resolves
+          the caller's role, writes the audit entry, and reads a pre-computed cell from the cache or the columnar
+          serving store. The heavy work — snapshot export, cohort build, matching, bootstrap — runs in the nightly lane
+          with nobody waiting. A cohort number is never computed at request time; the request only reads a cell that
+          was computed the night before.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> Walk the data flow from the event spine to a served cohort number.</summary>
+      <div class="body">
+        <p>The append-only event spine feeds a nightly projection that also emits an ungated observation store where
+          finance, adherence, and ops events are all visible. That projection freezes into a snapshot at an as-of
+          instant, carrying a manifest hash. Three filters pull the qualifying finance, adherence, and ops rows; the
+          overlap-window predicate keeps only patients whose three events fall in one 90-day window; the outcome
+          labeller attaches a 90-day outcome; the propensity matcher builds a control; the aggregate builds the
+          histogram and a seeded bootstrap CI. The result is written as pre-computed cells the serving endpoint reads.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is Stage A snapshot-only, with no live graph reads at all?</summary>
+      <div class="body">
+        <p>Reading the live decision graph per patient would be non-deterministic, expensive at cohort scale, and would
+          leak current state into a historical cohort. A frozen snapshot makes the whole nightly build reproducible —
+          the same corpus yields the same cohort — and reading a columnar file with predicate pushdown is far cheaper
+          than a per-patient graph traversal. The live graph is touched only by the on-demand per-patient drill-in,
+          never by the cohort screen.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why compute the cohort nightly rather than on demand?</summary>
+      <div class="body">
+        <p>The cohort screen intersects three filtered domains, builds a propensity-matched control, and runs a
+          2000-resample clustered bootstrap — none of which fits inside a request budget. Pre-computing it nightly turns
+          the request into a cache read of a finished cell, and it makes the number reproducible and auditable rather
+          than dependent on whatever the graph happened to look like at query time. The tradeoff is freshness: a patient
+          who qualifies today is not in the cohort until tonight's build, which the response surfaces explicitly.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How does Stage B relate to the single-patient causal-chain query?</summary>
+      <div class="body">
+        <p>Stage B does not re-implement graph traversal — it delegates to the platform's deterministic single-patient
+          chain service, passing an explicit window from the pivot to the pivot plus 90 days plus the tenant context.
+          That service returns a structured chain artifact with an export hash and validation metadata. Reusing it means
+          the drill-in inherits the chain service's determinism and its bounded-walk discipline instead of growing a
+          second, divergent traversal that would drift over time.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why does the aggregate not recompute statistics at request time?</summary>
+      <div class="body">
+        <p>Every metric cell is built in the nightly lane and stored keyed by a canonical cache key over the tenant, the
+          filters, and every version and freshness pin. The request path scans those pre-computed cohort and metric
+          tables and asserts the tenant on each row; it never re-runs matching or the bootstrap. That keeps request
+          latency bounded and, more importantly, keeps the served number identical to the one that was reviewed —
+          recomputing at request time would let two identical requests disagree.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Stage A reads a snapshot and Stage B reads a live-derived chain — isn't that an inconsistency a user sees?</summary>
+      <div class="body">
+        <p>It is a deliberate mixed model, and the design's answer is to make the split visible rather than hide it.
+          Every response carries the snapshot metadata — as-of, manifest hash, and source-event-sequence high-water mark
+          — and the per-patient drill-in additionally carries the live walk's as-of, its last-event-sequence, the
+          projector lag, and a degradation status. A patient who newly qualifies today is missed by tonight's cohort;
+          that is stated through the as-of metadata, not silently reconciled, because a nightly metric with an honest
+          timestamp is more trustworthy than a live number with a hidden one.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> If the nightly build fails, is the dashboard simply down?</summary>
+      <div class="body">
+        <p>No — the serving store still holds the last good snapshot, and the response carries its as-of and a
+          degradation tier so the staleness is legible rather than invisible. A user sees yesterday's cohort clearly
+          labelled as of yesterday, not a spinner or a silent gap. The design's stance throughout is that a stale number
+          with an honest timestamp is acceptable; a stale number presented as current is the failure.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 3 ================= -->
+  <section class="theme" id="t3">
+    <div class="stage"><b>Theme 03</b> As-of correctness and future leakage</div>
+    <h2>Every value the cohort sees existed before the pivot, and the outcome window proves itself mature</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What is "future leakage" here, and why is it the cardinal sin?</summary>
+      <div class="body">
+        <p>Future leakage is letting any value observed after the pivot influence the cohort, the features, or the
+          outcome — for example reading a patient's current program when the decision was made under a different one, or
+          scoring an outcome before the follow-up window has actually elapsed. It is the cardinal sin because it makes
+          the system look prescient: it silently borrows hindsight and reports it as foresight. Every as-of control in
+          the design exists to make that structurally impossible rather than merely discouraged.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How does the cohort screen avoid current-state leakage in its filters?</summary>
+      <div class="body">
+        <p>Stage A reads the frozen snapshot and the ungated observation projection as of a pinned instant, never the
+          current graph's property maps. Each cohort row persists its feature-as-of timestamp, its source event
+          sequence, and the snapshot manifest hash, so on replay you can prove exactly which spine events fed the row and
+          that none of them post-date the pivot. There is no path in Stage A that reads a live "latest" value.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How is the 90-day outcome window kept honest against immature follow-up?</summary>
+      <div class="body">
+        <p>The shared outcome labeller emits a status, not a bare 0/1: an outcome counts as mature only when the pivot
+          plus 90 days is at or before the snapshot's as-of; otherwise it is marked not-mature or missing and excluded
+          from the rate. Patients who drop out, switch programs, or transition phase before day 90 are censored via a
+          Kaplan-Meier treatment rather than counted as failures. Without this, a cohort assembled near the as-of edge
+          would silently score half its patients as failures simply because their window had not elapsed.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is the pivot the end of the overlap window rather than any single event?</summary>
+      <div class="body">
+        <p>The pivot is set to the window end — the latest of the three qualifying event times — so that "what followed"
+          is measured strictly after all three cross-domain signals are present. Anchoring on an earlier event would let
+          one of the three qualifying signals fall inside the outcome window, which would leak a defining feature into
+          the thing you are trying to measure. Pinning the pivot at the window end, and persisting it with the rule
+          version, makes the before/after boundary unambiguous and reproducible.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How do you stop a later care decision from stealing credit for an outcome?</summary>
+      <div class="body">
+        <p>The outcome labeller records an attribution decision id, the attribution rule version, and the distance in
+          days between the attributed decision and the outcome, using a nearest-decision-before-outcome rule. When a
+          later decision would otherwise claim the same outcome, the status records that it was censored by a later
+          decision instead of being double-counted. This makes attribution a first-class, auditable field rather than an
+          implicit "whatever happened closest."</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> The adherence filter is "first 30 days," but you evaluate at an arbitrary as-of — doesn't that mix time frames?</summary>
+      <div class="body">
+        <p>No, because the two clocks are separate and both pinned. "First 30 days" is enrollment-relative and computed
+          from the patient's immutable enrollment events as of the snapshot, so it always refers to the same real early
+          window regardless of when you evaluate. The 90-day overlap window and its pivot are a different, event-time
+          axis. Each row persists both the enrollment-day basis and the window bounds, so there is no ambiguity about
+          which clock any predicate was measured on.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> If the snapshot is already deterministic, why persist a source event sequence on every row?</summary>
+      <div class="body">
+        <p>Determinism tells you the build is reproducible; the per-row source event sequence tells you which spine
+          events any given row depends on. That dependency record is what lets a correction invalidate exactly the rows
+          it touches instead of forcing a full rebuild, and it is what lets an auditor confirm on replay that a row's
+          freshness matches its claim. Determinism and provenance answer different questions, so the design keeps both.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What does "the same corpus yields the same cohort" actually guarantee?</summary>
+      <div class="body">
+        <p>It guarantees that the snapshot exporter is order-independent: replaying the same spine in shuffled order,
+          with late arrivals, corrections, and supersede chains, produces a byte-identical snapshot at the same as-of.
+          Because the cohort is built deterministically on top of that snapshot with a pinned pivot rule, two runs
+          produce the same patients and the same pivots. The consequence is that a downstream query cannot silently
+          produce a slightly different cohort, and a regression fixture can assert exact reproduction.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 4 ================= -->
+  <section class="theme" id="t4">
+    <div class="stage"><b>Theme 04</b> Tenancy and isolation</div>
+    <h2>A three-field tenant scope, a five-field identity key, and a filter that runs before the data loads</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What is the tenant scope for this query?</summary>
+      <div class="body">
+        <p>The tenant scope is three fields — account, workspace, and control-unit — resolved from the caller's
+          authenticated context, not passed as a parameter. Every parquet partition, every scan predicate, and every
+          runtime assertion is keyed on all three together. There is no single-field tenant check anywhere in the path;
+          a request is scoped by the full triple or it is denied.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> How is the tenant scope different from the cross-domain identity key?</summary>
+      <div class="body">
+        <p>The tenant scope isolates whose data you may touch; the identity key decides which rows are the same person.
+          The cross-domain identity key is the three tenant fields plus enrollment and patient — five fields — and the
+          three domains are joined only on that full key. Using the tenant triple as part of the join key is what
+          prevents a finance row for one patient from joining an adherence row for a different patient who happens to
+          share a looser identifier.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Where is the tenant filter enforced in Stage A?</summary>
+      <div class="body">
+        <p>The tenant predicate is pushed into the columnar scan, so rows outside the caller's scope are never loaded
+          into memory in the first place. The cohort and metric tables are physically partitioned by tenant, snapshot
+          hash, and pivot rule, so a query reads only the caller's partition. After the join, a runtime assertion checks
+          every emitted row against the caller's scope and fails closed on any mismatch. Filter-at-scan plus partition
+          plus fail-closed assertion is belt-and-braces rather than a single predicate anyone could forget.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is cross-domain identity collision more dangerous here than in a single-domain query?</summary>
+      <div class="body">
+        <p>A single-domain query joins within one system's identifiers; this query joins finance, adherence, and
+          operations records, three subsystems that historically used their own keys. A loose join across them can mix
+          the wrong people even within a tenant, and across tenants it becomes a cross-tenant data exposure — a
+          reportable incident, not a bug. Because there are three domains rather than one, the surface area for a wrong
+          join is multiplied, which is why the identity key is the full five-field tuple and is applied at the join, not
+          after it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What is enforced inline, and what did the shared platform layer take over, for isolation?</summary>
+      <div class="body">
+        <p>Inline, the design already carries the filter-at-scan, the tenant partitioning, and the per-row fail-closed
+          assertion, so isolation does not depend on a per-author predicate. The shared traversal-source wrapper that
+          injects the tenant scope as a single enforced choke point across every query in the programme has since
+          landed, and this query now binds to it — so its isolation is centrally enforced rather than replicated
+          inline, closing what had been a maintenance risk rather than a correctness hole.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How is the per-patient drill-in kept tenant-scoped once it leaves this service?</summary>
+      <div class="body">
+        <p>The drill-in delegates to the chain service with the caller's tenant context, and that service enforces its
+          own tenant-scoped traversal and a response-time assertion on every vertex and edge it returns. Any cache the
+          drill-in uses is account-prefixed. So the tenant scope travels with the request across the service boundary
+          rather than being dropped at it, and a chain artifact that came back with a foreign tenant would fail the
+          assertion before it reached the reviewer.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> A single forgotten predicate leaks a tenant — how is discipline made structural rather than per-query?</summary>
+      <div class="body">
+        <p>The design deliberately does not rely on every author remembering the predicate. Three independent controls
+          have to all fail for a leak: the scan-time filter, the physical partitioning, and the fail-closed row
+          assertion, with a page-out on any cross-tenant row. That is real defense in depth, and it is honest to say the
+          gap the design review named was that these were enforced inline per query rather than by one shared wrapper.
+          That wrapper has since landed at the platform layer, and this query now binds to the shared version, so
+          isolation is one enforced choke point rather than a predicate each author must remember.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Could the ungated observation projection expose cross-tenant signals?</summary>
+      <div class="body">
+        <p>No — "ungated" refers only to the Decision-attachment gate, not to tenancy. The observation projection is
+          ungated in the sense that a finance, adherence, or ops event is visible even when no care decision references
+          it, which the cohort needs for completeness. The tenant predicate still runs at the scan over that projection,
+          exactly as it does over the vertex and edge files. The two gates are orthogonal, and only the Decision gate is
+          relaxed.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 5 ================= -->
+  <section class="theme" id="t5">
+    <div class="stage"><b>Theme 05</b> The core mechanism: cross-domain orchestration</div>
+    <h2>An overlap-window predicate that rejects rows, and a state graph where a hallucinated patient cannot get in</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What is the overlap-window predicate?</summary>
+      <div class="body">
+        <p>It is the rule that every qualifying patient's three events — the refund exception, the early-adherence
+          failure, and the escalated complaint — must fall inside a single 90-day window. The window start and end are
+          the earliest and latest of the three event times; the pivot is the window end; and the rule version is pinned.
+          A row whose three events span more than 90 days fails the predicate and is rejected outright — the window is
+          never stretched to force a match.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What does the orchestrator look like structurally?</summary>
+      <div class="body">
+        <p>It is a declared, deterministic state graph: the nodes and edges are fixed code, the state passed between
+          nodes is typed, and the only place a language model may appear is inside a single node body. Nothing about the
+          control flow is decided by a model. The graph is a compiled artifact the in-VPC runtime serves directly, which
+          is why it can be run and audited edge by edge rather than inferred from a prompt.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What are the orchestration primitives, expressed as graph structure?</summary>
+      <div class="body">
+        <p>Five. Parallel blind finders — three finder personas for finance, adherence, and ops fan out and run
+          concurrently, each blind to the others. A barrier — a fan-in node that runs once, after all three return, and
+          intersects their candidate id sets through the overlap-window predicate. A pipeline drill-in — each matched
+          patient's chain is built independently. A gated reduce — the matched-control comparison and clustered bootstrap
+          run behind power and balance gates. And a synthesis loop — an optional narration node inside a real
+          citation-validation cycle. Each primitive is graph structure, not a prompt instruction.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why are the finder agents blind to each other?</summary>
+      <div class="body">
+        <p>Each finder is a narrow persona that only proposes candidate patient ids for its own domain, and keeping it
+          blind stops one domain's results from priming another's — the intersection has to be earned at the barrier, not
+          negotiated between agents. Blindness also makes the finders independently cacheable and independently testable.
+          The coordination that matters happens deterministically at the barrier, not inside any agent.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> A finder could hallucinate a patient — how is that contained?</summary>
+      <div class="body">
+        <p>The barrier does more than wait: it re-verifies every proposed patient id against the frozen snapshot and the
+          overlap-window predicate before that id is allowed to count. A finder can only ever propose; it can never admit.
+          So a finder that invents a patient, or proposes one whose three events do not actually satisfy the window, is
+          silently dropped at the barrier and never enters the cohort. This is the structural reason a language model at
+          the edge cannot corrupt the numbers.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why intersect at a single barrier rather than letting finders coordinate?</summary>
+      <div class="body">
+        <p>A single fan-in node makes the intersection one deterministic operation over three id sets, with one place to
+          re-verify and one place to audit. If the finders coordinated among themselves, the cohort would depend on the
+          order and content of inter-agent messages, which is neither reproducible nor reviewable. The barrier also
+          enforces a happens-before: nothing downstream — no drill-in, no statistics — starts until the intersection
+          exists, so there is no partial cohort leaking into the reduce.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How is the pivot chosen and pinned, and why does that choice matter downstream?</summary>
+      <div class="body">
+        <p>The pivot is the window end — the latest of the three qualifying event times — and it is persisted per row
+          alongside the window start, the window end, and the pivot rule version. Everything downstream keys off it: the
+          outcome window is pivot to pivot plus 90 days, the maturity gate is pivot plus 90 days at or before the as-of,
+          and the drill-in passes that exact window to the chain service. Pinning the pivot and its rule version is what
+          makes two runs of the same cohort measure outcomes over the identical interval.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why match with a shared matcher binary rather than this query's own?</summary>
+      <div class="body">
+        <p>Several sibling cohort queries run propensity matching, and if each shipped its own the seed, caliper,
+          replacement policy, and covariate hash would drift, producing divergent matched cohorts and divergent
+          confidence intervals for the same patients over time. The shared matcher pins those choices and emits a match
+          manifest id over the covariate schema, snapshot, caliper, replacement policy, seed, and cohort filter. A cell
+          keyed on that manifest id is reproducible and comparable across queries; a private matcher would make
+          cross-query reuse claims unverifiable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Isn't "multi-agent" overkill for what is fundamentally a three-way set intersection?</summary>
+      <div class="body">
+        <p>Fairly asked, and the honest answer is that the intersection itself does not need agents — it is deterministic
+          code. The finders are cheap-tier personas that propose candidates per domain; you could replace them with plain
+          scans and the numbers would be identical, because the barrier re-verifies everything against the snapshot
+          anyway. What the graph buys is the disciplined structure — fan-out, barrier, gated reduce, and a bounded
+          synthesis loop — expressed as auditable code with typed channels, and a runnable work sample. The value is the
+          orchestration discipline, not the agents doing arithmetic, which they never do.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Why express this as a framework state graph instead of a plain batch DAG?</summary>
+      <div class="body">
+        <p>The state graph reuses the platform's existing orchestration runtime, gives every channel a typed, validated
+          contract, and expresses the one genuine cycle — the synthesis reject-and-re-prompt loop — as a first-class
+          conditional edge rather than ad-hoc retry code. It is also the concrete runnable artifact a reviewer can run in
+          CI with no keys. A plain batch DAG would work for the joins and stats, and in fact those parts are effectively
+          a DAG; the graph framework earns its place at the barrier, the gated reduce, and the feedback cycle.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 6 ================= -->
+  <section class="theme" id="t6">
+    <div class="stage"><b>Theme 06</b> Statistics, gates and suppression</div>
+    <h2>Two gates decide whether a number is allowed to exist, and suppression beats a caveated delta</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What two gates decide whether a cross-domain delta is shown?</summary>
+      <div class="body">
+        <p>First a power gate: the matched-pair count, the effective sample size, and the confidence-interval width must
+          all clear their thresholds. Then a balance gate: every covariate's standardised mean difference must sit under
+          the gate and the sensitivity bounds must hold. Both run deterministically, in order, before any delta reaches a
+          screen. If either fails, the delta does not exist for that cell.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What happens when a gate fails?</summary>
+      <div class="body">
+        <p>The cell returns descriptive facts only: the cohort count, the matched count, the full denominator breakdown,
+          and — for a balance failure — the failed-balance diagnostics. No causal-looking delta is emitted. The headline
+          number is withheld and labelled with the reason it was withheld, so a reader sees "not enough evidence" rather
+          than a confident figure with fine print.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is balance-fail "suppress" rather than "tag the delta and return the raw number"?</summary>
+      <div class="body">
+        <p>A raw delta from an unmatched cohort looks exactly like a causal effect, and a tag underneath it is read past —
+          the number anchors the reader before the caveat registers. The design review explicitly rejected returning a
+          raw delta on failed balance for precisely this reason. Suppression is the only responsible default: if the arms
+          are not comparable, the honest output is that no comparison can be made, not a comparison with a warning label.
+          The cost is a blank headline; the benefit is that the system never publishes a misleading effect.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What is the estimand, and why pre-register it?</summary>
+      <div class="body">
+        <p>The estimand is an observational, matched-cohort comparison of the 90-day outcome for the cross-domain cohort
+          versus a propensity-matched control, with the covariate list and matched-control eligibility fixed in advance.
+          Pre-registering it prevents the most common way these analyses mislead: choosing covariates, calipers, or an
+          as-of after seeing which combination produces a striking delta. Because the estimand and its parameters are
+          pinned and versioned, the number is a property of the design, not of the analyst who ran it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Which covariates are matched, and why those?</summary>
+      <div class="body">
+        <p>Baseline clinical severity, program, tenure, demographics, prior utilization, prior adherence, refund and
+          complaint history, and engagement. These are the axes on which a help-seeking, high-friction cohort predictably
+          differs from an average patient, so they are the confounders most likely to drive an outcome gap that has
+          nothing to do with the care decisions. Matching on them narrows the comparison to patients who looked similar
+          before the cross-domain episode — but only on these measured axes, which is the crucial limit.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What do the sensitivity bounds add beyond the SMD balance check?</summary>
+      <div class="body">
+        <p>Standardised mean difference only tells you the measured covariates are balanced; it says nothing about a
+          confounder you did not measure. The sensitivity bounds — a Rosenbaum-style gamma and an E-value — quantify how
+          strong an unmeasured confounder would have to be to explain away the observed delta. If a modest unmeasured
+          confounder could erase it, the bound is tight and the result is not robust. This is how the design keeps an
+          observational number honest about the confounding it cannot rule out.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is small-N treated as statistical reliability rather than only a privacy floor?</summary>
+      <div class="body">
+        <p>A privacy N-floor asks "are there enough people that I might identify one"; a reliability floor asks "are there
+          enough people that this number means anything." Those are different questions, and for this cohort the second
+          bites first — a confident delta from a handful of unusually complex patients is exactly the failure this query
+          would otherwise produce. So the headline carries matched-pair N, effective N, and CI width, and the cell goes
+          descriptive-only when those fail their thresholds, independent of the separate privacy floor.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Matching makes this sound causal — how do you stop a reader inferring cause?</summary>
+      <div class="body">
+        <p>Every emitted surface carries observational, non-causal labels, and the follow-up histogram is labelled
+          "observed follow-up decisions," never "recommended action," so no emitted surface presents itself as "do this
+          to get that outcome." Labelling constrains the causal misreading; it does not make it impossible, and the
+          design does not claim otherwise. The design is explicit that matching can only balance what was measured, so unmeasured confounding is
+          never ruled out. Nothing here is presented as a causal claim or a service-quality score, and the wording is
+          governed by Policy and Clinical Ops rather than left to a chart title.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Bootstrap CIs on tiny cohorts — aren't they close to meaningless?</summary>
+      <div class="body">
+        <p>On a tiny cohort the CI is wide, and that is the point: the CI width is itself one of the power-gate
+          thresholds, so a cohort too small to say anything produces a CI too wide to pass, and the cell goes
+          descriptive-only. The bootstrap clusters by enrollment rather than by row, so a single patient's repeated
+          events cannot masquerade as independent evidence and artificially narrow the interval. A wide interval is not a
+          bug to hide; it is the signal that routes the cell away from a headline delta.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Could a motivated analyst pick an as-of that makes the delta emit?</summary>
+      <div class="body">
+        <p>The metric is a nightly, reproducible cell built under a pinned pivot rule and pre-registered estimand, not an
+          ad-hoc query an analyst re-runs with different knobs, so cherry-picking would be visible in the version pins and
+          the deterministic build. The gates are deterministic functions of the data, so an as-of that produced a
+          balanced, well-powered cohort would be exactly the case where a delta is defensible. What the design forecloses
+          is choosing covariates or thresholds after the fact — those are fixed and versioned, and any change to them
+          bumps a hash that the cache key records.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 7 ================= -->
+  <section class="theme" id="t7">
+    <div class="stage"><b>Theme 07</b> Caching, determinism and versioning</div>
+    <h2>The cache key that makes a hit safe, and where determinism does and does not come from</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What is in the canonical cache key?</summary>
+      <div class="body">
+        <p>A canonical sorted key over the tenant triple, a query namespace, the endpoint, the filters, and every input
+          that can change the number: the metric schema hash, the match manifest id, the outcome-library version, the
+          bootstrap-library version, the snapshot manifest hash, the source-event-sequence high-water mark, the
+          correction epoch, and the pivot rule version. If any of those differs, it is a different key and a different
+          cell.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> Why isn't a TTL enough for freshness?</summary>
+      <div class="body">
+        <p>A TTL only bounds how old a value can be by wall-clock time; it says nothing about whether the underlying data
+          changed. A correction can land two minutes after a cell is cached, making a one-hour TTL serve a wrong number
+          for 58 minutes. Freshness here comes from the source-event-sequence watermark and the correction epoch in the
+          key, plus event-driven invalidation — the cell is evicted when its inputs change, not when a timer expires.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why does the cache key include library version pins?</summary>
+      <div class="body">
+        <p>Because the outcome labeller and the bootstrap both shape the number, upgrading either changes the answer
+          for the same data. The matcher is the honest exception: it enters only through the match manifest id, and that
+          manifest hashes the matcher's <em>inputs</em>, not its code — so a matcher upgrade does not by itself mint a new
+          key here. It is traced through the matcher version stamped on the result, not keyed on. KQ3's key, which pins the
+          matcher binary version as its own field, is the stronger form; this one does not claim to be. If the key dropped those versions, a cache hit computed by last month's
+          bootstrap would be served as if it were current, and two deploys would silently disagree. Pinning the library
+          versions means an upgrade produces a fresh key and a recompute rather than a stale hit, and it makes any served
+          number traceable to the exact code that produced it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How does a correction invalidate exactly the right cache entries?</summary>
+      <div class="body">
+        <p>Every derived artifact — cohort rows, metric cells, and the per-patient drill-in cache — records the range of
+          source event sequences it depends on in a dependency index. When a correction lands for a finance, adherence,
+          ops, decision, or outcome event, the listener maps that event to the slices whose dependency ranges include it
+          and rebuilds only those, targeting a P95 under five minutes. A full nightly recompute would be both too slow
+          and unnecessary; the dependency index is what makes the rebuild surgical.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Where does determinism in this system actually come from?</summary>
+      <div class="body">
+        <p>From three deterministic sources: the snapshot exporter, which produces byte-identical output under shuffled
+          replay; the structured single-patient chain, reconstructed deterministically from the spine; and the seeded
+          bootstrap. None of it comes from the language model. The through-line of the whole design is that the
+          deterministic core owns every number, and the model is confined to the edges where a non-deterministic output
+          costs a sentence, never a figure.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> The bootstrap is random — how is it reproducible?</summary>
+      <div class="body">
+        <p>Its seed is derived from the snapshot manifest hash, so the same snapshot always drives the same resamples;
+          the resample count is fixed at 2000, the estimator is percentile by default, ties are handled deterministically,
+          and resampling clusters by enrollment. Given the same snapshot and the same library version, the interval is
+          identical on every run. That is what lets the golden regression assert byte-for-byte reproduction of the
+          statistics, not just approximate agreement.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Two feedback loops share the word "loop" — how do they differ?</summary>
+      <div class="body">
+        <p>Loop A is deterministic data-plane re-derivation: a correction lands, a dependency index evicts the derived
+          keys that depended on it, and just those are rebuilt — no model is involved. Loop B is model-in-the-loop
+          self-correction: a synthesis narrative cites a node that is not in the chain, a typed validator flags it, and
+          the node re-prompts once with the offending citation flagged; if it still fails, the narrative is suppressed.
+          Same word, two different machines — one re-derives data with code, the other re-prompts a model behind a code
+          gate — and keeping them distinct is deliberate.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> You pin temperature to zero on the narrator — doesn't that make its output deterministic and cacheable like the numbers?</summary>
+      <div class="body">
+        <p>No, and this is a distinction the design is careful about. Pinning the model version, the system prompt, and
+          temperature zero, and hashing the input chain and the output narrative, gives you drift detection and
+          reproducible auditing — you can tell when a narrative changed and re-derive what a given response said. It does
+          not give you generation determinism: a language model can still vary its output, so the hashes detect drift,
+          they do not prevent it. That is exactly why the numbers never flow through the model and why the structured
+          chain, not the narrator, is the authoritative, deterministic artifact.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 8 ================= -->
+  <section class="theme" id="t8">
+    <div class="stage"><b>Theme 08</b> Historical hydration and what it buys this query</div>
+    <h2>Nine years of finance, adherence, and ops replayed through one spine, on the axis the window is measured on</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What does roughly nine years of hydrated history buy this query specifically?</summary>
+      <div class="body">
+        <p>It buys the cross-domain window itself. You can only judge whether a refund exception, an adherence collapse,
+          and a complaint fall inside one 90-day pivot if finance, adherence, and operations events all coexist over the
+          same historical span, at the same event-time resolution, under the same tenant scope. Without the hydrated
+          history there is no cross-domain episode to find and the overlap predicate would have almost nothing to admit
+          or reject.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> Was the history a throwaway backfill?</summary>
+      <div class="body">
+        <p>No — it was hydrated through the same append-only spine that now carries live events, as a first-class,
+          quarantine-first, proof-carrying pipeline. The distinction matters because a throwaway backfill would have its
+          own quirks, and a cross-domain cohort built on a load that behaves differently from the live stream would be
+          measuring the load, not the patients. History and live share one spine and one projection code precisely so the
+          cohort means the same thing across the whole span.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why is "event time is not ingestion time" existential for this query?</summary>
+      <div class="body">
+        <p>The overlap predicate is measured on true event time. If any one domain's event time collapsed to the moment
+          the system ingested it, all of that domain's events would appear to land on load day, the 90-day window would
+          admit everyone or no one, and the cross-domain episode would dissolve into an artefact of the load. So each
+          hydrated record keeps its real-world time, and an invariant asserts that event time falls strictly before
+          received time — the tripwire that catches an event time accidentally defaulted to ingestion time.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What proves the hydration is trustworthy rather than merely large?</summary>
+      <div class="body">
+        <p>Five properties. Event time is preserved, not collapsed to load time. The load is idempotent — content-addressed
+          event ids and conditional writes mean hydrating twice yields an identical spine and snapshot hash, an executable
+          proof rather than an assurance. Nothing is silently coerced — unmappable rows are quarantined and counted, never
+          defaulted. History replays through the same projection code that serves live. And the load is proof-carrying —
+          zero-event-loss reconciliation, per-tenant and per-class counts, as-of spot checks, and a golden replay gate the
+          load before anything downstream is built, with a fenced cutover proving no gap or duplicate at the boundary.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How does the four-field event-time split apply across three subsystems with different clocks?</summary>
+      <div class="body">
+        <p>Each event class chooses among event time, observed-at, received-at, and written-at explicitly, and the choice
+          is persisted per row. The real-world moment and the source's observed-at come from the record; received and
+          written are pinned to a single load fence rather than the load clock, so they record provenance only. Because
+          finance, adherence, and ops ran on their own clocks, forcing one field for all three would misalign the window;
+          letting each class name its axis and recording that choice is what keeps the overlap comparison meaningful.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What invariant catches an accidental ingestion-time default?</summary>
+      <div class="body">
+        <p>An assertion that every historical event's real-world event time falls strictly before the moment the system
+          received it. A row whose event time equals or exceeds its received time almost certainly had its event time
+          defaulted to the ingestion clock, so it is quarantined and counted rather than admitted. This single invariant
+          protects the axis the entire overlap predicate is measured on, which is why it is enforced at load time rather
+          than discovered downstream.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> If nine years were written back in arbitrary order, how is as-of order stable?</summary>
+      <div class="body">
+        <p>As-of order sorts by event time and then source sequence, never by the order rows happened to be written back,
+          so the arbitrary write order is irrelevant. The exporter is proven order-independent by a golden replay that
+          shuffles the spine and asserts an identical snapshot hash. The consequence is that the cohort you build from
+          nine years of back-loaded data is the same cohort you would build if those events had streamed in live in their
+          true order.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> A defaulted tenant on a legacy row — what stops it becoming a cross-tenant leak?</summary>
+      <div class="body">
+        <p>Any row that cannot be mapped to a known schema or to a tenant is quarantined and counted, never defaulted to a
+          placeholder tenant. A defaulted tenant is precisely the cross-tenant leak this query's identity discipline
+          exists to prevent, so the load refuses to guess: an unresolved row is held out and reported rather than
+          admitted under a wrong scope. The quarantine count is itself a monitored signal, so a spike in unmappable rows
+          surfaces rather than silently shrinking a cohort.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 9 ================= -->
+  <section class="theme" id="t9">
+    <div class="stage"><b>Theme 09</b> Governance, PHI and the LLM boundary</div>
+    <h2>The model writes words, never numbers, and where it runs is a network fact, not a contract</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> Where is a language model allowed, and where is it forbidden?</summary>
+      <div class="body">
+        <p>Forbidden in the intersection, in every per-patient chain, in the balance gate, and in every statistic — those
+          are deterministic code. Allowed only at two edges: the cheap-tier finder personas that propose candidate
+          patients per domain, and an optional synthesis narrator that puts words to a single patient's chain the code
+          already assembled. This is the portfolio's sharpest case of knowing when not to use a model — it lives at the
+          edges, gated, and never touches a number.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What is the RBAC split, and when is the audit entry written?</summary>
+      <div class="body">
+        <p>Cohort aggregates are served to an exec or ops role; the per-patient drill-in is narrowed to clinical or ops
+          need-to-know with a stated purpose. The audit entry — viewer, target patient, purpose, tenant, as-of, and
+          endpoint — is written before the response is served, not after, and the access log id is returned in the
+          payload. Writing the audit first means an access is recorded even if the serving step then fails.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Where does the narrator run, and how does PHI stay contained?</summary>
+      <div class="body">
+        <p>The production path is single and explicit: the narrator runs on a self-hosted Llama 3.1 model inside the VPC,
+          served through the native local runtime, so patient data never leaves the cluster and there is no vendor SDK or
+          external egress. An external provider is permitted only for a de-identified payload — never for raw clinical
+          text. Keeping the one narrative call in-VPC is what lets the rest of the governance story be about content
+          rather than about trusting a third party with PHI.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Isn't a business-associate agreement with a no-retention clause equivalent to running in-VPC?</summary>
+      <div class="body">
+        <p>No, and conflating the two would be a real error. A contractual no-retention agreement is a legal promise about
+          what a provider does after it receives the data; it is not a network-residency control and does not stop
+          clinical text from crossing the network to that provider in the first place. The design treats network
+          residency as the primary control — the payload stays in-VPC — and only permits an external provider when the
+          payload has been de-identified. The two are not interchangeable options that both keep clinical text on the
+          network; only self-hosting does that.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How does the self-hosted cascade route between the small and large models?</summary>
+      <div class="body">
+        <p>A pre-hoc classifier sends easy calls to the smaller model, boosted with structured output, a few-shot prompt,
+          and self-consistency; a post-hoc confidence gate escalates the uncertain tail to the larger model. Most traffic
+          clears on the small model and only the flagged tail escalates, and every routing decision is auditable code
+          rather than a hidden prompt. The routing is a cost and latency optimization that never changes the guardrails —
+          both tiers run in-VPC and both are held to the same citation validation.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How is the narrator prevented from stating anything the code didn't compute?</summary>
+      <div class="body">
+        <p>A typed claim grammar decomposes every factual sentence into allowed templates backed by cited chain fields and
+          cited edges; any sentence that cannot decompose, or that cites a node not present in the chain, is rejected. A
+          rejected narrative re-prompts exactly once with the offending citation flagged, and if it fails again the
+          narrative is suppressed with failure metadata while the chain still ships. Because the numbers are computed by
+          code and the model only narrates a chain it is handed, there is no path for the model to introduce a figure.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Doesn't a table of "patients who complained and missed doses" become a service-quality scorecard the moment it exists?</summary>
+      <div class="body">
+        <p>The risk is real, and the honest framing is that the design makes that misuse hard and visible rather than
+          claiming it is impossible. The controls are concrete: the cohort is labelled neutrally as patients with
+          finance, adherence, and ops friction signals; the histogram key is "observed follow-up decisions," never
+          "recommended action"; the delta is suppressed unless it survives the balance and power gates; the drill-in is
+          audit-first and need-to-know; and the UI wording is governed by Policy and Clinical Ops. These are mitigations
+          that make a scorecard reading harder to reach and easy to catch — not an absolute guarantee that no one could
+          ever misread the table.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> The narrative is off by default — is any of the LLM story actually live, then?</summary>
+      <div class="body">
+        <p>The finders and the orchestrator are live; the synthesis narrator is gated on the shared narrative-guardrail
+          contract and ships off by default until that contract is signed. That is deliberate honesty, not a hedge: the
+          words that describe a patient's care are the one place a model could mislead, so they wait for the field-level
+          claim grammar and PHI deployment to be settled at the platform level. When the narrator is on it runs behind the
+          full guardrail, and either way every number is already computed and served by code.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> If the numbers are code, what is the residual risk of the narrator hallucinating?</summary>
+      <div class="body">
+        <p>A confidently ungrounded sentence can actively mislead care even when the numbers beside it are correct, because
+          a reader trusts the prose. That is why citation faithfulness is a hard gate — every claim must resolve to a real
+          chain node, and the evaluation carries a deliberate fabricated-citation negative control the harness must catch.
+          The residual risk is bounded to a suppressed sentence, never a wrong number or a bypassed gate, because a failed
+          validation suppresses the narrative while the structured chain ships regardless.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 10 ================= -->
+  <section class="theme" id="t10">
+    <div class="stage"><b>Theme 10</b> Failure modes, degradation and operations</div>
+    <h2>What pages someone at 3am, what degrades quietly, and how a correction propagates in minutes</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What pages someone at 3am versus what degrades quietly?</summary>
+      <div class="body">
+        <p>A cross-tenant row or a partition mismatch pages immediately — that is an incident, not a metric, and the target
+          is zero. Staleness degrades quietly with a surfaced tier: a slow projector or a missed nightly build shows
+          yesterday's cohort with an honest as-of and a degradation status rather than an outage. The dividing line is
+          isolation failures escalate hard; freshness failures degrade visibly.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What operational signals are monitored before the exec dashboard ships?</summary>
+      <div class="body">
+        <p>Refresh lag, suppression rate, failed-balance rate, cohort churn week over week, correction rebuild counts,
+          live-walk latency when the narrator is on, and drill-in audit volume. These are required before an exec-facing
+          dashboard is allowed to ship, because a cross-domain metric that quietly suppresses most cells, or churns its
+          cohort weekly, is misleading in a way no single response reveals. The observability is how you tell a healthy
+          quiet from a broken one.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What does a response tell a user about freshness?</summary>
+      <div class="body">
+        <p>Every response carries the snapshot's as-of, its manifest hash, and its source-event-sequence high-water mark;
+          a per-patient drill-in additionally carries the live walk's as-of, its last event sequence, the projector lag in
+          milliseconds, and a degradation status. So a reader can always see how fresh the cohort is and, for a drill-in,
+          how far behind the live projection is running. Freshness is a field in the payload, not an assumption.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What is the degradation behavior when the snapshot is fresh but the live chain is slow?</summary>
+      <div class="body">
+        <p>Because the two stages read different sources, they degrade independently. Cohort numbers keep serving from the
+          fresh snapshot at full confidence, while the per-patient drill-in surfaces the projector lag and a degraded
+          status so a reviewer knows the live chain is running behind. The design documents the snapshot SLA and the live
+          SLA separately precisely so a slow live path never silently taints a cohort number that did not depend on it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> A patient qualifies today but tonight's cohort hasn't run — is that a bug?</summary>
+      <div class="body">
+        <p>No — snapshot-only Stage A is a nightly metric by construction, so a newly qualifying patient appears in the
+          next build, and the as-of metadata makes the boundary explicit. Treating this as a bug would push toward live
+          cohort reads, which would sacrifice determinism and leak current state. The accepted contract is a nightly
+          cadence with an honest timestamp, which is the right tradeoff for a governed analytical surface rather than a
+          real-time alert.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> How fast does a correction propagate, and why targeted rather than a full rebuild?</summary>
+      <div class="body">
+        <p>A correction listener maps each spine correction to the metric and cohort slices whose dependency ranges
+          include it and rebuilds only those, targeting a P95 under five minutes. A full overnight recompute would be too
+          slow — a late refund reversal would keep serving a wrong cell until the next night — and it would rebuild vast
+          amounts of unaffected data. The dependency index is what makes the rebuild surgical, so a single correction
+          refreshes in minutes rather than waiting for, or forcing, a full recompute.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What is the last valid dependency when a correction arrives mid-serve?</summary>
+      <div class="body">
+        <p>Reads stay consistent because the correction epoch is part of the cache key: a cell served before the rebuild
+          carries the old epoch, and once the targeted rebuild lands, the new epoch produces a distinct key. So a request
+          either reads the pre-correction cell or the rebuilt one, never a half-updated blend, and the epoch on the
+          response tells a reader which world their number came from. The invalidation is atomic at the granularity of a
+          keyed cell rather than a global flush.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> What happens if the narrator model is down at request time?</summary>
+      <div class="body">
+        <p>It fails quiet: a model outage costs a sentence of prose, never a number, a gate, or a control. The cohort and
+          the chain are served exactly as before, and the observational labels and neutrality rules are deterministic UI
+          copy that never passed through the model, so they are unaffected. Because the narrator is optional and off the
+          request's critical path, its availability has no bearing on whether the answer ships.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> The suppression rate spikes — is the query broken, or is the world?</summary>
+      <div class="body">
+        <p>You cannot tell from a single response, which is exactly why suppression rate and failed-balance rate are
+          first-class monitored signals rather than silent outcomes. A spike could be genuine — cohorts that really are
+          too small or too imbalanced to compare — or it could be a covariate or schema regression that is breaking the
+          balance check. The design's stance is to surface the spike and investigate rather than to relax a gate to make
+          cells emit, because an emitted-but-wrong delta is the worse failure.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 11 ================= -->
+  <section class="theme" id="t11">
+    <div class="stage"><b>Theme 11</b> Evaluation and acceptance criteria</div>
+    <h2>Per stage, which metric binds, proven on synthetic cohorts where the ground truth is known by construction</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> How is a regulated surface evaluated beyond "the model seems good"?</summary>
+      <div class="body">
+        <p>Evaluation names, per stage, the single binding metric and proves the golden set clears its bar — on seeded
+          synthetic cohorts where the ground truth of every gate decision and every citation is known by construction.
+          "The model seems good" is not admissible on a care surface, so each stage has a specific, checkable
+          acceptance target rather than a vibe. These are pre-registered acceptance targets the system was designed and
+          reviewed against, not measured production results.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What is the citation-faithfulness bar?</summary>
+      <div class="body">
+        <p>It is a hard gate at 1.0: every claim in a generated narrative must cite a real chain node, with no exceptions.
+          The golden set carries a deliberate fabricated-citation negative control that the validation harness must catch,
+          so the bar tests both that true citations pass and that a planted false one fails. A confidently ungrounded
+          citation on a care surface actively misleads, which is why this is the one metric that admits no tolerance.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why grade Stage A on recall but the gates on precision?</summary>
+      <div class="body">
+        <p>For Stage A, the failure that matters most is silently missing a qualifying patient, so the binding metric is
+          recall against the seeded cross-domain cohort — the screen must recover the patients it was built to find. For
+          the balance and power gates, a false emit is far worse than a false suppress, because emitting a delta that
+          should have been withheld puts a misleading number on screen, so the gates are graded precision-dominant. The
+          asymmetry reflects which mistake does real harm at each stage.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> What is in the golden regression fixture set?</summary>
+      <div class="body">
+        <p>Seeded fixtures for late arrivals, corrections, supersede chains, and events near the 90-day window boundary,
+          which must reproduce identical results across rebuilds. These are the four situations where a determinism or
+          boundary bug hides, so the regression is not a smoke test but a targeted assault on the exact edges the design
+          claims to handle. Byte-for-byte reproduction, not approximate agreement, is the pass condition.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why test events specifically near the 90-day boundary?</summary>
+      <div class="body">
+        <p>The overlap predicate is a hard cutoff, so a patient whose three events span exactly 90 days versus 91 days is
+          the difference between inclusion and exclusion. Boundary events are where an off-by-one, a rounding choice, or a
+          pivot-rule change silently flips a patient's membership, changing the cohort without any visible error. Fixing
+          fixtures right at the boundary is what proves the predicate and its rule version behave identically on every
+          rebuild.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Is tenant safety a graded metric or a gate?</summary>
+      <div class="body">
+        <p>A gate with a target of zero and a page-out on any violation — a cross-tenant row or a partition mismatch is an
+          incident, not a number you tolerate above some threshold. It is deliberately not expressed as a rate you try to
+          minimize, because "we leak one tenant in a thousand" is not an acceptable posture for PHI. The evaluation treats
+          it categorically: zero, or it fails.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> These are pre-registered targets, not measured results — why should a client trust them?</summary>
+      <div class="body">
+        <p>Because they are the bars the system was designed, reviewed, and deployed against, and because publishing them
+          as targets rather than as measured wins is itself the trust signal. The determinism, recall, precision, and
+          faithfulness properties are proven on synthetic ground truth where the correct answer is known by construction,
+          which is a genuine engineering claim. The observed production numbers belong to the client and are not mine to
+          publish, so this page states targets and review outcomes and is explicit that no measured metric appears on it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> Synthetic golden cohorts — do they prove anything about real patients?</summary>
+      <div class="body">
+        <p>They prove the machinery behaves correctly — that the screen recovers a seeded cohort, that the gates emit only
+          when they should, that citations are faithful, and that rebuilds are deterministic — because those are properties
+          you can only test where the ground truth is known. What they deliberately do not claim is a real-world effect
+          size; the design never publishes one, and the observational labels and suppression gates exist precisely because
+          a real effect size on this cohort would be confounded. The synthetic evaluation validates the honesty of the
+          pipeline, not a clinical conclusion.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 12 ================= -->
+  <section class="theme" id="t12">
+    <div class="stage"><b>Theme 12</b> Tradeoffs, alternatives, and what I would change</div>
+    <h2>The verdict was ship-with-changes, and the honest boundaries of what this query can claim</h2>
+
+    <details>
+      <summary><span class="depth d-screening">screening</span> What was the design-review verdict, honestly?</summary>
+      <div class="body">
+        <p>Ship-with-changes. Under a structured adversarial self-review this query — the most exposed in the whole system
+          — drew the most blood: twenty findings across correctness, statistics, governance, and operations, with an
+          unambiguous "do not implement as written." Those twenty query-local findings were absorbed directly into the v2
+          design body. It was never marked approved, and it is not approved now.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why snapshot-only Stage A instead of a live cross-domain graph walk?</summary>
+      <div class="body">
+        <p>A live cross-domain walk would be non-deterministic, expensive at cohort scale, and prone to leaking current
+          state into a historical cohort. Snapshot-only buys reproducibility, cost, and leakage-safety; the price is
+          nightly latency and the fact that a patient who qualifies today is not in the cohort until the next build. For a
+          governed analytical metric that tradeoff is correct — the honesty of a reproducible number outweighs the
+          freshness of a live one — and the freshness gap is surfaced rather than hidden.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why suppress a delta rather than show it with a caveat?</summary>
+      <div class="body">
+        <p>Because a caveat under a number is read past — the figure anchors the reader before the warning registers, and
+          on a care surface that is dangerous. When the arms are not comparable, the only responsible output is that no
+          comparison can be made, so the delta is withheld and the reason is stated in its place. The cost is a blank
+          headline that some readers will find unsatisfying; the benefit is that the system never ships a confident number
+          it cannot stand behind.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why reuse shared statistical libraries instead of query-local ones?</summary>
+      <div class="body">
+        <p>One outcome labeller, one propensity matcher with versioned manifests, and one seeded clustered bootstrap,
+          reused across every cohort query, mean the same cohort produces the same number in every query and that number
+          is reproducible and auditable. Query-local copies would drift — different seeds, calipers, and CI methods — and
+          make any cross-query reuse claim unverifiable. The tradeoff is coordination cost and a dependency on those
+          libraries landing at the platform level — they since have, and the query binds to the shared versions. The one
+          dependency still open is the narrative-guardrail contract.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-deep">deep</span> Why keep the narrator off by default rather than shipping it behind a feature flag?</summary>
+      <div class="body">
+        <p>Because its guardrail contract — the field-level claim grammar, the PHI deployment, the citation validation — is
+          still being settled at the platform level, and shipping words that describe a patient's care before that contract
+          is signed would be the one place a model could mislead on a care surface. Off-by-default is stronger than a flag
+          an operator could flip prematurely: the narrator is simply not eligible until the contract is live. The numbers
+          ship regardless, so nothing of value waits on the narrator.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> What can this query simply not answer today?</summary>
+      <div class="body">
+        <p>It cannot make a causal claim, it cannot serve as a service-quality score, and it cannot say anything about a
+          patient who newly qualifies inside the nightly gap. On small or imbalanced cohorts it often returns descriptive
+          facts only, with no delta at all. And even when a delta survives both gates, unmeasured confounding is never
+          ruled out — matching balances only the covariates that were measured, so the result is an observational summary,
+          not a demonstrated effect.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> The shared components landed — so what still blocks full approval?</summary>
+      <div class="body">
+        <p>The cross-cutting dependencies this query relies on have since landed at the platform layer: the tenant wrapper, the outcome
+          and bootstrap libraries, the correction backbone, the deterministic exporter proof, the four-field event-time
+          schema, the ungated observation projection, the metric-cache-key contract, and the deterministic single-patient
+          chain artifact this query's drill-in delegates to — the query now binds to the shared versions. Two things still
+          hold it at ship-with-changes: the shared narrative-guardrail contract is unsigned, so the synthesis narrator ships
+          off by default; and the finance, adherence, and ops upstream teams must emit schema-versioned events on the agreed
+          time axis. The runnable orchestrator also faces the same hiring-CTO review loop the precedent-search work sample
+          went through — and landing the components does not by itself move the verdict, which remains a review outcome.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="depth d-adversarial">adversarial</span> If you rebuilt it, what would you prove first or change?</summary>
+      <div class="body">
+        <p>I would want the deterministic exporter's golden replay and the ungated observation projection proven at the
+          platform level before trusting cohort completeness, because a biased projection or a non-deterministic export
+          would quietly poison every cohort downstream. I would want the narrative-guardrail contract signed before any
+          words ship. And I would calibrate the effective-N and CI-width thresholds against the real distribution of
+          cohort sizes rather than assumed values, since those thresholds decide how often the query can say anything at
+          all — and getting them wrong either floods the surface with under-powered deltas or suppresses everything.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= HONEST GAPS ================= -->
+  <div class="gaps">
+    <h2>Honest gaps</h2>
+    <p>The verdict of record for this query is <strong>ship-with-changes</strong>, absorbed into a v2 design — not
+      approved. Across the ten-query programme only the precedent-search query ever reached approved-with-nits; this one,
+      the most exposed in the system, drew a twenty-finding adversarial review with an explicit "do not implement as
+      written," and the twenty query-local findings were folded into v2. Its cross-cutting dependencies were promoted into
+      shared platform components so every sibling query inherits the same fixes — those components have since landed, and
+      the query now binds to the shared versions rather than its own inlined copies.</p>
+    <p>The shared backbone, now landed — and the one contract still open:</p>
+    <ul>
+      <li>the shared tenant-isolation wrapper — isolation is now enforced through one central choke point, not replicated inline;</li>
+      <li>the shared outcome labeller, propensity matcher, and clustered bootstrap libraries;</li>
+      <li>the correction-event backbone and the deterministic exporter's golden-replay proof;</li>
+      <li>the four-field event-time schema and the ungated observation projection that cohort completeness relies on;</li>
+      <li>the deterministic single-patient chain artifact this query's per-patient drill-in delegates to;</li>
+      <li><strong>still open:</strong> the shared narrative-guardrail contract — until it is signed, the synthesis narrator ships off by default.</li>
+    </ul>
+    <p>What the query cannot do even when everything is green: it makes no causal claim and is never a service-quality
+      score; it is silent on patients who qualify inside the nightly gap; it frequently returns descriptive facts only on
+      small or imbalanced cohorts; and it never rules out unmeasured confounding, because matching balances only the
+      covariates that were measured. The determinism it offers comes from the structured chain and the seeded pipeline,
+      not from the language model — pinned model, prompt, and temperature give drift detection and reproducible auditing,
+      not generation determinism, so the hashes detect drift, they do not prevent it.</p>
+  </div>
+
+  <footer>
+    <p>Client and product identifiers are anonymised; this page describes the design, adversarial hardening, and
+      production deployment of a cross-domain analytics query for a chronic-care platform covering 80+ chronic
+      conditions. The platform served roughly 10,000 patients across those conditions over about nine years of history
+      hydrated into the event spine. Role: sole owner — design through production.</p>
+    <p><strong>No measured production metrics are published here.</strong> Every figure on this page is a pre-registered
+      acceptance target or a design parameter; none is a measured production result, and the observed results are not
+      mine to publish.</p>
+    <p class="stack">Design of record · two-stage snapshot-cohort screen + deterministic per-patient chain drill-in ·
+      overlap-window predicate · five-field cross-domain identity key over a three-field tenant scope · shared outcome /
+      matcher / bootstrap libraries · power-then-balance suppression gates · deterministic LangGraph orchestrator ·
+      self-hosted Llama 3.1 narrator in-VPC, off by default.</p>
+    <p><a href="kq10-cross-domain.html">&larr; Read the case study</a></p>
+  </footer>
+</main>
+</body>
+</html>

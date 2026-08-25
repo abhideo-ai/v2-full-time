@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KQ7 · Confidence calibration — Questions &amp; Answers</title>
+<meta name="description" content="A deep-dive Q&amp;A on the confidence-calibration query for a chronic-care platform: whether self-reported decision confidence actually tracks 90-day outcomes, checked behind deterministic statistical gates, as-of reconstruction, tenant isolation, actor governance, and no language model anywhere in the arithmetic. About 100 questions a senior engineer or CTO would actually ask, answered honestly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --amber: #B4530A;
+    --amber-soft: #FBF1E5;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 2.85rem);
+    line-height: 1.15; letter-spacing: -0.015em; max-width: 22ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.3rem, 2.8vw, 1.6rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+  }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  strong { font-weight: 600; }
+  code {
+    font-family: var(--mono); font-size: 0.86em;
+    background: var(--mist); padding: 0.08em 0.34em; border-radius: 4px;
+    overflow-wrap: anywhere;
+  }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+
+  header.hero { padding: 66px 0 26px; }
+  .hero .sub { font-size: 1.1rem; color: var(--steel); max-width: 64ch; margin-top: 18px; }
+  .backlink { display: inline-block; margin-top: 22px; font-family: var(--mono); font-size: 0.82rem; }
+
+  .kq-callout {
+    margin: 30px 0 6px; padding: 20px 24px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .kq-callout .label {
+    font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .kq-callout blockquote {
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--ink);
+  }
+
+  /* ---- table of contents ---- */
+  nav.toc {
+    margin: 40px 0 8px; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 8px;
+  }
+  nav.toc h2 { font-size: 1.05rem; margin-bottom: 14px; }
+  nav.toc ol { list-style: none; counter-reset: t; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 4px 26px; }
+  nav.toc li { counter-increment: t; font-size: 0.94rem; padding: 3px 0; display: flex; gap: 10px; }
+  nav.toc li::before {
+    content: counter(t, decimal-leading-zero);
+    font-family: var(--mono); font-size: 0.72rem; color: var(--teal);
+    padding-top: 3px; min-width: 20px;
+  }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { color: var(--teal); text-decoration: underline; }
+
+  /* ---- theme sections ---- */
+  section.theme { margin-top: 58px; scroll-margin-top: 16px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+  section.theme > h2 { margin-bottom: 8px; }
+  section.theme > p.lede { color: var(--steel); font-size: 0.96rem; margin-bottom: 12px; }
+
+  /* ---- Q&A ---- */
+  details {
+    border: 1px solid var(--hairline); border-radius: 7px;
+    background: var(--card); margin: 9px 0; overflow: hidden;
+  }
+  details[open] { border-color: var(--mist); box-shadow: 0 1px 0 var(--hairline); }
+  summary {
+    cursor: pointer; list-style: none; padding: 14px 44px 14px 18px; position: relative;
+    font-weight: 500; font-size: 1rem; line-height: 1.5;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; position: absolute; right: 16px; top: 12px;
+    font-family: var(--mono); font-size: 1.15rem; color: var(--steel); font-weight: 400;
+  }
+  details[open] summary::after { content: "\2212"; }
+  summary:hover { background: #FBFCFC; }
+  details > .body { padding: 0 18px 16px; color: var(--ink); }
+  details > .body p { margin: 0 0 11px; font-size: 0.97rem; color: #21323C; max-width: none; }
+  details > .body p:last-child { margin-bottom: 0; }
+
+  .chip {
+    display: inline-block; font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.11em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; margin-right: 10px;
+    vertical-align: middle; border: 1px solid; position: relative; top: -1px;
+  }
+  .c-screening { background: rgba(11,117,111,0.09); border-color: rgba(11,117,111,0.4); color: var(--teal-deep); }
+  .c-deep { background: var(--mist); border-color: var(--hairline); color: var(--steel); }
+  .c-adversarial { background: var(--amber-soft); border-color: rgba(180,83,10,0.35); color: var(--amber); }
+
+  /* ---- honest gaps ---- */
+  .gaps {
+    margin: 60px 0 0; padding: 26px 28px;
+    background: #FBF7F1; border: 1px solid #E7D9C4; border-left: 3px solid var(--amber);
+    border-radius: 8px;
+  }
+  .gaps h2 { font-size: 1.35rem; margin-bottom: 12px; }
+  .gaps ul { margin: 12px 0 0 0; padding-left: 20px; }
+  .gaps li { margin: 0 0 9px; font-size: 0.96rem; }
+
+  footer {
+    margin-top: 62px; padding-top: 22px; border-top: 1px solid var(--hairline);
+    font-size: 0.84rem; color: var(--steel);
+  }
+  footer p { max-width: 78ch; margin-bottom: 10px; }
+  footer .stack { font-family: var(--mono); font-size: 0.76rem; }
+
+  @media print {
+    details { break-inside: avoid; border-color: #ccc; }
+    details > .body { display: block !important; }
+    summary::after { display: none; }
+    nav.toc { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <span class="eyebrow">Deep-dive Q&amp;A · Confidence calibration</span>
+    <h1>When a clinician says <em>&ldquo;high confidence&rdquo;</em>, does the outcome rate actually rise?</h1>
+    <p class="sub">A confidence-calibration query for a chronic-care platform covering 80+ chronic conditions: it checks self-reported decision confidence against what happened 90 days later, behind deterministic statistical gates, as-of reconstruction, tenant isolation, and actor governance &mdash; with no language model anywhere near the arithmetic. Roughly 100 questions a senior engineer or CTO would put to the person who designed it, grouped into twelve themes. The first design review returned one word, <em>redesign</em>; the version answered here is that redesign.</p>
+    <a class="backlink" href="kq7-confidence-calibration.html">&larr; Read the case study</a>
+  </header>
+
+  <div class="kq-callout">
+    <span class="label">The killer query, verbatim</span>
+    <blockquote>&ldquo;For low-confidence decisions, what is the outcome distribution versus high-confidence decisions?&rdquo;</blockquote>
+  </div>
+
+  <nav class="toc" aria-label="Themes">
+    <h2>Twelve themes</h2>
+    <ol>
+      <li><a href="#t1">The question and why it is hard</a></li>
+      <li><a href="#t2">Architecture and data flow</a></li>
+      <li><a href="#t3">As-of correctness and future leakage</a></li>
+      <li><a href="#t4">Tenancy and isolation</a></li>
+      <li><a href="#t5">The core mechanism: calibration statistics</a></li>
+      <li><a href="#t6">Outcome labels, gates and suppression</a></li>
+      <li><a href="#t7">Caching, determinism and versioning</a></li>
+      <li><a href="#t8">Historical hydration &mdash; what it buys this query</a></li>
+      <li><a href="#t9">Governance, PHI and the LLM boundary</a></li>
+      <li><a href="#t10">Failure modes, degradation and operations</a></li>
+      <li><a href="#t11">Evaluation and acceptance criteria</a></li>
+      <li><a href="#t12">Tradeoffs, alternatives, and hindsight</a></li>
+    </ol>
+  </nav>
+
+  <!-- ================= THEME 1 ================= -->
+  <section class="theme" id="t1">
+    <div class="stage"><b>Theme 01</b> The question and why it is hard</div>
+    <h2>The question and why it is hard</h2>
+    <p class="lede">What the query asks, and why a one-line comparison hides a statistics trap.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What does this query actually ask, in one sentence?</summary>
+      <div class="body">
+        <p>It asks whether the self-reported confidence a clinician attaches to a decision &mdash; one of three ordinal buckets, <code>low</code>, <code>medium</code>, <code>high</code> &mdash; actually tracks the rate at which the intended outcome is achieved 90 days later. In plain terms: when someone says &ldquo;high confidence&rdquo;, does the outcome rate genuinely rise relative to &ldquo;low confidence&rdquo;? A well-calibrated population shows outcome rates that climb monotonically across the buckets; a poorly calibrated one does not.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Why is &ldquo;does high confidence mean better outcomes?&rdquo; harder than it sounds?</summary>
+      <div class="body">
+        <p>Because almost every naive way of computing it can make an uncalibrated population look calibrated, or a calibrated one look broken. Outcomes that have not matured yet, decisions whose confidence field did not exist in the early years, a clinician who only ever says &ldquo;high&rdquo;, and random night-to-night noise in three small buckets each push the answer in a way that has nothing to do with real calibration. The design is mostly a set of gates that neutralise those artefacts before a rate is ever shown.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Confidence here is three ordinal buckets, not a probability. Why ship a monotonicity check instead of a proper calibration curve like ECE or Brier score?</summary>
+      <div class="body">
+        <p>ECE and Brier score assume a numeric predicted probability you can bin and compare against observed frequency; the field this platform actually captures is an ordinal enum with three levels, so there is no continuous probability to score. The honest thing to compute over three ordered categories is whether the outcome rate rises across them and whether that rise is real &mdash; a monotonicity test with a confidence interval on each bucket. Claiming an ECE off three coarse buckets would invent precision the input does not carry. Migrating to numeric confidence and a reliability diagram is a real future option, but it is a data-collection change, not a statistics trick you can retrofit.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why is self-reported confidence a statistically dangerous field to build a metric on?</summary>
+      <div class="body">
+        <p>Because the person producing the number also controls the denominator. If a clinician learns the metric rewards separation, they can produce apparent calibration by rationing their &ldquo;high&rdquo; label, and if they are anxious they can compress everything into &ldquo;medium&rdquo;; neither behaviour reflects a change in real accuracy. The metric therefore cannot be read as a bare rate &mdash; it needs a gaming test against the population's bucket distribution and per-actor governance so the number is never treated as a clean performance score.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What is the statistics trap hiding inside a confidence-versus-outcome comparison?</summary>
+      <div class="body">
+        <p>The central trap is selection on outcome availability. If you compute the rate only over decisions whose outcome has resolved, and low-confidence decisions are more likely to be censored &mdash; the patient switched programs, dropped out, or the follow-up simply has not matured &mdash; then the surviving low-confidence rows are a biased sample and calibration can look better or worse than it is. This was flagged as a P0 risk in the first review, and the fix is to run every decision through a shared 90-day outcome labeller that keeps missing and censored rows in the denominator with an explicit status rather than silently dropping them.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why express the result strictly as an association and never as &ldquo;confidence causes better outcomes&rdquo;?</summary>
+      <div class="body">
+        <p>Because this is observational data with no intervention: nobody randomised which decisions got labelled high versus low. A monotonic curve is fully consistent with confounding &mdash; for instance, easier cases attracting both higher confidence and better outcomes &mdash; so the query can report that the outcome rate rises with stated confidence, but not that the confidence produced the outcome. Every surface carries an observational caveat, and the design deliberately avoids causal verbs, because a calibration signal that is quietly read as a causal claim is exactly how an analytics tool becomes a bad management weapon.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> If a clinician always says &ldquo;high&rdquo;, the spread collapses and calibration looks perfect. Isn't that a fatal flaw in the whole idea?</summary>
+      <div class="body">
+        <p>It would be, if a bare spread were the output &mdash; which is exactly why it is not. A clinician who pushes everything into one bucket is caught by the denominator-gaming test, a chi-square against the population's bucket distribution per archetype, and the legacy &ldquo;more than 90% in one bucket&rdquo; rule is kept as a coarse sanity floor on top. Concentration flags the cell rather than rewarding it, so collapsing the spread does not buy a clean-looking result &mdash; it buys a gaming alarm routed to clinical-ops.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Isn't a monotonic low&#8209;to&#8209;high curve exactly what you'd get from case difficulty, not good calibration?</summary>
+      <div class="body">
+        <p>Yes, and the design does not pretend otherwise. Confounding by case difficulty &mdash; harder cases drawing lower confidence and worse outcomes &mdash; produces the same monotonic shape as genuine calibration, and this query does not run a propensity matcher to separate them. That is why the result is framed as observational and why the sibling AI-versus-human comparison, which does control for case mix, is a separate query; calibration here answers &ldquo;does stated confidence track outcomes in this population&rdquo;, not &ldquo;is the confidence itself well-founded once you adjust for difficulty&rdquo;. Conflating the two is the mistake the caveat exists to prevent.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 2 ================= -->
+  <section class="theme" id="t2">
+    <div class="stage"><b>Theme 02</b> Architecture and data flow</div>
+    <h2>Architecture and data flow</h2>
+    <p class="lede">An append-only spine, a graph kept off the hot path, and a snapshot-only cohort.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What are the moving parts, at a glance?</summary>
+      <div class="body">
+        <p>An append-only event spine on DynamoDB is the source of truth for decisions, their confidence field, actor edges, and outcomes. A decision graph on Neptune is projected off the spine for structure but is kept off this query's read path. A nightly and event-triggered offline lane exports a deterministic snapshot to Parquet, builds a tenant-scoped cohort with DuckDB, labels 90-day outcomes with a shared library, and writes a gated calibration artifact. A thin FastAPI request path then serves that artifact with role resolution, audit, caching, and a per-cell tenant assertion.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Which store is the source of truth, and which one is deliberately kept off the read path?</summary>
+      <div class="body">
+        <p>The append-only event spine is the source of truth; every fact is reconstructed from it. The decision graph is the store kept off the read path &mdash; it is projected from the spine and feeds the nightly snapshot, but it is never scanned at cohort-build time or on a request. That separation is the core lesson of the redesign: the first version read live graph properties, which made the answer depend on mutable current state rather than on what was true at each decision.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why build the cohort snapshot-only over DuckDB instead of scanning the always-current decision graph?</summary>
+      <div class="body">
+        <p>A live graph scan gives you whatever the properties happen to be right now, which is both non-reproducible and leakage-prone: a decision's confidence or actor could have been edited after its outcome was known, and two runs minutes apart could disagree. A frozen snapshot pinned to an as-of timestamp, with a manifest hash, makes the cohort deterministic and auditable &mdash; the same as-of always yields the same cells. DuckDB then does vectorized tenant-scoped joins over columnar Parquet cheaply, which a graph traversal engine is not built for.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> The decision graph is projected off the spine but never scanned here. Why keep it in the architecture at all?</summary>
+      <div class="body">
+        <p>Because it is a shared platform asset: the snapshot exporter reads the graph to freeze structure into Parquet, and other queries traverse it live. For calibration specifically it is structural only &mdash; the snapshot it helps produce is what this query consumes. Drawing it explicitly off the request path in the design is deliberate: it documents that nothing a clinician waits on, and nothing in the nightly calibration trace, touches a graph database, so graph latency or drift cannot corrupt a calibration cell.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Walk me through the nightly refresh: what participates, and what pointedly does not?</summary>
+      <div class="body">
+        <p>The offline job pins a tenant context and an as-of timestamp, scans the snapshot Parquet for supported-schema decisions in deterministic order, replays the spine as-of each decision to recover its confidence bucket, acting clinician, and covariates, asks the shared labeller for each 90-day outcome, then writes a tenant-partitioned cohort. The aggregator counts per-bucket maturity, computes seeded cluster-aware bootstrap intervals, runs the CI-overlap monotonicity and chi-square gaming checks, and writes the calibration artifact with its dependency set. No graph database participates anywhere in that sequence &mdash; its absence from the trace is the clearest proof the redesign holds.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why split the work into a request path, an offline lane, and a one-time hydration lane at three cadences?</summary>
+      <div class="body">
+        <p>Because each has a different latency budget and a different failure cost. The request path is what a clinician waits on, so it must be fast and can only serve pre-computed, gated cells. The offline lane runs the expensive statistics &mdash; bootstrap resampling, gate evaluation, correction-triggered rebuilds &mdash; where a few minutes are fine. The hydration lane ran once to pre-seed nine years of history and is proof-carrying rather than latency-sensitive. Mixing them would force the heavy statistics onto the request path or the reproducibility discipline onto a hot loop, and both would be wrong.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What does the calibration artifact produce for downstream consumers, and who reads it?</summary>
+      <div class="body">
+        <p>It writes a calibration table tagged with a metric version and the snapshot manifest hash, carrying per-archetype monotonicity status, spread, maturity flags, and gaming results. The sibling AI-versus-human comparison reads it before it will label any cohort &ldquo;high confidence&rdquo;, and it only trusts a bucket when monotonicity passes, maturity holds, and no gaming flag is set. So this query is not just a dashboard &mdash; it is a producer whose gated output gates another query.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Snapshot-only means the numbers are always slightly stale. Why is that acceptable on a clinical surface?</summary>
+      <div class="body">
+        <p>Because calibration is a population-level, retrospective statistic, not a bedside alert &mdash; every outcome in it is already at least 90 days old by construction, so a snapshot that is hours old changes nothing material. Staleness is bounded and made visible: under 24 hours serves normally, 24 to 48 hours serves with a staleness banner, and past 48 hours the service blocks and escalates rather than quietly serving old numbers. Freshness that matters &mdash; a correction to a confidence bucket or a late outcome &mdash; is handled out of band by a dependency-targeted rebuild with a five-minute P95, so the snapshot cadence and correction freshness are decoupled.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> You read the spine directly at build time for as-of reconstruction. Isn't that the same live scan you condemned in v1?</summary>
+      <div class="body">
+        <p>No, and the distinction is the whole point. The condemned pattern read the <em>current</em> properties of live graph vertices, so the answer depended on mutable present state. As-of reconstruction reads the append-only spine's immutable creation events at a pinned event sequence &mdash; it recovers the value a field held at the moment the decision was made, not its value now. One is a mutable point-in-time read that can silently change; the other is a replay of history that is by construction stable and reproducible.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 3 ================= -->
+  <section class="theme" id="t3">
+    <div class="stage"><b>Theme 03</b> As-of correctness and future leakage</div>
+    <h2>As-of correctness and future leakage</h2>
+    <p class="lede">Every field reconstructed as it stood at decision time, and every path by which the future could leak in.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What does &ldquo;as-of decision creation&rdquo; mean here?</summary>
+      <div class="body">
+        <p>It means every field the cohort uses &mdash; the confidence bucket, the acting clinician, the decision's archetype, program, and country &mdash; is reconstructed to the value it held at the instant the decision was created, by replaying the spine up to that decision's event sequence. It does not read the field's current value. That way a decision made three years ago is bucketed by the confidence it actually carried then, not by anything edited since.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What is the single most dangerous leak this query has to prevent?</summary>
+      <div class="body">
+        <p>An outcome, or knowledge of an outcome, influencing the confidence bucket it is later compared against. If a confidence value is read after it could have been revised in light of how things turned out, the calibration curve becomes self-fulfilling. Preventing that is why confidence is reconstructed as-of creation and why outcome maturity is gated at build time so no outcome inside the 90-day window can enter the cohort.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How is the confidence field reconstructed so it reflects the bucket set at the time, not a later edit?</summary>
+      <div class="body">
+        <p>The builder does not read the field off the current graph; it reads the decision's creation event from the spine at its source event sequence and takes the confidence value recorded there, persisting the event sequence it was read at alongside the value. If the field was later corrected, that shows up as a separate correction event with its own sequence and is handled by the correction listener &mdash; it does not overwrite the as-of value silently. The persisted event sequence makes the read auditable: you can point to the exact event that produced each bucket.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> The actor, archetype, program, and country are all reconstructed as-of too. Why can't you just read their current values?</summary>
+      <div class="body">
+        <p>Because all of them drift. A clinician changes teams, a patient's program or country of care changes, an archetype taxonomy is revised &mdash; reading current values would attribute a historical decision to a present-day context it was never made in, which is the <code>latest_*</code> leakage class the platform-wide findings call out. Each covariate is therefore reconstructed to its decision-time value with a per-field <code>feature_as_of_ts</code> and source event sequence persisted, so the covariate is honest and its provenance is checkable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why does a nine-year backfill make event-time-versus-ingest-time the make-or-break detail?</summary>
+      <div class="body">
+        <p>Because if the load stamped ingestion time as the decision's time, nine years of decisions would all read as having happened on load day, and every as-of reconstruction would collapse &mdash; every decision would be reconstructed against the same instant. Each hydrated decision therefore carries four timestamps from two sources: the real-world event and observed times come from the record, while the received and written times are pinned to a fixed load-fence constant, never <code>now()</code>. An invariant asserts the real-world time falls strictly before the ingest time on every historical row, which is precisely the guard that stops the timeline from flattening onto load day.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What is persisted per field so an as-of read is auditable and reproducible?</summary>
+      <div class="body">
+        <p>Each reconstructed field carries the source event sequence it was read at; covariates additionally carry a <code>feature_as_of_ts</code>; the confidence value carries its schema version; the cohort row carries the snapshot manifest hash and the min and max source event sequence spanned. Together these let you replay the exact inputs to any cell and let the correction listener know which cells a given spine sequence feeds. Without them, a cell would be a number with no traceable lineage, which is unacceptable for a governed clinical statistic.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How does the build-time maturity gate stop immature outcomes from leaking in?</summary>
+      <div class="body">
+        <p>A decision is only eligible if its event time is at least 90 days before the as-of timestamp, so its outcome window has fully closed inside the snapshot. This is enforced at cohort-build time, before the outcome labeller even runs, so a decision whose 90 days have not elapsed can never contribute a half-formed outcome. The consequence is that immaturity is handled by exclusion-with-a-count at the eligibility boundary, not by a fragile downstream filter on outcome values.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Walk me through every path by which post-decision information could contaminate a bucket's rate, and what stops each.</summary>
+      <div class="body">
+        <p>There are four. A confidence value edited after the outcome &mdash; stopped by reading the as-of creation event, not current state. A covariate updated later &mdash; stopped by as-of covariate reconstruction with persisted timestamps. An immature outcome sneaking in &mdash; stopped by the 90-day build-time eligibility gate. And a graph property mutated between runs &mdash; stopped by building over a frozen, manifest-hashed snapshot rather than the live graph. Each contamination path maps to exactly one named control, which is what makes the leakage argument auditable rather than aspirational.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> A confidence bucket quietly edited after the outcome was known is the kind of leak that looks clean. How would you even detect it?</summary>
+      <div class="body">
+        <p>Honestly, the design detects the <em>mechanism</em>, not the intent. Because confidence is read from the immutable creation event and later edits arrive as separate, sequenced correction events, an after-the-fact revision cannot overwrite the as-of value &mdash; the original bucket is what the cohort uses, and the correction is visible as a distinct event with its own timestamp. What the system does not and cannot do is judge whether a given correction was made in good faith; it can only ensure the calibration cell reflects the value at decision time and that the correction trail exists for audit. That residual limitation is named in the honest gaps.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 4 ================= -->
+  <section class="theme" id="t4">
+    <div class="stage"><b>Theme 04</b> Tenancy and isolation</div>
+    <h2>Tenancy and isolation</h2>
+    <p class="lede">A three-field tenant scope, enforced at partition and asserted on every served cell.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What defines a tenant here?</summary>
+      <div class="body">
+        <p>A tenant is a three-field scope: <code>account_id</code>, <code>workspace_id</code>, and <code>controlunit_id</code> together. It is never a single account check &mdash; all three fields are resolved from the caller's authenticated identity and travel together through the cohort build, the partitioning, and the serve-time assertion. Treating tenancy as one field would let two distinct control units under the same account see each other's calibration, which is a leak.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Where does the tenant identity come from on a request?</summary>
+      <div class="body">
+        <p>It is resolved from the caller's auth context, not passed as a query parameter a client could forge. The resolved three-field scope is then bound into the cache key and used to filter the Parquet partition, and every cell in the response is asserted against it before it leaves the service. The clinician never selects a tenant; the identity determines it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How is a cross-tenant cell made impossible rather than merely unlikely?</summary>
+      <div class="body">
+        <p>Through defence in depth: the cohort is partitioned in Parquet by the three tenant fields plus the snapshot hash, the DuckDB context is tenant-scoped so a scan only reads the caller's partition, and &mdash; as a fail-closed backstop &mdash; the service asserts on every served cell that its account, workspace, and control unit match the caller's, paging out on any mismatch. A partition mismatch or a cross-tenant row is treated as an incident, not a metric to trend. The build itself also asserts every written row matches the pinned tenant context, so a bad row cannot even reach the artifact.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Why partition the Parquet by tenant AND assert per-cell at serve time &mdash; isn't one enough?</summary>
+      <div class="body">
+        <p>They fail in different ways, so both are cheap insurance against the other's blind spot. Partitioning is a performance-and-correctness boundary but depends on the write path having partitioned correctly; a bug there would silently place a row in the wrong partition. The serve-time per-cell assertion catches exactly that class of bug at the last moment before data leaves the process, regardless of how the row got there. A single layer would make a partitioning bug invisible; the assertion turns it into a loud page.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Tenant isolation was marked platform-gated. What does that mean for this query today?</summary>
+      <div class="body">
+        <p>It means the enforcement contract &mdash; a shared tenant-scoped traversal wrapper &mdash; is a platform component this query depends on but does not own, and it has since landed centrally. The query wires the full contract (tenant-scoped context, partitioning, per-cell assertion) against that interface, and now binds to the shared wrapper rather than an inlined stand-in. The design states this explicitly so nobody reads &ldquo;tenant isolation&rdquo; as a locally-built mechanism when it is in fact a shared platform component the query depends on.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why is a defaulted tenant treated as a leak rather than a convenience during hydration?</summary>
+      <div class="body">
+        <p>Because a defaulted tenant on a historical row would place one client's decision into another client's calibration cohort &mdash; a cross-tenant contamination that no downstream gate would catch, since the row would look native. So the hydration load quarantines any record that cannot be mapped to a tenant, with a reason and a count, rather than assigning it a default. A defaulted confidence bucket poisons a statistic; a defaulted tenant poisons isolation, and the latter is the more serious of the two failures.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> A single-field account check would be simpler. Why insist on three fields?</summary>
+      <div class="body">
+        <p>Because the platform's isolation boundary is genuinely three-dimensional: one account can contain multiple workspaces, and a workspace multiple control units, each of which is a distinct governance and access boundary. A single-field account check would let a user in one control unit read calibration for another under the same account &mdash; a real breach, not a hypothetical. The extra two fields are not ceremony; they are the actual shape of who is allowed to see what.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> The cache sits between the query and the tenant assertion. Couldn't a poisoned or shared cache key serve one tenant another's cells?</summary>
+      <div class="body">
+        <p>That is exactly why the three tenant fields are part of the canonical cache key, so two tenants can never resolve to the same entry, and why the per-cell tenant assertion runs on the way out <em>after</em> a cache hit, not only on a miss. A cache hit still passes through the assertion, so even a hypothetical key collision would be caught before any cell is returned. The cache is treated as an untrusted accelerator, not a place where the isolation guarantee is allowed to lapse.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 5 ================= -->
+  <section class="theme" id="t5">
+    <div class="stage"><b>Theme 05</b> The core mechanism: calibration statistics</div>
+    <h2>The core mechanism: calibration statistics</h2>
+    <p class="lede">A suppression ladder, a CI-overlap monotonicity gate, and a distribution-based gaming test.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What is the suppression ladder, in one pass?</summary>
+      <div class="body">
+        <p>A calibration cell does not return a number and hope; it climbs a ladder and must clear every rung before it earns a headline rate. Access is resolved and audited first; then the cell passes maturity, sample-size, gaming, and monotonicity checks; then, on the way out, every row is asserted against the caller's tenant scope. Anything that fails a rung is not deleted &mdash; it is returned as a typed, suppressed cell that still carries its denominators, so a suppressed result is honest rather than silent.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> When does an inversion actually page a human?</summary>
+      <div class="body">
+        <p>Only when two conditions hold together: the outcome rate genuinely inverts across a bucket pair, <em>and</em> the two buckets' bootstrap intervals separate &mdash; they do not overlap. A bare &ldquo;low rate above medium rate&rdquo; where the intervals still overlap is informational and never pages. Be precise about what that screen is: interval separation is a deliberately conservative proxy, <em>not</em> a level-alpha pairwise test. It is harder to trip than a formal test at the same alpha, so it under-fires rather than over-fires &mdash; the direction an on-call rota can live with. And the inversion alarm only applies to archetypes that carry one &mdash; not to those exempted for low natural spread.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why gate monotonicity on a pairwise CI-overlap test instead of comparing point rates?</summary>
+      <div class="body">
+        <p>Because point rates over finite buckets jitter every night, and comparing them directly would fire on noise. The screen asks whether two buckets' intervals genuinely separate before it treats their ordering as real; only a separation counts as a monotonic step or, if reversed, an inversion. That converts &ldquo;the numbers wiggled&rdquo; into &ldquo;the numbers are distinguishable&rdquo;, which is the difference between a metric a clinician trusts and one they learn to ignore. Two caveats, stated plainly: non-overlapping marginal intervals are a conservative proxy for a difference test, not equivalent to one &mdash; they discard the covariance between the two bucket estimates, even though both are resampled from the same clustered draws, so the alpha is nominal rather than the achieved type-I rate; and overlapping intervals can still hide a real difference. The screen is tuned to protect the alarm channel, not to be the sharpest available instrument.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> What breaks if you delete the CI-overlap gate and page on any low-above-medium?</summary>
+      <div class="body">
+        <p>With three buckets resampled every night, one pair crosses by chance on a large fraction of nights, so the alarm fires almost constantly. The on-call rota then learns to dismiss calibration alarms wholesale, and the one night a real, sustained inversion appears it is waved off with the noise. Deleting the gate does not make the system more sensitive to real problems &mdash; it destroys the signal-to-noise ratio that makes any alarm actionable.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How does the chi-square gaming test catch compression the old &ldquo;90% in one bucket&rdquo; rule would miss?</summary>
+      <div class="body">
+        <p>The 90%-in-one-bucket rule only trips on the extreme case; it is blind to systematic compression like every clinician quietly parking 70&ndash;80% of decisions in &ldquo;high&rdquo;, which flattens spread without any single actor crossing 90%. The chi-square test compares an actor's or cohort's bucket distribution against the population distribution for that archetype and flags a statistically significant skew well below the extreme. So it catches the subtle, population-wide gaming that the coarse threshold rule structurally cannot see.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why keep the 90%-in-one-bucket rule at all if the chi-square test supersedes it?</summary>
+      <div class="body">
+        <p>It is retained only as a cheap, legible sanity floor &mdash; a rule anyone can read and reason about that catches the pathological extreme without needing a distributional argument. The headline gating decision uses the chi-square test at its alpha; the concentration rule is a backstop, not the primary detector. Keeping a simple floor under a statistical test is a hedge against the test being misconfigured or the reference distribution being wrong.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why are the Override and Escalate archetypes given a lower spread floor and no inversion alarm?</summary>
+      <div class="body">
+        <p>Because their outcome rates naturally have very little spread across confidence buckets &mdash; the action itself, not the stated confidence, dominates what happens next &mdash; so a monotonicity alarm there would fire on structure, not on miscalibration. They are given a lower minimum-spread floor and treated as descriptive-only, with no inversion page, until clinical-ops governance signs off on how to read them. This is a documented, policy-gated exemption with a stated reason, not a quiet carve-out.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Exempting Override and Escalate looks like exempting exactly the archetypes where you'd fail. Defend it.</summary>
+      <div class="body">
+        <p>The exemption is from the <em>alarm</em>, not from measurement: those archetypes are still computed, still shown, still carry their spread &mdash; they simply do not page on inversion, because a near-flat curve there is expected by design rather than evidence of a problem. Alarming on them would train the on-call to ignore the alarm entirely, which would blind you to the archetypes where inversion <em>is</em> meaningful. And the exemption is explicitly provisional: the pooled verdict is withheld and the treatment stays descriptive-only until clinical-ops signs off, so it is a governance-gated decision on the record, not a way to dodge a failing grade.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> A chi-square against the population distribution will flag an honest specialist whose case mix is genuinely skewed. Isn't that a false-alarm factory?</summary>
+      <div class="body">
+        <p>It is a real limitation, and the design mitigates rather than eliminates it. The reference distribution is taken <em>per archetype</em>, which absorbs a lot of legitimate case-mix variation, and the gaming flag routes to clinical-ops as something to review, not as an automatic verdict against the clinician. A concentrated distribution is a reason to look, and the per-actor view that would show it is itself governed &mdash; pseudonymous, access-logged, observational. What the test cannot do is distinguish honest specialisation from deliberate compression on its own, which is why a human governance step sits between the flag and any consequence.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 6 ================= -->
+  <section class="theme" id="t6">
+    <div class="stage"><b>Theme 06</b> Outcome labels, gates and suppression</div>
+    <h2>Outcome labels, gates and suppression</h2>
+    <p class="lede">The shared 90-day labeller, maturity and censoring, power, and the seeded bootstrap.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What is the 90-day outcome label, and why 90 days?</summary>
+      <div class="body">
+        <p>It is a shared library that, for each decision, returns a typed outcome status &mdash; mature, not-mature, missing, or censored &mdash; measured over a 90-day window after the decision, along with the attribution decision, the attribution rule version, the distance in days, and a censoring reason. Ninety days is the pre-registered window the programme's cohort queries share, so calibration, outcome correlation, and the AI-versus-human comparison all speak the same definition of &ldquo;outcome&rdquo;. Using one shared labeller is what prevents each query from inventing its own subtly different success criterion.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What happens to a decision whose outcome hasn't matured yet?</summary>
+      <div class="body">
+        <p>It is excluded at the eligibility boundary, because a decision is only eligible if its event time is at least 90 days before the as-of timestamp. So an immature decision never reaches the labeller in this cohort at all &mdash; it simply is not yet countable. Decisions that are eligible but whose outcome is missing or censored are a different case: they stay in the denominator with an explicit status rather than being dropped.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How does the shared labeller avoid the selection-on-availability bias the review called a P0 risk?</summary>
+      <div class="body">
+        <p>By refusing to silently drop rows whose outcome did not resolve. Missing and censored outcomes enter the denominator carrying <code>status = missing</code> or a censoring reason, and each bucket reports its eligible, mature, missing, and censored counts and its excluded share. Because low-confidence decisions may censor at a different rate than high-confidence ones, making those exclusions visible &mdash; and suppressing the headline when they are too large &mdash; is exactly what stops the rate from looking good simply because the inconvenient rows disappeared.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why do missing and censored outcomes enter the denominator with a status instead of being dropped?</summary>
+      <div class="body">
+        <p>Because dropping them is silent selection: the analyst never sees that a bucket lost a third of its rows, so a rate computed on survivors looks authoritative when it is biased. Keeping them with an explicit status makes the exclusion a first-class, countable fact that the suppression rule can act on and the reader can inspect. The principle is that a suppressed or partial answer that shows its denominators is honest, whereas a confident answer over a quietly filtered denominator is the failure mode the whole redesign was about.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What is the excluded-share suppression rule, and why suppress the headline rather than just footnote it?</summary>
+      <div class="body">
+        <p>If any bucket's excluded share &mdash; missing plus censored over eligible &mdash; passes the pre-registered threshold of 20%, the headline outcome rate and spread are suppressed and only the per-bucket maturity breakdown is shown. A footnote would let a reader take the headline number and drop the caveat the moment it is inconvenient; removing the headline entirely forces the conversation to be about the maturity of the data before any rate is quoted. The asymmetry is deliberate: a wrong headline propagates, a suppressed one merely delays.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why cluster the bootstrap by enrollment rather than resampling individual rows?</summary>
+      <div class="body">
+        <p>Because decisions within one enrollment are correlated &mdash; the same patient episode generates several decisions that share context &mdash; so resampling individual rows would treat correlated observations as independent and produce confidence intervals that are too narrow. Clustering the resample by enrollment respects that dependence and yields honestly wider intervals. Since the monotonicity gate is driven by whether those intervals overlap, understating their width would directly cause false &ldquo;significant&rdquo; steps and inversions.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What is the pre-registered minimum-detectable-effect and power table for, and what failure does it prevent?</summary>
+      <div class="body">
+        <p>It states, per tenant, program, and archetype, the smallest spread the design can detect and the mature sample per bucket needed to reach 80% power at the 5% level, and it is versioned alongside the metric hash. Its job is to stop an underpowered cell from masquerading as a null result &mdash; a flat curve that merely reflects too little data being misread as &ldquo;confidence doesn't track outcomes here&rdquo;. Pre-registering it means the power question is answered before the data is seen, not rationalised afterwards.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why is per-cell mature-sample-of-30 a hard floor rather than a soft warning?</summary>
+      <div class="body">
+        <p>Because below roughly thirty mature outcomes a bucket's rate and interval are too unstable to support any monotonicity claim, and a soft warning would let a reader quote the number anyway. Below the floor the cell reports &ldquo;insufficient data&rdquo; with its full per-bucket breakdown instead of a rate, and the floor must be cleared in every archetype and every governed actor slice before monotonicity is even evaluated. A hard floor turns &ldquo;we don't have enough data&rdquo; into an enforced state rather than a caption someone can ignore.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Contracting the denominator to exclude pre-field rows shrinks your sample. Defend throwing away data rather than keeping the cohort whole.</summary>
+      <div class="body">
+        <p>The alternative &mdash; the v1 behaviour &mdash; was to default decisions whose confidence field did not exist to &ldquo;medium&rdquo;, which invents a bucket that was never recorded and biases the medium rate toward the population mean. That is not keeping the cohort whole; it is fabricating the very variable under study. Excluding pre-field rows by schema version contracts the denominator honestly, and the per-bucket missing count is reported separately so any compression from the filter is visible at serve time. A smaller honest sample beats a larger one built on an invented value &mdash; and the nine-year history means the surviving sample is still deep enough to test.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 7 ================= -->
+  <section class="theme" id="t7">
+    <div class="stage"><b>Theme 07</b> Caching, determinism and versioning</div>
+    <h2>Caching, determinism and versioning</h2>
+    <p class="lede">A canonical cache key, a golden replay, and where determinism actually comes from.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Why does a calibration read need a cache at all?</summary>
+      <div class="body">
+        <p>Because the underlying artifact only changes when the snapshot advances or a correction lands, while a dashboard may be read many times between those events; recomputing the same gated cells on every read would be wasted work. An in-process cache keyed on everything that can change the answer lets repeat reads be instant while guaranteeing a stale input produces a different key. The cache is an accelerator over an immutable-until-invalidated artifact, not a store of truth.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What makes a cached answer safe to reuse?</summary>
+      <div class="body">
+        <p>That the cache key contains every input that could change the result, so any change produces a miss rather than a stale hit, and that the tenant assertion still runs on the way out even on a hit. If a key omitted an input &mdash; say the outcome library version &mdash; a library change could serve an answer computed under the old definition. Completeness of the key is therefore a correctness property, not a performance tuning knob.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Your canonical cache key has a dozen fields. Justify why each must be present.</summary>
+      <div class="body">
+        <p>The key spans the three tenant fields and the query namespace (isolation and routing), the archetype and actor-type split shape (different cells), the confidence schema version, metric schema hash, outcome-library version, and bootstrap-library version (any of which redefines the number), and the snapshot manifest hash, max source event sequence, and correction epoch (freshness). Drop any one and you can serve an answer computed under a superseded definition or a stale snapshot without a miss. Each field maps to a distinct way the answer could silently change, which is why the key is a hash over all of them and a key drift itself pages.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What would a stale cached answer cost on this surface specifically, versus a merely slow one?</summary>
+      <div class="body">
+        <p>A slow answer costs a clinician a moment; a stale one can show a calibration verdict that a correction has already overturned &mdash; for instance, a bucket that should now be suppressed because a batch of outcomes was censored, or an inversion that a fixed attribution has resolved. Because the sibling AI-versus-human query gates on this artifact, a stale &ldquo;monotonic, trusted&rdquo; verdict could license a downstream &ldquo;high confidence&rdquo; label that the current data no longer supports. Staleness here is a correctness failure with downstream reach, which is why the correction epoch is in the key and the freshness SLA is tight.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> You claim the pipeline is deterministic. Where does that determinism come from, given there's no model in the loop?</summary>
+      <div class="body">
+        <p>From four concrete places, none of them a language model: a snapshot frozen at an as-of timestamp with a manifest hash, a deterministic sort of the cohort by event time then source event sequence then id, content-addressed event ids with conditional writes that make hydration idempotent, and a bootstrap seeded from the snapshot manifest hash and clustered by enrollment. Because there is no generative narrator anywhere in this query, there is nothing here whose output could vary run-to-run under a fixed input. Determinism is a property of the structured, seeded statistical chain, not of a prompt.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How does the golden replay prove determinism rather than assert it?</summary>
+      <div class="body">
+        <p>It runs the pipeline over pinned fixtures &mdash; including late-arrival, correction, and supersede replay chains &mdash; at a fixed as-of, then shuffles the spine's arrival order and reruns, and requires the calibration artifact to hash identically. If any step secretly depended on arrival order, on wall-clock time, or on an unseeded random draw, the two hashes would diverge and the test would fail. That turns &ldquo;we believe it's reproducible&rdquo; into an executable regression, which is the only form of the claim worth making.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> The correction epoch invalidates cache entries. Is that precise, or does one correction blow away half the cache?</summary>
+      <div class="body">
+        <p>It is deliberately targeted, not a blanket bump. Each derived cell records the source event sequences it depends on, and the correction listener walks a dependency index to the exact cells a given correction touches, rebuilding only those and advancing the epoch for the affected keys. A correction to one clinician's confidence bucket does not invalidate an unrelated archetype's cells. The dependency index is what makes precise invalidation and a five-minute freshness SLA compatible &mdash; without it, the only safe response would be a full recompute.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> &ldquo;Same as-of, shuffled spine, identical hash&rdquo; &mdash; what real bug would that catch that a unit test wouldn't?</summary>
+      <div class="body">
+        <p>Order-dependence that unit tests, which usually feed inputs in a tidy fixed order, never exercise. Examples: a group-by that resolves ties by first-seen row, a bootstrap that draws from an unstable iteration order, a de-duplication that keeps whichever duplicate arrived first, or an aggregation whose floating-point sum depends on summation order. Each produces correct-looking numbers under one ordering and subtly different ones under another; the shuffle-and-compare-hash test is precisely what surfaces them, because it changes only the order and demands byte-identical output.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 8 ================= -->
+  <section class="theme" id="t8">
+    <div class="stage"><b>Theme 08</b> Historical hydration &mdash; what it buys this query</div>
+    <h2>Historical hydration &mdash; what it buys this query</h2>
+    <p class="lede">About nine years of decisions and matured outcomes, replayed through the same spine the live stream uses.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What was hydrated, and why does this query care?</summary>
+      <div class="body">
+        <p>Roughly nine years of prior decisions and their matured outcomes were loaded through the same append-only spine before the service went live, by a first-class quarantine-first pre-seed pipeline rather than a throwaway backfill. Calibration cares because a cell is only testable once its confidence bucket holds enough mature 90-day outcomes to clear the sample floor &mdash; and it must clear that floor in every archetype and every governed actor slice. Depth of history is what makes the low-versus-high comparison runnable rather than suppressed for insufficient data.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Did the service start against an empty database?</summary>
+      <div class="body">
+        <p>No &mdash; it started carrying its full history. The pre-seed loaded the legacy corpus into the spine so the platform had nine years of decisions and outcomes on day one, rather than needing years of live accrual before any calibration cell could clear its sample floor. For a retrospective, maturity-gated statistic, a cold start would mean most cells suppressed for a long time.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why does depth of history matter specifically for calibration, versus a query that just needs recent data?</summary>
+      <div class="body">
+        <p>Calibration slices the population three ways at once &mdash; by confidence bucket, by archetype, and by governed actor slice &mdash; and every one of those cells needs its own thirty mature outcomes before it can be tested. That multiplicative slicing is a sample-hungry structure, and only a deep history fills the thin cells (a rare archetype at low confidence, say) deeply enough to compare. A shallow window would leave most of the grid below the floor, so the headline low-versus-high verdict would be untestable exactly where it is most interesting.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How does the quarantine-first load avoid poisoning the very buckets calibration measures?</summary>
+      <div class="body">
+        <p>Any legacy record that cannot be mapped to a known schema, or to a tenant, is quarantined with a reason and counted &mdash; never defaulted into a bucket or an owner. A defaulted confidence value would inject invented data straight into the variable under study, and a defaulted tenant would be a cross-tenant leak; refusing both is the load's central honesty knob. The quarantine count is itself reported, so the cost of the strictness is visible rather than hidden.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why must history replay through the same projection code that serves the live stream?</summary>
+      <div class="body">
+        <p>Because if history were projected by a separate code path, the hydrated graph would be a subtly different product from the streaming one, and every determinism and as-of guarantee would only hold for one of them. Replaying the legacy corpus through the identical projection logic that serves live events means a decision from eight years ago and one from yesterday are shaped by the same rules. Otherwise the reproducibility guarantees would be theatre &mdash; true of the test path, false of production.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What proof gates the hydration before anything downstream is built?</summary>
+      <div class="body">
+        <p>Zero-event-loss reconciliation against the source, per-tenant and per-class counts, as-of spot checks against known-good historical reports, and a golden replay over a historical slice all have to pass before any downstream artifact is constructed; if any fails, nothing downstream is built. A fenced cutover then attaches the live stream with a proof of neither gap nor duplicate at the boundary. Re-running the load over the same corpus yields a byte-identical spine and manifest hash, which is an executable proof of determinism rather than an assurance in a document.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Nine years spans many payload schema versions of the confidence field. How do you compare buckets across a decade without silently coercing them?</summary>
+      <div class="body">
+        <p>Each legacy schema version gets an explicit upconverter, and the confidence value carries the schema version it was recorded under, so the cohort filter can require at least the minimum supported version rather than blindly comparing across incompatible encodings. Crucially, decisions predating the confidence field are excluded, not upconverted into a default, and the excluded count is reported. Coercion is refused precisely because a silent map from an old encoding to a new bucket would fabricate the variable calibration is trying to measure.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> A deeper history mixes eras made under different clinical guidelines. Doesn't that corrupt the calibration signal?</summary>
+      <div class="body">
+        <p>It is a genuine confound, and the design's answer is to slice rather than pool and to keep the result observational. Cells are computed per archetype and can be read within a program and time window, so era effects surface as differences between slices rather than being blended into one number, and the rolling 90-day monotonicity history exposes drift over time. What the query does not claim is that a monotonic curve pooled across a decade is a timeless truth &mdash; it reports association within the slice and window you look at, with the caveat that guidelines and case mix change. Ruling out era confounding entirely is not something an observational calibration statistic can do.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 9 ================= -->
+  <section class="theme" id="t9">
+    <div class="stage"><b>Theme 09</b> Governance, PHI and the LLM boundary</div>
+    <h2>Governance, PHI and the LLM boundary</h2>
+    <p class="lede">Per-actor governance that resists a scorecard, PHI kept in the VPC, and a deliberately unopened model seam.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Is there a language model anywhere in this query?</summary>
+      <div class="body">
+        <p>No &mdash; the calibration path contains zero model calls. A confidence-versus-outcome comparison is buckets, rates, confidence intervals, and gate decisions: arithmetic and governance end to end, with nothing for a model to summarise that a deterministic template does not already own. The platform ships a self-hosted language-model seam for the queries that genuinely narrate, and calibration deliberately opens none of it. This is the portfolio's purest case of knowing when not to use an LLM.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Who is allowed to see a per-actor calibration row?</summary>
+      <div class="body">
+        <p>Only leadership, or a clinician viewing their own row (self-view); everyone else gets population cells with the per-actor split stripped out. Even within that access, actor ids default to pseudonymous, the rows sort alphabetically with no rankable surface, and every per-actor read writes an audit entry before the data is served. The default is the safe one: you have to hold a specific role to see identified per-actor calibration at all.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What concrete controls make the per-actor view hard to weaponise into a league table?</summary>
+      <div class="body">
+        <p>Four enforced mitigations, not a promise: actor ids are pseudonymous by default; access is gated to leadership-or-self-view via RBAC; an audit entry recording viewer, target, purpose, and time is written before any per-actor split is served, and an access-log id is returned; and the ordering is alphabetic with no rank-sortable column exposed. Together they make building a ranking laborious and, more importantly, visible and logged &mdash; every attempt to look leaves a trail. They make misuse hard and auditable rather than metaphysically impossible, which is the honest claim to make about governance.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why is the audit entry written before the per-actor split is served, not after?</summary>
+      <div class="body">
+        <p>Because an audit entry written after serving can be lost precisely when it matters &mdash; a crash, an error, or a dropped write between reading the data and logging it would leave an unrecorded access to identified performance data. Writing the entry first, and returning its id in the response, makes the access log a precondition of serving rather than a best-effort side effect. If the audit write fails, the sensitive split does not go out.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why are actor ids pseudonymous by default, and what does leadership see differently?</summary>
+      <div class="body">
+        <p>Pseudonymous by default means the common case &mdash; looking at the distribution of per-actor calibration &mdash; never needs real identities, so accidental exposure and casual ranking are designed out. Leadership, acting with an explicit logged purpose, can open an identified drill-in, but that action writes its own audit entry and returns its own access-log id. The identified view is a deliberate, recorded act, not the resting state of the surface.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why is &ldquo;no LLM in the calibration path&rdquo; a design decision rather than a missing feature?</summary>
+      <div class="body">
+        <p>Because everything here is a value a deterministic template already owns exactly &mdash; a rate, an interval, a gate verdict &mdash; and a model could only restate it while adding a new way to be subtly, unaccountably wrong. There is no prompt to jailbreak, since the neutrality rules, suppression logic, and access controls are code and configuration, not instructions to a model; and nothing to hallucinate, since every number is computed and version-pinned. The absence is the discipline: the model door exists one import away for a sibling query, and this query chooses not to open it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> If you ever added a narrative explainer, where would the model be allowed to run and on what payload?</summary>
+      <div class="body">
+        <p>The production path is single and explicit: a self-hosted language model inside the client VPC, so protected health information never leaves the network. An external provider would be permitted only on a de-identified payload &mdash; and a contractual no-retention agreement is not a substitute for that, because it is not a network-residency control. So the answer would be in-VPC by default, external only over de-identified text, with the explainer strictly narrating a number the deterministic pipeline already computed and gated, never producing the number itself.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> &ldquo;Never becomes a scorecard&rdquo; is a strong claim. What actually stops a determined manager from ranking clinicians with this data?</summary>
+      <div class="body">
+        <p>Nothing makes it metaphysically impossible, and it would be dishonest to claim otherwise &mdash; what the design does is make it hard, slow, and visible. A manager would have to hold leadership RBAC, act with a logged purpose, and reconstruct a ranking by hand from an alphabetically sorted, pseudonymous, no-rank-column surface, and every access they made would be recorded with viewer, target, purpose, and time. On top of that, the numbers themselves carry a mandatory observational caveat and no pooled verdict ships without clinical-ops sign-off. Governance here is a set of mitigations that raise the cost and leave a trail, not an absolute guarantee.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Your tracing tool sees decision data. How is that not PHI leaving the network?</summary>
+      <div class="body">
+        <p>Because the tracing and evaluation tooling is deployed self-hosted, inside the same client VPC, so its traces and datasets never cross the network boundary. The design's rule is that PHI stays in the VPC full stop; a hosted observability service that shipped traces off-network would violate it, so the self-hosted deployment is a requirement, not a convenience. And since this query invokes no model, there is no prompt or completion payload to trace in the first place &mdash; the tracing covers the deterministic service, still in-VPC.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 10 ================= -->
+  <section class="theme" id="t10">
+    <div class="stage"><b>Theme 10</b> Failure modes, degradation and operations</div>
+    <h2>Failure modes, degradation and operations</h2>
+    <p class="lede">Freshness tiers, dependency-targeted correction rebuilds, and what pages versus what degrades.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What happens when the snapshot behind the numbers gets stale?</summary>
+      <div class="body">
+        <p>Freshness is tiered: under 24 hours old the service serves normally, between 24 and 48 hours it serves with a staleness banner, and past 48 hours it blocks and escalates rather than quietly serving old numbers. A projector lag beyond 30 minutes flips the tier to yellow independently. Staleness is never silent &mdash; it is either annotated on the response or it stops serving.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What degrades gracefully here, and what pages someone?</summary>
+      <div class="body">
+        <p>Snapshot age and projector lag degrade gracefully &mdash; a banner, then a block. Insufficient sample, excessive exclusion, and wide intervals degrade into typed suppressed cells rather than errors. What pages a human is a cross-tenant assertion failure or partition mismatch (an incident), a sustained CI-rejected inversion in an alarming archetype, and a denominator-gaming flag routed to clinical-ops. The rule is that data-quality shortfalls suppress, and isolation or governance breaches page.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> A clinician corrects a confidence bucket after the fact. What happens to the calibration tables, and why not just rebuild nightly?</summary>
+      <div class="body">
+        <p>The correction lands as a spine event; a listener maps it &mdash; via a dependency index over source event sequences &mdash; to exactly the calibration cells that depend on that fact, rebuilds only those, recounts maturity, reseeds the bootstrap, re-runs the gates, and bumps the correction epoch on the affected keys, with a P95 under five minutes. Waiting for the nightly rebuild would leave the dashboard, and the downstream query that gates on it, reading a verdict the correction has already overturned for up to a day. Targeting the rebuild is what makes correctness and a tight freshness SLA compatible.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How does the correction listener rebuild only the affected cells rather than the whole table?</summary>
+      <div class="body">
+        <p>Every derived cell records the set of source event sequences it was built from, registered in a dependency index. When a correction arrives at a given sequence, the listener looks up which cells reference it and rebuilds precisely that set &mdash; a correction to one actor's bucket in one archetype does not touch unrelated cells. Without the index, the only safe response to any edit would be a full nightly-scale recompute, and the five-minute SLA would be impossible.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What are the alarm severity tiers, and what escalates a page from P2 to P1?</summary>
+      <div class="body">
+        <p>Calibration-inverted and denominator-gaming alarms default to P2 and escalate to P1 when an inversion is sustained across seven or more refreshes, at which point the rolling monotonicity history is doing the escalation rather than a single noisy night. Each alarm carries an owner &mdash; clinical-ops governance plus the query's service owner &mdash; an acknowledgement path that emits an ack event to the spine, and a cooldown. Severity is thus a function of persistence, not of one refresh crossing a line.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What does the 24-hour cooldown after an acknowledgement prevent?</summary>
+      <div class="body">
+        <p>It stops a known, already-acknowledged condition from re-paging on every subsequent refresh while it is being worked, which is how an on-call rota gets trained to ignore an alarm. After an ack, the same condition holds its page for the cooldown window rather than firing repeatedly. The rolling history still records the ongoing inversion, so a genuinely sustained problem escalates in severity rather than being silenced &mdash; cooldown suppresses duplicate noise, not the underlying signal.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> The correction listener leans on a dependency index. What if that index is wrong &mdash; do you silently serve stale calibration?</summary>
+      <div class="body">
+        <p>That is the real risk of a targeted-rebuild design, and it is why the golden replay is not optional: the replay fixtures include correction and supersede chains and require the artifact to hash identically to a full recompute, so an index that under-invalidates would surface as a hash mismatch in the regression rather than in production. The nightly full refresh also re-derives every cell from scratch, which bounds how long a missed targeted invalidation could persist to at most one cycle. The honest statement is that the index is a performance optimisation whose correctness is backstopped by a periodic full rebuild and a determinism test, not an unchecked source of truth.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> A projector lag flips the tier to yellow but still serves. Isn't serving known-lagged calibration the exact failure you're trying to avoid?</summary>
+      <div class="body">
+        <p>For this statistic the tradeoff is acceptable and made visible rather than hidden. Every outcome in a calibration cell is at least 90 days old by construction, so a projector lag of tens of minutes cannot change a matured, gated verdict &mdash; it can only mean a very recent decision is not yet reflected, and recent decisions are immature and excluded anyway. The yellow banner tells the reader the freshness is degraded, and the hard 48-hour block still stops genuinely stale serving. Serving with an honest staleness signal beats blocking a population statistic on a lag that provably cannot move its answer.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 11 ================= -->
+  <section class="theme" id="t11">
+    <div class="stage"><b>Theme 11</b> Evaluation and acceptance criteria</div>
+    <h2>Evaluation and acceptance criteria</h2>
+    <p class="lede">One binding metric &mdash; never emit a number that should have been suppressed &mdash; and how it is tested without production data.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What is the single binding metric this query is evaluated against?</summary>
+      <div class="body">
+        <p>That the pipeline never emits a headline rate that should have been suppressed. Every emitted headline must clear the maturity and exclusion gates, and a false emit &mdash; a rate that is really immature or underpowered but shown as a verdict &mdash; is treated as the costliest failure in the system. Evaluation is built around that asymmetry rather than around chasing a single accuracy number.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> Are the numbers in the example API payload measured production results?</summary>
+      <div class="body">
+        <p>No. Every figure shown &mdash; the example bucket rates, the counts, the thresholds &mdash; is either an illustrative payload shape or a pre-registered acceptance target, not an observed production measurement. No measured production metrics are published; the observed results are not the author's to publish. The thresholds that do appear (the 90-day window, the sample floor, the 20% exclusion limit, the alphas, the power target) are design-time acceptance targets, not readings.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why is a false emit treated as far costlier than a false suppress?</summary>
+      <div class="body">
+        <p>Because a false suppress merely withholds a number until more data matures &mdash; a delay &mdash; whereas a false emit puts an unreliable calibration verdict in front of a clinician and into the downstream query that gates &ldquo;high confidence&rdquo; cohorts on it, where it can license a decision the data does not support. The two errors are not symmetric in consequence, so the gates are tuned to fail toward suppression. Building evaluation around that asymmetry is what keeps the surface trustworthy even when it is quiet.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> How do you evaluate gate decisions when you don't have production ground truth to publish?</summary>
+      <div class="body">
+        <p>On seeded synthetic cohorts where the ground truth of every gate decision is known by construction &mdash; you build a cohort that <em>should</em> suppress, or <em>should</em> alarm, and check that it does &mdash; and on golden fixtures that pin the pipeline byte-for-byte. That tests the machinery (does the maturity gate fire, does the CI-overlap test reject when intervals separate, does a shuffled spine reproduce the hash) without needing to publish any real patient outcome. It validates that the gates behave as specified; it does not, and cannot, certify the clinical meaning of the buckets.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What does the rolling 90-day monotonicity history add beyond a single-night verdict?</summary>
+      <div class="body">
+        <p>It distinguishes a one-off from a trend. A single night's CI-rejected inversion might be a genuine but transient artefact; the 90-day history of inversions per archetype, appended to the artifact, lets a sustained inversion escalate in severity rather than fire and be forgotten. It converts &ldquo;something looked off tonight&rdquo; into &ldquo;this has been off for a week&rdquo;, which is the difference between noise and a pageable drift.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> What is the tenant-safety acceptance bar, and why is it &ldquo;page-out&rdquo; rather than a metric?</summary>
+      <div class="body">
+        <p>The bar is zero cross-tenant rows and zero partition mismatches, and a violation is an incident that pages, not a rate you trend on a dashboard. Isolation is a binary safety property: &ldquo;we leaked one tenant's calibration into another's view 0.1% of the time&rdquo; is not an acceptable posture, so there is no acceptable non-zero rate to chart. Treating it as page-out rather than a metric encodes that a single breach is a stop-the-line event.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> Seeded synthetic cohorts prove your gates fire correctly, but not that the buckets mean anything clinically. Isn't the evaluation circular?</summary>
+      <div class="body">
+        <p>The evaluation is honest about its own scope: it certifies the statistical machinery, not the clinical validity of self-reported confidence. Whether &ldquo;high confidence&rdquo; is a meaningful construct is a question about the input data and clinical practice, which no amount of pipeline testing can settle &mdash; that is precisely why the output is framed observationally and why the gaming and governance controls exist. So it is not circular; it is scoped. The gates guarantee that <em>if</em> a real calibration signal exists it is measured honestly and, if it does not, the surface says &ldquo;insufficient&rdquo; rather than inventing one.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> You publish acceptance targets, not measured results. How would a client ever know the system actually hits them?</summary>
+      <div class="body">
+        <p>Through the artefacts a client can independently exercise: the pre-registered gate thresholds and power table, the golden regression that must reproduce a byte-identical artifact, and the seeded synthetic cohorts whose expected gate decisions are known by construction and can be re-run. Those are verifiable in the client's own environment against their own data. Published production numbers, by contrast, would be the author's assertion about someone else's patients &mdash; which is exactly what is not the author's to publish, and would be weaker evidence than a reproducible gate the client can run.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= THEME 12 ================= -->
+  <section class="theme" id="t12">
+    <div class="stage"><b>Theme 12</b> Tradeoffs, alternatives, and hindsight</div>
+    <h2>Tradeoffs, alternatives, and hindsight</h2>
+    <p class="lede">Why no propensity matcher, why ordinal not numeric, and what the review record really says.</p>
+
+    <details>
+      <summary><span class="chip c-screening">screening</span> What is the sharpest tradeoff you'd defend on this design?</summary>
+      <div class="body">
+        <p>Contracting the denominator by excluding pre-field and immature rows in exchange for an honest sample, rather than padding the cohort to look complete. It costs raw N and it makes some cells suppress, but it removes the two biases &mdash; a defaulted &ldquo;medium&rdquo; bucket and selection on outcome availability &mdash; that would otherwise quietly corrupt every rate. A smaller, honest, deeply-hydrated sample is the trade I would make again.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> This is Archetype B, and sibling queries run a shared propensity matcher. Why doesn't calibration, and what does that cost you?</summary>
+      <div class="body">
+        <p>Because calibration asks a within-population question &mdash; does stated confidence track outcomes across its own buckets &mdash; not a between-groups causal contrast like &ldquo;did the AI do better than the human on comparable cases&rdquo;, which is where matching earns its keep. Adding a matcher here would impose a causal frame the query does not claim and does not need. The cost is that calibration cannot separate genuine calibration from confounding by case difficulty; it owns that limitation openly and leaves the adjusted comparison to the sibling query that is built for it.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why ordinal buckets rather than migrating clinicians to a numeric confidence score now?</summary>
+      <div class="body">
+        <p>Because the field the platform actually collects is a three-level enum, and honest statistics follow the data you have, not the data you wish you had. A numeric score would enable a proper reliability diagram, but it is a clinical-workflow and data-collection change &mdash; you would need clinicians to enter calibrated probabilities and a plan for backward compatibility with a decade of enum history. The design keeps the ordinal treatment honest today and flags numeric migration as a future direction, rather than pretending three buckets carry more resolution than they do.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Would a reliability diagram or ECE be a better long-term surface, and what would it take to get there?</summary>
+      <div class="body">
+        <p>For a numeric confidence input, yes &mdash; a reliability diagram with a calibration error summary is the richer surface, because it shows the full predicted-versus-observed curve rather than three ordered points. Getting there requires the workflow to capture a numeric probability, an upconversion story for the existing enum history (or an explicit break at the migration boundary), and a re-registration of the power and MDE assumptions for a continuous scale. Until that data exists, an ECE would be precision theatre over three coarse buckets, so the monotonicity treatment is the honest interim.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Why decision-grain rather than patient-grain, and what does that imply for the bootstrap?</summary>
+      <div class="body">
+        <p>The unit under study is a decision and its stated confidence, so the cohort is decision-grain &mdash; a patient with several decisions contributes several rows, each with its own bucket and outcome. But those rows are correlated within the patient's enrollment, so treating them as independent would understate uncertainty; the bootstrap therefore resamples by enrollment, not by row, to respect that clustering. Decision-grain for the signal, enrollment-cluster for the interval &mdash; the two choices go together.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-deep">deep</span> Three of the eight required changes were promoted to shared platform components rather than solved locally. Why?</summary>
+      <div class="body">
+        <p>Because the tenant-isolation wrapper, correction-invalidation with a replay test, and the actor-access policy are cross-cutting concerns that several cohort queries share, and solving them locally would mean each query reimplementing them slightly differently &mdash; drift that is itself a risk. Promoting them makes the fix inheritable: sibling queries get the same tenant assertion, the same correction backbone, the same actor governance. The cost was that this query depended on those platform components landing; they have since landed at the platform layer, and the query now binds to the shared versions rather than an inlined stand-in.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> What would you change with hindsight, and where is the design weakest?</summary>
+      <div class="body">
+        <p>The weakest point is that calibration cannot, on its own, separate real calibration from confounding by case difficulty, and reporting it observationally is a mitigation, not a fix &mdash; a numeric confidence score plus the sibling matched comparison is the real answer, and I would push to collect numeric confidence earlier. I would also want the per-archetype exemption policy and the gaming-test reference distribution signed off by clinical-ops before more surfaces depend on them, since those are currently governance-gated. And the targeted-rebuild dependency index is a correctness-critical optimisation I would keep under especially heavy replay testing. None of these are hidden; they are the open edges of an otherwise conservative design.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="chip c-adversarial">adversarial</span> The case study stamps &ldquo;redesigned and shipped, 8/8 dispositioned.&rdquo; What does the review record actually show about this query's approval status?</summary>
+      <div class="body">
+        <p>The record shows a first-round design review whose one-word recommendation was <em>redesign</em>, with eight required changes before any production code &mdash; headline finding: selection on outcome availability is a P0 statistics risk. The version described here is that redesign: five changes were absorbed directly into the design and three were promoted to shared platform components. What the record does <em>not</em> show is a second independent review re-running the loop to a formal approval stamp &mdash; across the whole programme only one query ever reached &ldquo;approved with nits&rdquo;, and this is not it. So the honest status is &ldquo;redesign absorbed, shared platform dependencies since landed&rdquo;, not &ldquo;approved&rdquo;.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= HONEST GAPS ================= -->
+  <div class="gaps">
+    <h2>Honest gaps</h2>
+    <p>What this query cannot answer today, and what is still gated:</p>
+    <ul>
+      <li><strong>It is observational, not causal.</strong> A monotonic low-to-high curve is consistent with genuine calibration <em>and</em> with confounding by case difficulty; this query does not run a propensity matcher and cannot rule out unmeasured confounding. It reports that outcome rates track stated confidence in a population, never that confidence caused the outcomes.</li>
+      <li><strong>Three ordinal buckets, not a probability.</strong> With a three-level enum there is no honest ECE, Brier score, or reliability curve &mdash; only a monotonicity test with intervals. A richer calibration surface waits on collecting numeric confidence and re-registering the statistical plan for a continuous scale.</li>
+      <li><strong>The monotonicity screen compares marginal intervals, not a difference distribution.</strong> The gate
+      fires on whether two buckets' bootstrap intervals overlap. That is a conservative proxy for a pairwise test of
+      equality, not the test itself: it uses only the two marginal intervals and never the covariance between the bucket
+      estimates, even though both are resampled from the same clustered draws. The consequence is a nominal rather than
+      an achieved alpha, and a screen that under-detects real differences — acceptable for a channel whose job is to
+      protect an on-call rota from noise. The sharper instrument, a percentile interval on the bootstrap distribution of
+      the rate <em>difference</em>, paired across resamples, is the obvious upgrade if the gate is ever asked to carry
+      inferential weight.</li>
+      <li><strong>The confidence field is self-reported.</strong> The pipeline can guarantee a cell reflects the bucket set at decision time and that corrections are audited; it cannot judge whether a given confidence label, or a later correction, was made in good faith.</li>
+      <li><strong>The design-review verdict was <em>redesign</em>, and the shipped version is that redesign.</strong> Five required changes were absorbed directly and three promoted to shared platform components; there is no subsequent independent review re-running the loop to a formal approval. Across the programme, only one query ever reached &ldquo;approved with nits&rdquo;, and this is not it &mdash; every other query, this one included, sits at &ldquo;ship-with-changes / redesign-absorbed&rdquo;.</li>
+      <li><strong>Several dependencies were platform-gated, not locally closed.</strong> The shared tenant-isolation wrapper, the shared 90-day outcome labeller, the correction-event backbone, the deterministic exporter and its golden replay, and the actor-RBAC and audit service are shared components this query wires against but does not own; all have since landed at the platform layer, and the query binds to the shared versions rather than an inlined stand-in.</li>
+      <li><strong>Governance is mitigation, not an absolute.</strong> Pseudonymous ids, leadership-or-self-view RBAC, an audit entry written before serving, and alphabetic never-rankable ordering make a scorecard hard to build and its every use visible and logged &mdash; they do not make ranking metaphysically impossible.</li>
+      <li><strong>Policy sign-offs are still pending.</strong> The per-archetype monotonicity thresholds and the Override/Escalate exemption, the choice of denominator-gaming test and its reference distribution, the published minimum-detectable-effect and power table, and the alarm severity, ownership, ack-path, and cooldown policy all await clinical-ops governance sign-off; until then the pooled monotonicity verdict is withheld and those archetypes stay descriptive-only.</li>
+      <li><strong>No runnable code accompanies this query.</strong> Only the precedent-search, override-intelligence, and cross-domain orchestration queries ship a runnable work sample; this is a design and design-review artifact, and no measured production metrics are published for it.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p>Client and product identifiers are anonymised; this describes a confidence-calibration service for a chronic-care platform covering 80+ chronic conditions. The platform served roughly <strong>10,000 patients</strong> across those conditions over about <strong>nine years of history</strong> hydrated into the event spine. Role: <strong>sole owner &mdash; design through production</strong>.</p>
+    <p><strong>No measured production metrics are published here.</strong> Every figure on this page &mdash; every rate, count, threshold, and SLA &mdash; is a pre-registered acceptance target or an illustrative payload shape, not an observed measurement; the observed results are not mine to publish.</p>
+    <p class="stack">Stack: DynamoDB event spine · Neptune decision graph (off the read path) · Parquet + DuckDB · shared 90-day outcome labeller · seeded cluster-aware bootstrap · FastAPI · self-hosted, in-VPC tracing · Pydantic structured output · no language model in the calibration path.</p>
+  </footer>
+</main>
+</body>
+</html>

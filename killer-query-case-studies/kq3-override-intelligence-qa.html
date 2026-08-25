@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KQ3 · Override analytics — Questions &amp; Answers</title>
+<meta name="description" content="About a hundred senior-engineer questions and answers on the override-analytics query for a chronic-care platform: propensity-matched comparisons behind deterministic statistical gates, three-field tenant isolation, as-of reconstruction from an append-only event spine, and a language model kept off every number.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --brick: #A23B2E;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 2.85rem);
+    line-height: 1.15; letter-spacing: -0.015em;
+    max-width: 22ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  .muted { color: var(--steel); }
+
+  header.hero { padding: 64px 0 20px; }
+  .hero .sub { font-size: 1.08rem; color: var(--steel); max-width: 64ch; margin-top: 20px; }
+  .backlink { display: inline-block; margin-top: 22px; font-family: var(--mono); font-size: 0.82rem; }
+
+  code {
+    font-family: var(--mono); font-size: 0.85em;
+    background: var(--mist); padding: 1px 6px; border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ---- killer-query callout ---- */
+  .kq {
+    margin: 34px 0 8px; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .kq .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .kq blockquote {
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--ink);
+  }
+
+  /* ---- table of contents ---- */
+  nav.toc {
+    margin: 40px 0 8px; padding: 24px 26px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  nav.toc .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 14px;
+  }
+  nav.toc ol {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 4px 28px;
+    counter-reset: toc;
+  }
+  nav.toc li { counter-increment: toc; padding: 5px 0; border-bottom: 1px solid var(--mist); }
+  nav.toc li a { display: flex; gap: 12px; align-items: baseline; text-decoration: none; color: var(--ink); }
+  nav.toc li a:hover { color: var(--teal); }
+  nav.toc li a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono); font-size: 0.72rem; color: var(--teal); flex: 0 0 auto;
+  }
+  nav.toc .count { font-family: var(--mono); font-size: 0.72rem; color: var(--steel); margin-left: auto; }
+
+  /* ---- theme sections ---- */
+  section.theme { margin-top: 60px; scroll-margin-top: 20px; }
+  .stage {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--steel);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .stage::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+  .stage b { color: var(--teal); font-weight: 500; }
+  section.theme > p.lead { color: var(--steel); font-size: 0.96rem; margin-top: 8px; }
+
+  /* ---- Q&A ---- */
+  details {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+    margin: 10px 0; padding: 0 20px;
+  }
+  details[open] { border-color: var(--teal); }
+  summary {
+    list-style: none; cursor: pointer; padding: 15px 0;
+    display: flex; gap: 12px; align-items: baseline;
+    font-family: var(--serif); font-weight: 500; font-size: 1.02rem; line-height: 1.4;
+    color: var(--ink);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; margin-left: auto; font-family: var(--mono); color: var(--steel);
+    font-size: 1.2rem; line-height: 1; flex: 0 0 auto;
+  }
+  details[open] summary::after { content: "\2212"; color: var(--teal); }
+  summary:hover { color: var(--teal-deep); }
+  details > p, details > ul { font-family: var(--sans); font-weight: 400; font-size: 0.98rem; }
+  details > p:first-of-type { margin-top: 2px; }
+  details > *:last-child { margin-bottom: 18px; }
+  details ul { margin: 0 0 16px 20px; max-width: 72ch; }
+  details li { margin-bottom: 6px; }
+
+  .chip {
+    font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 4px; flex: 0 0 auto;
+    position: relative; top: -1px;
+    border: 1px solid;
+  }
+  .chip.screening { color: var(--steel); border-color: var(--hairline); background: var(--paper); }
+  .chip.deep { color: var(--teal); border-color: #A7D4CF; background: #EAF4F3; }
+  .chip.adversarial { color: var(--brick); border-color: #E0B7B0; background: #FBEFEC; }
+
+  /* ---- callouts ---- */
+  .callout {
+    margin: 26px 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .callout.gaps { border-left-color: var(--brick); }
+  .callout .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); display: block; margin-bottom: 10px;
+  }
+  .callout.gaps .label { color: var(--brick); }
+  .callout h2 { margin-bottom: 12px; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout ul { margin: 0 0 14px 20px; max-width: 72ch; }
+  .callout li { margin-bottom: 8px; }
+
+  footer {
+    margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hairline);
+    font-size: 0.86rem; color: var(--steel); max-width: 74ch;
+  }
+  footer p { margin-bottom: 10px; }
+
+  @media (max-width: 640px) {
+    header.hero { padding-top: 44px; }
+    summary { font-size: 0.98rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+  <span class="eyebrow">Deep-dive Q&amp;A · Override analytics</span>
+  <h1>When the platform overrides its own protocol — <em>who did it, and did it work?</em></h1>
+  <p class="sub">A hundred questions a Senior Principal engineer or CTO would actually ask about the
+  override-analytics query for a chronic-care platform covering 80+ chronic conditions — and honest
+  answers. The query compares overridden decisions against propensity-matched controls behind
+  deterministic statistical gates, reconstructs every fact as of the moment it happened from an
+  append-only event spine, and keeps a language model off every number. Answers teach the mechanism and
+  its consequence; the uncomfortable ones are answered honestly, and the design's real limits are named
+  at the end.</p>
+  <a class="backlink" href="kq3-override-intelligence.html">&larr; Read the case study</a>
+
+  <div class="kq">
+    <span class="label">The query the system must answer</span>
+    <blockquote>"Show all cases where a protocol was overridden — who overrode, what rationale was given,
+    and what were outcomes versus non-overridden cases?"</blockquote>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Themes">
+  <span class="label">Twelve themes</span>
+  <ol>
+    <li><a href="#t1">The question and why it is hard <span class="count">9</span></a></li>
+    <li><a href="#t2">Architecture and data flow <span class="count">9</span></a></li>
+    <li><a href="#t3">As-of correctness and future leakage <span class="count">9</span></a></li>
+    <li><a href="#t4">Tenancy and isolation <span class="count">8</span></a></li>
+    <li><a href="#t5">The core mechanism · propensity matching <span class="count">11</span></a></li>
+    <li><a href="#t6">Statistics, gates and suppression <span class="count">11</span></a></li>
+    <li><a href="#t7">Caching, determinism and versioning <span class="count">9</span></a></li>
+    <li><a href="#t8">Historical hydration · what it buys this query <span class="count">8</span></a></li>
+    <li><a href="#t9">Governance, PHI and the LLM boundary <span class="count">10</span></a></li>
+    <li><a href="#t10">Failure modes, degradation and operations <span class="count">9</span></a></li>
+    <li><a href="#t11">Evaluation and acceptance criteria <span class="count">7</span></a></li>
+    <li><a href="#t12">Tradeoffs, alternatives, what I would change <span class="count">9</span></a></li>
+  </ol>
+</nav>
+
+<!-- ================= THEME 1 ================= -->
+<section class="theme" id="t1">
+  <div class="stage"><b>01</b> The question and why it is hard</div>
+  <p class="lead">What "who overrode, and did it work?" really asks, and why a single GROUP BY answers it wrong.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What does this query answer, in one sentence?</summary>
+    <p>It finds every decision where a clinician deviated from an in-force protocol — the alignment flag reads
+    <em>overridden</em> — and reports who overrode, the rationale they recorded, and how those patients fared
+    at ninety days against a propensity-matched control of similar non-overridden decisions. The output is a
+    set of policy-level and actor-level cells, each carrying an outcome delta with a confidence interval, a
+    balance status, and an explicit observational tag. It is an analytics surface, not a recommendation
+    engine.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Why is this harder than a GROUP BY on an "overridden" flag?</summary>
+    <p>The GROUP BY gives you a rate; it tells you nothing about whether overriding <em>helped</em>, and it
+    invites the reader to compare clinicians as if the rate were performance. The hard part is the
+    counterfactual: an override is only meaningful against what would have happened to a comparable patient
+    who was <em>not</em> overridden, and clinicians override on their least-typical patients, so the comparison
+    is confounded before you start. Everything expensive in this design — as-of reconstruction, propensity
+    matching, balance and stability gates, governance — exists to turn a misleading one-liner into a defensible
+    comparison, or to suppress it honestly when it cannot be made defensible.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is a naive override-rate-per-clinician wrong three ways at once?</summary>
+    <p>First, it is confounded by design: clinicians override on their sickest and most unusual patients, so a
+    raw override-versus-followed comparison contrasts non-comparable populations. Second, small cohorts
+    manufacture confident-looking rates from a handful of cases, so a clinician with twelve decisions can look
+    like an outlier by noise alone. Third, the instant the table exists it reads as a scorecard — even a
+    statistically clean rate can end a career if it is presented as a ranking rather than an observation. The
+    design treats each as a first-class problem with a named control rather than hoping presentation will
+    smooth them over.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What makes this the most politically charged query in the product, and how does that shape the design?</summary>
+    <p>Every other query describes patients or the system; this one describes <em>people's judgment calls</em>,
+    and any number attached to a named clinician is read as an evaluation of them. That is why governance is a
+    first-class part of the pipeline rather than a UI afterthought: pseudonymous actor ids by default,
+    leadership-and-self-view access, an audit entry written before any actor row is served, and an
+    alphabetic, never-rankable ordering. The political charge is also why the statistical bar is set high —
+    a fragile or under-powered actor cell is suppressed rather than shown, because the cost of a wrong,
+    person-attributed number here is far larger than the cost of showing nothing.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Isn't comparing overridden against non-overridden decisions inherently confounded? How can any answer be trusted?</summary>
+    <p>It is confounded, and the design never pretends otherwise. Propensity matching narrows the comparison to
+    patients who look alike on the covariates that were measured, and the balance gate refuses to show a
+    headline unless the two arms are demonstrably similar on those covariates. But matching can only balance
+    what was measured — unmeasured confounding is never ruled out — so every surface stays observational, not
+    causal, and the numbers are framed as "these matched patients differed by X," never "the override caused
+    X." Trust here is bounded and stated, not claimed absolutely.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What does "override" mean mechanically — how is a decision marked overridden?</summary>
+    <p>Each decision event on the spine carries a rationale with a <code>policy_alignment</code> field; a value
+    of <em>overridden</em> means the recorded decision deviated from the protocol that constrained it at that
+    moment. The cohort builder does not trust the current graph for this — it reconstructs
+    <code>policy_alignment</code>, the free-text rationale, the acting person or agent, and the exact policy
+    version from the spine creation events as of the decision timestamp. That reconstruction is what lets the
+    query say <em>this was an override against version 4 of this policy</em> rather than against whatever the
+    policy says today.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Who consumes this, and what decisions does it inform?</summary>
+    <p>Clinical leadership and clinical-ops use it to see which protocols get overridden most and whether those
+    overrides track with better or worse ninety-day outcomes — a signal that a protocol may be miscalibrated
+    for a subgroup, or that a pattern of deviation deserves a closer look. Individual clinicians can see their
+    own row (self-view). It informs protocol revision and review conversations; it is deliberately not wired
+    into any automated action, incentive, or ranking.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If the honest answer is "we can't establish causality," why build the query at all?</summary>
+    <p>Because a well-gated observational comparison is still far more useful than the raw rate it replaces, and
+    the alternative — leadership eyeballing override counts with no comparison arm — is worse on every axis. A
+    balanced, powered, caliper-stable outcome delta is a legitimate signal to investigate a protocol; it just
+    is not a verdict on a clinician. The value is in surfacing where overrides cluster and whether they
+    co-occur with different outcomes, with enough statistical honesty that nobody mistakes the signal for
+    proof.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why does the design default to suppression over emission?</summary>
+    <p>Because in this domain a false <em>emit</em> — a headline number that should have been withheld — is far
+    more costly than a false <em>suppress</em>. A wrong, person-attributed override delta shown with a tight
+    interval can drive a bad protocol change or an unfair judgment; a suppressed cell that says "insufficient
+    data" with its denominators merely withholds a signal until it is trustworthy. So every gate fails toward
+    suppression with a stated reason and full denominators, and the evaluation is built around gate-check
+    precision rather than coverage.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 2 ================= -->
+<section class="theme" id="t2">
+  <div class="stage"><b>02</b> Architecture and data flow</div>
+  <p class="lead">Snapshot-only analytics with a matched control arm — where every number is pre-computed offline.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the high-level pipeline, from spine to served cell?</summary>
+    <p>A nightly snapshot is exported from the decision graph into columnar files; a cohort builder scans them,
+    reconstructs each override as of its moment from the append-only spine, anchors one decision per treatment
+    episode, and computes pre-treatment covariates. A propensity matcher pairs each override with the closest
+    non-overridden decision and emits a versioned match manifest. An aggregation step applies the statistical
+    gates and writes by-policy, by-actor, and outcome-delta metric tables, which an embedded analytical engine
+    serves behind role resolution and an audit log. Nothing on the request path recomputes statistics or
+    touches the live graph.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why snapshot-only, never touching the live graph at query time?</summary>
+    <p>Three reasons compound. Correctness: a point-in-time snapshot with a manifest hash is reproducible, so
+    the same request returns the same cells and every number can be replayed; a live graph mutating under the
+    query cannot promise that. Isolation of load: cohort scans and matching are heavy and must never contend
+    with the online decision path clinicians depend on. And governance: a frozen snapshot plus pre-computed
+    tables means the numbers a reviewer audits are exactly the numbers that were served, with no
+    read-time drift. The cost is bounded staleness, which is made explicit through freshness tiers rather than
+    hidden.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What does the cohort builder actually do, step by step?</summary>
+    <p>It runs a tenant-scoped analytical scan over the snapshot for candidate decision events of the relevant
+    types, filtered to those mature enough to have a ninety-day outcome and above the minimum supported payload
+    schema. For each candidate it reconstructs the alignment, rationale, actor, and policy version as of the
+    decision timestamp from the spine, keeps only the overrides, and anchors one decision per treatment episode
+    to avoid counting restarts multiple times. It then computes pre-treatment covariates as of the decision,
+    attaches the outcome label through the shared outcome library, and writes a cohort table partitioned by
+    tenant and snapshot hash, with every row carrying its as-of stamps and source sequence numbers.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why DuckDB and Parquet rather than querying the graph directly for the cohort?</summary>
+    <p>Cohort construction is a vectorized set operation over columns — scan, filter, join, group — which a
+    columnar engine does in one pass, whereas per-row graph traversals would issue thousands of point lookups
+    per refresh and put analytics load on the online graph. Parquet also gives content-addressable, partitioned
+    artifacts that carry a manifest hash, so a cohort is a fixed, reproducible object rather than the result of
+    a live traversal that could differ between runs. The rule the design enforces is blunt: no per-row Gremlin
+    on the analytics path — everything reads the snapshot or the spine.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Where do the served numbers come from at request time?</summary>
+    <p>From pre-computed metric tables. By the time a dashboard asks for override analytics, the balance gates
+    have run, the confidence intervals are computed, and the cells are written to columnar files keyed by
+    tenant and snapshot. The request path resolves the viewer's role, writes an audit entry, builds a canonical
+    cache key, and reads the matching cells — it never recomputes a bootstrap or a match at request time, which
+    is what keeps latency predictable and the served numbers identical to the audited ones.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> A nightly snapshot means numbers can be up to a day stale. Why is that acceptable for clinical analytics?</summary>
+    <p>Because this is a retrospective analytics surface, not a bedside alert: it answers "over the mature
+    ninety-day cohort, how did overrides on this protocol compare?" — a question whose answer does not
+    meaningfully move within a day. The design still refuses to hide the staleness: under 24 hours serves
+    normally, 24–48 hours serves with a visible banner, and past 48 hours the service blocks and escalates
+    rather than serve quietly outdated statistics. And any upstream correction triggers a targeted rebuild of
+    just the affected slices within a five-minute P95, so material changes propagate far faster than the
+    nightly cycle.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How does the matcher fit into the build path, and what does it emit?</summary>
+    <p>It sits between the labelled cohort and the aggregation step: given the overridden decisions and a pool
+    of eligible non-overridden candidates, it pairs each override with its nearest pre-treatment neighbour
+    inside a caliper, seeded from the snapshot manifest and without replacement. Beyond the matched control
+    rows, it emits a <code>match_manifest_id</code> — a hash over the covariate schema, snapshot manifest,
+    cohort filters, caliper, replacement policy, seed, and tie-break rule. That manifest is the contract that
+    lets a sibling cohort query reuse the exact same control arm, or rebuild it identically, instead of
+    silently producing a slightly different one.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is the decision graph in the architecture at all if it is never queried at analytics time?</summary>
+    <p>The graph is the projection target that the nightly snapshot is exported from, and it serves the online
+    decision experience; the analytics pipeline consumes a frozen export of it, not the live database. Keeping
+    it on the diagram but off the request path is deliberate — it marks the graph as a deliberate absence for
+    this query, so no one mistakes a convenient live traversal for a supported access pattern. The source of
+    truth for reconstruction is the append-only spine, and the snapshot is a derived, reproducible view of the
+    graph at a pinned moment.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> What breaks if someone adds a per-row graph call to "enrich" the cohort?</summary>
+    <p>Reproducibility and isolation both break. A live traversal reads current graph state, which can differ
+    from the pinned snapshot and can reflect edits made after the decision — reintroducing exactly the as-of
+    leakage the design forbids — and it makes the cohort non-deterministic, so the golden replay test can no
+    longer prove two builds produce identical parquet. It also puts analytics load on the online graph. The
+    prohibition on per-row graph calls is a design invariant precisely because a single well-meaning enrichment
+    call quietly voids the correctness and determinism guarantees the rest of the pipeline depends on.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 3 ================= -->
+<section class="theme" id="t3">
+  <div class="stage"><b>03</b> As-of correctness and future leakage</div>
+  <p class="lead">Reconstructing what was true at the moment of the decision — not what is true now.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is "as-of reconstruction," and why does this query need it?</summary>
+    <p>As-of reconstruction rebuilds a decision's facts from the append-only spine using only events at or
+    before the decision timestamp, rather than reading the current graph. This query needs it because every
+    input — the alignment flag, the rationale, the acting actor, the constraining policy version, and the
+    matching covariates — can be edited after the fact, and using a later value would leak the future into a
+    historical comparison. Without it, an override could be scored against a covariate the patient only
+    acquired weeks later, or attributed to a policy version that did not exist when they deviated.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Policy text changes mid-window. How do you avoid attributing an override to the wrong policy version?</summary>
+    <p>Overrides are referenced to an immutable, versioned policy, not to a mutable policy id. The builder
+    reconstructs the constraining-policy edge and its <code>policy_version_id</code> plus a
+    <code>policy_text_hash</code> as of the decision, so an override is bound to the exact protocol text that
+    was in force when the clinician deviated. Grouping and comparison then happen by policy version, which is
+    also why the downstream policy-friction query can trust that two pipelines are talking about the same
+    protocol. If policies were keyed by mutable id, a mid-window edit would silently pool overrides against two
+    different texts into one cell.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Which Decision fields are reconstructed from the spine rather than read from current state?</summary>
+    <p>The alignment flag, the free-text rationale, the "made by" actor edge, the "constrained by" policy edge,
+    and the policy version and text hash — plus the pre-treatment covariates used for matching. Each is rebuilt
+    from spine creation events at the decision's source sequence number, and the row persists the sequence and
+    an as-of timestamp for every field. Reading any of these from the current graph is explicitly forbidden,
+    because all of them are mutable after the decision.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If you read a covariate "as of the decision," how do you prove the value wasn't back-edited afterward?</summary>
+    <p>Because the reconstruction reads the spine's append-only creation events, not the current property, and
+    it selects the latest valid observation whose event time is at or before the decision — a later correction
+    is a new event with a later sequence number and is simply not in scope for that as-of read. Every emitted
+    row records the <code>source_event_seq</code> and <code>feature_as_of_ts</code> it used, so on replay you
+    can point at the exact event that produced each value. A back-edit does not overwrite history on an
+    append-only spine; it appends, and the as-of read deterministically ignores anything after the cutoff.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the leakage risk in the matching covariates, and how is it prevented?</summary>
+    <p>Two distinct risks. Temporal leakage: matching on a value observed after the decision — a later lab, a
+    later program state — imports the future; the fix is that every covariate is reconstructed strictly as of
+    the decision timestamp. Endogeneity leakage: matching on something caused by the patient being
+    override-eligible in the first place — a recent-escalation count, a prior protocol-exception flag — bakes
+    the treatment into the "control," collapsing the comparison; the fix is that the covariate set is
+    pre-registered as pre-treatment only, and endogenous fields are deliberately excluded. Both are audited as
+    part of the review, not left to the featurizer's discretion.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why persist a feature-as-of timestamp and a source sequence on every row?</summary>
+    <p>So feature freshness is auditable on replay rather than assumed. When a regulator or a reviewer asks "how
+    was this override's baseline HbA1c determined?", the row names the exact event and the exact time basis it
+    used. It also makes correction handling precise: a correction event carries a sequence range, and only rows
+    whose recorded source sequences overlap it are rebuilt. Without those stamps, freshness and correction
+    scope would both be guesswork.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> A late-arriving observation with an event time before the decision could legitimately change the as-of value. How is that handled?</summary>
+    <p>That is exactly why the two time axes are kept separate: an observation carries both when it happened
+    (event time) and when the system learned of it, and the as-of read is by event time, so a legitimately
+    earlier-but-late-arriving observation does update the reconstructed value. The snapshot manifest carries an
+    allowed-lateness watermark so the build knows how long to wait for stragglers, and when a late arrival lands
+    after a cohort is built it is treated as a correction: the dependent slices are rebuilt within the
+    five-minute P95. The design does not assume events arrive in order; it assumes only that event time and
+    sequence are recorded.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is reading current graph properties on a historical decision explicitly forbidden?</summary>
+    <p>Because a current property read on a historical decision can silently return a value edited after the
+    decision — a rationale that was amended, a policy edge that was re-pointed, a confidence that was revised —
+    and there is no signal at read time that it happened. The prohibition is categorical rather than
+    case-by-case because "this particular edge is probably immutable" is the kind of assumption that quietly
+    rots; requiring spine reconstruction for every Decision-tied field or edge makes the correctness property
+    hold by construction. It is the difference between hoping nothing was edited and proving the read used only
+    pre-decision events.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the single worst as-of mistake this design is built to prevent?</summary>
+    <p>Scoring an override with information that only existed after the clinician deviated — most dangerously,
+    an outcome-adjacent covariate — which would make overrides on patients who later deteriorated look
+    systematically different for reasons that had nothing to do with the override. That single mistake would
+    bias the entire comparison and would be invisible in the output. As-of reconstruction, the pre-treatment
+    covariate rule, and the persisted as-of stamps exist first and foremost to make that class of error
+    impossible to commit silently.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 4 ================= -->
+<section class="theme" id="t4">
+  <div class="stage"><b>04</b> Tenancy and isolation</div>
+  <p class="lead">A three-field tenant scope enforced at partition, at serve, and in the cache key.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the tenant scope for this query?</summary>
+    <p>Three fields — <code>account_id</code>, <code>workspace_id</code>, and <code>controlunit_id</code> —
+    resolved from the caller's authenticated token, never from a client-supplied parameter. Every cohort row,
+    metric cell, cache key, and served response is scoped to that triple. Isolation here is a three-field
+    predicate, not a single-field account check, because the platform's tenancy model nests workspaces and
+    control units within an account.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is tenant isolation enforced end to end for this query today?</summary>
+    <p>Three layers in series. The candidate scan filters on the full tenant triple before any rows are loaded;
+    the derived cohort, matched-control, and metric parquet are physically partitioned by that triple plus the
+    snapshot hash; and a runtime assertion fails closed if any served cell's tenant fields do not equal the
+    caller's. The cache key also carries the triple, so a cached cell for one tenant can never be returned to
+    another. Defense in depth is intentional — no single predicate is trusted to be the only thing standing
+    between two tenants.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> A single forgotten predicate leaks cross-tenant rows into a snapshot forever. What actually stops that?</summary>
+    <p>Two things beyond the query author's discipline. First, physical partitioning by the tenant triple means
+    a scan that names the caller's partition cannot see another tenant's rows even if a WHERE clause is
+    fumbled. Second, the fail-closed runtime assertion re-checks every served row against the caller's tenant,
+    so a leak that slipped through the scan surfaces as a paging incident rather than a silent disclosure. The
+    honest limit is that per-query discipline is fragile, which is why the design named a shared
+    tenant-injecting access wrapper as a platform dependency rather than assuming it — it has since landed, and the
+    query now binds to it, removing the discipline from every author's hands.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why partition the cohort by tenant AND assert tenant at serve time — isn't one enough?</summary>
+    <p>They fail differently, so both are kept. Partitioning is a build-time property: it prevents a scan from
+    reading across tenants and keeps the artifacts physically separated on disk. The runtime assertion is a
+    serve-time property: it catches a mistake anywhere downstream — a mis-keyed cache entry, a join that pulled
+    an unpartitioned column, a bug in the API layer — before a byte reaches the caller. Belt-and-braces here is
+    cheap and the failure it guards against is catastrophic and irreversible, so the redundancy is warranted.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the runtime tenant assertion, and when does it fire?</summary>
+    <p>It is a fail-closed check that every row in a served response — and every row written by the builder —
+    carries the caller's exact account, workspace, and control unit. It fires at write time in the cohort
+    builder and again at serve time after the cache returns, so even a cached answer is re-checked for the
+    current caller rather than trusted because it was served once before. A mismatch is not degraded around; it
+    pages, because a cross-tenant row is an incident, not a metric.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> The design once said it "awaits a shared access wrapper." Now that it has landed, what was the exposure until then?</summary>
+    <p>The per-query controls are in place and enforced inline: tenant-scoped scans, partitioned artifacts, and
+    the fail-closed assertion all ship with the query. The <em>shared</em> wrapper that injects the tenant
+    predicate automatically on every access — so no future author can forget it — has since landed at the
+    platform layer, and the query now binds to it. Before it landed, isolation for this query rested on the
+    inline predicate plus the runtime assertion — strong, but dependent on each new code path repeating the
+    pattern, which is precisely the fragility the shared wrapper was meant to remove. It was named as a
+    platform dependency rather than quietly assumed solved.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why must the cache key carry the full three-field tenant scope?</summary>
+    <p>Because a cache is a place where a cell computed for one caller can be handed to another, and dropping any
+    tenant field from the key is how a cross-tenant hit happens. The canonical key is built from sorted JSON
+    over the full triple plus the query shape and freshness pins, so two different tenants can never collide on
+    the same key. A cache keyed on the metric-table version alone — the exact bug this design was reviewed to
+    avoid — would silently serve one tenant's cells to another on a hit.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What happens on a cross-tenant assertion failure?</summary>
+    <p>It pages. A returned row lacking the caller's tenant triple, or a parquet partition that does not match
+    the requested scope, is treated as an isolation breach and escalated immediately rather than logged and
+    served. This is deliberately not a soft-fail: there is no "return what we can" path, because a single
+    cross-tenant cell in a healthcare context is a disclosure, not a degraded result.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 5 ================= -->
+<section class="theme" id="t5">
+  <div class="stage"><b>05</b> The core mechanism · propensity matching</div>
+  <p class="lead">Pairing each override with its closest comparable non-override — and being honest about the ones with no match.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Why propensity matching rather than a raw override-versus-rest comparison?</summary>
+    <p>Because the two groups are not comparable to begin with — overrides happen on atypical patients — so a
+    raw comparison measures the difference between populations, not the effect of overriding. Matching pairs
+    each override with a non-overridden decision that looks alike on pre-treatment covariates, so the outcome
+    delta contrasts similar patients rather than dissimilar ones. It does not manufacture causality, but it
+    removes the crudest confounding on the covariates that were measured, which is the minimum bar for the
+    comparison to be worth showing.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What are the matcher's pinned parameters, and why are they pinned?</summary>
+    <p>The version, the seed (derived from the snapshot manifest), the base caliper, a without-replacement
+    policy, a deterministic tie-break, and the covariate schema hash are all fixed and recorded. They are
+    pinned because matching is the step most prone to silent drift: change the seed and you get different
+    pairs, change the caliper and you get a different cohort, and either change moves the confidence interval.
+    Pinning them and hashing them into the match manifest is what makes a matched cohort a reproducible object
+    that two pipelines can agree on rather than a fresh guess each night.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is the control pool constrained — what makes a decision eligible to be a control?</summary>
+    <p>A candidate control must be a non-overridden decision of the same archetype, in the same policy family,
+    at the same program phase, within the same tenant, and it must be comparable only on pre-treatment
+    covariates. Same policy family matters most: comparing an override of one protocol against a followed
+    decision on an unrelated protocol would confound the policy with the override. The eligibility rules are
+    part of the cohort-filter hash in the match manifest, so the definition of "eligible control" is itself
+    pinned and reproducible.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Matching on baseline HbA1c is fine; matching on "recent escalation count" is not. How do you keep endogenous covariates out?</summary>
+    <p>By pre-registering the covariate list as pre-treatment only and auditing it explicitly during review —
+    endogeneity is the first critical question the design is examined against. A covariate that was itself
+    caused by the patient being override-eligible — a recent escalation count, a prior protocol-exception flag
+    — encodes the treatment into the control and biases the comparison toward null, so those fields are
+    excluded by policy, not by the featurizer's judgment. The measured set is age, BMI, country, program, phase,
+    baseline HbA1c, prior adherence, and tenure — all fixed before the decision — and the covariate schema hash
+    pins that choice so it cannot drift unaudited.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why same-policy-family controls only, rather than any non-overridden decision?</summary>
+    <p>Because the question is "did overriding <em>this</em> protocol help?", and a control drawn from an
+    unrelated protocol would confound the effect of the override with the effect of being on a different
+    protocol entirely. Restricting controls to the same policy family holds the protocol context roughly fixed,
+    so the contrast is override-versus-followed within a comparable clinical situation. The cost is a smaller
+    control pool per cell, which is one more reason the query needs deep history to clear the power floor.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the match manifest, and what problem does it solve across sibling queries?</summary>
+    <p>It is a hash over everything that determines the matched cohort — covariate schema, snapshot manifest,
+    cohort filters, caliper, replacement policy, seed, and tie-break rule — committed to disk alongside the
+    matched controls. The downstream policy-friction query is supposed to reuse this cohort's matches; the
+    manifest is what makes "reuse" verifiable: it may reuse the controls verbatim only when every manifest
+    field matches, and otherwise must rebuild with the same binary. Without it, two queries copy-pasting their
+    own matchers would drift into divergent cohorts and divergent intervals, and the reuse claim would be
+    unfalsifiable.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> A downstream query "reuses this query's matches." How do you guarantee it gets the identical cohort and not a silently divergent one?</summary>
+    <p>The guarantee is the manifest-equality check plus a shared binary. The downstream query compares every
+    field of the match manifest — covariate schema hash, snapshot hash, cohort-filter hash, caliper,
+    replacement, seed, tie-break — and reuses the controls only on an exact match; any mismatch forces a full
+    rebuild with the same matcher binary rather than a partial or fresh-fallback patch. A cross-query parity
+    fixture in the golden suite asserts both pipelines produce the identical matched cohort, and it exists
+    because a real sign-flip between two pipeline versions was caught during review. The honest caveat is that
+    this equality holds only once one shared matcher binary is the platform component both queries call.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why k=1 without replacement, rather than k-nearest or with-replacement matching?</summary>
+    <p>One-to-one without replacement gives each override a single, distinct comparator and keeps the control
+    arm a set of real, non-reused patients, which makes the enrollment-clustered bootstrap and the balance
+    accounting straightforward to reason about and to audit. With-replacement matching reuses good controls and
+    complicates the variance estimate; larger k trades bias for the risk of pulling in less-similar neighbours.
+    The design favors the interpretable, auditable choice and instead spends its robustness budget on the
+    caliper sensitivity sweep, where the trade is made explicit rather than buried in the estimator.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Propensity matching only balances measured covariates. Doesn't that make every emitted delta potentially confounded?</summary>
+    <p>Yes, and the design states it rather than hiding it: matching balances only the covariates that were
+    measured, so unmeasured confounding is never ruled out, and every surface is tagged observational for
+    exactly this reason. What matching buys is the removal of confounding on the measured, pre-registered set —
+    a real improvement over the raw comparison — and the balance gate refuses to headline a cell where even
+    that measured balance is not achieved. The delta is honest about being an association within matched
+    strata, not a causal effect; the selling language never uses causal verbs.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How are unmatched treated rows handled — dropped, or accounted for?</summary>
+    <p>An override with no control inside the caliper is excluded from the estimate but counted: every cell
+    reports an <code>n_unmatched</code>. Silently dropping unmatchable overrides would bias the comparison
+    toward the easy-to-match cases and make overrides look more routine than they are, so the denominator is
+    kept honest by surfacing exactly who the estimate could and could not speak for. If unmatched rates climb,
+    that itself is a signal that the cell's comparison is on thin support.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the tie-break policy in matching, and why does it matter for reproducibility?</summary>
+    <p>When two candidate controls are equidistant from an override, the matcher breaks the tie by a canonical
+    decision id rather than by whatever order the rows happened to arrive. Without a deterministic tie-break,
+    two runs over the same data could pick different controls purely from row ordering, producing different
+    cohorts and different intervals — and the golden replay test would fail for no real reason. The tie-break
+    rule is part of the match manifest, so it is pinned and its effect is reproducible.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 6 ================= -->
+<section class="theme" id="t6">
+  <div class="stage"><b>06</b> Statistics, gates and suppression</div>
+  <p class="lead">A gate ladder in code: balance, stability, power, uncertainty — and a schema that refuses a gate-failing number.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the SMD gate, and what does failing it do?</summary>
+    <p>The standardised mean difference measures how far apart the two arms are on each pre-registered covariate;
+    the gate requires every covariate's SMD to sit at or under 0.1 before a cell may show a headline number. If
+    any covariate exceeds the threshold, or common support is poor, the cell is tagged unmatched, its headline
+    is suppressed, and it is routed to descriptive counts only. It is the balance check that decides whether the
+    two arms are comparable enough to compare at all.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is the balance gate applied per cell, before any headline number is shown?</summary>
+    <p>Because balance is a property of a specific policy-by-cohort slice, not of the pipeline as a whole — a
+    matcher can produce well-balanced arms for one protocol and poorly balanced arms for another with a thin
+    control pool. Checking per cell, before emission, means a poorly matched slice never gets a headline delta
+    at all; it degrades to descriptive-only with its reason recorded. Applying it globally would let a
+    well-behaved average hide a handful of badly confounded cells, which are exactly the ones a reader would
+    over-interpret.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the sensitivity sweep across calipers, and how is it different from the SMD gate?</summary>
+    <p>The SMD gate asks "are the matched arms balanced?"; the sensitivity sweep asks "is the finding an
+    artifact of the matching radius?" Each comparison is recomputed at a strict, a base, and a loose caliper,
+    and if the sign of the delta flips or the interval moves materially across them, the cell is marked
+    unstable and its headline and any recommendation are withheld. It is a robustness check on the match itself,
+    distinct from and additional to the balance gate — a cell can be perfectly balanced at the base caliper yet
+    fall apart when the radius changes, and that fragility is worth surfacing.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If a finding is stable across calipers, does that make it causal?</summary>
+    <p>No. Caliper stability shows the finding is not an artifact of one arbitrary matching radius; it says
+    nothing about confounders you never measured. A delta can be balanced on every measured covariate and
+    stable across every caliper and still be driven entirely by an unmeasured factor that co-varies with
+    overriding. Stability raises confidence that the observational estimate is not a matching artifact — it
+    does not promote an association to a cause, and the surface keeps saying observational regardless of how
+    many robustness checks it passes.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why a minimum of thirty patients in each arm, and what is emitted below the floor?</summary>
+    <p>Below roughly thirty per arm, bootstrap intervals are wide and unstable and a handful of cases can swing a
+    rate, so a small cell manufactures false precision — the second of the three ways a naive dashboard misleads.
+    When either arm falls below the floor, the cell emits an explicit "insufficient data" with its full
+    denominator breakdown rather than a headline number. The user sees that the question was asked and why it
+    could not be answered, instead of a confident figure built on a dozen patients or a silent gap.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How are the confidence intervals computed, and why cluster by enrollment?</summary>
+    <p>Through a shared bootstrap library, fixed at 2000 resamples, seeded from the snapshot manifest, percentile
+    intervals by default, with the resampling unit being the enrollment rather than the row. Clustering by
+    enrollment matters because a single patient's enrollment can contribute multiple correlated decisions;
+    resampling rows independently would treat those as independent observations and understate the interval.
+    Clustered resampling produces an honest width, and seeding from the snapshot hash makes that width
+    reproducible byte-for-byte.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Bootstrap CIs on observational deltas can look precise and still be biased. What stops a decision-maker from over-reading them?</summary>
+    <p>Nothing about a confidence interval can fix bias — it quantifies sampling uncertainty, not confounding —
+    and the design does not pretend otherwise. The counter-measures are contextual: every cell ships with its
+    balance status, its sensitivity status, its censoring counts, and its unmatched count, and every surface
+    carries the observational tag, so the interval is never presented as the whole story. The evaluation is
+    also built around gate-check precision, meaning the intervals only appear on cells that already cleared
+    balance, stability, and power — the interval is the last rung, not the first.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the gate ladder, and why is it modeled as code rather than a checklist?</summary>
+    <p>The ladder is four rungs — balance, then caliper stability, then power, then a seeded bootstrap interval —
+    and every rung has an explicit exit that produces a suppressed cell with a stated reason and full
+    denominators. It is code, not a checklist, because a checklist is advisory and drifts; seeded, replayable
+    code applies the same reasoning every run and can be tested against known ground truth. The point is that
+    the "chain of thought" behind a shown number is deterministic and auditable, not a human remembering to
+    check four things.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How does the type system make a gate-failing number unrepresentable?</summary>
+    <p>The output schema's validator raises an exception if an outcome delta is attached to a cell whose gates
+    did not pass — a cell carrying a headline with failed balance, instability, or under-power simply cannot be
+    constructed. That converts a statistical policy into a compile-time-style guarantee: it is not that showing
+    a bad number is discouraged, it is that the type refuses to hold one. The value is durability — the
+    guarantee survives future refactors and new call sites, because the invalid state has no representation for
+    anyone to accidentally reach.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Suppression hides findings. How do you keep it from being used to bury inconvenient results?</summary>
+    <p>Suppression here is never a silent drop: a suppressed cell still renders, with its reason
+    (unmatched, unstable, or insufficient data) and its full denominators, so an absent headline is visible and
+    accountable rather than a gap. The suppression rules are deterministic and pre-registered — they key off
+    balance, caliper stability, and the sample floor, not off whether the result is convenient — and the golden
+    regression pins which cells suppress and why. Someone wanting to bury a result cannot do it by tuning a
+    threshold at request time, because the thresholds are fixed in the seeded build and the decision is
+    recorded on the cell.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What does a suppressed cell actually show the user?</summary>
+    <p>It shows the reason for suppression and the raw counts behind it — references, overrides, and the
+    censoring and unmatched breakdown — but not the headline outcome delta or any actor or policy
+    recommendation. For an unstable cell it may show raw rates with no delta; for an under-powered cell it says
+    "insufficient data" with denominators. The user always learns that the question was asked and why it could
+    not be answered confidently, which is a very different experience from a blank or a fabricated number.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 7 ================= -->
+<section class="theme" id="t7">
+  <div class="stage"><b>07</b> Caching, determinism and versioning</div>
+  <p class="lead">Canonical keys, pinned seeds, and a replay test that makes two builds byte-for-byte identical.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What goes into the canonical metric-cache key?</summary>
+    <p>Canonical sorted JSON over the tenant triple, the query namespace, the split and filter shape, the metric
+    schema hash, the snapshot manifest hash, the match manifest id, the matcher binary version, the statistical-plan
+    version, the maximum source event sequence, and a correction epoch. Every result-affecting input is in the key,
+    so a change to any of them yields a different key rather than a stale hit. Building the key from sorted JSON
+    avoids the subtle bug where two logically identical requests hash differently because their fields were ordered
+    differently.</p>
+    <p>The last three deserve their own line. The match manifest id pins <em>which</em> control arm the cells were
+    computed against; the matcher binary version pins the code that built it, because the manifest hashes the
+    matcher's inputs and not the matcher itself; and the statistical-plan version pins the bootstrap and gate
+    configuration applied afterwards. Omit any one of them and a cached delta can outlive the cohort it describes.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why does the key include a correction epoch and a snapshot manifest hash?</summary>
+    <p>The snapshot hash pins which point-in-time state the cells were built from, so a new snapshot cannot
+    serve under an old key. The correction epoch is bumped when an upstream correction rebuilds affected slices,
+    so a cell invalidated by a correction is no longer reachable through the old key even within the same
+    snapshot. Together they make freshness a property of the key, not of a TTL — the cache cannot serve a cell
+    that a newer snapshot or a landed correction has superseded.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> TTL caches are simpler. Why not just expire metric results after an hour?</summary>
+    <p>Because a TTL answers "how old is this entry?" and this query needs "is this entry still correct?" —
+    different questions. Within an hour a correction can land that flips a cell, and a TTL would keep serving the
+    stale value until it happened to expire; conversely, a stable cell would be needlessly recomputed on
+    expiry. Freshness by content — snapshot hash plus correction epoch plus source sequence — invalidates
+    exactly the cells that changed and keeps the rest, which is both safer and cheaper than time-based
+    expiry.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is the whole pipeline made byte-for-byte reproducible on replay?</summary>
+    <p>Every stage is pinned to content, not to wall-clock or arrival order: the snapshot export is deterministic
+    under shuffled spine order, the matcher is seeded from the snapshot hash with a canonical tie-break, and the
+    bootstrap is seeded the same way. Each derived artifact carries its manifest and schema hashes, and the
+    golden regression asserts that re-running the build over the same inputs produces identical parquet. The net
+    effect is that any served number can be regenerated exactly and any two builds of the same as-of state
+    agree.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the deterministic exporter, and why is it a platform-level dependency?</summary>
+    <p>It is the component that turns a moment in the spine into a snapshot whose parquet hash is identical no
+    matter what order events were replayed, including late arrivals, corrections, and supersede chains. It is
+    platform-level because every snapshot-backed query depends on it — if the same as-of moment could yield
+    two different snapshots, every downstream cohort and interval would be silently non-reproducible. This
+    query names it as a dependency rather than re-implementing export determinism per pipeline.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Two replays of the same as-of moment could produce different parquet hashes if ordering isn't pinned. Where exactly is order pinned?</summary>
+    <p>At three places. The exporter resolves point-in-time state deterministically regardless of the spine
+    replay order, so shuffled ingestion produces one canonical snapshot. Any as-of reconstruction sorts by
+    event time and source sequence, never by write order, so the bulk load can write years in whatever shard
+    order is fastest without affecting the result. And the matcher's canonical tie-break removes the last
+    source of order-dependence when two controls are equidistant. The golden replay fixture — same as-of moment,
+    shuffled spine, late arrivals, corrections, supersede chains — asserts identical hashes precisely to catch
+    any ordering leak.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is the matcher made deterministic across runs?</summary>
+    <p>Its seed is derived from the snapshot manifest hash, so the same snapshot always seeds the same
+    pseudo-random draws; its replacement policy and caliper are fixed; and equidistant candidates are resolved
+    by a canonical decision id rather than by arrival order. Because all of these are hashed into the match
+    manifest, "deterministic" is not a hope but a checkable property — a rebuild with the same manifest fields
+    must produce the same pairs. This is also what lets a sibling query trust a reused cohort.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why seed the bootstrap from the snapshot manifest hash rather than a fixed constant?</summary>
+    <p>A fixed constant would make every snapshot's resamples identical in their random structure, which sounds
+    reproducible but couples unrelated snapshots and hides seed-related fragility. Seeding from the snapshot
+    hash ties the resampling to the exact data it ran on, so the same snapshot always reproduces the same
+    interval while different snapshots get independent draws. It keeps reproducibility per snapshot without
+    pretending two different datasets should share a random seed.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If everything is cached and pinned, how does a legitimate upstream correction ever reach the dashboard?</summary>
+    <p>Through the correction listener, which is the deliberate escape hatch from the pinning. A spine correction
+    carries a source-sequence range; the listener maps that range to the derived slices whose recorded sequence
+    ranges overlap it, rebuilds just those, and bumps the correction epoch so the old cache keys no longer
+    resolve. The freshness is targeted — only the touched cells rebuild, at a five-minute P95 — so pinning does
+    not trap stale data; it holds everything stable until a correction explicitly moves the affected slices.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 8 ================= -->
+<section class="theme" id="t8">
+  <div class="stage"><b>08</b> Historical hydration · what it buys this query</div>
+  <p class="lead">Roughly nine years of overrides replayed into the spine — the difference between "insufficient data" and an estimate.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What does roughly nine years of hydrated history buy this query specifically?</summary>
+    <p>Statistical power at the cell level. Propensity matching needs each policy version to have accumulated
+    enough overridden decisions — and enough comparable non-overridden controls — to draw balanced pairs from,
+    and a per-cell arm has to clear the thirty-patient floor. Nine years of replayed overrides, rationales, and
+    outcomes is what turns most policy-by-cohort cells from "insufficient data" into estimable comparisons; a
+    cold system would suppress almost everywhere for want of matchable support.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why does propensity matching in particular depend on deep history?</summary>
+    <p>Matching within a caliper only succeeds when a similar-enough control exists in the pool, and it restricts
+    controls to the same policy family and program phase, which shrinks the pool further. With little history,
+    many overrides have no control inside the caliper — they become unmatched, the arm falls under the power
+    floor, and the cell suppresses. Depth of history is what populates the control pool densely enough that a
+    nearest neighbour usually falls inside the caliper at an acceptable SMD, which is the precondition for the
+    comparison to exist at all.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If you replay nine years of events on load day, don't they all look like they happened at once?</summary>
+    <p>They would if event time and ingestion time were collapsed, which is exactly the failure the hydration
+    guards against. Each legacy record keeps the moment the decision actually happened, with separate fields for
+    when the system learned of it, and every as-of reconstruction reads by event time. The hydration watermark
+    also runs in a mode where a nine-year spread of late-arriving data is normal rather than the small
+    live-mode tolerance that would drop almost all of it. Collapse the two and every as-of reconstruction of
+    what a clinician knew when they deviated would be void.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How are old payloads with different schema versions handled in the cohort?</summary>
+    <p>Nine years means many payload-schema versions, so each gets an explicit upconverter and every candidate is
+    filtered to be at or above a minimum supported schema before it enters the cohort. A row that cannot be
+    mapped to a schema — or to a tenant — is quarantined and counted, never silently defaulted, because a
+    defaulted field is how a mis-typed override or a cross-tenant row slips into the comparison. The
+    reconstruction reads the payload version stamped on each event, so it always interprets a field the way
+    that event's schema meant it.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why filter on payload schema version in the candidate query?</summary>
+    <p>Because a field like the alignment flag or the rationale structure may not have existed, or may have meant
+    something different, in the earliest schema versions, and reading it under today's assumptions would
+    misclassify old decisions. Filtering to a minimum supported schema ensures the fields the query depends on
+    are present and comparably defined across the cohort. It is the difference between a defensible cohort and
+    one silently contaminated by decisions whose payloads predate the concept of a recorded override.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Older overrides used policies that no longer exist. How can they sit in the same cohort as current ones?</summary>
+    <p>They are keyed to the immutable policy <em>version</em> in force when they happened, not to a current
+    policy id, so a retired protocol is a distinct, still-referenceable version rather than a dangling
+    reference. Comparison and grouping happen by policy version, and controls are drawn from the same policy
+    family, so an old override is compared against contemporaneous followed decisions on that same version, not
+    against today's protocol. The history is not flattened onto the current policy set; each decision keeps its
+    own as-of policy context.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What would this query look like without the hydrated history — where does it degrade?</summary>
+    <p>It would still run, but most cells would suppress: thin arms would fail the thirty-patient floor,
+    unmatched rates would climb because control pools would be sparse, and the surviving cells would carry wide
+    intervals. The governance and gate machinery would all function correctly — they would just have very little
+    to say. The degradation is graceful and honest rather than silent: the dashboard would show "insufficient
+    data" widely instead of confident numbers on tiny cohorts, which is the correct behavior, merely a less
+    useful one.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Does more history make the numbers more trustworthy, or just larger?</summary>
+    <p>Both, but for different reasons. More history widens the control pool and lifts arms over the power floor,
+    which narrows intervals and lets more cells clear the gates — that is real added trustworthiness for the
+    measured comparison. It does not touch unmeasured confounding, so it cannot make an observational delta
+    causal; a bigger cohort estimates the same possibly-confounded quantity more precisely. History buys power,
+    not identification.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 9 ================= -->
+<section class="theme" id="t9">
+  <div class="stage"><b>09</b> Governance, PHI and the LLM boundary</div>
+  <p class="lead">Audit-first access, pseudonymous actors, never-rankable ordering — and a language model kept off every number.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the access model for the actor-level breakdown?</summary>
+    <p>Actor-level override data is need-to-know: by default only clinical leadership sees the full breakdown,
+    and an individual clinician sees only their own row. The viewer's role is resolved from the authenticated
+    token, never from the client, and any other caller is denied the actor breakdown and served the policy view
+    only. Every actor-level request writes an audit entry before it is served. These are enforced mitigations
+    that make misuse hard and visible, not a promise that the data can never be read as a ranking.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is the audit entry written before the data is served, not after?</summary>
+    <p>Because a log written after serving can be skipped by any path that errors mid-response, which would
+    disclose actor-level data with no record it was ever seen. Writing the audit entry first — viewer, target,
+    purpose, and time, with the access-log id returned in the response — makes the access trail complete by
+    construction rather than best-effort. The ordering is the whole point: the record exists before the
+    disclosure can, so there is no window in which someone is shown a clinician's data untracked.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why are actor IDs pseudonymous by default, and when is re-identification allowed?</summary>
+    <p>Pseudonymous ids by default mean the routine leadership view shows comparative structure without naming
+    individuals, which keeps casual browsing from becoming casual judgment. Re-identification requires an
+    explicit purpose-of-access drill-in by a leadership viewer, and that drill-in itself writes a separate audit
+    entry. The design makes seeing a real name a deliberate, logged act rather than the default state, so the
+    barrier and the trail both scale with the sensitivity of the request.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is the actor list alphabetically ordered and never rank-sortable?</summary>
+    <p>Because a table sorted by override rate is a leaderboard, and a leaderboard invites the exact scorecard
+    reading the design works to prevent. Fixing the order to alphabetic — and refusing to expose a
+    rate-sortable payload — removes the affordance that turns an observational breakdown into a ranking. It does
+    not stop a determined viewer from sorting a copied spreadsheet, which is why the ordering is one mitigation
+    among several (pseudonymity, RBAC, audit, observational tagging) rather than a standalone guarantee.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Can you guarantee this dashboard never becomes a scorecard?</summary>
+    <p>No, and the design does not claim to. What is actually enforced is a set of mitigations that make misuse
+    hard and visible: pseudonymous actor ids by default, leadership-and-self-view access, an audit entry written
+    before any actor row is served, alphabetic never-rankable ordering, and an observational tag on every
+    surface. A leader with legitimate access could still read a balanced table as a ranking — the controls raise
+    the cost and the traceability of that misuse, and they log it, but they cannot make a human interpretation
+    impossible. Honesty about that boundary is part of the governance, not a gap in it.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Where is the LLM in this system, and what is it forbidden to do?</summary>
+    <p>There is exactly one language-model call, and it is an optional, post-hoc explainer: after a cell has
+    passed every gate, the model is handed the finished numbers and asked to restate them in neutral,
+    observational wording. It is forbidden to compute, re-rank, conclude, or reach for any fact outside the cell
+    it was handed. Statistics, gating, suppression, ordering, and access control are all deterministic code —
+    this is the portfolio's clearest case of knowing when not to use a language model.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If the explainer narrates the numbers, how do you stop it from inventing or misstating one?</summary>
+    <p>Two ways. First, the claims never live in the generated text: the neutrality rules and the substantive
+    statements ship as deterministic UI copy backed by the typed cell, and the explainer is additive colour, so
+    a hallucinated figure has no authority even if it appears. Second, evaluation includes a faithfulness check
+    — quoted numbers must match the cell and the prose must carry no verdict language. Because the model is
+    handed one already-computed cell and asked only to restate it, there is no corpus to pull a wrong number
+    from; the numbers were authoritative before the call and remain the sole authority after.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is PHI kept safe when the explainer runs?</summary>
+    <p>The production path is single and explicit: the explainer runs on a self-hosted model inside the VPC, so
+    patient data never leaves the network. It also happens that the explainer is handed only the finished
+    numbers — delta, interval, arm sizes, balance status — and never the reconstructed rationale free-text or
+    any clinical identifiers, so its input is essentially de-identified even before the in-VPC boundary. If an
+    external provider were ever used it would be permitted only with a de-identified payload; a contractual
+    no-retention agreement is not a substitute for network residency, and the two are not treated as
+    equivalent.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Doesn't temperature-zero make the narration deterministic and therefore auditable?</summary>
+    <p>No — temperature zero does not make a language model's output deterministic. Pinning the model, the prompt,
+    and the temperature, and hashing the input and output, gives you drift detection and reproducible auditing,
+    not generation determinism; the hashes detect drift, they do not prevent it. Determinism in this system
+    lives in the structured cell and the deterministic gate code, not in the narrator, and the faithfulness
+    check re-validates the prose against the cell on every response. That is why the narrative is only ever
+    optional colour and the cell — not the sentence — is the authoritative evidence.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why keep governance rules as deterministic UI copy rather than in the model's prompt?</summary>
+    <p>Because rules in a prompt can drift with a model update and can, in principle, be jailbroken, whereas rules
+    shipped as code plus role-based access cannot. The neutrality framing, the observational tag, and the
+    access branching are all deterministic, so they hold regardless of what the model does or whether it is
+    running at all. There is nothing to jailbreak because the claims never pass through the model — the model
+    only ever narrates a cell it is handed, and losing it loses a sentence of prose, not a control.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 10 ================= -->
+<section class="theme" id="t10">
+  <div class="stage"><b>10</b> Failure modes, degradation and operations</div>
+  <p class="lead">What pages, what degrades gracefully, and what the system does when a gate, a snapshot, or a shared component is missing.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What happens when the snapshot is stale?</summary>
+    <p>Freshness runs in tiers. Under 24 hours old, the service serves normally; between 24 and 48 hours it
+    serves with a visible staleness banner so consumers know the numbers are aging; past 48 hours it blocks
+    serving and escalates rather than quietly return outdated statistics. Projector lag beyond 30 minutes also
+    trips the yellow tier. The behavior is explicit and visible at every stage instead of a silent slow decay.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How does the correction-event listener keep derived tables fresh, and what's the SLA?</summary>
+    <p>Every derived artifact records the source-sequence range and snapshot hash it depends on. When a
+    correction lands on the spine, the listener maps its sequence range to the slices whose recorded ranges
+    overlap it and rebuilds just those — cohort, matched control, and metric cells — then bumps the correction
+    epoch so stale cache keys stop resolving. The target is a P95 under five minutes from correction to fresh
+    tables. The rebuild is dependency-targeted rather than a full nightly recompute, so a single correction does
+    not force the whole cohort to rebuild.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> A correction flips an override's outcome. How fast does the served number change, and what if the rebuild fails?</summary>
+    <p>The listener rebuilds the affected slices within the five-minute P95 and bumps the correction epoch, so
+    the old cell is no longer reachable through its prior cache key and the next read gets the corrected value.
+    If the targeted rebuild fails, the correct posture is to fall closed for those slices rather than keep
+    serving a value known to be superseded — a stale-but-known-wrong cell is worse than a temporarily
+    unavailable one in this domain. The dependency index is what makes that fall-closed precise, touching only
+    the slices the correction actually affects.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What does the system do when a whole cell fails the balance gate?</summary>
+    <p>The cell is tagged unmatched, its headline outcome delta is suppressed, and it is routed to
+    descriptive-only: raw counts and denominators, no comparison. It is not dropped from the response — the
+    reader sees the policy or cohort, its reference and override counts, and the reason the comparison could not
+    be made. That way a badly confounded slice degrades to honest descriptive statistics rather than to either
+    a misleading delta or an unexplained absence.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How does projector lag degrade the service differently from a stale snapshot?</summary>
+    <p>They are different clocks measuring different risks. Snapshot age measures how old the last successful
+    export is; projector lag measures how far the graph projection has fallen behind the spine, which can make
+    even a fresh snapshot miss recent events. The design surfaces both: projector lag beyond its threshold trips
+    the yellow tier independently of snapshot age, because a recent snapshot built off a lagging projection is
+    quietly incomplete. Treating them as one signal would let a fresh-but-incomplete snapshot look healthy.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> The shared components weren't all shipped at first. How did the query run in the meantime, and what was fragile about that?</summary>
+    <p>Where a shared component was not yet live, the query wired its contract against a stub or an inline
+    implementation that returned representative results — the tenant predicate, the outcome labeller, the matcher,
+    the bootstrap, and the actor-access policy all shipped inline in the query while their shared platform
+    versions were pending. The fragility was real and named: inline implementations could drift from the shared
+    contract, and cross-query guarantees like "reuse the same matched cohort" only truly held once one shared
+    binary was what both queries called. Those components have since landed at the platform layer and the query
+    now binds to the shared versions — but landing a component changes its own state, not the review verdict:
+    the design still stands at "ship with changes," not approved.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What pages an operator, versus what degrades silently within tolerance?</summary>
+    <p>Correctness and isolation breaches page: a cross-tenant row or a partition mismatch, a snapshot past the
+    48-hour block threshold, a correction rebuild that cannot complete. Bounded, expected conditions degrade
+    visibly but do not page: a 24–48 hour snapshot serves with a banner, an under-powered or unbalanced cell
+    suppresses with a reason, the explainer being down drops a sentence. The dividing line is whether the
+    condition could mislead or disclose — those page — versus merely reduce coverage, which is surfaced and
+    tolerated.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How do you detect that matched-cohort quality is drifting over time?</summary>
+    <p>Through the observability the review called for: the per-refresh distribution of covariate SMDs, the
+    unmatched rate per policy, and the share of cells that suppress for balance or stability. A rising unmatched
+    rate or a widening SMD distribution signals that control pools are thinning or that the population is
+    shifting away from matchable support, well before any single cell looks wrong. These are build-time
+    diagnostics rather than request-time metrics, because the quality of a match is decided in the nightly
+    build.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> If the LLM explainer is down, what does the user lose?</summary>
+    <p>A sentence of narration and nothing else. Every number, gate, interval, and access control is deterministic
+    code that runs independently of the explainer, and the substantive claims live in UI copy, not in generated
+    text. The dashboards are fully functional with the explainer absent — it is additive colour, so its outage
+    is a cosmetic degradation, not a functional one.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 11 ================= -->
+<section class="theme" id="t11">
+  <div class="stage"><b>11</b> Evaluation and acceptance criteria</div>
+  <p class="lead">Gate-check precision as the binding metric, on seeded synthetic cohorts where every gate decision is known.</p>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What is the single binding metric this system is evaluated on?</summary>
+    <p>Gate-check precision — whether every emitted cell genuinely passed balance, stability, and power. It is
+    evaluated on seeded synthetic cohorts where the ground truth of each gate decision is known by construction,
+    so a false emit (a headline that should have been suppressed) is detectable. That asymmetry — a false emit
+    costs far more than a false suppress — is the axis the whole evaluation is built around.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why is gate-check precision the binding metric rather than recall of real effects?</summary>
+    <p>Because the cost of the two error types is wildly asymmetric here: a suppressed real effect withholds a
+    signal until it is trustworthy, while an emitted spurious effect on a named clinician or a protocol can
+    drive a bad decision that is hard to walk back. Optimizing recall would push the system to emit marginal
+    cells; optimizing gate-check precision pushes it to emit only defensible ones. The design accepts lower
+    coverage as the price of not headlining a number that should not exist.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is the golden regression test constructed, and what does it guarantee?</summary>
+    <p>It pins specific cells produced from seeded fixtures — including late-arrival, correction, and supersede
+    replay chains — and asserts that a rebuild reproduces identical cells byte-for-byte. It guarantees that the
+    pipeline is deterministic under exactly the conditions most likely to introduce order-dependence, so a
+    refactor that quietly changes a matched pair or a suppression decision fails the test rather than shipping.
+    It is the executable proof behind the reproducibility claims.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the cross-query parity fixture, and what real bug did it come from?</summary>
+    <p>It asserts that the downstream policy-friction query, reusing this query's match manifest, reproduces the
+    exact same matched cohort — identical pairs, identical cells. It exists because a real sign-flip was caught
+    between two versions of the pipeline during review: the same override appeared to produce opposite outcome
+    directions across the two consumers, which is exactly the divergence a shared matcher and a strict manifest
+    check are meant to prevent. The fixture began life failing on that sign-flip and is wired into the golden
+    suite as a permanent guard.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Your eval runs on synthetic cohorts. How do you know the gates behave on real data you can't label?</summary>
+    <p>Synthetic evaluation is deliberate: it is the only place the ground truth of each gate decision is known,
+    so it is where gate-check precision can actually be measured. On real data, where the true effect is
+    unknowable, the design leans on the observability signals instead — SMD distributions, unmatched and
+    suppression rates, censoring counts — to detect when the gates are behaving pathologically, plus the
+    golden and parity fixtures to detect regressions. The honest limit is that no offline test proves the
+    observational estimate is unconfounded on real data; that is why every surface stays observational rather
+    than validated as causal.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> How is tenant safety evaluated, and why isn't it treated as a metric?</summary>
+    <p>It is checked as a pass/fail invariant, not a rate: a cross-tenant row or a partition mismatch is an
+    incident that pages, with a target of zero, because there is no acceptable non-zero rate of cross-tenant
+    disclosure in healthcare. Framing it as a metric would imply a tolerance, and there is none. The evaluation
+    asserts the assertion fires on injected cross-tenant fixtures and that partitioning holds, treating any
+    breach as a stop-the-line event.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> What are the pre-registered acceptance targets a reviewer signs off against?</summary>
+    <p>The SMD balance gate at or under 0.1 on the pre-registered covariates, a minimum of thirty patients per
+    arm, a caliper sensitivity sweep with sign and interval stability, a seeded 2000-resample enrollment-clustered
+    bootstrap, the snapshot freshness tiers, the sub-five-minute correction-freshness P95, and the actor-access
+    governance rules. These are design-time acceptance targets, not measured production results — they are the
+    bar the system was built, reviewed, and deployed against, and no measured outcomes are published.</p>
+  </details>
+</section>
+
+<!-- ================= THEME 12 ================= -->
+<section class="theme" id="t12">
+  <div class="stage"><b>12</b> Tradeoffs, alternatives, what I would change</div>
+  <p class="lead">Why matching over regression, why suppress over caveat, the weakest assumption, and what is still gated.</p>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why matching rather than regression adjustment or inverse-probability weighting?</summary>
+    <p>Matching produces an explicit, inspectable control arm and a per-cell balance diagnostic, which makes the
+    comparison legible to a clinical reviewer and easy to gate on — you can see the SMDs and refuse to headline
+    an unbalanced cell. Regression adjustment and IPW can be more efficient but bury the comparability
+    assumption inside a model and make "was this cell balanced?" a harder question to answer at the point of
+    display. For a politically charged surface where the balance check itself must be visible and auditable, an
+    inspectable matched arm is the more defensible primitive.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> A difference-in-differences or instrumental-variable design could get closer to causal. Why not use one?</summary>
+    <p>Both would require assumptions this data does not credibly support: difference-in-differences needs a
+    parallel-trends assumption across overridden and non-overridden groups that clinicians' selective overriding
+    almost certainly violates, and a valid instrument for "chose to override" is not available. Adopting either
+    would trade an honestly-labelled observational estimate for a causal claim resting on an unverifiable
+    assumption — a worse position for a surface people will read as judging clinicians. The design chooses the
+    method whose limits it can state plainly over one whose limits it would have to hope hold.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> Why suppress fragile cells rather than emit them with a large caveat?</summary>
+    <p>Because caveats are reliably under-read, especially on a table someone wants to use to make a case, and a
+    fragile delta shown with a footnote is still a delta someone will quote. Suppression removes the headline
+    entirely and replaces it with the reason and the denominators, which is harder to misquote than a number
+    plus a warning. The asymmetry of harm — a wrong person-attributed number versus a withheld one — makes
+    withholding the safer default; the caveat lives in the observational tag on the cells that <em>do</em>
+    survive.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What is the honest ceiling on what this query can claim, and why?</summary>
+    <p>At most it can say: among matched patients balanced on the covariates we measured, overrides on this
+    policy version were associated with a different ninety-day outcome by this interval, with these robustness
+    checks passed. It cannot say overriding caused the difference, because matching balances only measured
+    covariates and unmeasured confounding is never ruled out. Everything above that ceiling — protocol changes,
+    clinician judgments — is a human decision the query informs, not a conclusion it draws.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> If you had to name the single weakest assumption in the whole design, what is it?</summary>
+    <p>That the pre-registered covariate set captures enough of why a clinician chose to override that matching on
+    it yields comparable arms. Clinicians override on tacit signals — a patient's demeanor, a hunch, context not
+    in structured fields — and none of that is measured, so residual confounding by indication is the most
+    likely way an emitted delta is wrong despite passing every gate. The design mitigates it with the
+    pre-treatment-only rule and the observational framing, but it cannot eliminate it, which is exactly why the
+    query stays a signal to investigate rather than a verdict.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> The shared platform components have since landed — why does the query still carry a "ship with changes" verdict rather than "approved"?</summary>
+    <p>Five findings were promoted from the review into shared platform components: the tenant-injecting access
+    wrapper, the shared outcome library, the shared matcher binary with its manifest, the deterministic exporter
+    and its replay test, and the platform actor-access-and-audit policy. Those components have since landed at
+    the platform layer, and the query now binds to the shared versions rather than its earlier inline
+    stand-ins, so its strongest guarantees — automatic tenant enforcement, verifiable cross-query cohort
+    reuse, and byte-for-byte export determinism — now fully hold. But landing the components changed their own
+    state, not the review outcome: final design-review sign-off was never revisited, which is why the verdict
+    stays "ship with changes" hardened into v2, not approved.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip deep">deep</span> What would you do differently if you rebuilt this today?</summary>
+    <p>I would sequence the shared platform components ahead of the per-query work rather than in parallel, so
+    the query is built against the real tenant wrapper, matcher binary, and exporter from day one instead of
+    inline stand-ins that must later be reconciled. I would also invest earlier in the observability of match
+    quality — the SMD and unmatched-rate dashboards — because those are what tell you a cell is degrading before
+    it produces a wrong number, and they are easy to add late and expensive to miss early.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip adversarial">adversarial</span> Isn't shipping "ship with changes" and calling it live a contradiction?</summary>
+    <p>No — the two describe different milestones. "Ship with changes" was the design-review verdict: the design
+    is sound but conditioned on a named set of changes, most absorbed into the hardened v2 and a few promoted to
+    shared platform components, which have since landed. "Live" describes the deployed service running against
+    that hardened design with its inline controls in place. The query runs and serves governed dashboards; the
+    remaining gate is the <em>final</em> design-review sign-off itself — a review outcome, not a component state.
+    Landing the components did not convert the verdict, and the design names that distinction explicitly rather
+    than papering over it.</p>
+  </details>
+
+  <details>
+    <summary><span class="chip screening">screening</span> Where else does this pattern transfer outside healthcare?</summary>
+    <p>Anywhere you must answer "who deviated from the baseline, and did it work?" without turning the answer into
+    a blame exercise: underwriting exceptions, SRE runbook deviations, fraud-ops overrides, content-moderation
+    appeals. The transferable core is a matched observational comparison behind deterministic gates,
+    governed access with an audit trail, and a language model kept away from the arithmetic. The domain changes;
+    the discipline — honest numbers about human judgment calls, gated and governed — does not.</p>
+  </details>
+</section>
+
+<!-- ================= HONEST GAPS ================= -->
+<div class="callout gaps" id="honest-gaps">
+  <span class="label">Honest gaps · what this query cannot answer today</span>
+  <h2>Where the design stops, stated plainly</h2>
+  <p><strong>It is observational, not causal — and cannot be made otherwise on this data.</strong> Matching
+  balances only the covariates that were measured; residual confounding by indication (the tacit reasons a
+  clinician overrides) is never ruled out, so every surface stays observational and no delta is a proof that
+  overriding helped or hurt. A powered, balanced, caliper-stable cell is a signal to investigate a protocol,
+  not a verdict on a clinician.</p>
+  <p><strong>Governance mitigates misuse; it does not make it impossible.</strong> Pseudonymous actor ids,
+  leadership-and-self-view access, an audit entry written before serving, and alphabetic never-rankable
+  ordering raise the cost and the traceability of reading the breakdown as a scorecard — but a viewer with
+  legitimate access could still interpret a balanced table as a ranking. The controls make that hard and
+  visible, not unthinkable.</p>
+  <p><strong>The design-review verdict was "ship with changes," and it stays that way.</strong>
+  A structured adversarial design review returned ship-with-changes with findings across correctness,
+  statistics, governance, and scalability; most were absorbed into the hardened v2, and five were promoted into
+  shared platform components — the tenant-injecting access wrapper, the shared outcome library, the shared
+  matcher binary and manifest, the deterministic exporter and its replay test, and the platform
+  actor-access-and-audit policy. Those components have since landed at the platform layer, and the query now
+  binds to the shared versions rather than the inline controls it originally shipped with — its strongest
+  guarantees — automatic tenant enforcement, verifiable cross-query cohort reuse, byte-for-byte export
+  determinism, and a single actor-access policy shared across sibling dashboards — now fully hold. This query
+  was never marked "approved," and landing the shared components does not change that: it was hardened and
+  shipped with the platform dependencies named, not assumed solved, and approval remains a separate,
+  still-pending review outcome.</p>
+  <p><strong>What the language model does not do.</strong> The only model call is an optional post-hoc explainer
+  handed finished numbers; it is forbidden to compute, re-rank, or conclude, and its output is additive colour
+  re-validated against the cell. Pinning the model, prompt, and temperature gives drift detection and
+  reproducible auditing, not generation determinism — the determinism lives in the deterministic gate code and
+  the structured cell, never in the narrator.</p>
+</div>
+
+<footer>
+  <p>Client and product identifiers are anonymised; this describes the design and hardening of an
+  override-analytics system for a chronic-care platform covering 80+ chronic conditions, not a named product.
+  The platform served roughly 10,000 patients across those conditions over about nine years of history
+  hydrated into the append-only event spine. Role: sole owner — design through production.</p>
+  <p>Every threshold, SLA, and statistical bar on this page is a <strong>pre-registered acceptance target</strong>
+  — the gate the system was designed, reviewed, and deployed against. <strong>No measured production metrics are
+  published here</strong>; the observed results are not mine to publish.</p>
+</footer>
+
+</main>
+</body>
+</html>

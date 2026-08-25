@@ -222,3 +222,10 @@ Three products
   architecture. you can find it them ![v4 Two Streams Implementation - Page 1.jpeg](v4%20Two%20Streams%20Implementation%20-%20Page%201.jpeg) & 
 ![v4 Two Streams Implementation - Page 2.jpeg](v4%20Two%20Streams%20Implementation%20-%20Page%202.jpeg)
 - [killer-query-impl-for-amura-voltuswave](killer-query-impl-for-amura-voltuswave) has the Killer Query implemented for Amura/Voltuswave
+
+
+# Additional information for Voltuswave <> Amura Platform
+
+## Killer Queries
+
+Present in /Users/adeo/Documents/v2-full-time/killer-query-case-studies directory for your perusal.

@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KQ9 · Auditable Decision-Chain Reconstruction — Questions &amp; Answers</title>
+<meta name="description" content="A deep-dive engineering Q&amp;A on reconstructing the full decision chain behind a patient's treatment plan: the two-product split into a fast bounded live clinician view and a deterministic spine-replayed regulator export, as-of correctness, tenancy, the cited-narrative guardrail, and the honest platform-gated gaps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F9FA;
+    --card: #FFFFFF;
+    --ink: #12222C;
+    --steel: #51626D;
+    --mist: #E4EBEC;
+    --hairline: #D5DFE1;
+    --teal: #0B756F;
+    --teal-deep: #084F4B;
+    --clay: #9E5B3B;
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 0 24px 96px; }
+
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 4.6vw, 2.9rem);
+    line-height: 1.14; letter-spacing: -0.015em; max-width: 24ch;
+  }
+  h1 em { font-style: normal; color: var(--teal); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    line-height: 1.25; letter-spacing: -0.01em;
+  }
+  p { margin: 0 0 16px; max-width: 72ch; }
+  strong { font-weight: 600; }
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--teal-deep); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal);
+    display: block; margin-bottom: 14px;
+  }
+  code {
+    font-family: var(--mono); font-size: 0.85em;
+    background: var(--mist); padding: 1px 6px; border-radius: 4px;
+  }
+
+  header.hero { padding: 64px 0 8px; }
+  .hero .sub { font-size: 1.08rem; color: var(--steel); max-width: 64ch; margin-top: 20px; }
+  .backlink { display: inline-block; margin-top: 22px; font-family: var(--mono); font-size: 0.82rem; }
+
+  .spec-card {
+    margin: 34px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--teal); border-radius: 6px;
+  }
+  .spec-card .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--steel); display: block; margin-bottom: 10px;
+  }
+  .spec-card blockquote {
+    font-family: var(--mono); font-size: 0.9rem; line-height: 1.7; color: var(--ink);
+  }
+
+  /* ---- table of contents ---- */
+  nav.toc {
+    margin: 40px 0 0; padding: 24px 26px;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: 6px;
+  }
+  nav.toc h2 { font-size: 1.05rem; margin-bottom: 16px; }
+  nav.toc ol {
+    list-style: none; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 6px 22px; counter-reset: toc;
+  }
+  nav.toc li { counter-increment: toc; font-size: 0.92rem; padding: 3px 0; }
+  nav.toc li a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono); font-size: 0.72rem; color: var(--steel);
+    margin-right: 10px;
+  }
+  .legend { margin: 20px 2px 0; font-size: 0.84rem; color: var(--steel); display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .legend .chip { vertical-align: middle; }
+
+  /* ---- theme sections ---- */
+  section.theme { margin-top: 60px; scroll-margin-top: 16px; }
+  section.theme > h2 {
+    display: flex; align-items: baseline; gap: 12px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--hairline); margin-bottom: 6px;
+  }
+  section.theme > h2 .tnum {
+    font-family: var(--mono); font-size: 0.8rem; font-weight: 500;
+    color: var(--teal); letter-spacing: 0.04em;
+  }
+
+  /* ---- chips ---- */
+  .chip {
+    font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 3px; border: 1px solid; white-space: nowrap;
+  }
+  .chip.screening { color: var(--teal); border-color: var(--teal); background: rgba(11,117,111,0.06); }
+  .chip.deep { color: var(--steel); border-color: var(--steel); background: rgba(81,98,109,0.06); }
+  .chip.adversarial { color: var(--clay); border-color: var(--clay); background: rgba(158,91,59,0.07); }
+
+  /* ---- Q&A ---- */
+  details {
+    border-bottom: 1px solid var(--hairline);
+    padding: 4px 0;
+  }
+  details summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 2px; font-weight: 500; color: var(--ink);
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary .qtext { flex: 1; }
+  details summary .mark {
+    color: var(--steel); font-family: var(--mono); font-size: 0.9rem;
+    transition: transform 0.15s ease; margin-top: 1px;
+  }
+  @media (prefers-reduced-motion: reduce) { details summary .mark { transition: none; } }
+  details[open] summary .mark { transform: rotate(90deg); }
+  details[open] summary { color: var(--teal-deep); }
+  details .answer {
+    padding: 0 2px 18px 34px; color: var(--ink);
+  }
+  details .answer p { margin: 0 0 12px; max-width: 74ch; }
+  details .answer p:last-child { margin-bottom: 0; }
+
+  /* ---- callout ---- */
+  .callout {
+    margin: 34px 0 0; padding: 22px 26px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-left: 3px solid var(--clay); border-radius: 6px;
+  }
+  .callout.gaps { border-left-color: var(--clay); }
+  .callout .label {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--clay); display: block; margin-bottom: 12px;
+  }
+  .callout h2 { font-size: 1.35rem; margin-bottom: 14px; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout ul { margin: 0 0 14px 20px; }
+  .callout li { margin-bottom: 8px; max-width: 74ch; }
+
+  footer {
+    margin-top: 72px; padding-top: 26px; border-top: 1px solid var(--hairline);
+    font-size: 0.85rem; color: var(--steel); max-width: 74ch;
+  }
+  footer p { margin-bottom: 10px; }
+
+  @media (max-width: 620px) {
+    header.hero { padding-top: 44px; }
+    details .answer { padding-left: 12px; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+<header class="hero">
+  <span class="eyebrow">Deep-dive Q&amp;A · Auditable decision-chain reconstruction</span>
+  <h1>Why is this patient on this plan — <em>and can you prove every step, twice?</em></h1>
+  <p class="sub">This is the engineering interrogation behind KQ9 on a chronic-care platform covering
+  80+ chronic conditions: the query a clinician trusts at the bedside and a regulator subpoenas a year
+  later. The honest short answer to "show me the chain" is that it is two questions with two different
+  burdens of proof, and the design is the split between them. Below are roughly a hundred questions a
+  Senior Principal engineer or CTO would actually ask, answered at the level of mechanism and
+  consequence — including the uncomfortable ones.</p>
+  <a class="backlink" href="kq9-causal-path.html">← Read the case study</a>
+
+  <div class="spec-card">
+    <span class="label">The query the system must answer</span>
+    <blockquote>"For patient P, show the full decision chain leading to the current medication plan,
+    including all evidence and policy nodes."</blockquote>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>The twelve themes</h2>
+  <ol>
+    <li><a href="#t1">The question, and why it is genuinely hard</a></li>
+    <li><a href="#t2">Architecture and data flow</a></li>
+    <li><a href="#t3">As-of correctness and future leakage</a></li>
+    <li><a href="#t4">Tenancy and isolation</a></li>
+    <li><a href="#t5">The core mechanism: traversal and replay</a></li>
+    <li><a href="#t6">The narrator: gates, faithfulness, suppression</a></li>
+    <li><a href="#t7">Caching, determinism and versioning</a></li>
+    <li><a href="#t8">Nine years of hydration — what it buys</a></li>
+    <li><a href="#t9">Governance, PHI and the LLM boundary</a></li>
+    <li><a href="#t10">Failure modes, degradation and operations</a></li>
+    <li><a href="#t11">Evaluation and acceptance criteria</a></li>
+    <li><a href="#t12">Tradeoffs and what I would do differently</a></li>
+  </ol>
+  <div class="legend">
+    <span><span class="chip screening">screening</span> orientation</span>
+    <span><span class="chip deep">deep</span> mechanism &amp; consequence</span>
+    <span><span class="chip adversarial">adversarial</span> where it could break</span>
+  </div>
+</nav>
+
+<!-- ================= THEME 1 ================= -->
+<section class="theme" id="t1">
+  <h2><span class="tnum">01</span> The question, and why it is genuinely hard</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What exactly is this query being asked to answer?</span></summary>
+    <div class="answer">
+      <p>Given one patient, return the full chain of reasoning that ends at their current medication
+      plan: the active decision, the evidence nodes that supported it, the policy nodes that constrained
+      it, and the earlier decisions it superseded — each step carrying the identifiers that justify it.
+      The governing rule is "no quote, no claim": every edge in the answer must cite the evidence, policy,
+      or decision it stands on. It is the regulator's view of a treatment, rendered so a clinician can
+      also read it at the bedside.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Why is "show the decision chain" two questions rather than one?</span></summary>
+    <div class="answer">
+      <p>A clinician opening the panel mid-visit needs <em>what is true right now</em>, fast enough not to
+      interrupt the consultation, bounded so it shows the decisions that matter and not a decade of
+      history. A regulator asks the same words but means <em>what was true at exactly this instant</em>,
+      reconstructed so precisely that the same query re-run next year returns a byte-identical chain. One
+      wants speed and recency; the other wants provable point-in-time replay. Those are different
+      correctness contracts wearing the same sentence.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Who are the two audiences, concretely, and what does each actually need?</span></summary>
+    <div class="answer">
+      <p>The bedside clinician needs a low-latency, bounded, current view to answer "why is this patient on
+      this?" without leaving the consultation. The auditor or regulator needs a complete, deterministic,
+      replayable export that reconstructs the chain as it stood at a named historical moment, with full
+      provenance on every node and edge. The clinician trades completeness for speed; the auditor trades
+      speed for provable exactness. Trying to satisfy both from one pipeline forces you to short-change one.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why can't a single pipeline serve both audiences well?</span></summary>
+    <div class="answer">
+      <p>The live decision graph is an <em>asynchronously projected</em> copy of the append-only event
+      history, maintained by a projection process. It is excellent at "what is true right now" but cannot,
+      on its own, guarantee point-in-time replay of "what was true back then" — the graph reflects the
+      latest projection, not a frozen past state. A single pipeline built on it must either accept
+      non-replayable audit exports or cripple the clinician path with reconstruction overhead it does not
+      need. That structural conflict, not a bug, is what forced the split.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What are the failure modes that quietly destroy trust in an audit surface?</span></summary>
+    <div class="answer">
+      <p>Three. <strong>Tenant leakage</strong> — one clinic's decision node surfacing in another's chain,
+      which is a reportable privacy incident, not a mere defect. <strong>Time leakage</strong> —
+      reconstructing against "now" when the question was about a specific moment, so the answer silently
+      includes decisions that had not happened yet. And <strong>a narrative that outruns its evidence</strong>
+      — a fluent summary asserting more than the cited nodes support, which is exactly the sentence a
+      regulator will pull on. Each is silent when it happens and catastrophic when discovered, so the
+      design treats all three as first-class threats rather than edge cases.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is "no quote, no claim / with citations" a hard requirement, not a nicety?</span></summary>
+    <div class="answer">
+      <p>An audit surface is only worth anything if every assertion in it can be traced back to the record
+      that supports it; an uncited claim is indistinguishable from a fabrication under scrutiny. Making
+      citation mandatory turns the chain into evidence rather than commentary, and it forces the system to
+      degrade honestly — if it cannot cite a step, it withholds the step rather than guessing. That
+      constraint is also what lets a language model touch the output at all: it may only phrase claims that
+      already decompose into cited node fields and edges.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Isn't splitting into two products just gold-plating — why not serve the regulator from the same walk with a bigger depth?</span></summary>
+    <div class="answer">
+      <p>Depth is not the problem; replayability is. Even an unbounded live walk reads the current
+      projection, so re-running it next year against the same historical moment can return a different chain
+      — a new correction landed, a node was superseded, the projection advanced. The regulator needs a chain
+      reconstructed from the immutable event history at a named instant, which the live graph cannot promise
+      no matter how deep you walk. The split is not extra polish; it is the only way to give the auditor
+      determinism without taxing the clinician with it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A skeptic says this is just a graph query with a fancy audit log. What is actually hard here?</span></summary>
+    <div class="answer">
+      <p>The graph traversal is the easy part. The hard parts are: guaranteeing that a reconstruction is
+      byte-identical on replay across years and server restarts; ordering a chain by clinical event time
+      while four distinct timestamps compete to represent "when"; keeping a chronic patient's decade of
+      history from either flooding the clinician or truncating the auditor; enforcing tenancy on a live graph
+      walk at the traversal source rather than after the fact; and letting a language model narrate without
+      ever asserting an uncited fact. A graph query answers "what connects." This system has to answer
+      "what was provably true, at this instant, for this tenant, and can you show your work."</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is a chronic-care setting what makes this problem bite?</span></summary>
+    <div class="answer">
+      <p>Chronic conditions produce long, revised decision histories — a type-2 diabetic may have been on a
+      medication for years, across multiple protocol phases, with superseded plans and corrections along the
+      way. A short bounded window is fine for an acute encounter but under-shows a chronic patient; an
+      unbounded walk is fine for an audit but overwhelms the bedside. The tension between "recent enough to
+      be usable" and "complete enough to be defensible" is exactly what the two-product split resolves, and
+      it is a tension acute-care systems rarely feel this hard.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 2 ================= -->
+<section class="theme" id="t2">
+  <h2><span class="tnum">02</span> Architecture and data flow</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What are the two products, and what do they share?</span></summary>
+    <div class="answer">
+      <p>A <strong>clinician product</strong> that walks the live decision graph, bounded and tenant-scoped,
+      for "what is true right now"; and a <strong>regulator product</strong> that ignores the live graph and
+      reconstructs the chain deterministically from the append-only event spine at an exact historical
+      moment. They share exactly two things: a deterministic <em>seed-derivation contract</em> (how to find
+      the patient's active protocol set and current medication-plan decision), and an optional, heavily
+      guarded narrative layer. Everything else — the data source, the caching, the RBAC, the response shape —
+      diverges deliberately.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Walk me through the clinician data flow end to end.</span></summary>
+    <div class="answer">
+      <p>The request hits the live clinician endpoint; RBAC authorises the clinician role and an access-log
+      entry is written. The <code>as_of_ms</code> is resolved once at admission and always echoed back. A
+      canonical cache key is built and looked up in Redis; on a hit, a tenant assertion runs over every node
+      and edge and the chain returns. On a miss, projector lag is checked against the clinician SLA (degrade
+      if exceeded), the seed decision is derived, a bounded backward walk runs with edges pre-filtered by
+      event time, the optional narrative is validated, the result is cached with an invalidation subscription
+      registered, and the chain returns with bounded-view metadata and lag.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Walk me through the regulator data flow end to end.</span></summary>
+    <div class="answer">
+      <p>The request hits the regulator export endpoint with a required access reason; a regulator-specific
+      RBAC role, per-tenant and per-role rate limits, and a max page size apply, and an immutable audit
+      record is written <em>before</em> anything is served. A circuit breaker is checked; above a page-count
+      threshold the request becomes an async export job with a webhook on completion. Otherwise the spine is
+      read by source sequence at the requested <code>as_of_ms</code>, the supersedes chain and correction
+      epoch are applied to determine effective state, a deterministic cursor paginates the result, and each
+      page emits every node and edge with full provenance plus replay instructions and an export hash.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why does the regulator path read the event spine directly instead of the graph?</span></summary>
+    <div class="answer">
+      <p>Because only the append-only spine can be replayed to a precise past state. The live graph is a
+      current projection: it holds the latest structure, not a history you can rewind. The spine records
+      every event with a source sequence and event-time fields, so the regulator path can read all events up
+      to a named <code>as_of_ms</code>, apply supersedes and correction lineage, and rebuild exactly the
+      chain that stood at that instant. Reading the graph would give you "the chain as it looks now," which
+      is precisely the wrong answer to an audit question.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is the seed contract, and why is it the only shared compute?</span></summary>
+    <div class="answer">
+      <p>The seed contract is the deterministic recipe for finding the starting point of the chain: the
+      patient's active protocol set and the current medication-plan decision, selected with an explicit
+      medication-plan filter, an as-of valid-time check on the active edges, and a fixed tie-break order of
+      event time, then source sequence, then vertex id. It is shared because both products must agree on
+      <em>where the chain begins</em> or they would answer different questions. Everything downstream of the
+      seed differs, but if the seed drifted between the two, the clinician and the auditor would be looking
+      at different treatments.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the projection process relate the spine to the live graph, and what does it stamp?</span></summary>
+    <div class="answer">
+      <p>A projection Lambda consumes the append-only spine and maintains the live graph, stamping each node
+      and edge with a projection version and exposing a projector-lag figure. That lag is the age of the
+      projection relative to the spine, and it is the honest signal the clinician path uses to decide whether
+      it is serving fresh-enough structure or must degrade. Because projection is asynchronous, the graph is
+      always slightly behind the spine — which is exactly why the regulator path bypasses it and reads the
+      spine directly.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Where does the narrator sit in the topology, and why "off to the side"?</span></summary>
+    <div class="answer">
+      <p>The narrative layer hangs off both products as an optional post-processing step; it never sits in the
+      authoritative data path. The chain JSON — nodes, edges, provenance — is always the primary artifact;
+      the narrative is a phrasing of it that can be requested, validated, and dropped without affecting the
+      chain. Placing it off to the side means an LLM failure degrades to "chain without prose," never to
+      "wrong chain," and for the regulator export the narrative is explicitly an optional appendix with the
+      chain JSON as primary evidence.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">If both products start from the same seed, how can they legitimately return different chains for the same patient at the same moment?</span></summary>
+    <div class="answer">
+      <p>They can, and it is by design. The clinician chain is bounded — depth-limited and windowed — so for a
+      long-history patient it deliberately omits older ancestors, and it marks that omission in
+      bounded-view metadata. The regulator chain is complete at the requested instant. So at the same
+      <code>as_of_ms</code> the clinician sees a correct <em>subset</em> and the auditor sees the whole; the
+      seed is identical, the bounds differ. The design makes the omission explicit rather than pretending the
+      bounded view is the full story.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">What happens if the live graph and the spine disagree?</span></summary>
+    <div class="answer">
+      <p>They will disagree by construction, because the graph lags the spine — that gap is the projector lag,
+      and it is surfaced, not hidden. The clinician path treats the graph as authoritative for "right now"
+      but degrades when lag exceeds SLA; the regulator path treats the spine as ground truth and never
+      consults the graph, so its answer is unaffected by projection state. If the two ever diverged beyond
+      lag — a projection defect — the spine is the arbiter, and the regulator export would still be correct
+      while the clinician panel would show a degraded banner. The design deliberately never asks the two to
+      agree in real time.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 3 ================= -->
+<section class="theme" id="t3">
+  <h2><span class="tnum">03</span> As-of correctness and future leakage</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is as_of_ms, and why must it be explicit?</span></summary>
+    <div class="answer">
+      <p><code>as_of_ms</code> is the instant the reconstruction is anchored to — the "when" of "what was true
+      when." It is resolved once at request admission and always returned in the response, never allowed to
+      default silently to "now." Making it explicit is what turns an ambiguous question into a reproducible
+      one: two callers asking about the same moment get the same chain, and an auditor can re-run the export
+      against the same anchor and expect an identical result.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What goes wrong if as_of defaults silently to "now"?</span></summary>
+    <div class="answer">
+      <p>You get non-reproducibility and, worse, silent future leakage. If the anchor floats to wall-clock
+      "now," then a chain reconstructed for an audit about a past decision quietly includes evidence and
+      decisions that post-date the moment in question. The export stops being an as-of reconstruction and
+      becomes a moving snapshot that changes every time it runs, which is fatal for anything a regulator would
+      rely on. Resolving the anchor once, at admission, and echoing it back is the cheapest possible defense
+      against an expensive class of bug.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the clinician walk avoid pulling in edges from after the anchor?</span></summary>
+    <div class="answer">
+      <p>The edge allow-list is filtered by <code>event_time_ms</code> against the window and the anchor
+      <em>before</em> each expansion step, so an edge that occurred after the anchor is never traversed in the
+      first place. Combined with resolving the anchor once, this keeps the bounded walk strictly within the
+      as-of horizon. Without it, a fast-moving patient record could splice a later evidence node into a chain
+      that is supposed to represent an earlier state.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why must the edge time-filter be applied before expansion, not after?</span></summary>
+    <div class="answer">
+      <p>If you expand first and filter afterward, you can fragment the chain: the walk steps through an
+      out-of-window edge to reach an in-window node, then the post-filter drops the connecting edge and
+      strands or drops the node, producing a broken or incomplete chain. Filtering each edge by event time
+      before the repeat step means the traversal only ever follows edges that belong in the window, so the
+      surviving chain is connected and correct. This was a specific high-severity finding in the first
+      review, and the pre-expansion filter is the fix.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Two clinicians open the same panel 30 seconds apart and see different chains. Is that a bug?</span></summary>
+    <div class="answer">
+      <p>No — it is expected and documented. If a new decision lands in the 30-second gap, the later caller's
+      "now" is genuinely a different world, and the clinician product is supposed to show current reality. The
+      design makes this legible by resolving and returning <code>as_of_ms</code> on every response, so the two
+      views are not "inconsistent," they are anchored to two different instants. The place where a re-run must
+      return the identical chain is the regulator export at a fixed anchor — and there it does.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the regulator reconstruction guarantee the same chain for a historical as_of on a rerun next year?</span></summary>
+    <div class="answer">
+      <p>It reconstructs from the immutable spine, not the mutable graph, and every input is pinned: it reads
+      all events for the patient and tenant up to the anchor by source sequence, applies the supersedes chain
+      and the correction epoch effective at that anchor, and orders the result deterministically. Because the
+      spine is append-only and content-addressed, the same anchor plus the same correction epoch yields the
+      same effective events in the same order, and the export hash lets a reviewer confirm equality. The
+      determinism comes from the structured reconstruction, and the hash is how you check it held.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Which of the four event-time fields orders the chain, and why not received or written time?</span></summary>
+    <div class="answer">
+      <p>The clinical chain is ordered by <code>event_time_ms</code> — the real-world moment the decision or
+      observation happened — because that is the order a clinician or regulator reasons in. The other three,
+      <code>observed_at_ms</code>, <code>received_at_ms</code>, and <code>written_at_ms</code>, are kept for
+      replay and late-arrival handling but must not drive chain order: received and written time reflect when
+      the system learned of an event, which for backfilled or delayed data can be years after it occurred.
+      Order by ingestion time and a decision made in 2019 but loaded in 2025 would sort as if it happened in
+      2025.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A correction lands that changes what was true at a past instant. Does the regulator export change retroactively?</span></summary>
+    <div class="answer">
+      <p>This is what the correction epoch exists to disambiguate. A correction is itself an event with its own
+      time and epoch, so the export reconstructs the state that was <em>effective</em> at the requested anchor
+      under the correction epoch effective then — it does not silently rewrite a prior export. If you ask for
+      the same anchor but a later correction epoch, you can legitimately get a corrected chain, and the
+      response records which epoch it reflects. The point is that "what was true then" and "what we later
+      learned was true then" are both answerable and distinguishable, never conflated.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is a "bounded view," and how is the omission surfaced to the clinician?</span></summary>
+    <div class="answer">
+      <p>A bounded view is the clinician chain limited to a configurable depth and time window so it stays fast
+      and readable. The response carries bounded-view metadata — the depth, the window, the edge allow-list,
+      the traversal-policy version, and an explicit flag that older ancestors were omitted — so the panel can
+      tell the clinician the view is partial and offer to request older ancestors or a full regulator export.
+      The omission is a stated fact in the payload, never an unlabelled truncation.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 4 ================= -->
+<section class="theme" id="t4">
+  <h2><span class="tnum">04</span> Tenancy and isolation</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is the tenant identity, and where does it come from?</span></summary>
+    <div class="answer">
+      <p>Tenancy is a three-field scope — <code>account_id</code>, <code>workspace_id</code>, and
+      <code>controlunit_id</code> — resolved from the caller's authenticated identity, not passed as a query
+      parameter. All three must match on every node and edge that appears in a chain. Treating tenancy as a
+      single field would let a workspace or control-unit boundary leak inside a shared account, so the scope is
+      carried whole through the traversal, the cache key, and the spine read.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">How is tenant isolation enforced on the live graph walk?</span></summary>
+    <div class="answer">
+      <p>The clinician walk runs through a tenant-scoped traversal source: the graph traversal is constructed
+      already bound to the caller's three-field scope, so the walk cannot step outside it. That is the primary
+      enforcement layer. It is backed by a Redis key prefix that includes the tenant and a response-time
+      assertion that re-checks every returned node and edge — belt and braces, because a single missing
+      predicate on a live graph is a privacy incident, not a rendering glitch.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why isn't a post-hoc filter on results enough — why scope at the traversal source?</span></summary>
+    <div class="answer">
+      <p>A post-hoc filter runs after the walk has already visited other tenants' nodes, which means the query
+      touched data it should never have read and any bug in the filter leaks it. Scoping at the traversal
+      source means the walk is structurally incapable of leaving the tenant's subgraph — the isolation is a
+      property of the query construction, not a cleanup pass. The response-time assertion is then a
+      defense-in-depth check that the invariant held, not the thing you rely on to establish it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the Redis chain cache avoid cross-tenant bleed?</span></summary>
+    <div class="answer">
+      <p>The canonical cache key is prefixed with the full three-field tenant scope alongside the endpoint,
+      bounds, edge allow-list, schema versions, anchor, last event sequence, and projection version. Because
+      the tenant is part of the key, one tenant's cached chain can never be served to another even if every
+      other dimension matches. The key completeness is a cross-cutting requirement across the platform, and
+      here it does double duty: correctness of the cached result and tenant safety of it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A single missing tenant predicate leaks another clinic's decision node. What is the defense in depth?</span></summary>
+    <div class="answer">
+      <p>Three independent layers must all fail for a leak to reach the caller: the tenant-scoped traversal
+      source (the walk can't leave the scope), the tenant-prefixed cache key (a hit can't cross tenants), and
+      the response-time assertion that re-verifies every node and edge against the caller's scope before
+      serving. The assertion exists precisely because human error in a query predicate is plausible; it turns a
+      silent leak into a served-nothing failure. A cross-tenant node is treated as an incident that pages a
+      human, not a metric to trend downward.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the regulator spine reconstruction enforce tenancy?</span></summary>
+    <div class="answer">
+      <p>The spine read predicates on all three tenant fields — account, workspace, and control unit — as part
+      of the query that selects events by source sequence at the anchor, so events outside the caller's scope
+      are never fetched. Tenancy is thus enforced at the point of data retrieval on both products: the
+      traversal source for the live path, the query predicate for the spine path. The regulator export
+      additionally records the tenant in its immutable audit entry, so who read whose data is itself part of
+      the permanent record.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">You once called tenant isolation "partial / platform-gated." What does that mean for shipping this KQ safely?</span></summary>
+    <div class="answer">
+      <p>The query first inlined its own enforcement — the tenant-scoped traversal source, the Redis prefix, and the
+      response-time assertion are all specified in this KQ. The <em>shared</em> traversal-source wrapper standardised
+      across every query, so isolation is not re-implemented per query with per-query risk, has since landed, and KQ9
+      now binds to it. Before it landed, KQ9 was safe on its own terms but carried the dependency openly rather than
+      claiming a platform-level guarantee it did not yet have. Honesty about which layer owns the guarantee is the point.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Is a cross-tenant node a metric or an incident?</span></summary>
+    <div class="answer">
+      <p>An incident. The evaluation bar for tenant safety is zero cross-tenant nodes or edges on any returned
+      chain, and a violation pages a human rather than being averaged into a dashboard. Framing it as a metric
+      to optimise would implicitly accept a nonzero rate, which for a privacy boundary in healthcare is not an
+      acceptable posture.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 5 ================= -->
+<section class="theme" id="t5">
+  <h2><span class="tnum">05</span> The core mechanism: traversal and replay</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Which edge types make up the causal chain?</span></summary>
+    <div class="answer">
+      <p>Three: <code>SUPPORTED_BY</code> (a decision rests on an evidence node), <code>CONSTRAINED_BY</code>
+      (a decision is bounded by a policy node), and <code>SUPERSEDES</code> (a decision replaces an earlier
+      one). These form the causal backbone of the chain. Attribution edges — who made the decision — are
+      handled separately, because "which clinician acted" is not part of the clinical justification and must
+      not be folded into it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is attribution separated from the causal path rather than folded in?</span></summary>
+    <div class="answer">
+      <p>The causal chain answers "what justified this decision" — evidence and policy. The attribution edge
+      answers "who recorded it," which is a different question with different governance. Folding the actor
+      into the causal path both muddies the justification and creates a scorecard risk, so attribution is
+      rendered as a sibling block carrying a pseudonymous actor id, not a link in the reasoning. Keeping them
+      distinct means a regulator reads the clinical logic without it being tangled up with clinician identity.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">How is the seed decision derived deterministically?</span></summary>
+    <div class="answer">
+      <p>Starting from the patient, the walk finds the active protocol set via as-of valid-time checks on the
+      enrolment and phase edges, then selects the medication-plan decision with an explicit event-type filter,
+      breaking any ties by ordering on event time, then source sequence, then vertex id. That fixed ordering is
+      what makes the seed deterministic: given the same anchor and data, the same starting decision is chosen
+      every time. A non-deterministic seed would let two runs begin the chain at different decisions and
+      diverge from the first step.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How is the walk bounded, and why depth plus a time window rather than one bound?</span></summary>
+    <div class="answer">
+      <p>The clinician walk is bounded both by depth — a pre-registered target of four hops — and by a time
+      window, defaulting to a year, with both configurable per patient. Depth alone would let a dense recent
+      cluster of edges explode the result; a time window alone would let a single deep chain run past what a
+      clinician can read. Together they keep the bedside view fast and legible. The regulator product removes
+      the bounds entirely, which is exactly why it needs the separate deterministic engine.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A four-year diabetic has chains older than the window. Doesn't the clinician panel under-show and mislead?</span></summary>
+    <div class="answer">
+      <p>It under-shows by design, and the design refuses to let that be silent. When older ancestors fall
+      outside the window, the response sets an explicit "older ancestors omitted" flag and the panel offers to
+      request older ancestors or the full regulator export. So the clinician is told the view is bounded rather
+      than shown a truncated chain dressed up as complete. The bounds are also per-patient configurable, so a
+      long-history chronic patient can be given a wider window when that is clinically warranted.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How is SUPERSEDES lineage handled so a superseded decision isn't shown as current?</span></summary>
+    <div class="answer">
+      <p>Supersession is a first-class edge, and the regulator reconstruction walks the supersedes chain to
+      determine the effective state at the anchor — an earlier decision that was superseded before the anchor
+      is represented as history, not as the current plan. Each vertex also carries the source sequence it
+      supersedes, so the lineage is explicit and replayable. Ignoring supersession would show a patient as
+      being on a plan that a later decision had already replaced, which is both clinically wrong and an audit
+      failure.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What actually makes the regulator reconstruction deterministic?</span></summary>
+    <div class="answer">
+      <p>A deterministic cursor over the tuple <code>(event_time_ms, source_event_seq, vertex_id,
+      edge_position)</code>. That composite ordering is total — no two elements tie — so the reconstruction
+      emits nodes and edges in one and only one order for a given anchor and correction epoch. Determinism is a
+      property of this structured ordering over immutable events, not of any model or heuristic. It is what lets
+      the same export be reproduced byte-for-byte and verified against its hash.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the cursor stay stable across server restarts and reject misuse?</span></summary>
+    <div class="answer">
+      <p>The cursor encodes the ordering tuple plus the anchor and the traversal-policy version, so it is a
+      pure function of the data and the request, not of server-local state — a restarted server resumes exactly
+      where the previous one left off. Critically, it is bound to its <code>as_of_ms</code> anchor and is
+      rejected if reused when freshness changes without that same anchor, which stops a caller from paging
+      through a moving target and stitching together an inconsistent export. Stable pagination is what makes a
+      multi-page audit export trustworthy rather than a race against ingestion.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">What stops the walk from looping or exploding on a densely connected patient graph?</span></summary>
+    <div class="answer">
+      <p>The clinician walk uses simple-path semantics so it never revisits a vertex within a path, and it is
+      hard-bounded by depth and the pre-expansion time filter, which together cap how far and how wide it can
+      go. Cycles in supersedes or evidence links therefore terminate rather than spin. The regulator path does
+      not walk at all — it reads events in cursor order — so it has no traversal blow-up to worry about, only
+      pagination, which the deterministic cursor and async job mode handle.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 6 ================= -->
+<section class="theme" id="t6">
+  <h2><span class="tnum">06</span> The narrator: gates, faithfulness, suppression</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is the "claim grammar," and what does it enforce?</span></summary>
+    <div class="answer">
+      <p>The claim grammar is a field-level validator that every factual sentence in a narrative must satisfy:
+      the sentence has to decompose into allowed templates backed by cited node fields and cited edges that
+      actually exist in the chain. A sentence like "metformin was started because HbA1c crossed the first-line
+      threshold" only passes if the drug field, the evidence value, and the policy threshold it names are all
+      present and linked. It is what keeps the narrator from asserting anything the structured chain does not
+      already contain.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">How is a factual sentence validated against the chain?</span></summary>
+    <div class="answer">
+      <p>Each candidate sentence is parsed against the allowed claim templates, and every field and edge it
+      references is checked to exist in the chain JSON with the values it asserts — cited node ids must resolve
+      to real nodes, and the "X led to Y" structure must match a real edge direction. Both a citation check
+      (do the referenced nodes exist) and a structural check (does the asserted relationship match an edge) are
+      necessary; either alone is insufficient. A sentence that fails any part is not repaired — it is removed.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">When a sentence can't be cited, is it softened or dropped?</span></summary>
+    <div class="answer">
+      <p>Dropped. The principle is suppress, don't soften: a claim that fails validation is removed and the
+      response is labelled <code>narrative_suppressed</code> rather than being quietly weakened into a vaguer
+      version that might still overreach. Softening is dangerous because it produces a claim that looks
+      supported but isn't; suppression produces an honest gap. The chain JSON is always returned regardless, so
+      the caller loses prose, never evidence.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Can the narrator assert "the patient's diet improved" without a node id? Why not?</span></summary>
+    <div class="answer">
+      <p>No. "The patient's diet improved" is a factual clinical claim, and if no node and edge in the chain
+      encode that observation, it cannot decompose into a cited template, so the claim grammar rejects it and
+      the sentence is suppressed. This is the exact failure the guardrail exists to catch: a fluent model
+      inferring a plausible-sounding fact the record does not support. Allowing it would be precisely the
+      sentence a regulator pulls, so the system would rather say less than say something it cannot back.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is "suppression over emission" the governing principle here?</span></summary>
+    <div class="answer">
+      <p>Because the cost of a wrong or unsupported claim in a clinical audit surface vastly outweighs the cost
+      of an omitted sentence. A missing sentence is a visible, recoverable gap; an unsupported sentence is an
+      invisible liability that surfaces at the worst possible moment. Designing the system to withhold when
+      uncertain — in the narrator, in the degraded clinician path, in the bounded-view omission flag — makes
+      its failures honest and legible rather than confidently wrong. Emission-by-default would optimise for
+      looking complete over being correct.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">The chain links decisions to evidence. How do you keep the language observational rather than causal?</span></summary>
+    <div class="answer">
+      <p>The edges record what a decision <em>was supported by</em> and <em>constrained by</em> in the record —
+      an association a clinician documented — not a proven cause. The narrative templates and the surrounding
+      copy stay in that register: "this decision cited this evidence and this policy," never "this evidence
+      caused this outcome." The graph reconstructs the documented reasoning; it does not certify that the
+      reasoning was correct or that the treatment worked. Keeping the language observational is what stops an
+      audit trail from being misread as a causal claim about clinical efficacy.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Isn't "causal path reconstruction" inherently a causal claim? How do you square that with keeping statistics observational?</span></summary>
+    <div class="answer">
+      <p>The "causal" here is the documented decision causality — "this plan was recorded as resting on this
+      evidence and this policy" — not statistical causal inference about outcomes. The system reconstructs the
+      chain of reasoning a clinician actually recorded; it makes no claim that the evidence caused a good
+      result, and it computes no treatment effect. Where the platform does compare cohorts elsewhere, matching
+      balances only the covariates that were measured and never rules out unmeasured confounding, so those
+      results are framed as observational too. In KQ9 specifically there is no effect estimate at all — only a
+      provenance chain — so the causal-inference caveat is about being careful with the word, not about a
+      hidden statistical claim.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What is emitted when the narrator fails validation, and how does the caller know?</span></summary>
+    <div class="answer">
+      <p>The response carries a <code>narrative_suppressed</code> status alongside the full chain JSON and
+      validation-failure metadata describing which check failed and on which sentence. The caller therefore
+      receives the authoritative evidence and an explicit signal that the prose was withheld and why, rather
+      than a silently shortened paragraph. For the regulator export this matters doubly: the chain JSON is the
+      primary evidence and the narrative was only ever an optional appendix, so its suppression costs nothing
+      of substance.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 7 ================= -->
+<section class="theme" id="t7">
+  <h2><span class="tnum">07</span> Caching, determinism and versioning</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is in the clinician cache key?</span></summary>
+    <div class="answer">
+      <p>The canonical key binds the three-field tenant scope, the endpoint, the bounds and edge allow-list,
+      the schema and traversal-policy versions, the resolved <code>as_of_ms</code>, the last event sequence,
+      and the projection version. Each dimension changes the answer, so each must be in the key or the cache
+      would serve a chain computed under different assumptions. The point of a canonical key is that two
+      requests share a cache entry if and only if they would compute the same chain.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why does the key include last_event_seq and projection_version, not just patient and anchor?</span></summary>
+    <div class="answer">
+      <p>Because patient plus anchor does not uniquely determine the chain: the same patient at the same anchor
+      can reconstruct differently after a correction lands or the projection advances. The last event sequence
+      is a freshness marker that changes when new events arrive, and the projection version changes when the
+      graph is re-projected; folding both into the key means a stale entry can never masquerade as current.
+      Without them, the cache would happily return a chain that new events had already invalidated.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is a 15-minute TTL alone the wrong invalidation strategy for an in-room clinician?</span></summary>
+    <div class="answer">
+      <p>Because the clinician who just recorded a decision would not see it for up to the TTL, which is exactly
+      the moment they most need the chain to reflect their own action. A TTL bounds staleness by time, but the
+      event that matters is a write, not a clock tick. So the cache invalidates on decision-writes and
+      correction events for the patient via a subscription registered when the entry is set — the chain updates
+      when the world changes, not on a timer. A TTL can still exist as a backstop, but it cannot be the primary
+      mechanism.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Does temperature-zero make the narrator's output deterministic?</span></summary>
+    <div class="answer">
+      <p>No. Temperature-zero, a pinned model version, and a pinned prompt reduce variance and make regeneration
+      <em>reproducible enough to audit</em>, but they do not guarantee a language model returns byte-identical
+      text — floating-point non-associativity, batching, and hardware differences can still shift a token. So
+      the design does not claim generation determinism from the narrator. It claims something narrower and
+      honest: the hashes detect drift; they do not prevent it. Any real determinism in this system comes from
+      the structured chain, not from the model that describes it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">If temperature-zero isn't deterministic, what do the chain and narrative hashes actually buy you?</span></summary>
+    <div class="answer">
+      <p>Drift detection and reproducible auditing. The chain-json hash pins the exact input the narrator saw,
+      the narrative hash pins the exact text served, and the validation version pins the rules it passed.
+      Stored together, they let a later regeneration be compared against what was actually served, so a
+      divergence is <em>caught</em> rather than assumed impossible. You cannot promise the model never drifts,
+      but you can promise that if it does, the audit trail shows it — which is the guarantee an auditor
+      actually needs.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">So the clinician dashboard could flicker on cache rehydrate. How is that prevented?</span></summary>
+    <div class="answer">
+      <p>By not regenerating the narrative per view. Narratives are cached and served keyed by the chain hash,
+      so a rehydrate returns the same stored text rather than re-invoking the model, which is where flicker
+      would come from. Regeneration only happens when the underlying chain actually changes — a new
+      decision-write or correction — at which point a different narrative is expected and correct. The
+      structured chain is the source of stability; the cache-by-hash discipline is what protects the panel from
+      the model's non-determinism.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Where does real determinism in this system come from, then?</span></summary>
+    <div class="answer">
+      <p>From the structured reconstruction, not the prose. The regulator chain is a pure function of immutable
+      spine events, the correction epoch, and a total ordering over
+      <code>(event_time_ms, source_event_seq, vertex_id, edge_position)</code>; given the same anchor those
+      inputs are fixed, so the output is fixed and its hash is verifiable. The narrator sits downstream of that
+      determinism and inherits none of the model's uncertainty into the evidentiary artifact. That separation —
+      deterministic chain, best-effort narration — is the whole reason the LLM is allowed near a regulated
+      surface at all.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is the regulator export not cached in Redis?</span></summary>
+    <div class="answer">
+      <p>Because it is a deterministic stream reconstructed from the spine, not a point lookup that benefits
+      from a cache. Every export is anchored, paginated by a stable cursor, and reproducible on demand, so
+      caching it would add invalidation complexity for little gain and risk serving a stale page under a moving
+      anchor. Large exports are instead handled by an async job with a webhook. The clinician path caches
+      because it is latency-sensitive and repeatedly asked; the regulator path streams because it is
+      correctness-sensitive and replayable.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A model or prompt version bumps. What happens to previously served narratives?</span></summary>
+    <div class="answer">
+      <p>Previously served narratives keep their stored hashes and the versions they were produced under, so
+      they remain auditable exactly as served — the bump does not retroactively rewrite history. A new request
+      runs under the new versions, and because the versions are part of what is pinned and stored, a
+      regeneration under a different version that diverges is flagged rather than silently accepted. This is why
+      the model and prompt versions are treated as first-class recorded inputs, not deployment details: they
+      are part of what makes a past narrative explainable.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 8 ================= -->
+<section class="theme" id="t8">
+  <h2><span class="tnum">08</span> Nine years of hydration — what it buys</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Why does a decision-chain query care about nine years of history?</span></summary>
+    <div class="answer">
+      <p>Because a regulator can ask about a decision made years ago, and there is nothing to reconstruct unless
+      that history lives in the spine. Roughly nine years of records were replayed through the same
+      append-only spine that carries live traffic, so the system starts with its full past rather than accruing
+      one. For a chronic patient whose current plan rests on a chain that began long before, the historical
+      backfill is the difference between a complete chain and a stub.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What breaks if legacy event time is collapsed to load time during hydration?</span></summary>
+    <div class="answer">
+      <p>Every as-of reconstruction — the entire regulator product — becomes void. If nine years of events all
+      carry a load-day timestamp, the chain can no longer be ordered by when things actually happened, and any
+      "what was true at this instant" query returns nonsense because everything appears to have occurred at
+      once. That is why each legacy record keeps its real-world event time and observed time separately from the
+      received and written timestamps that record only when the system learned of it. Collapsing them apart is
+      not a data-quality nit; it is a correctness-ending mistake.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">How is the backfill made idempotent and resumable?</span></summary>
+    <div class="answer">
+      <p>Content-addressed event ids plus conditional writes: re-running the pipeline over the same corpus
+      produces a byte-identical spine because a duplicate event addresses to the same id and the conditional
+      write is a no-op. That makes the load safe to interrupt and resume, and safe to re-run without doubling
+      anything. Idempotence is what lets a nine-year backfill be operated like a normal pipeline rather than a
+      one-shot migration you are terrified to touch.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">How do you know the hydration didn't silently corrupt or reorder history?</span></summary>
+    <div class="answer">
+      <p>Because re-running it is an executable proof: the same corpus yields a byte-identical spine and an
+      identical snapshot manifest hash, so equality of the hash is a check you can run rather than an assurance
+      you have to trust. If a load had corrupted or reordered anything, the hash would differ and the
+      divergence would be caught. This turns "we believe the backfill was faithful" into "the backfill
+      reproduces to the same bytes, here is the hash" — the kind of claim an auditor can independently verify.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What specifically does nine years of hydration buy this query that a fresh system couldn't offer?</span></summary>
+    <div class="answer">
+      <p>The ability to answer the regulator's oldest questions at all. A decision made years before the
+      platform went live is only reconstructible if its events exist in the spine with faithful event times, so
+      hydration is what makes a long-tenure chronic patient's chain deep and complete rather than starting from
+      whenever the platform switched on. It also means the deterministic reconstruction has real, messy history
+      to be tested against — corrections, supersessions, protocol changes — not a clean synthetic past.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why are hydration-time lateness and live-time lateness handled as different modes?</span></summary>
+    <div class="answer">
+      <p>Live traffic tolerates a small operational window of late arrivals; hydration deliberately expects a
+      nine-year spread of "late" data, because every backfilled record arrives long after it occurred. Treating
+      hydration under the live watermark would flag the entire backfill as pathologically late and either drop
+      or misclassify it. So lateness runs in a distinct hydration mode that keeps that wide spread as normal,
+      preserving the real event times instead of forcing legacy data through an operational-window assumption
+      built for streaming.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A chronic patient's chain spans the full nine years. How does the regulator export page through that without falling over?</span></summary>
+    <div class="answer">
+      <p>Above a page-count threshold the export switches to an async job mode: it returns a job id and
+      notifies via webhook on completion instead of holding a synchronous request open. Within a job, the
+      deterministic cursor pages the reconstruction in stable, restart-safe chunks, and per-tenant and
+      per-role rate limits plus a circuit breaker keep one large export from starving the endpoint. So a
+      decade-spanning chain is handled as a bounded stream of pages, not a single unbounded response that times
+      out.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 9 ================= -->
+<section class="theme" id="t9">
+  <h2><span class="tnum">09</span> Governance, PHI and the LLM boundary</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">Where does the narrator run, and does PHI leave the network?</span></summary>
+    <div class="answer">
+      <p>The production narrator is a self-hosted language model running inside the platform's VPC, so the
+      chain — which contains patient identifiers and clinical detail — is never sent off the network to
+      generate prose. In-VPC self-hosting is the single, explicit production path for the LLM boundary. That
+      choice is deliberate: the cheapest way to keep clinical text safe is to not let it leave in the first
+      place.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Under what single condition is an external provider permitted?</span></summary>
+    <div class="answer">
+      <p>Only with a de-identified payload — the chain must be stripped of protected health information before
+      it ever leaves the network to an external model. That is the one permitted alternative to the self-hosted
+      in-VPC path, and it changes the residency of clinical text rather than relying on a promise about what the
+      external service does with it. If the payload still contains PHI, the external route is not available,
+      full stop.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Isn't a no-retention contract with a provider equivalent to keeping the data in-VPC?</span></summary>
+    <div class="answer">
+      <p>No — and conflating the two is the mistake to avoid. A contractual no-retention agreement is a legal
+      control over what a provider promises to do with data it has already received; it is not a
+      network-residency control, because the PHI still left your network to reach them. In-VPC self-hosting
+      prevents the data from leaving at all, which is a categorically stronger guarantee than a promise not to
+      keep what was sent. The design treats residency and retention as different axes and only accepts an
+      external provider when residency is handled by de-identification, not by a retention clause.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">How is regulator access governed — RBAC, audit, rate limits?</span></summary>
+    <div class="answer">
+      <p>The regulator export runs under a distinct RBAC role, separate from the clinician role, with per-tenant
+      and per-role rate limits and a max page size. An immutable audit record — viewer, purpose, tenant, export
+      id, and export hash — is written <em>before</em> the export is served, so access is logged even if the
+      request later fails. Circuit breakers protect the endpoint independently of the clinician path. Access to
+      the audit surface is itself audited.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">The chain attributes decisions to clinicians. How do you keep it from becoming a clinician scorecard?</span></summary>
+    <div class="answer">
+      <p>Through a set of mitigations that make misuse hard and visible rather than any single guarantee.
+      Attribution carries a pseudonymous actor id rather than a name; the attribution block is rendered as a
+      sibling to the causal chain, not folded into it; where actors are listed the ordering is alphabetic and
+      never rankable; viewing attribution is RBAC-gated toward leadership-and-self views; and every regulator
+      access is written to an immutable log before serving. None of these makes a scorecard impossible, but
+      together they make building one require deliberate, logged, cross-purpose effort.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Couldn't leadership use this to rank clinicians anyway?</span></summary>
+    <div class="answer">
+      <p>Honestly, a determined actor with enough access could try to derive one — no design can make a
+      dataset that names who did what incapable of being misused. What the system does is raise the cost and
+      the visibility: pseudonymous ids, never-rankable alphabetic ordering, RBAC scoping, and an immutable
+      access log mean the raw material is not shaped like a league table and any attempt to assemble one leaves
+      a trail. The claim is not "this can never become a scorecard"; it is "misuse is made hard and visible,"
+      which is the honest and enforceable version.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What is written to the audit log, and exactly when?</span></summary>
+    <div class="answer">
+      <p>For a regulator export: the viewer id, the stated purpose or access reason, the tenant scope, the
+      export id, and the export hash — and it is written before the chain is served, not after. Writing it
+      first means an access is recorded even if the export subsequently errors or is abandoned, so the log
+      reflects intent to access, not just successful completion. Clinician requests are logged through the
+      standard access pipeline. The ordering — log, then serve — is the small detail that makes the audit trail
+      trustworthy.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why does attribution use a pseudonymous actor id rather than the clinician's name in the graph?</span></summary>
+    <div class="answer">
+      <p>Because the graph's job is to record which actor a decision is attributed to, not to broadcast
+      identity everywhere the chain travels. A pseudonymous id lets the attribution be joined back to a real
+      identity through a governed, access-controlled resolution when there is a legitimate need, while keeping
+      raw names out of chains that may be widely read. It reduces the blast radius of any chain that leaks or is
+      over-shared and supports the never-rankable posture around clinician attribution.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">If the narrator is optional and can be suppressed, why include an LLM at all?</span></summary>
+    <div class="answer">
+      <p>Because a cited natural-language summary is genuinely useful at the bedside — a clinician reads "started
+      because HbA1c crossed the threshold, superseding the diet-only plan" faster than a node-and-edge graph —
+      and the guardrail makes that convenience safe by refusing any sentence it cannot cite. The value is
+      accessibility; the risk is overreach; and the design keeps the value while capping the risk by making the
+      narrator strictly downstream of the deterministic chain, validated per sentence, and droppable without
+      loss. If the guardrail ever felt insufficient, a deterministic template renderer is the fallback, since
+      the chain already carries everything a template needs.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 10 ================= -->
+<section class="theme" id="t10">
+  <h2><span class="tnum">10</span> Failure modes, degradation and operations</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What happens when projector lag exceeds the clinician SLA?</span></summary>
+    <div class="answer">
+      <p>The clinician path returns a degraded response — a bounded-view-degraded state with the last event
+      sequence it actually saw and an explicit banner that it is serving a stale projection — rather than
+      pretending the graph is current or hanging the request. The projector lag is always returned so the
+      degradation is legible. The clinician still gets a usable answer with an honest caveat, which is far
+      better than a silently outdated chain or a spinner mid-consultation.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why return a degraded response instead of blocking or serving silently-stale data?</span></summary>
+    <div class="answer">
+      <p>Blocking hangs the consultation; serving silently-stale data lies to the clinician. A labelled degraded
+      response does neither — it hands over the best available chain and tells the reader exactly how fresh it
+      is, so the human can decide whether to trust it or wait. This is suppression-over-emission applied to
+      operations: when the system cannot meet its freshness bar, it says so instead of hiding it. Degraded
+      responses are also held to the latency budget, so degradation never means slow.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How does the regulator endpoint protect itself under load?</span></summary>
+    <div class="answer">
+      <p>With per-tenant and per-role rate limits, a max page size, a circuit breaker independent of the
+      clinician path, and an async export job mode above a page-count threshold. These exist because a full
+      historical export is expensive and a burst of them could starve the endpoint or the spine. Isolating the
+      regulator controls from the clinician path means a heavy audit run cannot degrade the bedside experience,
+      and vice versa — the two products fail independently.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">The narrator times out or fails mid-request. Does the whole chain fail?</span></summary>
+    <div class="answer">
+      <p>No. The narrative is off to the side of the authoritative path, so an LLM timeout or failure yields a
+      <code>narrative_suppressed</code> response with the full chain JSON and failure metadata — the caller
+      loses the prose, never the evidence. Because the chain is computed before and independently of the
+      narrator, there is no path where a model problem produces a wrong or missing chain. This is precisely why
+      the narrator was architected as an optional post-processing step rather than an inline dependency.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What do the green, yellow, and red degradation tiers mean operationally?</span></summary>
+    <div class="answer">
+      <p>Green means projector lag is within SLA and the clinician chain reflects fresh structure. Yellow and
+      red are escalating degraded states where lag exceeds the threshold: the response still returns within the
+      latency budget but is explicitly marked stale, with the last event sequence seen so the reader knows how
+      far behind it is. The tiers turn a continuous lag figure into an operational signal the UI and on-call can
+      act on, rather than a raw number nobody reads.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How are very large exports handled without timing out the request?</span></summary>
+    <div class="answer">
+      <p>Above a page-count threshold the export becomes an async job: the endpoint returns a job id
+      immediately and delivers a webhook notification when the reconstruction completes, committing an export
+      hash. Synchronous requests stay small and fast; unbounded historical exports run offline as jobs. This
+      keeps the endpoint responsive and lets a decade-spanning chain be produced reliably instead of racing a
+      request timeout it would eventually lose.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">A clinician just wrote a decision they can't see because the live graph is stale. How is that handled?</span></summary>
+    <div class="answer">
+      <p>This is the exact case a TTL would mishandle. The chain cache invalidates on decision-writes for the
+      patient, so the clinician's own action busts the relevant cache entry rather than being hidden behind a
+      timer. If the projection itself is lagging, the response degrades with a stale banner and the last event
+      sequence, so the clinician can see that their write may not yet be reflected and why. The combination of
+      write-driven invalidation and honest degradation is what keeps the "I just did this and it's not there"
+      failure from happening silently.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What observability is needed to run this safely?</span></summary>
+    <div class="answer">
+      <p>Per-endpoint latency at the median and tail, the narrative faithfulness-rejection rate, the
+      audit-export volume, and the projector lag distribution that drives degradation — plus tenant-assertion
+      failures, which should be zero and page if not. These are the signals that tell you whether the clinician
+      SLA is holding, whether the narrator is suppressing more than expected (a prompt or model regression),
+      and whether the regulator endpoint is being stressed. Without them you would learn about a degradation or
+      a guardrail regression from a user, not a dashboard.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 11 ================= -->
+<section class="theme" id="t11">
+  <h2><span class="tnum">11</span> Evaluation and acceptance criteria</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What are the two things evaluation must never let break?</span></summary>
+    <div class="answer">
+      <p>A chain that reconstructs differently on a rerun, and a narrative that says more than the chain
+      supports. Everything in the evaluation suite is organised around those two failures, because they are the
+      ones that destroy an audit surface's credibility. Both are checked on seeded fixtures where the correct
+      answer is known by construction, so a regression is caught deterministically rather than argued about.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip screening">screening</span><span class="qtext">What is a "golden chain," and what edge cases does the set cover?</span></summary>
+    <div class="answer">
+      <p>A golden chain is a hand-curated fixture whose correct reconstruction is known, used to assert
+      byte-for-byte output. The set is expanded well beyond the archetype's baseline of twenty to cover the
+      cases that actually bite: chronic histories over a year long, multiple protocol sets, corrections and
+      supersedes chains, same-timestamp events that stress the tie-break ordering, missing projection edges,
+      and paginated audit fixtures. It exists so the hard cases are tested on purpose, not discovered in
+      production.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How is replay determinism tested?</span></summary>
+    <div class="answer">
+      <p>The spine reconstruction is run repeatedly against a fixed historical anchor and asserted to produce an
+      identical chain each time, including across simulated server restarts, and the cursor is checked to reject
+      reuse when freshness changes without the same anchor. The acceptance bar is "identical at any as-of,"
+      verified against the export hash. This directly tests the property the regulator depends on — that next
+      year's rerun matches this year's — rather than assuming the deterministic ordering is enough.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">How is narrative faithfulness tested per sentence?</span></summary>
+    <div class="answer">
+      <p>A faithfulness suite runs the claim grammar over each factual sentence on seeded chains where the
+      supportable claims are known, asserting that every sentence decomposes into allowed templates backed by
+      cited node fields and edges and that unsupportable sentences yield <code>narrative_suppressed</code>. The
+      bar is "suppress, don't soften," so a fixture that plants an uncitable claim must produce suppression, not
+      a weakened variant. Testing per sentence rather than per paragraph is what catches a single overreaching
+      clause hiding in otherwise-supported prose.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Golden chains are seeded fixtures. How do you know they resemble real chronic histories?</span></summary>
+    <div class="answer">
+      <p>They are constructed to reproduce the structural features real chronic histories have — long
+      windows, multiple protocol sets, corrections, supersessions, same-timestamp collisions, missing
+      projection edges — rather than clean happy-path chains, precisely so the suite exercises what production
+      throws at it. That said, seeded fixtures cannot prove behaviour on the full messiness of nine years of
+      real data, and the honest position is that they test the known hard cases well and the unknown ones not at
+      all. This is a real limitation, not a solved problem, and it is why no measured production accuracy is
+      claimed.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What is the clinician latency acceptance target, and what about degraded responses?</span></summary>
+    <div class="answer">
+      <p>The pre-registered targets are a P99 under 500 ms on a cache hit and under 1.5 s cold, with degraded
+      responses required to return within the same budget rather than hanging. The budget is tight because the
+      chain has to open inside a live consultation. Crucially these are the targets the system was designed and
+      reviewed against — not measured production figures, which are not published here.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">All of these are targets. Is anything actually measured and published?</span></summary>
+    <div class="answer">
+      <p>No measured production numbers are published here — every latency, depth, and quality figure on this
+      page and its case study is a pre-registered acceptance target the system was designed, reviewed, and
+      deployed against, not an observed result. The observed outcomes are not mine to publish. This is a
+      deliberate honesty constraint: it would be easy and misleading to dress a target up as a measurement, so
+      the portfolio states targets as targets and stops there.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why is tenant safety an eval bar of "zero / page-out" rather than a percentage?</span></summary>
+    <div class="answer">
+      <p>Because a cross-tenant node on a returned chain is a reportable privacy incident, and a percentage
+      target would implicitly sanction a nonzero rate of them. The bar is that any such node is an incident that
+      pages a human, so the acceptance criterion is a hard zero backed by the response-time assertion that
+      fails the request rather than serving a leak. Some failures are best expressed as invariants, not
+      rates, and tenant isolation in healthcare is one of them.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= THEME 12 ================= -->
+<section class="theme" id="t12">
+  <h2><span class="tnum">12</span> Tradeoffs and what I would do differently</h2>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why not snapshot the graph periodically and serve the regulator from snapshots instead of spine replay?</span></summary>
+    <div class="answer">
+      <p>Snapshots only let you replay the instants you happened to snapshot; a regulator can ask about any
+      moment, including one between snapshots, so you would either store impractically many or return an
+      approximation. Reconstructing from the append-only spine at an arbitrary anchor answers <em>any</em>
+      instant exactly, with correction and supersedes lineage applied. The cost is that reconstruction is more
+      work than reading a snapshot, which is why it is the regulator path's job and not the clinician's. For
+      point-in-time audit, exact-any-instant beats fast-some-instants.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Why not make the clinician path also spine-deterministic for consistency?</span></summary>
+    <div class="answer">
+      <p>Because the clinician needs "what is true right now" at bedside latency, and reconstructing from the
+      spine on every panel open would blow the sub-500-ms budget for no clinical benefit — the clinician does
+      not need byte-identical replay, they need current and fast. Using the live projected graph, bounded and
+      cached, is the right tool for that job. Forcing one engine on both audiences is exactly the mistake the
+      first design made; the two-product split is the correction. Consistency of implementation is not worth
+      degrading both audiences to serve one contract.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">Two products doubles the surface area. Was the split worth the operational cost?</span></summary>
+    <div class="answer">
+      <p>It is a real cost — two endpoints, two RBAC roles, two sets of limits and audit paths, two failure
+      modes to run. But the cost is bounded because they share the seed contract and the narrative guardrail,
+      so the duplication is at the edges, not the core, and the products fail independently, which is itself an
+      operational benefit. The alternative — one pipeline — was reviewed and judged unable to meet both bars, so
+      the split is not gratuitous surface area; it is the minimum structure that makes both correctness
+      contracts satisfiable at once.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">Could a deterministic template renderer replace the LLM narrator entirely — what would you gain and lose?</span></summary>
+    <div class="answer">
+      <p>Yes, and it is a live alternative, because the chain already carries every field a template would need
+      — drug, evidence value, policy threshold, supersession. You would gain true output determinism and remove
+      the PHI-boundary and drift concerns entirely. You would lose fluency and the ability to phrase varied
+      chains naturally, and you would trade a claim-grammar guardrail for a fixed set of sentence templates. The
+      current design keeps the LLM for its readability while confining it behind the same claim grammar a
+      template would enforce, so the two are closer than they look — the honest answer is that a template is a
+      reasonable fallback the design is structured to allow.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What was platform-gated and could not be closed by this KQ alone?</span></summary>
+    <div class="answer">
+      <p>Several shared contracts: a standardised tenant-scoped traversal-source wrapper, a shared correction-
+      event backbone with decision-write invalidation, a centralised four-field event-time schema in the spine,
+      and — used by this query and the cross-domain drill-in query — a signed shared narrative-guardrail contract.
+      The regulator path additionally depended on spine indexing being in production. All of these have since
+      landed except the narrative-guardrail contract, which remains unsigned: the query now binds to the shared
+      wrapper, backbone, event-time schema, and spine index, while the synthesis narrator ships off by default
+      until the guardrail contract is signed. KQ9 designed its own versions first so each was specifiable and
+      testable, and carried every dependency explicitly rather than assuming it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip deep">deep</span><span class="qtext">What would you do differently with hindsight?</span></summary>
+    <div class="answer">
+      <p>Bring the two-product split to the very first design review instead of arriving with the single
+      pipeline that the review sent back for redesign — the structural conflict between "right now" and "back
+      then" was discoverable up front, and I now treat "does one artifact serve two burdens of proof" as a
+      question to ask before drawing the architecture. I would also freeze the shared seed contract and the
+      narrative-guardrail contract earlier, since both turned out to be the real coupling points across
+      products and across queries. The redesign was the right outcome; it just did not need to be a redesign.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="mark">›</span><span class="chip adversarial">adversarial</span><span class="qtext">What is the single biggest residual risk in this design?</span></summary>
+    <div class="answer">
+      <p>The dependency chain under the regulator product: its determinism guarantee rests on spine indexing,
+      the correction-event backbone, and the four-field event-time schema all being correct and in production,
+      and a defect in any of those upstream contracts would undermine replayability in a way KQ9 cannot fully
+      compensate for on its own. The mitigations — export hashes, replay instructions, the deterministic cursor
+      — make such a defect <em>detectable</em>, but detection is not prevention. That is the honest residual
+      risk, and it is why those platform items are named as gating dependencies rather than glossed over.</p>
+    </div>
+  </details>
+</section>
+
+<div class="callout gaps">
+  <span class="label">Honest gaps</span>
+  <h2>What this query cannot claim today</h2>
+  <p><strong>The real design-review verdict was redesign.</strong> The first design — a single live-graph
+  pipeline serving both the clinician panel and the regulator export — was returned by a structured adversarial
+  review with one unambiguous recommendation: redesign, behind two structural blockers, thirteen high-severity
+  findings, and six mediums. The v2 described throughout this page <em>is</em> that redesign: the two-product
+  split is the answer to the verdict, and telling it as anything softer would be dishonest. Every blocker and
+  high is dispositioned — most to a named mechanism, the rest carried openly as tracked platform dependencies.</p>
+  <p><strong>The shared backbone, and the one contract still open.</strong> KQ9 first built its own tenant
+  scoping, cache-key completeness, correction invalidation, event-time semantics, and narrative guardrail. The
+  corresponding <em>shared</em> platform contracts — a standardised tenant-scoped traversal-source wrapper, a
+  correction-event backbone, a centralised four-field event-time schema, and spine indexing for the regulator
+  path — have since landed, and the query now binds to them rather than its own inlined copies. The one
+  exception is the signed shared narrative-guardrail contract, still unsigned: tenancy, correction invalidation,
+  and event-time now rest on a platform-wide guarantee, while the narrative guardrail stays "partial" and the
+  synthesis narrator ships off by default until the contract is signed.</p>
+  <p><strong>What the query genuinely cannot answer.</strong> It reconstructs the decision reasoning a clinician
+  recorded; it does not certify that the reasoning was correct or that the treatment worked, and it makes no
+  causal claim about outcomes. The language model narrating the chain is not made deterministic by
+  temperature-zero — the hashes detect drift, they do not prevent it — so determinism lives in the structured
+  chain, never in the prose. Governance mitigations make turning the attribution into a clinician scorecard hard
+  and visible, not impossible. And the evaluation rests on seeded golden fixtures whose coverage of the known
+  hard cases is strong but which cannot prove behaviour across the full messiness of nine years of real data.</p>
+  <p><strong>What is not published.</strong> No measured production metrics appear anywhere here. Every latency,
+  depth, and quality figure is a pre-registered acceptance target the system was designed, reviewed, and
+  deployed against — the observed results are not mine to publish. This query has runnable design and API
+  contracts, not a published runnable code sample.</p>
+</div>
+
+<footer>
+  <p>Client and product identifiers are anonymised; this page describes a decision-chain reconstruction system
+  built for a chronic-care platform covering 80+ chronic conditions. The platform served roughly 10,000
+  patients across those conditions, over about nine years of history hydrated into the append-only event spine.
+  Role: sole owner — design through production.</p>
+  <p><strong>No measured production metrics are published here.</strong> Every latency, depth, threshold, and
+  quality figure on this page is a pre-registered acceptance target the system was designed, reviewed, and
+  deployed against — not an observed measurement. The design-review verdict for this query was redesign, and the
+  two-product architecture described here is that redesign.</p>
+</footer>
+
+</main>
+</body>
+</html>
