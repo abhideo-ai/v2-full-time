@@ -308,6 +308,26 @@ automation/.venv/bin/python automation/daily.py     # regenerate the page from d
   inventing one. That refusal is deliberate: an agent has to come back and ask.
 - Tests: `bash automation/tests/run.sh` (the page suite needs `npm install jsdom`).
 
+### Case studies — VoltusWave · Amura
+
+`killer-query-case-studies/` is **v1**, complete and committed (46227bd). Ten killer-query case
+studies plus Q&A companions, ~198,000 words: what was implemented for Amura, a chronic-care
+platform covering 80+ conditions.
+
+**v2 is in progress and needs a few more points before it is final.** It lands in
+`killer-query-case-studies-v2/` — **never overwrite v1 in place.** v1 stays authoritative until
+v2 is complete, `professional-journey-original.md` line 231 and the launcher link both point at
+v1 and stay valid, and keeping both side by side is what makes the diff possible.
+
+**The v1↔v2 diff is honesty work, not bookkeeping.** A claim that moves from *shipped* to
+*designed* between his own two versions must never reach a résumé as shipped. Extract both,
+diff them, and treat any downgrade as binding.
+
+**Status vocabulary, preserved from the source and never upgraded:** `shipped-production` ·
+`shipped-ci-only` · `designed-reviewed` · `designed-only` · `unclear`. The material draws this
+line itself — *"components landing does not by itself convert a review verdict"* is its own
+wording. Anything derived from it inherits that precision.
+
 ### upGrad export
 
 ```
