@@ -43,7 +43,7 @@
             },
             {
               "id": "paste-1-10",
-              "task": "Paste §§1–10 from the <a href=\"../master/master_paste.html\">paste sheet</a> — headline, summary, three skills blocks, five experience roles",
+              "task": "Paste §§1–10 from the <a href=\"../master/upgrad_resume.html\">master résumé</a> — headline, summary, three skills blocks, five experience roles",
               "detail": "Use the copy buttons; they carry <code>data-copy-html=\"1\"</code> so bold reaches the clipboard. Every bullet on that sheet is a standalone <code>&lt;p&gt;</code> by design — upGrad strips bold from list-rooted content, so pasting out of a list silently loses every bold fact.",
               "p": 1,
               "needs": [
@@ -74,7 +74,7 @@
             {
               "id": "personal-info",
               "task": "Check the Personal Information modal — Hyderabad · phone · email · LinkedIn <strong>abhisheikdeo</strong>",
-              "detail": "The slug is <code>abhisheikdeo</code>, not <code>abhideo</code> — that is the email domain. Exact phone and email are in <a href=\"../master/master_paste.html\">§0 of the paste sheet</a>. Card-only: the bot only ever writes the headline field.",
+              "detail": "The slug is <code>abhisheikdeo</code>, not <code>abhideo</code> — that is the email domain. Exact phone and email are in <a href=\"../master/upgrad_resume.html\">§0 of the paste sheet</a>. Card-only: the bot only ever writes the headline field.",
               "p": 2,
               "needs": [
                 "clone-card"

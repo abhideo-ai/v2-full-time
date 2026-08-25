@@ -47,11 +47,26 @@ def _inner_html(el) -> str:
 
 
 def _ul_items_html(div) -> list[str]:
-    """Return each <li>'s inner HTML (with <strong>/<em> preserved)."""
+    """Each bullet's inner HTML, <strong>/<em> preserved.
+
+    Accepts BOTH shapes, because one file now serves two masters:
+
+      <ul><li>…</li></ul>   the original machine-facing shape
+      <p>…</p><p>…</p>      standalone paragraphs
+
+    The paragraph form exists because upGrad's paste sanitiser STRIPS BOLD from
+    list-rooted content, so anything a human copies by hand must not sit inside
+    a <ul>. Supporting both here is what allows a single résumé file to be both
+    hand-pasted and bot-parsed, instead of two files that silently drift apart.
+
+    Returning [] on an unrecognised shape would be silently skipped by the
+    callers, so an unparseable section must look empty ONLY when it truly is.
+    """
     ul = div.find("ul")
-    if ul is None:
-        return []
-    return [_inner_html(li) for li in ul.find_all("li", recursive=False)]
+    if ul is not None:
+        return [_inner_html(li) for li in ul.find_all("li", recursive=False)]
+    return [_inner_html(p) for p in div.find_all("p", recursive=False)
+            if p.get_text(strip=True)]
 
 
 def _section_div(soup: BeautifulSoup, sec_id: str):

@@ -1,10 +1,14 @@
 # master/ — the canonical résumé source
 
-**`master/upgrad_resume.html` does not exist yet, and nothing exports until it does.**
+**`master/upgrad_resume.html` is the single master résumé.**
 
-That is deliberate. v1's master was assembled from "bits and pieces"; v2 derives it from
-`professional-journey.md`, which is the source of truth. Author it against
-`upgrad_resume.template.html`, which carries the exact section contract the bot parses.
+One file, two readers: he pastes sections 1–15 into the Hiration card by hand, and
+`automation/upgrad_resume_paste.py` parses ten of them by id for the bot. It replaced a three-file
+split on 2026-08-25 — a parsed copy, a hand-paste copy and a blank template — whose sections 1–10
+were duplicated verbatim and could drift apart without anyone noticing.
+
+Every bullet is a standalone `<p>`, never inside a `<ul>`: upGrad's paste sanitiser strips bold from
+list-rooted content. `_ul_items_html` reads **both** shapes, so the same file serves both readers.
 
 ---
 
@@ -23,7 +27,7 @@ That is deliberate. v1's master was assembled from "bits and pieces"; v2 derives
 |---|---|---|
 | `quick-headline` | `<p>` | plain text |
 | `quick-summary` | `<p>` | HTML, `<strong>` preserved |
-| `quick-skills-tls` | `<ul><li>` | "Technology Leadership & Strategy" |
+| `quick-skills-tls` | `<p>` or `<ul><li>` | "Technology Leadership & Strategy" |
 | `quick-skills-ee` | `<ul><li>` | "Engineering Excellence" |
 | `quick-skills-bd` | `<ul><li>` | "Business & Delivery" |
 | `quick-vp` | `<ul><li>` | experience 0 |

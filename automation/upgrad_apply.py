@@ -54,7 +54,7 @@ URL = "https://careers.upgrad.com/resume-builder"
 #   august_ic_master_resume -> DEFAULT. Cloned from august_master_resume, so it already
 #                            carries all ten experience entries (five bot-written, five
 #                            pre-2016 untouched), dates, education and certifications.
-#                            Content source: master/master_paste.html.
+#                            Content source: master/upgrad_resume.html.
 #                            NAME NOT YET FINALISED (2026-08-25) and the card may not exist
 #                            yet -- until it does, stage_find_master fails loudly with a
 #                            "check the card name / pass --master" message. That loud

@@ -74,9 +74,12 @@ verbatim — typos included — and point to it from the derived file.** He has 
 earlier rewrite, *"after your changes I'm unable to recognise it."* Check `git status`
 first: an `M` means the on-disk version is not recoverable from git.
 
-`master/upgrad_resume.html` **does not exist yet and must be authored** from the journey
-doc against `master/upgrad_resume.template.html`. Nothing exports until it does. See
-`master/README.md` for the ten-section parser contract and its silent failure modes.
+`master/upgrad_resume.html` is **the single master résumé** — one file with two readers. He pastes
+sections 1–15 into the Hiration card by hand; `upgrad_resume_paste.py` parses ten of them by id for
+the bot. It replaced the old three-file split (parsed copy, hand-paste copy, blank template) on
+2026-08-25, because sections 1–10 were duplicated verbatim and drifting apart silently. Every bullet
+is a standalone `<p>`, never a `<ul>` — upGrad strips bold from list-rooted content — and the parser
+now accepts both shapes. See `master/README.md` for the ten-section contract.
 
 ---
 
@@ -389,7 +392,7 @@ Two live masters, both in `cleanup_cards.py`'s `PROTECTED` set:
   not from blank.** That base already carries all ten experience entries — the five the bot
   writes plus the five pre-2016 roles it never touches — along with dates, education and
   certifications. So building the IC card is **overwriting text in an existing skeleton**, not
-  creating sections. Content comes from `master/master_paste.html`. It is the **script
+  creating sections. Content comes from `master/upgrad_resume.html`. It is the **script
   default** as of 2026-08-25 — a bare export uses it, no flag needed.
   **The name is not finalised.** Until a card exists in Hiration under exactly this name,
   every export fails loudly at `stage_find_master` with a "check the card name, or pass
@@ -567,9 +570,9 @@ recording failed.
 
 - `master/upgrad_resume.html` — the ten parsed sections, verified against the real parser, no
   silent skips. 23 leading verbs, all unique.
-- `master/master_paste.html` — the manual paste sheet. Section 0 is Personal Information,
-  1–10 the parsed sections, 11–15 the pre-2016 roles. Every bullet a standalone `<p>` so bold
-  survives the upGrad paste; zero `<ul>` elements by design.
+- **One master file.** `master/upgrad_resume.html` carries Personal Information, the dates table,
+  the ten parsed sections and the five card-only pre-2016 roles. `master_paste.html` and
+  `upgrad_resume.template.html` were folded into it on 2026-08-25.
 - Root `index.html` — minimal launcher with status tabs (`static/tabs.js`). A workspace joins
   by adding one `<a class="card" data-status="…">` to `#app-list`; counts are computed.
 - `automation/workspace_favicon.py` — per-workspace favicon so open tabs stay tellable apart.
