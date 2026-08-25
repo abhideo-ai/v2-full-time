@@ -29,7 +29,7 @@
        Common acronyms may stay unexpanded HERE only. -->
   <div class="section copy-target" id="quick-headline">
     <button class="copy-btn" data-copy-target="#quick-headline">Copy</button>
-    <p>Principal Software Architect — multi-tenant SaaS platforms, Java and Spring Boot microservices, and production AI on AWS</p>
+    <p>Principal Software Architect — Java and Spring Boot microservices, multi-tenant SaaS platforms, and production AI where deterministic code owns every number</p>
   </div>
 
   <!-- SUMMARY — parsed as HTML, <strong> preserved.
@@ -37,7 +37,7 @@
        which is what makes the card-only pre-2016 roles count. -->
   <div class="section copy-target" id="quick-summary">
     <button class="copy-btn" data-copy-target="#quick-summary">Copy</button>
-    <p>Principal-level software architect with <strong>19+ years</strong> across software as a service (SaaS), healthcare, travel and enterprise data. Deep in <strong>Java and Spring Boot</strong> — roughly <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025 — alongside <strong>Python</strong>, <strong>Go</strong> and artificial intelligence (AI) in production on Amazon Web Services (AWS). Moved a per-customer deployment model onto shared <strong>multi-tenant</strong> infrastructure, unified identity on central single sign-on (SSO) with zero user disruption, and retired a third-party pricing dependency for an in-house Elasticsearch, Logstash and Kibana (ELK) stack.</p>
+    <p>Principal-level software architect, <strong>19+ years</strong>, strongest in <strong>Java and Spring Boot</strong> — about <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025. Consolidated per-customer deployments onto shared <strong>multi-tenant</strong> software as a service (SaaS) infrastructure with dedicated isolation for regulated banking customers, and moved every instance onto central single sign-on (SSO) with <strong>zero user disruption</strong>. Then shipped <strong>ten analytics and artificial intelligence (AI) services</strong> for a chronic-care platform on Amazon Web Services (AWS): causal inference and leakage-safe machine learning over <strong>9–10 years of patient history</strong>, deterministic code owning every number, and self-hosted models keeping patient data inside the client boundary. Cut infrastructure cost <strong>25–30%</strong> and deploy time from hours to <strong>under 10 minutes</strong>.</p>
   </div>
 
   <!-- SKILLS — three fixed subgroups.
@@ -60,9 +60,13 @@
       <li><strong>Java 8/17, Spring Boot 2.x</strong>, Java Server Pages (JSP) — microservices, versioned interfaces, Representational State Transfer (REST) API design</li>
       <li><strong>Python</strong> — Django, FastAPI, LangChain, LangGraph, <strong>retrieval-augmented generation (RAG)</strong> pipelines, Model Context Protocol (MCP) servers</li>
       <li><strong>Go</strong>, JavaScript, TypeScript, React, Node.js</li>
-      <li><strong>PostgreSQL</strong>, Amazon Aurora, DynamoDB, OpenSearch, Elasticsearch; SQL Server and MySQL in earlier roles</li>
-      <li><strong>AWS</strong> — Kinesis, Lambda, Elastic Container Service (ECS), S3, SQS, EC2; Datadog and Amplitude observability</li>
+      <li><strong>PostgreSQL</strong>, Amazon Aurora, DynamoDB, <strong>Elasticsearch dense_vector</strong> nearest-neighbour search, OpenSearch, <strong>Redis</strong>, <strong>DuckDB and Parquet</strong>; SQL Server and MySQL in earlier roles</li>
+      <li><strong>AWS</strong> — Kinesis, Lambda, Elastic Container Service (ECS), S3, SQS, EC2, <strong>SageMaker</strong>, <strong>Neptune</strong> with Gremlin; Datadog and Amplitude observability</li>
       <li>Keycloak, Red Hat single sign-on, OpenID Connect, OAuth 2.0</li>
+      <li><strong>Causal inference on observational data</strong> — propensity matching, inverse probability weighting (IPW), standardised mean difference (SMD) balance gates, seeded bootstrap intervals</li>
+      <li><strong>Leakage-safe machine learning</strong> — as-of featurisation, point-in-time correctness, outcome-maturity windows, right-censoring, calibration</li>
+      <li><strong>Deterministic, replayable systems</strong> — append-only event sourcing, frozen snapshots, byte-deterministic replay, canonical cache keys carrying every version pin</li>
+      <li><strong>Self-hosted models inside the virtual private cloud</strong> — Ollama, Llama 3.1, SageMaker embeddings, self-hosted LangSmith, Pydantic v2 structured output</li>
     </ul>
   </div>
 
@@ -89,8 +93,12 @@
       <li>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> in burst testing at <strong>P95 under 16 ms</strong>, on a flow firing ~50 calls per message</li>
       <li>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</li>
       <li>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</li>
-      <li>Engineered a <strong>RAG</strong> pipeline over dense vectors and an <strong>Amazon Neptune</strong> context graph spanning <strong>80+ chronic conditions</strong>, in <strong>Python</strong> with FastAPI, LangChain and LangGraph</li>
+      <li>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</li>
       <li>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering first-cut implementation and test scaffolding under review</li>
+      <li>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</li>
+      <li>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</li>
+      <li>Sequenced patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</li>
+      <li>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</li>
     </ul>
   </div>
 

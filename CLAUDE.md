@@ -194,19 +194,21 @@ versus a SOC, the security operations centre.
 
 *Rebuilt 2026-08-25 from `master/upgrad_resume.html` — this list is now real, not inherited.*
 
-- **Used — do not reuse as leading verbs** (all 23 leading verbs in the master):
-  Architected, Scaled, Deployed, Delivered, Engineered, Drove, Implemented, Steered, Forged,
-  Productized, Stewarded, Championed, Anchored, Coached, Surfaced, Partnered, Co-founded,
-  Mobilized, Helmed, Codified, Cut, Reconciled, Lifted.
+- **Used — do not reuse as leading verbs** (all 27 leading verbs in the master, regenerated
+  2026-08-25 after the Amura additions): Architected, Scaled, Deployed, Delivered, Engineered,
+  Drove, **Hardened, Extracted, Sequenced, Secured**, Implemented, Steered, Forged, Productized,
+  Stewarded, Championed, Anchored, Coached, Surfaced, Partnered, Co-founded, Mobilized, Helmed,
+  Codified, Cut, Reconciled, Lifted.
 - **ATS power verbs — current role ONLY — still free:** Secured, Optimized, Strengthened,
   Built, Spearheaded, Improved, Increased. *(Established, Launched, Designed, Reduced and
   Owned are burnt — their roots appear mid-bullet as establishing / launched / design /
   reducing / ownership.)*
 - **Fresh verbs — older roles only — still free: Translated, Calibrated. That is all.**
   Thirteen of the original fifteen went into the master.
-- **Verified free against the master, for Rule 7 top-ups:** Extracted, Instrumented, Hardened,
-  Replatformed, Brokered, Piloted, Eliminated, Halved, Bridged, Curated, Sequenced, Seeded,
-  Salvaged, Trimmed.
+- **Verified free against the master, for Rule 7 top-ups:** Instrumented, Replatformed,
+  Brokered, Piloted, Eliminated, Halved, Bridged, Curated, Seeded, Salvaged, Trimmed.
+  *(Extracted, Hardened, Sequenced and Secured moved to the used list on 2026-08-25.
+  `Built` is NOT free — `Build`-versus-buy sits mid-bullet in the skills block.)*
 
 **Same-root collisions count, and they hide mid-bullet.** Check the whole master, not just the
 leading words: `Lifted` as a leading verb sat alongside *lifting sales* and *lifting revenue*
