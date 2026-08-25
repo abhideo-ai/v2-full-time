@@ -586,9 +586,24 @@ no code change.
 
 ## Execution model — workflows and subagents do the work
 
-**Default to the Workflow tool for anything substantive**, and fan the work out to
-**subagents**. Read each phase's results before choosing the next phase. Solo only for
-conversational turns and trivial mechanical edits.
+**If it CAN be offloaded to a subagent or workflow, it IS.** Set by him 2026-08-25 and it is the
+default, not a preference — research, résumé drafting, JD scoring, workspace artefacts, extraction,
+audits, drafting of any kind. Read each phase's results before choosing the next phase.
+
+**The test is not "is this hard enough to delegate" — it is "does this have to be me".** Almost
+nothing does. When it feels faster to write it myself than to brief an agent, that is precisely
+the instinct that does not scale to twenty workspaces a night, and it is the same reflex that
+turns a main thread into the bottleneck.
+
+**What genuinely has to stay in the main thread:**
+
+- **Adjudicating** what comes back, and the **adversarial verify pass** against
+  `professional-journey.md` — delegation is only safe because this happens.
+- **His decisions** — the confirm-or-reject list, what to send, what to trim.
+- **Coordination** — deciding the next phase, and status changes through `./todo`.
+- Conversational turns, and running a command that already exists.
+
+Everything else goes wide.
 
 **Research a job → workflow.** A multi-modal sweep, one agent per angle: the company's own
 site, comp signals, the seat's legitimacy and whether it is even open, red and green flags,
