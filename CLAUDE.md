@@ -437,6 +437,27 @@ answered. That figure is load-bearing rather than decorative — as-of featurisa
 leakage-safe labelling, 90-day outcome maturity and sequence mining are only meaningful with
 years of longitudinal data behind them, so it is the number that makes the rest credible.
 
+**⚠ THE SINGLE WORST HONESTY LANDMINE IN THE CORPUS — KQ2's illustrative served-cell table.**
+`kq2-outcome-correlation.html` prints `Metformin + concurrent nutrition | 412 | 0.58 |
+[0.53, 0.63]` against `Metformin alone | 217 | 0.34 | [0.28, 0.41]`, a `+24 percentage points`
+difference and `max SMD 0.08` across eight covariates. It is formatted exactly like a measured
+result. The page labels it in its own words: *"**Illustrative response shape, not a production
+measurement.**"* The prep page instructs saying the word aloud. **None of 412, 217, 0.58, 0.34,
++24pp or 0.08 may ever appear on a résumé or in a room as an outcome.** Same class: KQ1's
+*"300 patients in India on protocol A"* is an illustrative example, not a cohort size. Of
+198,000 words this is the block most likely to be mistaken for the impact metrics he does not
+have. Verified directly 2026-08-25.
+
+**⚠ Amura names NO message broker — verified 2026-08-25: `Kafka` 0 hits and `Kinesis` 0 hits
+across the entire corpus.** The source deliberately says only *"its streaming transport"*. **The
+master's Kinesis bullet is the CHAT PLATFORM, a different system.** Keep them apart, and never
+cite Amura as Kinesis evidence. (Kinesis remains confirmed in production for the chat platform.)
+
+**The 6-hour cache TTL belongs to KQ4, not KQ1.** Verified 2026-08-25: `kq1-precedent-search.html`
+is **TTL 1h**; `kq4-early-signal-detection.html` is **TTL 6h**. Both are safe markers — attach
+each to the right query. `TraversalSource` is corroborated **in substance but not by that name**;
+KQ9 words it *"tenant-scoped traversal-source wrapper"*, which is how to write it.
+
 **Latency achieved, adoption, error reduction, cost saved — he cannot supply these,
 so they are `[fill in metric]` or absent. Never invent one, and never ask him again for a
 number he has already said he does not have.**
