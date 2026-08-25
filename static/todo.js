@@ -28,6 +28,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const nextText = nextEl && nextEl.querySelector("p:last-child");
   const entries = [];
   let store = "local";
+  const REASONS = (() => {
+    try { return JSON.parse(document.getElementById("reasons").textContent); }
+    catch { return []; }
+  })();
+  const labelOf = k => (REASONS.find(r => r.key === k) || {}).label || k;
+  // A task can come back only if EVERY reason it carries is revivable — one
+  // terminal reason (the posting is gone) closes it regardless of the others.
+  const canComeBack = rs =>
+    Array.isArray(rs) && rs.length > 0 &&
+    rs.every(k => (REASONS.find(r => r.key === k) || { revivable: true }).revivable);
   let state = {};
 
   // ---- backend ------------------------------------------------------------
@@ -140,6 +150,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     until.value = iso(tomorrow);
     until.min = iso(new Date());
     document.getElementById("move-note").value = "";
+    document.getElementById("move-hint").hidden = true;
+    dlg.querySelectorAll("#move-reasons input").forEach(c => { c.checked = false; });
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
   }
 
@@ -156,13 +168,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       closeDialog();
     });
     document.getElementById("move-confirm").addEventListener("click", async () => {
+      const reasons = [...dlg.querySelectorAll("#move-reasons input:checked")].map(c => c.value);
+      if (!reasons.length) {
+        // Do NOT close: moving a task out without saying why is the one thing
+        // this dialog exists to prevent, and the database refuses it anyway.
+        document.getElementById("move-hint").hidden = false;
+        return;
+      }
       const p = pending; pending = null;
       closeDialog();
       if (!p) return;
       const op = {
         key: p.entry.key,
         action: p.action,
-        reason: document.getElementById("move-reason").value,
+        reasons,
         note: document.getElementById("move-note").value.trim() || null,
       };
       if (p.action === "pushed") op.until = document.getElementById("move-until").value;
@@ -232,10 +251,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       badge(e, d ? d.cls : "", d ? d.text : null, ".dl-due");
 
       e.li.classList.toggle("moved", !!s.moved);
-      const why = [s.reason, s.note].filter(Boolean).join(" — ");
+      const why = [(s.reasons || []).map(labelOf).join(" + "), s.note]
+        .filter(Boolean).join(" — ");
       badge(e, "muted", s.moved
         ? `${s.moved}${s.until ? ` until ${s.until}` : ""}${why ? ` · ${why}` : ""}`
         : null, ".dl-movednote");
+      const revive = s.moved ? canComeBack(s.reasons) : null;
+      badge(e, revive ? "good" : "muted",
+        s.moved ? (revive ? "can come back" : "closed for good") : null, ".dl-revivable");
+      e.li.classList.toggle("closed-for-good", s.moved && revive === false);
       e.li.querySelectorAll(".dl-act").forEach(b => {
         b.hidden = (b.dataset.act === "restored") !== !!s.moved;
       });

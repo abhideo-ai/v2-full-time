@@ -230,9 +230,18 @@
   <form>
     <h3 id="move-title">Move out</h3>
     <p class="dl-dialog-task" id="move-task"></p>
-    <label class="dl-field">Reason
-      <select id="move-reason"><option value="posting-closed">Posting no longer active</option><option value="jd-changed">JD changed materially since we built it</option><option value="comp-below">Comp band below the floor</option><option value="leadership-seat">Leadership seat — built, not sending</option><option value="duplicate">Already applied, or duplicates another workspace</option><option value="blocked">Blocked on something else</option><option value="other">Other — say why</option></select>
-    </label>
+    <fieldset class="dl-field dl-reasons" id="move-reasons">
+      <legend>Reasons — pick at least one</legend>
+      <label class="dl-reason"><input type="checkbox" value="posting-closed" data-revivable="false" /><span>Posting no longer active</span><span class="dl-revive no">closed for good</span></label>
+      <label class="dl-reason"><input type="checkbox" value="jd-changed" data-revivable="true" /><span>JD changed materially since we built it</span><span class="dl-revive yes">can come back</span></label>
+      <label class="dl-reason"><input type="checkbox" value="comp-below" data-revivable="false" /><span>Comp band below the floor</span><span class="dl-revive no">closed for good</span></label>
+      <label class="dl-reason"><input type="checkbox" value="leadership-seat" data-revivable="true" /><span>Leadership seat — built, not sending</span><span class="dl-revive yes">can come back</span></label>
+      <label class="dl-reason"><input type="checkbox" value="duplicate" data-revivable="false" /><span>Already applied, or duplicates another</span><span class="dl-revive no">closed for good</span></label>
+      <label class="dl-reason"><input type="checkbox" value="blocked" data-revivable="true" /><span>Blocked on something else</span><span class="dl-revive yes">can come back</span></label>
+      <label class="dl-reason"><input type="checkbox" value="superseded" data-revivable="false" /><span>Superseded by a better seat at the same firm</span><span class="dl-revive no">closed for good</span></label>
+      <label class="dl-reason"><input type="checkbox" value="other" data-revivable="true" /><span>Other — say why in the note</span><span class="dl-revive yes">can come back</span></label>
+    </fieldset>
+    <p class="dl-reason-hint" id="move-hint" hidden>Pick at least one reason.</p>
     <label class="dl-field" id="move-until-field" hidden>Comes back on
       <input type="date" id="move-until" />
     </label>
@@ -247,7 +256,7 @@
 </dialog>
 
 </main>
-<script type="application/json" id="reasons">[{"key": "posting-closed", "label": "Posting no longer active"}, {"key": "jd-changed", "label": "JD changed materially since we built it"}, {"key": "comp-below", "label": "Comp band below the floor"}, {"key": "leadership-seat", "label": "Leadership seat \u2014 built, not sending"}, {"key": "duplicate", "label": "Already applied, or duplicates another workspace"}, {"key": "blocked", "label": "Blocked on something else"}, {"key": "other", "label": "Other \u2014 say why"}]</script>
+<script type="application/json" id="reasons">[{"key": "posting-closed", "label": "Posting no longer active", "revivable": false}, {"key": "jd-changed", "label": "JD changed materially since we built it", "revivable": true}, {"key": "comp-below", "label": "Comp band below the floor", "revivable": false}, {"key": "leadership-seat", "label": "Leadership seat \u2014 built, not sending", "revivable": true}, {"key": "duplicate", "label": "Already applied, or duplicates another", "revivable": false}, {"key": "blocked", "label": "Blocked on something else", "revivable": true}, {"key": "superseded", "label": "Superseded by a better seat at the same firm", "revivable": false}, {"key": "other", "label": "Other \u2014 say why in the note", "revivable": true}]</script>
 <script src="../static/todo.js" defer></script>
 </body>
 </html>

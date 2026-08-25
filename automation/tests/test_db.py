@@ -28,30 +28,38 @@ ok("done_at" not in s["tasks"][K], "undone clears done_at")
 
 print("\n2. park / push / drop / restore")
 reset()
-s = db.apply_ops([{"key": K2, "action": "parked", "reason": "posting-closed",
+s = db.apply_ops([{"key": K2, "action": "parked",
+                   "reasons": ["posting-closed", "comp-below"],
                    "note": "role pulled from their careers page"}])
 ok(s["tasks"][K2]["moved"] == "parked", "parked recorded")
-ok(s["tasks"][K2]["reason"] == "posting-closed", "reason stored")
+ok(s["tasks"][K2]["reasons"] == ["posting-closed", "comp-below"], "SEVERAL reasons stored, in order")
 ok(s["tasks"][K2]["note"].startswith("role pulled"), "note stored")
-s = db.apply_ops([{"key": K2, "action": "pushed", "until": "2026-08-27", "reason": "blocked"}])
+s = db.apply_ops([{"key": K2, "action": "pushed", "until": "2026-08-27", "reasons": ["blocked"]}])
 ok(s["tasks"][K2]["moved"] == "pushed" and s["tasks"][K2]["until"] == "2026-08-27", "pushed with return date")
 ok("note" not in s["tasks"][K2], "pushed cleared the previous note")
 s = db.apply_ops([{"key": K2, "action": "restored"}])
 ok("moved" not in s["tasks"][K2], "restored clears the move")
+ok("reasons" not in s["tasks"][K2], "restored clears the reasons")
 ok("until" not in s["tasks"][K2], "restored clears until")
-s = db.apply_ops([{"key": K2, "action": "dropped", "reason": "duplicate"}])
+s = db.apply_ops([{"key": K2, "action": "dropped", "reasons": ["duplicate"]}])
 ok(s["tasks"][K2]["moved"] == "dropped", "dropped recorded")
 
 print("\n3. done overrides a move")
 reset()
-db.apply_ops([{"key": K, "action": "parked", "reason": "blocked"}])
+db.apply_ops([{"key": K, "action": "parked", "reasons": ["blocked"]}])
 s = db.apply_ops([{"key": K, "action": "done"}])
 ok(s["tasks"][K]["done"] is True and "moved" not in s["tasks"][K], "ticking a parked task unparks it")
+ok("reasons" not in s["tasks"][K], "and drops the reasons with it")
 
 print("\n4. validation rejects bad ops")
 reset()
 for label, op in [
-    ("pushed with no until",   {"key": K, "action": "pushed"}),
+    ("pushed with no until",   {"key": K, "action": "pushed", "reasons": ["blocked"]}),
+    ("park with NO reasons",   {"key": K, "action": "parked"}),
+    ("park with an EMPTY list",{"key": K, "action": "parked", "reasons": []}),
+    ("park with a blank reason",{"key": K, "action": "parked", "reasons": ["  "]}),
+    ("park with a non-string", {"key": K, "action": "parked", "reasons": [7]}),
+    ("park with duplicates",   {"key": K, "action": "parked", "reasons": ["blocked", "blocked"]}),
     ("unknown action",         {"key": K, "action": "yeeted"}),
     ("key with no ::",         {"key": "clone-card", "action": "done"}),
     ("key with a bad date",    {"key": "2026-13-45::x", "action": "done"}),
@@ -76,11 +84,11 @@ print("\n6. history is append-only and ordered")
 reset()
 db.apply_ops([{"key": K, "action": "done"}])
 db.apply_ops([{"key": K, "action": "undone"}])
-db.apply_ops([{"key": K, "action": "parked", "reason": "posting-closed"}])
+db.apply_ops([{"key": K, "action": "parked", "reasons": ["posting-closed", "comp-below"]}])
 h = db.history(10)
 ok(len(h) == 3, f"three events recorded — got {len(h)}")
 ok([e["action"] for e in h] == ["parked", "undone", "done"], f"newest first — got {[e['action'] for e in h]}")
-ok(h[0]["reason"] == "posting-closed", "reason kept in history")
+ok(h[0]["reasons"] == ["posting-closed", "comp-below"], "every reason kept in history")
 
 print("\n7. DB constraints hold against direct writes")
 reset()
@@ -92,7 +100,11 @@ with db.connect() as c, c.cursor() as cur:
         ("moved must be a known value",
          "INSERT INTO task_state (key, day, task_id, moved) VALUES ('2026-08-25::x', '2026-08-25', 'x', 'vanished')"),
         ("pushed requires until",
-         "INSERT INTO task_state (key, day, task_id, moved) VALUES ('2026-08-25::y', '2026-08-25', 'y', 'pushed')"),
+         "INSERT INTO task_state (key, day, task_id, moved, reasons) VALUES ('2026-08-25::y', '2026-08-25', 'y', 'pushed', ARRAY['blocked'])"),
+        ("a move REQUIRES at least one reason",
+         "INSERT INTO task_state (key, day, task_id, moved) VALUES ('2026-08-25::z', '2026-08-25', 'z', 'parked')"),
+        ("an empty reasons array is not a reason",
+         "INSERT INTO task_state (key, day, task_id, moved, reasons) VALUES ('2026-08-25::w', '2026-08-25', 'w', 'parked', ARRAY[]::text[])"),
     ]:
         try:
             cur.execute(sql); c.commit(); ok(False, label)

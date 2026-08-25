@@ -1,0 +1,6 @@
+#!/bin/bash
+# Daily log CLI. Named `todo` because `daily` is the page directory.
+#   ./todo            what's due
+#   ./todo --help     everything else
+here="$(cd "$(dirname "$0")" && pwd)"
+exec "$here/automation/.venv/bin/python" "$here/automation/daily_cli.py" "$@"

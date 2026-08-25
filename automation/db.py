@@ -10,7 +10,8 @@ can never disagree — there is one write path, not two.
     {"ops": [
       {"key": "2026-08-25::clone-card", "action": "done"},
       {"key": "2026-08-25::paste-jds",  "action": "parked",
-       "reason": "posting-closed", "note": "role pulled from their careers page"},
+       "reasons": ["posting-closed", "comp-below"],
+       "note": "recruiter confirmed the band caps below floor and the req is closed"},
       {"key": "2026-08-25::source-ic",  "action": "pushed", "until": "2026-08-27"},
       {"key": "2026-08-25::source-ic",  "action": "restored"}
     ]}
@@ -55,6 +56,14 @@ def validate(op: dict) -> tuple[date, str, str]:
     if action not in ACTIONS:
         raise OpError(f"action {action!r} must be one of {sorted(ACTIONS)}")
     day, task_id = split_key(op.get("key"))
+    if action in MOVES:
+        reasons = op.get("reasons")
+        if not isinstance(reasons, list) or not reasons:
+            raise OpError(f"a '{action}' op needs a non-empty `reasons` list")
+        if any(not isinstance(r, str) or not r.strip() for r in reasons):
+            raise OpError(f"a '{action}' op has an empty reason in {reasons!r}")
+        if len(reasons) != len(set(reasons)):
+            raise OpError(f"a '{action}' op has duplicate reasons in {reasons!r}")
     if action == "pushed":
         until = op.get("until")
         if not until:
@@ -69,12 +78,12 @@ def validate(op: dict) -> tuple[date, str, str]:
 # Every action's effect on task_state, as a single UPSERT tail. `done` clears a
 # move: ticking a parked task means you did it after all.
 _SET = {
-    "done":     "done = true,  done_at = now(), moved = NULL, reason = NULL, note = NULL, until = NULL, moved_at = NULL",
+    "done":     "done = true,  done_at = now(), moved = NULL, reasons = NULL, note = NULL, until = NULL, moved_at = NULL",
     "undone":   "done = false, done_at = NULL",
-    "restored": "moved = NULL, reason = NULL, note = NULL, until = NULL, moved_at = NULL",
-    "parked":   "moved = 'parked',  reason = %(reason)s, note = %(note)s, until = NULL,       moved_at = now()",
-    "pushed":   "moved = 'pushed',  reason = %(reason)s, note = %(note)s, until = %(until)s,  moved_at = now()",
-    "dropped":  "moved = 'dropped', reason = %(reason)s, note = %(note)s, until = NULL,       moved_at = now()",
+    "restored": "moved = NULL, reasons = NULL, note = NULL, until = NULL, moved_at = NULL",
+    "parked":   "moved = 'parked',  reasons = %(reasons)s, note = %(note)s, until = NULL,       moved_at = now()",
+    "pushed":   "moved = 'pushed',  reasons = %(reasons)s, note = %(note)s, until = %(until)s,  moved_at = now()",
+    "dropped":  "moved = 'dropped', reasons = %(reasons)s, note = %(note)s, until = NULL,       moved_at = now()",
 }
 
 
@@ -89,13 +98,13 @@ def apply_ops(ops: list) -> dict:
         day, task_id, action = validate(op)
         prepared.append({
             "key": op["key"], "day": day, "task_id": task_id, "action": action,
-            "reason": op.get("reason"), "note": op.get("note"), "until": op.get("until"),
+            "reasons": op.get("reasons"), "note": op.get("note"), "until": op.get("until"),
         })
     with connect() as conn, conn.cursor() as cur:
         for p in prepared:
             cur.execute(
-                "INSERT INTO task_event (key, day, task_id, action, reason, note, until)"
-                " VALUES (%(key)s, %(day)s, %(task_id)s, %(action)s, %(reason)s, %(note)s, %(until)s)",
+                "INSERT INTO task_event (key, day, task_id, action, reasons, note, until)"
+                " VALUES (%(key)s, %(day)s, %(task_id)s, %(action)s, %(reasons)s, %(note)s, %(until)s)",
                 p,
             )
             cur.execute(
@@ -119,7 +128,7 @@ def apply_ops(ops: list) -> dict:
 def get_state() -> dict:
     with connect() as conn, conn.cursor() as cur:
         cur.execute(
-            "SELECT key, done, done_at, moved, reason, note, until, moved_at, updated_at"
+            "SELECT key, done, done_at, moved, reasons, note, until, moved_at, updated_at"
             " FROM task_state ORDER BY key"
         )
         tasks = {}
@@ -136,7 +145,7 @@ def get_state() -> dict:
 def history(limit: int = 100) -> list[dict]:
     with connect() as conn, conn.cursor() as cur:
         cur.execute(
-            "SELECT key, action, reason, note, until, at FROM task_event"
+            "SELECT key, action, reasons, note, until, at FROM task_event"
             " ORDER BY at DESC, id DESC LIMIT %s",
             (limit,),
         )

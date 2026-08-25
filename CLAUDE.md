@@ -215,7 +215,9 @@ moved together. The rule is a direct user directive and stands regardless.
 
 ## JD match scoring — two scores
 
-**(1) TECHNICAL — target 95+.** Engineering capability. Read "e.g. / or / preferably"
+**(1) TECHNICAL — target 95+. This is the score he cares about**, and getting it close to a
+95% match is the job. Score it with **subagents, one per rubric criterion** (see *Execution
+model*). Engineering capability. Read "e.g. / or / preferably"
 qualifiers generously: Python satisfies "e.g. Python, C++, or Rust"; LangChain satisfies
 "e.g. LangChain, LlamaIndex". A specific named tool he has not used (MongoDB vs his
 DynamoDB, OpenTelemetry vs his Datadog) is a **ramp item, not a capability cap**. Honesty
@@ -274,6 +276,37 @@ tomorrow** — the gap is where his read forms.
 - Workspaces: `Month-YYYY/DD/<slug>/` → repo root is `../../../`. Raw inputs:
   `job-applications/Month-YYYY/DD/`.
 - **No per-file `<style>` blocks.** Shared classes live in `style.css`.
+
+### The daily log
+
+`daily/index.html` — what is due, what is blocked, what is next. **Generated, never authored:**
+`daily/days.json` is the source and `automation/daily.py` owns the markup.
+
+```
+automation/.venv/bin/python automation/serve.py     # replaces `python3 -m http.server 8006`
+automation/.venv/bin/python automation/daily.py     # regenerate the page from days.json
+./todo                                              # what's due, from the terminal
+./todo backlog                                      # what's moved out, and what can come back
+```
+
+- **State lives in PostgreSQL** (`v2_daily`), not in the HTML and not in the browser.
+  `task_state` is what the page renders; `task_event` is append-only history — every tick,
+  park, push and drop with its reasons and timestamp. Schema: `automation/schema.sql`;
+  migrations in `automation/migrations/`.
+- **`serve.py`, not `http.server`.** Same port 8006 so a pinned tab keeps working. It adds the
+  state API, sends `no-store` so a refresh really refreshes, and binds `127.0.0.1` because it
+  writes to a database. Against plain `http.server` the page falls back to localStorage and
+  says so in the banner.
+- **Each task carries a priority and dependencies.** A task whose prerequisites are unticked is
+  marked *waiting* but never disabled — doing things out of order is legitimate.
+- **Unfinished tasks roll over automatically.** Never duplicate a task in `days.json` to carry
+  it forward.
+- **Moving a task out always needs at least one reason**, and reasons decide whether it can
+  come back: a task is revivable only if **every** reason it carries is revivable
+  (`revivable` in `days.json`). One terminal reason — the posting is gone — closes it.
+  The CLI refuses to move a task out with no reason and no terminal to ask on, rather than
+  inventing one. That refusal is deliberate: an agent has to come back and ask.
+- Tests: `bash automation/tests/run.sh` (the page suite needs `npm install jsdom`).
 
 ### upGrad export
 
@@ -351,6 +384,54 @@ Naukri's "Job profile" textarea rejects `<` and `\`. Substitute: `<` → `under`
 
 ---
 
+## Execution model — workflows and subagents do the work
+
+**Default to the Workflow tool for anything substantive**, and fan the work out to
+**subagents**. Read each phase's results before choosing the next phase. Solo only for
+conversational turns and trivial mechanical edits.
+
+**Research a job → workflow.** A multi-modal sweep, one agent per angle: the company's own
+site, comp signals, the seat's legitimacy and whether it is even open, red and green flags,
+forcing questions. Then a synthesis pass into cited `research.html`. Postings lie about
+location, title and openness — every JD claim gets checked against the company's own site.
+
+**Build a résumé → workflow.** Fan the draft out per section — headline, summary, the three
+skills blocks, the five experience roles — each agent working from `professional-journey.md`.
+Then Rule 7 re-vectoring per job, fanned out the same way.
+
+**Score a JD → subagents, one per rubric criterion.** The **technical score is the one that
+matters, and the target is 95+.** Give each criterion its own agent: weight, score out of ten,
+and the evidence quoted from `professional-journey.md`. A separate agent names the **binding
+constraint and the smallest honest lift** — which is almost always Rule 7 re-vectoring of real
+work, never a new claim.
+
+**Never fabricate to reach 95.** If honest evidence caps the score below 95, say so and name
+exactly what is missing and what would close it. A 95 built on an invented claim is worse than
+an honest 88, because the invented one gets found in the room. Read "e.g. / or / preferably"
+generously — a specific named tool he has not used is a ramp item, not a capability cap — and
+keep the non-technical score out of it entirely: informational, never a gate, never a drag on
+the technical number.
+
+**The verification phase is not optional, and it is what makes delegation safe.** Subagent
+output runs roughly one factual error per ten claims, and this is a document where an invented
+number is the cardinal sin. Every résumé workflow ends with adversarial agents checking each
+claim back against the journey doc and the honesty rules above — anything unsupported is
+**cut, not softened** — and you adjudicate the survivors yourself before a word reaches a file
+he will paste. A claim that survives because no one checked it is a defect, not a result.
+
+**Never delegate the open claims.** The confirm-or-reject list is his call alone. No agent
+resolves the graph neural network, the four Rocket metrics, the 70–80% consolidation, the
+27 ms / P95 16 ms pairing or the 100,000-concurrent wording. Surface them in every prep
+artefact and leave the résumé wording alone.
+
+**He still writes the master by hand.** Workflows draft, verify and stage paste-ready content;
+they do not ship on his behalf, and they never touch the Hiration card.
+
+**`./todo` coordinates, it never executes.** It answers what is due, what is blocked and what
+is next, and records status changes with reasons. Do not grow it into a task runner. A workflow
+may finish a task and report it; marking it `done` / `parked` / `pushed` / `dropped` goes
+through `./todo`, and moving a task out always needs at least one reason.
+
 ## Working rules
 
 - **Ask, don't assume.** At a fork, an ambiguity, or a missing input, invoke
@@ -409,6 +490,10 @@ recording failed.
 - Root `index.html` — minimal launcher with status tabs (`static/tabs.js`). A workspace joins
   by adding one `<a class="card" data-status="…">` to `#app-list`; counts are computed.
 - `automation/workspace_favicon.py` — per-workspace favicon so open tabs stay tellable apart.
+- **The daily log** — `daily/index.html` generated from `daily/days.json`, state in PostgreSQL
+  (`v2_daily`), `automation/serve.py` in place of `http.server`, and `./todo` on the command
+  line. Priorities, dependencies, automatic rollover, and move-out (park / push / drop) that
+  always records at least one reason. See *Layout & automation → The daily log*.
 
 **Not built yet:**
 

@@ -251,8 +251,13 @@ def main() -> None:
         if len(days) > 1
         else '\n<p class="dl-archive-empty">No earlier days yet — this is day one of the log.</p>'
     )
-    reason_options = "".join(
-        f'<option value="{r["key"]}">{r["label"]}</option>' for r in reasons
+    reason_options = "\n      ".join(
+        f'<label class="dl-reason"><input type="checkbox" value="{r["key"]}"'
+        f' data-revivable="{str(bool(r.get("revivable"))).lower()}" />'
+        f'<span>{r["label"]}</span>'
+        f'<span class="dl-revive {"yes" if r.get("revivable") else "no"}">'
+        f'{"can come back" if r.get("revivable") else "closed for good"}</span></label>'
+        for r in reasons
     )
     reasons_json = json.dumps(reasons)
     OUT.write_text(f"""<!doctype html>
@@ -293,9 +298,11 @@ def main() -> None:
   <form>
     <h3 id="move-title">Move out</h3>
     <p class="dl-dialog-task" id="move-task"></p>
-    <label class="dl-field">Reason
-      <select id="move-reason">{reason_options}</select>
-    </label>
+    <fieldset class="dl-field dl-reasons" id="move-reasons">
+      <legend>Reasons — pick at least one</legend>
+      {reason_options}
+    </fieldset>
+    <p class="dl-reason-hint" id="move-hint" hidden>Pick at least one reason.</p>
     <label class="dl-field" id="move-until-field" hidden>Comes back on
       <input type="date" id="move-until" />
     </label>

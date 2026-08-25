@@ -1,5 +1,5 @@
 {
-  "_comment": "Source of truth for daily/index.html. Edit this, then run: automation/.venv/bin/python automation/daily.py. Newest day first. p = priority (1 critical path, 2 today but off it, 3 while you're in there). needs = task ids that must be done first. due = optional ISO date; a task with no `due` is due on its own day. reasons = the preset move-out reasons offered in the UI. Tick / park / push / drop state lives in PostgreSQL (v2_daily), never here, and unfinished tasks roll over automatically — so a task is NEVER duplicated in this file. task/detail/why are trusted HTML and are not escaped.",
+  "_comment": "Source of truth for daily/index.html. Edit this, then run: automation/.venv/bin/python automation/daily.py. Newest day first. p = priority (1 critical path, 2 today but off it, 3 while you're in there). needs = task ids that must be done first. due = optional ISO date; a task with no `due` is due on its own day. reasons = the preset move-out reasons; `revivable` says whether a task parked for that reason can come back to the active list. A task is revivable only if EVERY one of its reasons is — one terminal reason closes it. Tick / park / push / drop state lives in PostgreSQL (v2_daily), never here, and unfinished tasks roll over automatically, so a task is NEVER duplicated in this file. task/detail/why are trusted HTML and are not escaped.",
   "days": [
     {
       "date": "2026-08-25",
@@ -118,31 +118,43 @@
   "reasons": [
     {
       "key": "posting-closed",
-      "label": "Posting no longer active"
+      "label": "Posting no longer active",
+      "revivable": false
     },
     {
       "key": "jd-changed",
-      "label": "JD changed materially since we built it"
+      "label": "JD changed materially since we built it",
+      "revivable": true
     },
     {
       "key": "comp-below",
-      "label": "Comp band below the floor"
+      "label": "Comp band below the floor",
+      "revivable": false
     },
     {
       "key": "leadership-seat",
-      "label": "Leadership seat — built, not sending"
+      "label": "Leadership seat — built, not sending",
+      "revivable": true
     },
     {
       "key": "duplicate",
-      "label": "Already applied, or duplicates another workspace"
+      "label": "Already applied, or duplicates another",
+      "revivable": false
     },
     {
       "key": "blocked",
-      "label": "Blocked on something else"
+      "label": "Blocked on something else",
+      "revivable": true
+    },
+    {
+      "key": "superseded",
+      "label": "Superseded by a better seat at the same firm",
+      "revivable": false
     },
     {
       "key": "other",
-      "label": "Other — say why"
+      "label": "Other — say why in the note",
+      "revivable": true
     }
   ]
 }

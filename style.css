@@ -3163,3 +3163,19 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .dl-group.blocking > h3 { color: var(--accent); }   /* explicit, not inherited-by-default */
 .dl-moved > summary .n { color: var(--ink-soft); font-weight: 700; }
 .dl-act.restore:hover { border-color: var(--good); color: var(--good); }
+
+/* Several reasons per move-out, and what they imply about coming back. */
+.dl-reasons { border: 1px solid var(--rule); border-radius: 7px; padding: 10px 12px 4px; }
+.dl-reasons legend { font-family: var(--mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); padding: 0 5px; }
+.dl-reason { display: flex; align-items: center; gap: 8px; margin: 0 0 7px; font-family: var(--sans); font-size: 13.5px; text-transform: none; letter-spacing: 0; color: var(--ink); cursor: pointer; }
+.dl-reason input { width: 15px; height: 15px; margin: 0; flex: 0 0 auto; accent-color: var(--accent); }
+.dl-reason > span:first-of-type { flex: 1 1 auto; }
+.dl-revive { font-family: var(--mono); font-size: 9.5px; letter-spacing: .05em; text-transform: uppercase; border-radius: 999px; padding: 1px 7px; flex: 0 0 auto; }
+.dl-revive.yes { color: var(--good); background: var(--good-soft); border: 1px solid var(--good); }
+.dl-revive.no  { color: var(--muted); background: var(--paper-2); border: 1px solid var(--rule); }
+.dl-reason-hint { font-family: var(--mono); font-size: 11px; color: var(--bad); margin: -8px 0 12px; }
+
+.dl-revivable { font-family: var(--mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; border-radius: 999px; padding: 1px 8px; border: 1px solid var(--rule); background: var(--paper-2); color: var(--muted); }
+.dl-revivable[data-tone="good"] { color: var(--good); border-color: var(--good); background: var(--good-soft); }
+.dl-list > li.closed-for-good { opacity: .55; }
+.dl-list > li.closed-for-good .dl-act.restore { opacity: .6; }
