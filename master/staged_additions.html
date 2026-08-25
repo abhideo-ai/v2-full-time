@@ -3,149 +3,236 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Staged additions — Amura</title>
+  <title>Master — section-by-section paste</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
 <main class="page" id="main">
 
-<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · staged additions</p>
+<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · section-by-section paste</p>
 
 <header>
-  <p class="eyebrow">Staged — nothing applied</p>
-  <h1>Additions from the Amura case studies</h1>
+  <p class="eyebrow">Card build · 4 sections changed of 10</p>
+  <h1>Paste into the Hiration card, section by section</h1>
 </header>
 
 <div class="tldr">
   <strong>How to use this</strong>
-  Every block below is copy-ready and preserves bold. Paste what you agree with into
-  <a href="upgrad_resume.html">master/upgrad_resume.html</a>. <strong>Nothing here has been applied
-  to the master.</strong> Each experience bullet names its leading verb, its source, and its word
-  count, so you can check it against the hygiene rules without re-counting.
+  Ten sections in résumé order. Each says what changed and why, then gives you the exact text with a
+  <strong>Copy</strong> button that <strong>preserves bold</strong> — use the button, never a manual
+  selection, because upGrad silently drops bold from a hand-made selection. Four sections changed;
+  the other six are included unchanged so you can build the whole card without leaving this page.
 </div>
 
 <div class="callout warn">
-  <b>One correction first — this is a factual error, not an improvement.</b> The master's current
-  RAG bullet says the pipeline runs over an <em>Amazon Neptune context graph</em>. KQ1's own stack
-  table puts the dense vectors in <strong>Elasticsearch</strong> — “Authoritative serving index —
-  dense_vector filtered kNN” — and keeps Neptune deliberately off the serving path, “so serving
-  latency never depends on its tail”. As written, the bullet describes a system that does not
-  exist. The replacement below keeps the leading verb <code>Engineered</code>, per Rule 7.
+  <b>Before any of this: the card must exist.</b> Clone <code>august_master_resume</code>, rename the
+  copy <code>august_ic_master_resume</code>. The base already carries all ten experience entries, the
+  five pre-2016 roles, dates, education and certifications — you are overwriting text in an existing
+  skeleton, not creating sections. Dates, Personal Information and sections 11–15 are
+  <strong>card-only</strong> and live in <a href="upgrad_resume.html">the master résumé</a>; the bot
+  never writes them.
 </div>
 
-<h2>1 · Fix the RAG bullet — VoltusWave</h2>
+<h2 class="quick-paste-title">Section by section</h2>
 
-<div class="diff-pair">
-  <p class="diff-label">Current — replace this</p>
-  <div class="diff-old">
-    <p>Engineered a <strong>RAG</strong> pipeline over dense vectors and an <strong>Amazon Neptune</strong> context graph spanning <strong>80+ chronic conditions</strong>, in <strong>Python</strong> with FastAPI, LangChain and LangGraph</p>
-  </div>
-</div>
+  <h3 class="section-head">1. Headline</h3>
 
-<div class="section copy-target" id="fix-rag">
-  <button class="copy-btn" data-copy-target="#fix-rag" data-copy-html="1">Copy</button>
-  <p>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</p>
-</div>
-<p class="dim">Leading verb <code>Engineered</code> unchanged · 23 words · source: KQ1 stack table and
-“Slow graph database on the hot path”</p>
+  <section class="paste-block">
+    <h3 class="paste-block-title"><span class="num">①</span><span class="label">Replace:</span> Headline</h3>
+    <p class="paste-block-why"><strong>Why:</strong> The old headline led with <em>multi-tenant SaaS platforms</em> and ended on a generic “production AI on AWS”. Five drafts were scored by three independent judges — a recruiter lens, a hiring-engineer lens and an honesty auditor — and all three picked this one, <strong>46, 47 and 47 out of 50</strong>. It is the only draft that puts Java in the first content slot <em>and</em> says something about the AI work that almost no other candidate can say.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Goes in Hiration's <strong>headline</strong> field — the only field the bot ever writes. Replace the whole line.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 20 words · tagline exception applies, so SaaS and AI may stay unexpanded here · no leadership framing</p>
+    <div class="paste-area copy-target" id="sec-quick-headline">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-headline" data-copy-html="1">Copy →</button>
+        <p>Principal Software Architect — Java and Spring Boot microservices, multi-tenant SaaS platforms, and production AI where deterministic code owns every number</p>
+    </div>
+  </section>
 
-<h2>2 · Engineering Excellence — five new lines</h2>
-<p>These go in the <code>quick-skills-ee</code> block. Skills lines carry no number requirement —
-that rule is for experience bullets — so nothing here needs a metric you do not have.</p>
+  <!-- ============================================================ -->
+  <h3 class="section-head">2. Summary</h3>
 
-<div class="section copy-target" id="skills-ee">
-  <button class="copy-btn" data-copy-target="#skills-ee" data-copy-html="1">Copy all five</button>
-  <p><strong>Causal inference on observational data</strong> — propensity matching, inverse probability weighting (IPW), standardised mean difference (SMD) balance gates, caliper stability, seeded bootstrap intervals</p>
-  <p><strong>Leakage-safe machine learning</strong> — as-of featurisation, point-in-time correctness, outcome-maturity windows, right-censoring and survival analysis, calibration</p>
-  <p><strong>Deterministic, replayable systems</strong> — append-only event sourcing, frozen snapshots, byte-deterministic replay, canonical cache keys carrying every version pin</p>
-  <p><strong>DuckDB and Parquet</strong> columnar analytics over frozen snapshots; <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search; <strong>Redis</strong> canonical-keyed caching; <strong>Amazon Neptune</strong> with Gremlin traversal</p>
-  <p><strong>Self-hosted models inside the virtual private cloud (VPC)</strong> — Ollama, Llama 3.1, Amazon SageMaker embeddings and batch transform, self-hosted LangSmith, Pydantic v2 structured output</p>
-</div>
+  <section class="paste-block">
+    <h3 class="paste-block-title"><span class="num">②</span><span class="label">Replace:</span> Summary</h3>
+    <p class="paste-block-why"><strong>Why:</strong> The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the whole summary. <strong>Bold must survive</strong> — use the Copy button, not a manual selection.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> ~115 words · every acronym expanded on first use in reading order · no “currently” attached to VoltusWave, which ended Apr 2026</p>
+    <div class="paste-area copy-target" id="sec-quick-summary">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-summary" data-copy-html="1">Copy →</button>
+        <p>Principal-level software architect, <strong>19+ years</strong>, strongest in <strong>Java and Spring Boot</strong> — about <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025. Consolidated per-customer deployments onto shared <strong>multi-tenant</strong> software as a service (SaaS) infrastructure with dedicated isolation for regulated banking customers, and moved every instance onto central single sign-on (SSO) with <strong>zero user disruption</strong>. Then shipped <strong>ten analytics and artificial intelligence (AI) services</strong> for a chronic-care platform on Amazon Web Services (AWS): causal inference and leakage-safe machine learning over <strong>9–10 years of patient history</strong>, deterministic code owning every number, and self-hosted models keeping patient data inside the client boundary. Cut infrastructure cost <strong>25–30%</strong> and deploy time from hours to <strong>under 10 minutes</strong>.</p>
+    </div>
+  </section>
 
-<div class="callout">
-  <b>One optional extra, for Business &amp; Delivery rather than here.</b> You chose Engineering
-  Excellence for the techniques, and the five above are all technical. This one is governance, so
-  it reads better in the third block — take it or leave it.
-</div>
+  <!-- ============================================================ -->
+  <h3 class="section-head">3. Skills — Technology Leadership &amp; Strategy</h3>
 
-<div class="section copy-target" id="skills-bd">
-  <button class="copy-btn" data-copy-target="#skills-bd" data-copy-html="1">Copy</button>
-  <p><strong>Analytics governance by design</strong> — small-cell suppression, pseudonymous and deliberately unrankable per-clinician views, neutral output vocabulary that resists scorecard misuse</p>
-</div>
+  <section class="paste-block nochange">
+    <h3 class="paste-block-title"><span class="num">③</span><span class="label">No change:</span> Skills — Technology Leadership &amp; Strategy</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Untouched. Included so you can paste it while building the card without hunting for it.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is. Nothing here was edited.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 5 lines · unchanged</p>
+    <div class="paste-area copy-target" id="sec-quick-skills-tls">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-skills-tls" data-copy-html="1">Copy (unchanged) →</button>
+        <p><strong>Multi-tenant architecture and tenant isolation</strong> — shared-schema design, per-tenant data separation, dedicated carve-outs for regulated customers</p>
+        <p><strong>Monolith decomposition</strong> and cross-product platform services — identity, billing and subscription, global configuration</p>
+        <p><strong>Build-versus-buy judgement</strong> — vendor retirement, industry-standard integration, third-party dependency removal</p>
+        <p><strong>Engineering organisation design</strong> across backend, mobile, web, AI, quality assurance (QA) and DevOps</p>
+        <p>Architecture roadmaps and technical narrative for investor- and enterprise-facing programmes</p>
+    </div>
+  </section>
 
-<h2>3 · Experience bullets — VoltusWave</h2>
-<p>Six candidates. Every leading verb was checked for same-root collisions across the entire
-master, not just against the other leading words — <code>Built</code> was rejected because
-<em>Build</em>-versus-buy already appears in your skills block.</p>
+  <!-- ============================================================ -->
+  <h3 class="section-head">4. Skills — Engineering Excellence</h3>
 
-<div class="callout warn">
-  <b>You cannot take all six.</b> The role already carries six bullets about the chat platform —
-  Kinesis, the Go service, Datadog, patient onboarding — and these are a second, separate body of
-  work at the same company. All six would take the role to twelve. Pick the three or four that do
-  the most for the seat you are applying to, and re-vector per job from there.
-</div>
+  <section class="paste-block">
+    <h3 class="paste-block-title"><span class="num">④</span><span class="label">Replace:</span> Skills — Engineering Excellence</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Six lines became ten. Two existing lines were <em>extended</em> rather than duplicated — the stores line gained <strong>Elasticsearch dense_vector</strong>, <strong>Redis</strong> and <strong>DuckDB and Parquet</strong>; the AWS line gained <strong>SageMaker</strong> and <strong>Neptune with Gremlin</strong>. Four are new: causal inference, leakage-safe machine learning, deterministic replayable systems, and self-hosted models in-VPC. All of it appears repeatedly in your own case studies and none of it was on the résumé — DuckDB and Parquet in 8 studies each, Redis in 7, Ollama in 6, self-hosted LangSmith in 9.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the <strong>whole</strong> block — two of the ten lines are edits to existing ones, so pasting only the four new lines would leave duplicates.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> Skills lines carry <strong>no number requirement</strong> — that rule is for experience bullets · no metric you cannot supply</p>
+    <div class="paste-area copy-target" id="sec-quick-skills-ee">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-skills-ee" data-copy-html="1">Copy →</button>
+        <p><strong>Java 8/17, Spring Boot 2.x</strong>, Java Server Pages (JSP) — microservices, versioned interfaces, Representational State Transfer (REST) API design</p>
+        <p><strong>Python</strong> — Django, FastAPI, LangChain, LangGraph, <strong>retrieval-augmented generation (RAG)</strong> pipelines, Model Context Protocol (MCP) servers</p>
+        <p><strong>Go</strong>, JavaScript, TypeScript, React, Node.js</p>
+        <p><strong>PostgreSQL</strong>, Amazon Aurora, DynamoDB, <strong>Elasticsearch dense_vector</strong> nearest-neighbour search, OpenSearch, <strong>Redis</strong>, <strong>DuckDB and Parquet</strong>; SQL Server and MySQL in earlier roles</p>
+        <p><strong>AWS</strong> — Kinesis, Lambda, Elastic Container Service (ECS), S3, SQS, EC2, <strong>SageMaker</strong>, <strong>Neptune</strong> with Gremlin; Datadog and Amplitude observability</p>
+        <p>Keycloak, Red Hat single sign-on, OpenID Connect, OAuth 2.0</p>
+        <p><strong>Causal inference on observational data</strong> — propensity matching, inverse probability weighting (IPW), standardised mean difference (SMD) balance gates, seeded bootstrap intervals</p>
+        <p><strong>Leakage-safe machine learning</strong> — as-of featurisation, point-in-time correctness, outcome-maturity windows, right-censoring, calibration</p>
+        <p><strong>Deterministic, replayable systems</strong> — append-only event sourcing, frozen snapshots, byte-deterministic replay, canonical cache keys carrying every version pin</p>
+        <p><strong>Self-hosted models inside the virtual private cloud</strong> — Ollama, Llama 3.1, SageMaker embeddings, self-hosted LangSmith, Pydantic v2 structured output</p>
+    </div>
+  </section>
 
-<div class="section copy-target" id="bullet-1">
-  <button class="copy-btn" data-copy-target="#bullet-1" data-copy-html="1">Copy</button>
-  <p>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</p>
-</div>
-<p class="dim"><code>Hardened</code> — free · 24 words · KQ10's twenty-finding review; KQ6's
-block-on-prereq. <strong>Says self-review deliberately</strong> — it was one, and saying so
-pre-empts the question.</p>
+  <!-- ============================================================ -->
+  <h3 class="section-head">5. Skills — Business &amp; Delivery</h3>
 
-<div class="section copy-target" id="bullet-2">
-  <button class="copy-btn" data-copy-target="#bullet-2" data-copy-html="1">Copy</button>
-  <p>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</p>
-</div>
-<p class="dim"><code>Extracted</code> — free · 22 words · KQ2, KQ3, KQ6, KQ8. The
-“unrepresentable in the output type” phrasing is the part interviewers react to.</p>
+  <section class="paste-block nochange">
+    <h3 class="paste-block-title"><span class="num">⑤</span><span class="label">No change:</span> Skills — Business &amp; Delivery</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Untouched. One optional governance line was drafted for here and not applied — see the note at the end.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 lines · unchanged</p>
+    <div class="paste-area copy-target" id="sec-quick-skills-bd">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-skills-bd" data-copy-html="1">Copy (unchanged) →</button>
+        <p>Enterprise onboarding and consolidation at <strong>multi-hundred-instance scale</strong></p>
+        <p>Regulated delivery — <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> pipelines, least-privilege access, role-based access control</p>
+        <p>Accessibility compliance to <strong>Web Content Accessibility Guidelines (WCAG) 2.2 Level AA</strong></p>
+        <p>Cost reduction through infrastructure consolidation and licence-model change</p>
+        <p>Distributed <strong>United States–India</strong> delivery teams</p>
+        <p>Measured adoption of AI-assisted development (Claude Code, OpenAI Codex) under hands-on review</p>
+    </div>
+  </section>
 
-<div class="section copy-target" id="bullet-3">
-  <button class="copy-btn" data-copy-target="#bullet-3" data-copy-html="1">Copy</button>
-  <p>Sequenced patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</p>
-</div>
-<p class="dim"><code>Sequenced</code> — free · 24 words · KQ4. Pairs naturally with the
-<strong>9–10 years</strong> of history if you want the scale marker in.</p>
+  <!-- ============================================================ -->
+  <h3 class="section-head">6. VoltusWave — Principal Software Architect (Mar 2025 – Apr 2026)</h3>
 
-<div class="section copy-target" id="bullet-4">
-  <button class="copy-btn" data-copy-target="#bullet-4" data-copy-html="1">Copy</button>
-  <p>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</p>
-</div>
-<p class="dim"><code>Secured</code> — free, current-role-only ATS power verb, which is where it
-belongs · 20 words · in-VPC deployment across the programme.</p>
+  <section class="paste-block">
+    <h3 class="paste-block-title"><span class="num">⑥</span><span class="label">Replace:</span> VoltusWave — Principal Software Architect (Mar 2025 – Apr 2026)</h3>
+    <p class="paste-block-why"><strong>Why:</strong> One <strong>factual correction</strong> and four new bullets. The RAG bullet claimed the pipeline ran over an Amazon Neptune context graph; KQ1's own stack table names <strong>Elasticsearch</strong> the “Authoritative serving index — dense_vector filtered kNN” and says the graph “serves audit and drill-down only, so serving latency never depends on its tail”. KQ9 is the Neptune query — the old bullet collapsed two systems into one. The four new bullets carry the Amura work: adversarial self-review, confounder gates, the relapse model, and in-VPC self-hosting.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the whole role. <strong>This is now ten bullets and needs trimming to six or seven</strong> for the three-page limit — six are chat-platform work and four are Amura. Which to cut is a per-job call.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> All bullets ≤25 words · leading verbs <code>Hardened</code>, <code>Extracted</code>, <code>Sequenced</code>, <code>Secured</code> verified free across the whole résumé · <code>Engineered</code> kept on the corrected bullet, per Rule 7 · no achieved Amura metric, because none exists</p>
+    <div class="paste-area copy-target" id="sec-quick-vp">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-vp" data-copy-html="1">Copy →</button>
+        <p>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</p>
+        <p>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> in burst testing at <strong>P95 under 16 ms</strong>, on a flow firing ~50 calls per message</p>
+        <p>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</p>
+        <p>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</p>
+        <p>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</p>
+        <p>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering first-cut implementation and test scaffolding under review</p>
+        <p>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</p>
+        <p>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</p>
+        <p>Sequenced patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</p>
+        <p>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</p>
+    </div>
+  </section>
 
-<div class="section copy-target" id="bullet-5">
-  <button class="copy-btn" data-copy-target="#bullet-5" data-copy-html="1">Copy</button>
-  <p>Bridged finance, adherence and operations signals in a deterministic <strong>LangGraph</strong> orchestrator where code owned every join, intersection and statistic</p>
-</div>
-<p class="dim"><code>Bridged</code> — free · 19 words · KQ10. The strongest evidence that the
-language model was confined to a gated edge rather than trusted with arithmetic.</p>
+  <!-- ============================================================ -->
+  <h3 class="section-head">7. Deque Software (Dec 2019 – Feb 2025)</h3>
 
-<div class="section copy-target" id="bullet-6">
-  <button class="copy-btn" data-copy-target="#bullet-6" data-copy-html="1">Copy</button>
-  <p>Seeded every statistical comparison with fixed randomness over <strong>frozen snapshots</strong>, so a number a clinician saw could be reproduced <strong>byte-for-byte</strong> months later</p>
-</div>
-<p class="dim"><code>Seeded</code> — free · 22 words · KQ9's byte-deterministic replay, and the
-seeded-bootstrap discipline across the set.</p>
+  <section class="paste-block nochange">
+    <h3 class="paste-block-title"><span class="num">⑦</span><span class="label">No change:</span> Deque Software (Dec 2019 – Feb 2025)</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Untouched. Two claims inside it are still unconfirmed — <strong>~300 enterprise instances</strong> and <strong>70–80% consolidation</strong>.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 bullets · unchanged</p>
+    <div class="paste-area copy-target" id="sec-quick-deque">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-deque" data-copy-html="1">Copy (unchanged) →</button>
+        <p>Implemented multi-tenant isolation across <strong>approximately 300 enterprise instances</strong>, adding an organisation ID to every table and resolving tenant from the <strong>JSON Web Token (JWT)</strong></p>
+        <p>Steered <strong>70–80%</strong> of customers onto shared instances while regulated banks kept dedicated databases, with one codebase serving both deployment models</p>
+        <p>Forged a central authentication service in <strong>Java and Spring Boot</strong>, migrating every instance from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong> with zero user disruption</p>
+        <p>Productized a billing and subscription service consumed by <strong>every product</strong> in the portfolio, porting it from <strong>Node.js/TypeScript</strong> to <strong>Java and Spring Boot</strong></p>
+        <p>Stewarded a <strong>zero-downtime</strong> upgrade from <strong>PostgreSQL 9.6</strong> to <strong>Amazon Aurora PostgreSQL 13.x</strong> across every axe Auditor instance</p>
+        <p>Championed decomposition of a monolith into <strong>10–15 services</strong>, splitting on independent scaling and database ownership rather than on team boundaries</p>
+    </div>
+  </section>
 
-<h2>4 · What is deliberately not here</h2>
-<ul class="checks strikes">
-  <li><strong>Any achieved metric.</strong> Every figure in the case studies is a pre-registered
-  acceptance target — the index says so outright: “none reports a measured production result”. The
-  numbers above (<strong>ten</strong> services, <strong>twenty</strong> findings,
-  <strong>80+</strong> conditions, <strong>9–10 years</strong>) are scale and design markers from
-  your own documents, never outcomes.</li>
-  <li><strong>The graph neural network.</strong> Zero occurrences across all 22 files. KQ4's ladder
-  is logistic baseline → PrefixSpan → Transformer. Still yours to settle — it attaches to the
-  Context Graph, which these ten do not document.</li>
-  <li><strong>The narrative guardrails as shipped.</strong> Split: KQ1's claim grammar is live
-  inside its retrieval service, but KQ9's shared contract is unsigned and its narrator ships off by
-  default. A bullet claiming KQ9 must carry KQ9's hedge.</li>
-  <li><strong>“Sole owner”.</strong> Every case study says it; the journey document describes an
-  organisation of six sub-teams. You have since confirmed you implemented these, so the tension is
-  resolved — but no bullet above uses the phrase.</li>
+  <!-- ============================================================ -->
+  <h3 class="section-head">8. Rocket Software (Aug 2018 – Jul 2019)</h3>
+
+  <section class="paste-block nochange">
+    <h3 class="paste-block-title"><span class="num">⑧</span><span class="label">No change:</span> Rocket Software (Aug 2018 – Jul 2019)</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Untouched. Two metrics here are still unconfirmed — <strong>bugs −50%</strong> and <strong>sales +20%</strong>.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is. Title is <strong>Software Engineer III</strong> — never “Director”.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged</p>
+    <div class="paste-area copy-target" id="sec-quick-rocket">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-rocket" data-copy-html="1">Copy (unchanged) →</button>
+        <p>Anchored decomposition of <strong>IBM Db2 Configuration Manager</strong> into <strong>Java and Spring Boot</strong> microservices, defining boundaries across <strong>z/OS and Linux, UNIX and Windows</strong> platforms</p>
+        <p>Coached a <strong>5-engineer</strong> team through delivery planning, code review and performance appraisals while remaining hands-on as an individual contributor</p>
+        <p>Surfaced defect hot-spots through <strong>REST</strong> interfaces and service isolation, reducing reported bugs <strong>over 50%</strong></p>
+        <p>Partnered with product to extend platform support to <strong>Windows</strong> and Linux — Ubuntu, CentOS and <strong>Red Hat Enterprise Linux (RHEL)</strong> — raising sales <strong>over 20%</strong></p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <h3 class="section-head">9. VoltusWave — Co-Founder &amp; VP of Technology (Mar 2017 – Apr 2018)</h3>
+
+  <section class="paste-block nochange">
+    <h3 class="paste-block-title"><span class="num">⑨</span><span class="label">No change:</span> VoltusWave — Co-Founder &amp; VP of Technology (Mar 2017 – Apr 2018)</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Untouched. Historical and unambiguous — this title stays as-is.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 3 bullets · unchanged</p>
+    <div class="paste-area copy-target" id="sec-quick-voltuswave-cofounder">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-voltuswave-cofounder" data-copy-html="1">Copy (unchanged) →</button>
+        <p>Co-founded VoltusWave and launched its first <strong>application Platform-as-a-Service (aPaaS)</strong> product for web and Android, winning <strong>8 early enterprise clients</strong></p>
+        <p>Mobilized an engineering organisation from <strong>0 to 35</strong> in 13 months, mentoring freshers and senior engineers while establishing delivery process</p>
+        <p>Helmed development, deployment and operations on <strong>Amazon Elastic Container Service</strong>, setting the architecture roadmap every subsequent product inherited</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <h3 class="section-head">10. Teletext India (Mar 2016 – Mar 2017)</h3>
+
+  <section class="paste-block nochange">
+    <h3 class="paste-block-title"><span class="num">⑩</span><span class="label">No change:</span> Teletext India (Mar 2016 – Mar 2017)</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Untouched — but the <strong>+65% hotel conversions</strong> bullet is the one unresolved claim on this résumé. Your journey document flags it twice and your original contains no 65% conversion claim at all.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is <em>unless</em> you decide the 65% now. The evidenced alternative is innRoad's <strong>60–70% screen-load improvement</strong>, in your own handwriting and currently unused.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged · one open claim</p>
+    <div class="paste-area copy-target" id="sec-quick-teletext">
+      <button type="button" class="copy-btn" data-copy-target="#sec-quick-teletext" data-copy-html="1">Copy (unchanged) →</button>
+        <p>Codified a scatter-gather integration across <strong>25 hotel suppliers</strong> on a <strong>MuleSoft enterprise service bus</strong>, succeeding where a prior <strong>.NET 2.0</strong> upgrade had failed</p>
+        <p>Cut operational cost <strong>46%</strong> by retiring a third-party pricing product for an in-house <strong>ELK</strong> cache with a 20-minute time-to-live</p>
+        <p>Reconciled supplier hotel identifiers onto <strong>GIATA MultiCodes</strong>, automating the pipeline on <strong>AWS Lambda</strong> with human approval retained, growing revenue <strong>8% month over month</strong></p>
+        <p>Lifted hotel booking conversions <strong>65%</strong> by widening matched inventory and ranking contracted properties first across <strong>2–3 million daily requests</strong></p>
+    </div>
+  </section>
+
+<h2>Not pasted here</h2>
+<ul class="checks">
+  <li><strong>Dates, Personal Information, and sections 11–15</strong> — card-only, hand-edited in
+  Hiration. They are in <a href="upgrad_resume.html">the master résumé</a>. The one that matters is
+  <strong>El Paso</strong>: the v1 card calls it .NET; it is a <strong>Senior Java Developer</strong>
+  role, and leaving it hides four of the eleven Java years.</li>
+  <li><strong>One optional governance line</strong> for Business &amp; Delivery, drafted and not
+  applied: <em>Analytics governance by design — small-cell suppression, pseudonymous and deliberately
+  unrankable per-clinician views, neutral output vocabulary that resists scorecard misuse.</em></li>
+  <li><strong>Two bullets drafted and not used</strong> — <code>Bridged</code> (cross-domain LangGraph
+  orchestration) and <code>Seeded</code> (byte-deterministic replay). VoltusWave is already at ten.</li>
 </ul>
+
+<footer class="signoff">
+  <p><a href="upgrad_resume.html">The master résumé</a> ·
+     <a href="CHANGES.html">What changed, and why</a> ·
+     <a href="README.md">Parser contract</a></p>
+</footer>
 
 </main>
 <script src="../static/copy.js" defer></script>

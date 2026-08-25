@@ -3206,3 +3206,18 @@ li.pj-open { list-style: none; margin-left: -20px; }
 }
 .tablewrap table { margin: 0; border: 0; min-width: 640px; }
 .tablewrap th, .tablewrap td { padding: 10px 14px; vertical-align: top; }
+
+/* Per-section update sheet (master/staged_additions.html), the shape v1 proved:
+   section head, then why / heads-up / hygiene, then a copy block. */
+.section-head {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent); margin: 34px 0 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.paste-block-hygiene {
+  font-size: 13px; color: var(--muted); background: var(--paper-2);
+  border-radius: 5px; padding: 7px 11px; margin: 0 0 12px;
+}
+.paste-block-hygiene strong { color: var(--ink-soft); }
+.nochange { border-left-color: var(--good); }
+.nochange .paste-block-title .label { color: var(--good); }
