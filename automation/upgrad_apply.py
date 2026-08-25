@@ -176,9 +176,43 @@ def stage_login(page) -> None:
     print(f"[login] OK -- at {page.url}", file=sys.stderr)
 
 
+def _dismiss_modals(page) -> int:
+    """Clear any Ant Design modal blocking the iframe.
+
+    upGrad shows an onboarding dialog ("Let's kickstart your career journey")
+    that renders as `.ant-modal-wrap` and swallows pointer events, so every
+    click inside the iframe times out with "subtree intercepts pointer events".
+    It carries no close button in the markup, so Escape and mask-clicks are not
+    reliable — the nodes are removed outright. Returns how many were cleared.
+    """
+    JS = """() => {
+        const sel = ".ant-modal-wrap, .ant-modal-mask, .ant-modal-root";
+        const nodes = document.querySelectorAll(sel);
+        nodes.forEach(n => n.remove());
+        // Ant locks scrolling while a modal is open; give it back.
+        document.body.style.overflow = "";
+        document.body.classList.remove("ant-scrolling-effect");
+        return nodes.length;
+    }"""
+    cleared = 0
+    # The dialog lives in the TOP-LEVEL page and overlays the iframe — clearing
+    # only the app frame found nothing while every click still bounced off it.
+    # Sweep every reachable frame; cross-origin ones simply throw and are skipped.
+    for frame in [page.main_frame, *page.frames]:
+        try:
+            cleared += frame.evaluate(JS) or 0
+        except Exception:                                        # noqa: BLE001
+            continue
+    return cleared
+
+
 def stage_nav(page) -> None:
     # Wait for the iframe to mount, then act inside it.
     page.wait_for_selector(APP_IFRAME, timeout=15_000)
+    cleared = _dismiss_modals(page)
+    if cleared:
+        print(f"[nav] dismissed {cleared} blocking modal element(s)", file=sys.stderr)
+        page.wait_for_timeout(400)
     frame = app(page)
     # If "My Resumes" already visible inside the iframe, nothing to do.
     if frame.locator('text="My Resumes"').count() > 0:
@@ -189,8 +223,17 @@ def stage_nav(page) -> None:
     sidenav = frame.locator('text="Resume Builder"').first
     try:
         sidenav.click(timeout=10_000)
-    except Exception as e:
-        fail(page, "nav", f'could not click "Resume Builder" inside iframe: {e!r}')
+    except Exception:
+        # A modal can mount after the first dismissal; clear and retry once
+        # before failing, rather than losing the whole run to a dialog.
+        again = _dismiss_modals(page)
+        print(f"[nav] click blocked -- cleared {again} modal element(s), retrying",
+              file=sys.stderr)
+        page.wait_for_timeout(500)
+        try:
+            sidenav.click(timeout=10_000)
+        except Exception as e:
+            fail(page, "nav", f'could not click "Resume Builder" inside iframe: {e!r}')
     # Wait for grid heading to appear
     try:
         frame.locator('text="My Resumes"').first.wait_for(state="visible", timeout=15_000)
