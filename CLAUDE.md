@@ -159,6 +159,20 @@ frame PostgreSQL↔MySQL as transferable.
   `master/upgrad_resume.html` carries **6**. Eight are unmerged, including Jenkins → GitHub Actions
   with ISO 27001, PostgreSQL → Amazon RDS, a Puppeteer regression framework, the axe-core
   spider/scanning pipeline, run-over-run regression comparison, and API versioning.
+- **✅ HIGH-AVAILABILITY DESIGN IS REAL — user-confirmed 2026-08-25.** His words: *"GO Chat
+  Service and the 2 Data Stream has HA design, multi AZ deployment, failover, disaster recovery,
+  etc since we needed certification."* So HA attaches to the **Go chat service and the two-stream
+  Kinesis design** — multi-availability-zone deployment, failover and disaster recovery — and the
+  **driver was a certification requirement**. Claimable. It closes what the Yes Madam rubric had
+  booked as an unrecoverable 2.0-point floor.
+  ⚠ **Scope it correctly: this is the CHAT PLATFORM, not Amura.** The Amura corpus names no
+  broker at all (see the Kafka/Kinesis guardrail above). Never let HA evidence migrate across.
+  ⚠ **Open — ask him which certification** (HIPAA and ISO 27001 are both in his headline). Do not
+  guess it into a bullet.
+- **✅ TERRAFORM AND KUBERNETES WERE ADOPTED AS A COMPANY-WIDE STANDARD — user-confirmed
+  2026-08-25**, not merely run by him. This is an *adoption* artefact, the same shape as bullet 8's
+  Go and DynamoDB across five sub-teams, and it satisfies a "standards implemented and adopted,
+  not just documented" criterion rather than only a "ran the tool" one.
 - **✅ ALL 17 BULLETS USER-CONFIRMED ACCURATE, 2026-08-25** — his words: *"everything is
   accurate."* Do not re-flag any of them for factual accuracy, and do not scrub any of them.
   Two readings this settles:
