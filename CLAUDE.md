@@ -487,6 +487,13 @@ every per-job résumé.
   not duplicating what is already there — three chances to get it wrong, silently, in a field he
   cannot easily diff afterwards.
 - If a section changed by one word, the block still carries the **whole** section.
+- **Key Skills is one section, not three.** It renders as three sub-groups —
+  Technology Leadership & Strategy, Engineering Excellence, Business & Delivery — but when
+  tailoring per job it is **replaced whole**, all three groups at once. The paste sheet carries a
+  combined block for exactly this. Set by him 2026-08-25.
+- **His skills format is short capability labels, not sentences** — `Multi-Tenant SaaS
+  Architecture (Shared-Schema, Per-Tenant Isolation, Regulated Carve-Outs)`, never a descriptive
+  clause. It scans; prose does not. Match it.
 - **Generate copy blocks FROM the résumé file, never retype them.** A paste sheet that disagrees
   with the file the bot writes from is the drift that merging three files into one removed.
 - Content that did not make it into a section is **not offered for pasting at all** — record it as

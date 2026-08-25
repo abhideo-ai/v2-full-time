@@ -10,9 +10,9 @@
     "hygiene": "~115 words · every acronym expanded on first use in reading order · no \"currently\" attached to VoltusWave, which ended Apr 2026"
   },
   "quick-skills-ee": {
-    "why": "Six lines became ten. Two existing lines were <em>extended</em> rather than duplicated — stores gained <strong>Elasticsearch dense_vector</strong>, <strong>Redis</strong> and <strong>DuckDB and Parquet</strong>; the AWS line gained <strong>SageMaker</strong> and <strong>Neptune with Gremlin</strong>. Four are new: causal inference, leakage-safe machine learning, deterministic replayable systems, self-hosted models in-VPC. All of it appears repeatedly in your own case studies and none of it was on the résumé — DuckDB and Parquet in 8 studies each, Redis in 7, Ollama in 6, self-hosted LangSmith in 9.",
-    "heads_up": "Replaces the <strong>whole</strong> block. Two of the ten lines are edits to existing ones, so a partial paste would leave duplicates.",
-    "hygiene": "10 lines · skills lines carry <strong>no number requirement</strong> — that rule is for experience bullets"
+    "why": "His thirteen lines kept, with one <strong>correction</strong> and four <strong>additions</strong>. Corrected: “5 sub-teams” → <strong>6 sub-teams</strong> — backend, React Native, web, AI, QA, DevOps, and he hired the QA engineers. Added: <strong>Java + Spring Boot Microservices</strong>, which was absent from Key Skills entirely and is the single most-demanded thing on every high-scoring seat; <strong>Leakage-Safe Machine Learning</strong>; <strong>Self-Hosted Models In-VPC</strong>; <strong>Vector &amp; Columnar Data Stores</strong>. His Statistical Rigor line was extended with inverse probability weighting and standardised-mean-difference balance gates rather than duplicated.",
+    "heads_up": "Replaces the <strong>whole</strong> sub-group. Or use the combined <strong>Key Skills</strong> block above and paste all three at once.",
+    "hygiene": "17 lines · nothing of his removed · 5→6 sub-teams is a factual fix, not an edit"
   },
   "quick-vp": {
     "why": "One <strong>factual correction</strong> and four new bullets. The RAG bullet claimed the pipeline ran over an Amazon Neptune context graph; KQ1's own stack table names <strong>Elasticsearch</strong> the \"Authoritative serving index — dense_vector filtered kNN\" and says the graph \"serves audit and drill-down only, so serving latency never depends on its tail\". KQ9 is the Neptune query — the old bullet collapsed two systems into one. The four new bullets carry the Amura work: adversarial self-review, confounder gates, the relapse model, in-VPC self-hosting.",
@@ -29,8 +29,13 @@
     "hygiene": "4 bullets · unchanged · bugs −50% and sales +20% still unconfirmed · title is Software Engineer III, never \"Director\""
   },
   "quick-skills-bd": {
-    "why": "One line changed: HIPAA pipelines now read “in an <strong>ISO 27001</strong>-certified environment”. That is Deque's certification and the environment he delivered in — deliberately not worded as a credential he personally holds.",
-    "heads_up": "Replaces the <strong>whole</strong> block.",
-    "hygiene": "6 lines · ISO 27001 framed as environment, per his confirmation 2026-08-25"
+    "why": "His three lines kept, three added back from the previous master: <strong>WCAG 2.2 Level AA</strong>, enterprise consolidation at multi-hundred-instance scale, and distributed United States–India teams. Security line extended to name <strong>HIPAA pipelines in an ISO 27001-certified environment</strong> — the environment he delivered in, not a credential he holds.",
+    "heads_up": "Replaces the <strong>whole</strong> sub-group. Or use the combined <strong>Key Skills</strong> block above and paste all three at once.",
+    "hygiene": "6 lines · ISO 27001 framed as environment"
+  },
+  "quick-skills-tls": {
+    "why": "<strong>His structure, kept verbatim.</strong> Short capability labels scan; the long descriptive lines that were here did not. All six of his lines survive unchanged.",
+    "heads_up": "Replaces the <strong>whole</strong> sub-group. Or use the combined <strong>Key Skills</strong> block above and paste all three at once.",
+    "hygiene": "6 lines · unchanged from his card"
   }
 }
