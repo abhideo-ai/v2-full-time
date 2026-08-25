@@ -1,29 +1,32 @@
 # Pending at context clear — 2026-08-25 ~22:15
 
-## Two scoring workflows still running
+## All three scored — full rubrics in each `<workspace>/score.json`
 
-Results arrive as task notifications. If the session was cleared before they landed, recover them
-from the journals — **do not re-run**, the agents are done.
+| Seat | Technical | Comp | Mode | The cap |
+|---|---|---|---|---|
+| **AI-Native & Agentic Architect** — Bengaluru | **83.3** | not disclosed | hybrid | No dedicated vector-DB product; ANN internals absent |
+| **Yes Madam** — Lead Architect, Noida | **83.0** | ₹60–80L | **in-office** | **Kubernetes** and **Grafana/Prometheus** absent, both *required* |
+| **o9 Solutions** — Senior Architect, Bengaluru | **80.4** | **₹60–100L** | hybrid | **"5+ years deep learning"** — he has ~14 months applied |
 
-| Workspace | Run ID | Journal |
-|---|---|---|
-| `August-2026/25/principal-architect-ai-native/` | `wf_7461126c-a96` | `~/.claude/projects/-Users-adeo-Documents-v2-full-time/75b448f1-*/subagents/workflows/wf_7461126c-a96/journal.jsonl` |
-| `August-2026/25/o9-senior-architect-agentic/` | `wf_3f4e51a0-2a5` | `~/.claude/projects/-Users-adeo-Documents-v2-full-time/75b448f1-*/subagents/workflows/wf_3f4e51a0-2a5/journal.jsonl` |
+**None reaches 95, and none is closable by re-vectoring** — each is capped by absent experience,
+not by wording. Say so plainly rather than implying a rewrite fixes it.
 
-Each journal has one `{"type":"result",...}` line per agent — six criterion scores plus one
-adjudication. Save each as `<workspace>/score.json` the way Yes Madam's was.
+**The three sharpest findings, one per seat:**
 
-## Scored so far
-
-| Seat | Technical | Blocking |
-|---|---|---|
-| **Yes Madam** — Lead Architect, Noida, ₹60–80L, **in-office** | **83/100** | **Kubernetes** and **Grafana/Prometheus** both absent and both in the *required* block. Comp midpoint ₹70L is **below his current ₹72L** |
-
-Yes Madam's full rubric is in `August-2026/25/yes-madam-lead-architect/score.json`.
-
-**Sharpest finding:** he left Deque on **Spring Boot 2.x**, so it is *never shipped on Spring Boot
-3*, not *behind on it* — Jakarta namespace, SB3 observability and Java 21 virtual threads are all
-unevidenced. His concurrency proof is **Go**, so a JVM follow-up has no JVM answer behind it.
+- **Yes Madam** — he left Deque on **Spring Boot 2.x**, so it is *never shipped on Spring Boot 3*,
+  not *behind on it*. Jakarta namespace, SB3 observability, Java 21 virtual threads all unevidenced.
+  His concurrency proof is **Go**, so a JVM follow-up has no JVM answer behind it.
+- **AI-Native** — his own KQ1 Q&A already answers the vector-DB objection: Elasticsearch
+  `dense_vector` is *"the implementation default behind an index abstraction"* and a dedicated store
+  is *"a still-open bake-off"*. He architected the **vector data access layer** — the JD's exact
+  phrase. But Pinecone/Weaviate/Milvus/pgvector/Qdrant and HNSW internals are zero hands-on.
+- **o9** — the requirement is a compound OR and the halves must not be averaged. **Data
+  engineering: met deeply**, 2012 → 2026, nine-year hydration with byte-identical replay.
+  **Deep learning: ~14 months**, one stint. The IIIT diploma (Jan 2021) adds credibility, not years.
+  And his portfolio's stated through-line is *"knowing when not to use an LLM"* — an architecture
+  virtue that reads as one, but it means no fine-tuning, no pre-training, no CV, no RL anywhere.
+  MLOps partly rescues it: retraining pipelines and drift detection are directly evidenced; a
+  **model registry is never named**.
 
 ## Still outstanding, his hand
 
