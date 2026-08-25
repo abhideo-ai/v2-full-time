@@ -47,7 +47,8 @@
   </p>
   <!-- Rows are rendered from the jobs_tracker database by static/apps.js.
        Never hand-write a card here: the database is the search layer, and a row
-       added by hand is a row `./todo`, the tabs and every query cannot see. -->
+       added by hand is a row no query can see. Register it with
+       automation/jobs_sync.py instead — resume.py new already does. -->
   <p id="app-status" class="app-status">Loading applications…</p>
   <div class="grid" id="app-list"></div>
   <p id="tab-empty" hidden>No applications match.</p>

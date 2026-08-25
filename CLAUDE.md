@@ -406,6 +406,22 @@ tomorrow** — the gap is where his read forms.
   `job-applications/Month-YYYY/DD/`.
 - **No per-file `<style>` blocks.** Shared classes live in `style.css`.
 
+### The launcher renders from the database
+
+`index.html`'s Applications list comes from `jobs_tracker` via `GET /api/jobs`, not from
+markup. **Never hand-write a card into `#app-list`** — a row added by hand is a row no query
+can see, which is exactly how the page came to show 4 applications while the database held 92.
+
+- `automation/jobs_db.py` — read-only queries (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker`).
+- `automation/jobs_sync.py` — registers a seat, and re-reads every workspace's `score.json` to
+  refresh its technical score. Idempotent; re-run it after any re-scoring.
+- Status→tab mapping and the two-score derivation are documented in `automation/README.md`.
+  `recommended_skip` → **closed** is deliberate: those 49 rows must not drag on the
+  ready-and-unsent backlog gate.
+- ⛔ `applications.salary` is never selected or rendered — compensation is deferred.
+- Served by plain `http.server` there is no API, and the page **says the list is unavailable**
+  rather than rendering an empty grid.
+
 ### The daily log
 
 `daily/index.html` — what is due, what is blocked, what is next. **Generated, never authored:**
@@ -446,7 +462,8 @@ automation/.venv/bin/python automation/resume.py sheet [--slug <slug>] [--since 
 
 - **`new`** scaffolds a whole job workspace: the dated directory, `upgrad_resume.html` copied
   from the master, an empty `paste_notes.json`, a `jd.md` to paste into, a per-workspace favicon,
-  and the launcher card registered as `building`. Everything repeated 15–20 times a night.
+  and a row in `jobs_tracker` as `resume_drafted`, which the launcher shows under *building*.
+  Everything repeated 15–20 times a night.
 - **`sheet`** emits `<workspace>/paste_sheet.html` — every section as ONE copy block, generated
   **from** the résumé so it cannot disagree with what the bot writes. Which sections changed is
   derived by diffing against git; `--since <ref>` is needed when the change is already committed,
