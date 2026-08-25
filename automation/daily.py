@@ -265,7 +265,7 @@ def main() -> None:
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daily to-do — full-time JD workspace (v2)</title>
+  <title>Daily to-do</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="../style.css" />
 </head>
