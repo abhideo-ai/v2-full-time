@@ -1,9 +1,15 @@
 // Status tabs. Pills carry data-tab; rows carry data-status.
 // data-tab="all" shows everything. Counts are filled from the rows.
 document.addEventListener("DOMContentLoaded", () => {
+  const BASE_TITLE = document.title;
   const pills = [...document.querySelectorAll("[data-tab]")];
   const rows  = [...document.querySelectorAll("[data-status]")];
   if (!pills.length) return;
+
+  // Live tab title: ready-and-unsent is the number that matters here — the
+  // backlog gate — so a pinned launcher tab surfaces it without being opened.
+  const ready = rows.filter(r => r.dataset.status === "ready").length;
+  document.title = ready ? `${ready} ready · unsent · ${BASE_TITLE}` : BASE_TITLE;
 
   pills.forEach(p => {
     const t = p.dataset.tab;

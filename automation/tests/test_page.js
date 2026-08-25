@@ -4,6 +4,13 @@ const API = "http://127.0.0.1:8106", PLAIN = "http://127.0.0.1:8107";
 let P = 0, F = 0;
 const ok = (c, l) => { c ? P++ : F++; console.log(`  ${c ? "PASS" : "FAIL"}  ${l}`); };
 const settle = (ms = 90) => new Promise(r => setTimeout(r, ms));
+// Parse the live title rather than hardcoding numbers: the runner adds a
+// synthetic second day, so the totals differ between a one-day and two-day log.
+const titleParts = d => {
+  const m = d.title.match(/^(?:(\d+) overdue \u00b7 )?(\d+)\/(\d+) \u00b7 (.+)$/);
+  return m ? { overdue: Number(m[1] || 0), done: Number(m[2]), total: Number(m[3]), stem: m[4] }
+           : { raw: d.title };
+};
 
 async function boot(base) {
   const html = fs.readFileSync(REPO + "/daily/index.html", "utf8");
@@ -54,6 +61,9 @@ const move = async (w, id, action, reasons, note, until) => {
   ok(d.getElementById("store-banner").textContent.includes("PostgreSQL"), "banner names the store");
   ok(li(d, "clone-card").querySelector(".dl-due").textContent === "due today", "due-today badge");
   ok(li(d, "verify-dates").classList.contains("waiting"), "dependency gating still on");
+  let T = titleParts(d);
+  ok(T.done === 0 && T.total > 0, `live title leads with progress — got "${d.title}"`);
+  ok(T.stem && T.stem.startsWith("Daily to-do"), "live title keeps the page name as its stem");
 
   console.log("\n2. A tick reaches the database");
   await tick(w, "clone-card");
@@ -61,6 +71,7 @@ const move = async (w, id, action, reasons, note, until) => {
   ok(st.tasks["2026-08-25::clone-card"]?.done === true, "row written to postgres");
   ok(!li(d, "verify-dates").classList.contains("waiting"), "dependant unlocked in the page");
   ok(!li(d, "clone-card").querySelector(".dl-due"), "a done task drops its due badge");
+  ok(titleParts(d).done === 1, `title tracks the tick — got "${d.title}"`);
 
   console.log("\n3. Park with a reason");
   await move(w, "paste-jds", "parked", ["posting-closed", "comp-below"],
@@ -79,6 +90,8 @@ const move = async (w, id, action, reasons, note, until) => {
   // Denominator = today's ACTIVE tasks. Rolled-over tasks count too, so derive
   // the expectation rather than hardcoding it for the single-day case.
   const active = d.querySelectorAll(".dl-day.today .dl-group:not(.rolled) li[data-id], .dl-day.today .dl-group.rolled li[data-id]").length;
+  ok(titleParts(d).total === active,
+     `a parked task leaves the title's denominator too — title says ${titleParts(d).total}, ${active} active`);
   ok(d.querySelector(".dl-count").textContent === `1/${active} done`,
      `parked task left the denominator — got "${d.querySelector('.dl-count').textContent}", ${active} active`);
 
@@ -156,6 +169,7 @@ const move = async (w, id, action, reasons, note, until) => {
     const due = rolled.querySelector('li[data-id="old-open"] .dl-due');
     ok(due && due.textContent.includes("overdue"), `rolled task reads as overdue — got "${due && due.textContent}"`);
     ok(rolled.querySelector(".dl-from").textContent.includes("2026-08-24"), "shows the day it came from");
+    ok(/^\d+ overdue · /.test(d.title), `overdue count leads the title — got "${d.title}"`);
     const box = rolled.querySelector('li[data-id="old-open"] input');
     box.checked = true; box.dispatchEvent(new w.Event("change")); await settle();
     const origin = d.querySelector('.dl-day[data-day="2026-08-24"] li[data-id="old-open"]');

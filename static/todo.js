@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const TODAY = iso(new Date());
   const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
 
+  // Captured before anything mutates it: the generated <title> is the fallback
+  // for a no-JS view, and the stem every live title is built on.
+  const BASE_TITLE = document.title;
   const days = [...document.querySelectorAll(".dl-day")];
   const today = document.querySelector(".dl-day.today");
   const banner = document.getElementById("store-banner");
@@ -285,9 +288,23 @@ document.addEventListener("DOMContentLoaded", async () => {
       count.classList.toggle("all-done", done === mine.length);
     });
 
-    if (!nextText || !today) return;
+    if (!today) return;
     const mine = entries.filter(e => e.inToday && !isOut(st(e.key)));
     const open = mine.filter(e => st(e.key).done !== true);
+
+    // Live tab title. A pinned tab should say where things stand without being
+    // opened, so the numbers lead — a tab strip truncates the tail, never the head.
+    const overdue = open.filter(e => {
+      const s2 = st(e.key);
+      const due = s2.moved === "pushed" && s2.until ? s2.until : e.due;
+      return due < TODAY;
+    }).length;
+    const bits = [];
+    if (overdue) bits.push(`${overdue} overdue`);
+    if (mine.length) bits.push(open.length ? `${mine.length - open.length}/${mine.length}` : "✓ all done");
+    document.title = bits.length ? `${bits.join(" · ")} · ${BASE_TITLE}` : BASE_TITLE;
+
+    if (!nextText) return;
     // Priority decides; an overdue task only breaks a tie within its priority.
     const ready = open
       .filter(e => !e.li.classList.contains("waiting"))
