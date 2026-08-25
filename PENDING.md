@@ -45,3 +45,33 @@ not by wording. Say so plainly rather than implying a rewrite fixes it.
 automation/.venv/bin/python automation/resume.py new --slug <slug> --company X --role Y
 ```
 Then delegate the whole build. Master PDF is done: `master/Abhisheik_Deo_Resume.pdf`, 3 pages, ATS 85.
+
+## His read on the vector-DB gap — 2026-08-25, and it stands
+
+> *"Vector databases — it's a relatively simple thing for a person with my experience to learn/master."*
+
+**Correct, and the rubric already agrees**: it is classified a **RAMP ITEM, not a capability cap.**
+He did not fail to use a vector database — he architected around one deliberately, and KQ1's Q&A
+makes the case: Elasticsearch `dense_vector` is *"the implementation default behind an index
+abstraction… so the store can be swapped without touching the serving contract."*
+
+Someone who already reasons about hybrid filter-plus-kNN in one engine, tenant filters **inside**
+the query, embedding-version pinning across index and query, and blue-green index rebuilds with
+shadow evaluation learns a specific store's API in an afternoon.
+
+**The caveat that still holds:** "I could learn it quickly" does not score in a room. Fluency in the
+trade-offs *now* does — HNSW `ef_construction` vs `M`, recall-versus-latency, quantisation cost,
+when a dedicated store actually beats a hybrid engine. A week of reading, not a quarter. **Do not
+re-litigate this gap as a capability cap.**
+
+## Gap prep running
+
+`wf_58f6f5c4-caa` → `~/Documents/interview-prep/gap-prep/index.html`. Seven gaps, ordered by how
+CERTAIN the question is. Each gets: the honest concession first, the nearest real thing, the bridge
+and where it stops, what to learn this week, and three likely questions with one-sentence headlines.
+
+**The graph neural network is first and is the highest-risk item in his whole profile** — he
+confirmed it is real, it sits in word-position four of his headline, and the phrase appears **zero
+times across all 22 case-study files** because it attaches to the Context Graph, which those ten
+killer queries do not document. A headline claim with no artefact to rehearse from. Only he can
+fill in the node/edge schema, the task, the framework, the training data and how it was served.
