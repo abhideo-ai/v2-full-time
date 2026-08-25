@@ -194,7 +194,13 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
         # Section-level copy needs a source with NO wrapper markup, so it gets
         # its own hidden div holding only the <p>s. copy.js builds the clipboard
         # from innerHTML, so `hidden` costs nothing and keeps the page clean.
-        hidden_src = ("".join(f"<p>{x}</p>" for x in now))
+        # WHOLE-SECTION source is <ul><li>, COMPACT. <p> per line keeps bold but
+        # loses the bullets; <ul><li> keeps the bullets. The earlier <ul> test
+        # that lost bold ran BEFORE whitespace between <ul> and <li> was
+        # stripped — a text node where a list expects only <li> children makes a
+        # sanitiser fall back to plain text, which is exactly "bullets kept,
+        # bold lost". No whitespace here, so the list parses as a list.
+        hidden_src = "<ul>" + "".join(f"<li>{x}</li>" for x in now) + "</ul>"
         body = (f'<div class="paste-area copy-target sr-src" id="sec-{sec_id}" hidden>'
                 f'{hidden_src}</div>\n        ' + rows)
         blocks.append(f'''<div class="ps-head">
@@ -222,8 +228,9 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     ks_body = ""
     ks_hidden = ""
     for sid, sub in ks:
-        ks_hidden += f"<p><strong>{sub}</strong></p>" + "".join(
-            f"<p>{x}</p>" for x in paragraphs(html, sid))
+        ks_hidden += (f"<p><strong>{sub}</strong></p><ul>"
+                      + "".join(f"<li>{x}</li>" for x in paragraphs(html, sid))
+                      + "</ul>")
         ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>"
         ks_body += "".join(
             f'\n        <div class="bullet-row">'
