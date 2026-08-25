@@ -49,10 +49,19 @@ URL = "https://careers.upgrad.com/resume-builder"
 # mapping: VoltusWave, Deque, Rocket, Co-Founder, Teletext (five pre-2016 roles follow,
 # untouched by the bot). Prior default was june_master_resume.
 #
-# ONE-CARD DESIGN (2026-08-18, user's call -- supersedes the two-card plan below).
-# Every seat, IC or leadership, exports "Principal Software Architect".
-#   august_master_resume  -> the ONLY card. VoltusWave 2025-26 reads
-#                            "Principal Software Architect". Use it for everything.
+# TWO-CARD DESIGN (2026-08-25, user's call -- supersedes the one-card note below).
+# v2 is IC-only, so the IC card is the DEFAULT and the older card is the exception.
+#   august_ic_master_resume -> DEFAULT. Cloned from august_master_resume, so it already
+#                            carries all ten experience entries (five bot-written, five
+#                            pre-2016 untouched), dates, education and certifications.
+#                            Content source: master/master_paste.html.
+#                            NAME NOT YET FINALISED (2026-08-25) and the card may not exist
+#                            yet -- until it does, stage_find_master fails loudly with a
+#                            "check the card name / pass --master" message. That loud
+#                            failure is deliberate: it beats silently exporting from the
+#                            wrong card, which is what the old default did.
+#   august_master_resume  -> kept deliberately, may still be used for future positions.
+#                            Reach it with `--master august_master_resume`.
 # VERIFIED 2026-08-18: passing `--master june_master_resume` for a leadership seat
 # (Backbase) still produced "Principal Software Architect" -- that card was retitled
 # in place at some point, so NO card produces the VP title any more. This is now the
@@ -63,7 +72,7 @@ URL = "https://careers.upgrad.com/resume-builder"
 # Superseded two-card design (2026-07-24, TITLE_PIVOT_PLAN.md), kept for context:
 #   june_master_resume    -> was meant to read "VP of Technology" (it no longer does)
 #   master_ic_architect   -> was meant to read "Principal Software Architect" (never built)
-MASTER_TITLE = os.environ.get("UPGRAD_MASTER_CARD") or "august_master_resume"
+MASTER_TITLE = os.environ.get("UPGRAD_MASTER_CARD") or "august_ic_master_resume"
 DEBUG_DIR = ROOT / ".debug" / "upgrad"
 LOGIN_POLL_TIMEOUT_S = 5 * 60
 

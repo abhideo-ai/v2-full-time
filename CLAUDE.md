@@ -111,6 +111,12 @@ frame PostgreSQL↔MySQL as transferable.
   Java actually spans roughly **11 years across three eras**.
 - **The VoltusWave VP role ended Apr 2026** — he is available immediately. Reason for
   change is the honest VoltusWave/Amura cashflow situation. Never invent a better one.
+- **Current location is Hyderabad** (set 2026-08-25). This is where he lives now — distinct
+  from the still-open question of whether the *Deque role* was Hyderabad or Bangalore, which
+  the journey doc records unresolved. Location is **card-only**: it lives in Hiration's
+  Personal Information modal with phone, email and LinkedIn, and the bot never writes it. It
+  only edits `#personal_title_1`, the headline. **Relocation stays open** and is never a
+  scoring constraint.
 - **The VoltusWave org was 6 sub-teams** — backend, React Native, web, artificial
   intelligence, quality assurance (QA), DevOps. Never "5". He hired QA engineers.
 - **Safe to claim:** Django, FastAPI, LangChain, LangGraph, real Model Context Protocol
@@ -287,13 +293,20 @@ root, so **cwd matters**. Login is automated from encrypted credentials in `auto
 
 Two live masters, both in `cleanup_cards.py`'s `PROTECTED` set:
 
-- **`august_ic_master_resume`** — the IC card, hand-built 2026-08-25 from
-  `master/master_paste.html`. **This is the default choice for the IC-only track.** It is
-  *not* the script default, so every export needs `--master august_ic_master_resume` or
-  `UPGRAD_MASTER_CARD=august_ic_master_resume` in the environment.
-- **`august_master_resume`** — kept deliberately. It may still be used for future positions.
-  It is what `upgrad_apply.py` falls back to when no `--master` is passed, so **an export with
-  no flag silently uses this one** — pass the flag or check which card you got.
+- **`august_ic_master_resume`** — the IC card. **Created by cloning `august_master_resume`,
+  not from blank.** That base already carries all ten experience entries — the five the bot
+  writes plus the five pre-2016 roles it never touches — along with dates, education and
+  certifications. So building the IC card is **overwriting text in an existing skeleton**, not
+  creating sections. Content comes from `master/master_paste.html`. It is the **script
+  default** as of 2026-08-25 — a bare export uses it, no flag needed.
+  **The name is not finalised.** Until a card exists in Hiration under exactly this name,
+  every export fails loudly at `stage_find_master` with a "check the card name, or pass
+  `--master`" message. That loud failure is intended; the previous silent fallback to the
+  other card was the bug. Renaming means one line in `upgrad_apply.py`, one in
+  `cleanup_cards.py`'s `PROTECTED`, and this block.
+- **`august_master_resume`** — kept deliberately; it may still be used for future positions,
+  and it is the base the IC card is cloned from. No longer the default: reach it explicitly
+  with `--master august_master_resume`.
 
 ### ⛔ Card deletion — ask first, every time
 
@@ -304,8 +317,15 @@ not a follow-up to infer. Tailored `<slug>_ats_resume` cards accumulating is the
 state, not a mess to clean.
 
 **⚠ Dates live in the Hiration card, not the HTML.** The bot overwrites bullet text only, so
-the card itself must already read Apr 2026. **Education, certifications and the pre-2016 roles
-are card-only too** — the bot never touches them; edit those by hand in the Hiration UI.
+the card itself must already read Apr 2026. On `august_master_resume` it already does
+(VoltusWave 2025-03-01 → 2026-04-01, Deque 2019-12-01 → 2025-02-01) — **verify after cloning
+rather than assuming a clone preserved them.**
+
+**Education, certifications and the pre-2016 roles are card-only** — the bot never touches
+them. They already exist on the card, carried over from v1, so the work is correcting their
+text by hand in the Hiration UI. **The one that matters is El Paso**: it is a Java role —
+Senior Java Developer, JSP and Java Enterprise Edition, Tennessee Gas Pipeline — and the v1
+card describes it as .NET, hiding four of the eleven Java years.
 
 **Verify every exported PDF:** dates correct (VoltusWave ended **Apr 2026**), bold renders
 heavier, content matches `bullets_for_upgrad.html`, contact details and the LinkedIn slug
@@ -377,10 +397,38 @@ recording failed.
 
 ---
 
-## Not built yet
+## Status — 2026-08-25
 
-Deliberately absent, to be created as the pipeline restarts:
+**Built:**
 
-- `master/upgrad_resume.html` — author it from `professional-journey.md`.
-- The root `index.html` dashboard and per-workspace launcher pages.
-- Any job workspaces.
+- `master/upgrad_resume.html` — the ten parsed sections, verified against the real parser, no
+  silent skips. 23 leading verbs, all unique.
+- `master/master_paste.html` — the manual paste sheet. Section 0 is Personal Information,
+  1–10 the parsed sections, 11–15 the pre-2016 roles. Every bullet a standalone `<p>` so bold
+  survives the upGrad paste; zero `<ul>` elements by design.
+- Root `index.html` — minimal launcher with status tabs (`static/tabs.js`). A workspace joins
+  by adding one `<a class="card" data-status="…">` to `#app-list`; counts are computed.
+- `automation/workspace_favicon.py` — per-workspace favicon so open tabs stay tellable apart.
+
+**Not built yet:**
+
+- **The Hiration card itself.** Nothing has ever been exported, so the chain is unproven end
+  to end. Clone `august_master_resume`, rename, overwrite from the paste sheet.
+- Per-workspace launcher pages, and any job workspaces.
+
+**The next real step is his, not ours:** build the card, then a first export and PDF verify.
+
+**Blocking or open:**
+
+- **The card name is not finalised.** `august_ic_master_resume` is the default in three files;
+  until a card exists under that exact name every export fails loudly (which is intended).
+- **El Paso is the one section that must change.** The v1 card calls it .NET; it is a Java
+  role, and leaving it hides four of the eleven Java years.
+- **Nine bullets carry scale markers, not digits** — the Deque service count, how many
+  products inherited the VoltusWave roadmap, the McDonald's store count. He supplies these.
+- **Confirm-or-reject, his call alone:** ~300 customers vs instances; the 70–80%
+  consolidation; two Rocket metrics (bugs −50%, sales +20%); where the +65% conversion lift
+  attaches; 8% month-over-month sustained or one-time; the 100,000-concurrent wording,
+  currently written as burst testing.
+- **Deliberately not claimed** until he settles them: the graph neural network, the large
+  language model narrative guardrails, the 27 ms / P95 16 ms pairing.

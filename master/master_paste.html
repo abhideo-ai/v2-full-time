@@ -11,12 +11,15 @@
 <main class="page" id="main">
 
 <h1>Master résumé — manual paste sheet</h1>
-<p><strong>Card: <code>august_master_resume</code></strong>. Every bullet below is a standalone
+<p><strong>Clone <code>august_master_resume</code> and rename the copy
+<code>august_ic_master_resume</code>.</strong> The base already carries all ten experience
+entries — including the five pre-2016 roles — plus dates, education and certifications, so this
+is <em>overwriting text in an existing skeleton</em>, not creating sections. Every bullet below is a standalone
 <code>&lt;p&gt;</code>, never inside a <code>&lt;ul&gt;</code> — upGrad strips bold from
 list-rooted content, so pasting from a list silently loses every <strong>bold</strong>.
 Copy buttons carry <code>data-copy-html="1"</code>, which preserves bold on the clipboard.</p>
 
-<h2>Dates — set these on the card first</h2>
+<h2>Dates — verify, do not assume the clone kept them</h2>
 <table>
 <tr><th>#</th><th>Employer</th><th>Title</th><th>From</th><th>To</th><th>Location</th></tr>
 <tr><td>1</td><td>VoltusWave Technologies</td><td>Principal Software Architect</td><td>Mar 2025</td><td><strong>Apr 2026</strong></td><td>Hyderabad</td></tr>
@@ -33,6 +36,18 @@ Copy buttons carry <code>data-copy-html="1"</code>, which preserves bold on the 
 <p><strong>Education:</strong> MS Computer Science, University of Houston (Aug 2004 – Dec 2007).
 PG Diploma in Artificial Intelligence / Machine Learning, IIIT Bangalore (Jan 2021).
 <strong>Never downgrade the MS.</strong></p>
+
+<h2>0. Personal Information — card-only, hand-edited</h2>
+<p>All of this lives in Hiration's <strong>Personal Information</strong> modal. The bot never
+writes any of it — it only edits the headline field. Check each one after cloning, and again on
+every exported PDF.</p>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Current location</td><td><strong>Hyderabad</strong></td></tr>
+<tr><td>Phone</td><td>+91 93640 27487</td></tr>
+<tr><td>Email</td><td>abhisheik@abhideo.ai</td></tr>
+<tr><td>LinkedIn slug</td><td><strong>abhisheikdeo</strong> — not <code>abhideo</code>, which is the email domain</td></tr>
+</table>
 
 <h2>1. Headline</h2>
 <div class="section copy-target" id="p-headline">
