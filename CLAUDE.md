@@ -599,6 +599,16 @@ location, title and openness — every JD claim gets checked against the company
 skills blocks, the five experience roles — each agent working from `professional-journey.md`.
 Then Rule 7 re-vectoring per job, fanned out the same way.
 
+**EVERY workspace artefact is built by a subagent or workflow — no exceptions.** Set by him
+2026-08-25. That means the whole build, not just the parts that look hard: `jd.md` and `jd.html`,
+the weighted-rubric `index.html`, `resume_changes_for_<N>pct_match.html`, `bullets_for_upgrad.html`,
+the re-vectored `upgrad_resume.html`, and cited `research.html`. Scaffolding with `resume.py new`
+is a command, not authoring — but the moment content is being written into a workspace, it is
+delegated.
+
+**What stays in the main thread:** adjudicating what comes back, the adversarial verify pass, and
+status changes through `./todo`. Coordination and judgement, never production.
+
 **Score a JD → subagents, one per rubric criterion.** The **technical score is the one that
 matters, and the target is 95+.** Give each criterion its own agent: weight, score out of ten,
 and the evidence quoted from `professional-journey.md`. A separate agent names the **binding
