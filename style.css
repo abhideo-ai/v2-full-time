@@ -3179,3 +3179,16 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .dl-revivable[data-tone="good"] { color: var(--good); border-color: var(--good); background: var(--good-soft); }
 .dl-list > li.closed-for-good { opacity: .55; }
 .dl-list > li.closed-for-good .dl-act.restore { opacity: .6; }
+
+/* Pills in a flex row must not stretch. `.pills` is display:flex, whose default
+   align-items:stretch grows every pill to the tallest one; with
+   border-radius:999px a stretched pill renders as a large oval instead of a
+   pill. Pin the cross-axis size and stop them flexing at all. */
+.pills { align-items: center; }
+.pills .pill {
+  flex: 0 0 auto;
+  align-self: center;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+.pills .pill .n { font-size: inherit; font-weight: 700; margin-left: 4px; }
