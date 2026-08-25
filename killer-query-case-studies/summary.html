@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Killer Queries — summary</title>
+<style>
+:root{
+  --paper:#F7F9FA; --card:#FFFFFF; --ink:#12222C; --steel:#51626D; --mist:#E4EBEC;
+  --hairline:#D5DFE1; --teal:#0B756F; --teal-deep:#084F4B; --amber:#8A5A00; --amber-soft:#FBF3E2;
+  --serif:"IBM Plex Serif",Georgia,serif;
+  --sans:"IBM Plex Sans",-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:1.02rem;line-height:1.65;-webkit-font-smoothing:antialiased}
+main{max-width:960px;margin:0 auto;padding:64px 24px 96px}
+a{color:var(--teal-deep)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:14px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.16;letter-spacing:-.015em}
+.sub{font-size:1.08rem;color:var(--steel);max-width:64ch;margin-top:16px}
+h2{font-family:var(--serif);font-weight:600;font-size:1.45rem;letter-spacing:-.01em;margin:52px 0 6px}
+h3{font-family:var(--serif);font-weight:600;font-size:1.12rem;margin:28px 0 8px}
+.lede{color:var(--steel);font-size:.97rem;max-width:70ch;margin-bottom:18px}
+.tablewrap{overflow-x:auto;margin:18px 0;border:1px solid var(--hairline);border-radius:6px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:720px}
+th,td{text-align:left;padding:10px 14px;vertical-align:top}
+thead th{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);border-bottom:1px solid var(--hairline);background:var(--paper)}
+tbody tr+tr td{border-top:1px solid var(--mist)}
+td.kq{font-family:var(--mono);font-size:.74rem;color:var(--teal);white-space:nowrap}
+td.name{font-weight:600}
+.spine{background:var(--card);border:1px solid var(--hairline);border-left:3px solid var(--teal);border-radius:6px;padding:22px 26px;margin:18px 0}
+.spine ol{margin:10px 0 0 20px}
+.spine li{margin-bottom:7px;font-size:.95rem}
+.spine code,td code,.g code{font-family:var(--mono);font-size:.84em;background:var(--mist);padding:1px 5px;border-radius:3px}
+.g{background:var(--card);border:1px solid var(--hairline);border-radius:6px;padding:18px 22px;margin:14px 0}
+.g h4{font-family:var(--sans);font-size:.98rem;font-weight:600;margin-bottom:2px}
+.g .term{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:6px}
+.g p{font-size:.93rem;color:var(--steel);margin-bottom:8px}
+.g p:last-child{margin-bottom:0}
+.g .why{color:var(--ink)}
+.g .ask{background:var(--amber-soft);border-left:3px solid var(--amber);border-radius:0 4px 4px 0;padding:8px 12px;font-size:.88rem;color:var(--ink)}
+.g .ask b{color:var(--amber)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--hairline);background:var(--paper);color:var(--steel);margin-left:6px}
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--hairline);font-size:.86rem;color:var(--steel)}
+@media print{body{background:#fff}main{padding:0}}
+</style>
+</head>
+<body>
+<main>
+
+<span class="eyebrow">Portfolio · Summary</span>
+<h1>Ten killer queries, one spine</h1>
+<p class="sub">A chronic-care platform covering <strong>80+ conditions</strong>, carrying
+<strong>9–10 years of patient history</strong>. Ten analytics and machine-learning services, all
+shipped, all built on the same architecture and the same discipline: deterministic code owns
+every number, and a language model is only ever allowed at a gated edge.</p>
+
+<h2>The ten</h2>
+<p class="lede">Each row links to its full case study and its question-and-answer companion.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>#</th><th>Query</th><th>What it answers</th><th>The design tell</th></tr></thead>
+<tbody>
+<tr><td class="kq"><a href="kq1-precedent-search.html">KQ1</a></td><td class="name">Precedent search</td>
+<td>At the moment a clinician drafts a decision, which prior decisions were most analogous — with their rationale, evidence and 3/6-month outcomes?</td>
+<td>Chose <strong>Decision, not Patient</strong>, as the retrieval unit and derived everything else from it. Clinical filters encode <em>contracts, not preferences</em>.</td></tr>
+
+<tr><td class="kq"><a href="kq2-outcome-correlation.html">KQ2</a></td><td class="name">Outcome correlation</td>
+<td>Did adding a nutrition protocol help, or did healthier patients just receive it?</td>
+<td>Four timestamps split into two he trusts and two he does not — the untrusted pair survives only as provenance.</td></tr>
+
+<tr><td class="kq"><a href="kq3-override-intelligence.html">KQ3</a></td><td class="name">Override intelligence</td>
+<td>Who overrode the clinical protocol, why, and did those patients fare differently?</td>
+<td>The cache key pins <code>matcher_binary_version</code> and <code>stat_plan_version</code> — otherwise a cached delta outlives the cohort it came from.</td></tr>
+
+<tr><td class="kq"><a href="kq4-early-signal-detection.html">KQ4</a></td><td class="name">Early-signal detection</td>
+<td>Which patients show the ordered 30-day run-up of events that precedes a relapse?</td>
+<td>Never scores an outcome window that has not matured. Sorts by <code>(event_time_ms, source_event_seq, event_id)</code> so two events in one millisecond cannot yield two scores.</td></tr>
+
+<tr><td class="kq"><a href="kq5-decision-latency.html">KQ5</a></td><td class="name">Decision latency</td>
+<td>How long from a high-risk lab result arriving to the treatment decision that answers it?</td>
+<td>Unanswered labs stay in the denominator as <strong>right-censored</strong> observations rather than being quietly dropped.</td></tr>
+
+<tr><td class="kq"><a href="kq6-ai-vs-human.html">KQ6</a></td><td class="name">AI versus clinician</td>
+<td>When a clinician accepted an AI suggestion versus rejected it, what was the 90-day outcome delta?</td>
+<td>Held <strong>dark</strong> until an upstream team shipped the audit trail that made the comparison honest — a system that knew which question it was not yet entitled to answer.</td></tr>
+
+<tr><td class="kq"><a href="kq7-confidence-calibration.html">KQ7</a></td><td class="name">Confidence calibration</td>
+<td>Was a clinician's own stated certainty borne out by the 90-day outcome?</td>
+<td>Immature decisions are not merely excluded — they are <em>not yet countable</em>, which is a different and stricter thing.</td></tr>
+
+<tr><td class="kq"><a href="kq8-policy-friction.html">KQ8</a></td><td class="name">Policy friction</td>
+<td>Per policy version, how often did clinicians override each rule, and how did those patients do?</td>
+<td>Emits only six <strong>neutral zone codes</strong>, deliberately engineered to resist being turned into a staff scorecard.</td></tr>
+
+<tr><td class="kq"><a href="kq9-causal-path.html">KQ9</a></td><td class="name">Causal path</td>
+<td>Why is this patient on this medication plan — answered for a clinician at the bedside, and for a regulator asking about an exact past instant?</td>
+<td>Two products, one question: a bounded live graph walk, and a <strong>byte-deterministic</strong> replay from the event spine.</td></tr>
+
+<tr><td class="kq"><a href="kq10-cross-domain.html">KQ10</a></td><td class="name">Cross-domain analytics</td>
+<td>Which patients had a refund exception, an early adherence failure and an escalated complaint inside one 90-day window?</td>
+<td>Anchors the window at its <em>end</em>, with the reason stated: anchoring earlier would leak a defining signal into the outcome window.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>The shared spine</h2>
+<p class="lede">All ten sit on the same stack. Being able to draw this from memory, in order, is worth
+more in a room than any individual query.</p>
+<div class="spine">
+<ol>
+<li><strong>DynamoDB</strong> — an append-only event spine. The source of truth; nothing is ever
+updated in place, so any past instant can be reconstructed.</li>
+<li><strong>Amazon Neptune</strong> — the decision graph, traversed with Gremlin. Relationships
+between decisions, patients, protocols and outcomes.</li>
+<li><strong>Parquet snapshots</strong> — frozen nightly. A query reads a snapshot, not the live
+graph, so the same question asked twice gives the same answer.</li>
+<li><strong>DuckDB</strong> — columnar analytics over those snapshots.</li>
+<li><strong>FastAPI</strong> (+ <strong>Redis</strong> where a cache earns its place) — audit-first
+serving, tenant asserted on every row, canonical cache keys carrying every version pin.</li>
+<li><strong>LangGraph / LangChain</strong>, with <strong>Ollama</strong> and self-hosted
+<strong>LangSmith</strong> inside the virtual private cloud (VPC) — used at gated edges only.
+Several queries call no model at all.</li>
+</ol>
+</div>
+<p class="lede"><strong>The one-sentence version:</strong> deterministic, seeded, replayable code
+computes every number; a language model may propose candidates or narrate figures the code already
+produced, and only after every gate has passed.</p>
+
+<h2>The vocabulary this work runs on</h2>
+<p class="lede">These are the terms a Staff or Principal interviewer will pull on. Each one below is
+what it means, why it is in this system, and the question it invites.</p>
+
+<h3>Causal inference and statistics</h3>
+
+<div class="g">
+<span class="term">Confounding</span>
+<h4>Did the treatment help, or were the treated patients already healthier?</h4>
+<p>When something other than the intervention explains the difference in outcomes. The whole
+reason KQ2, KQ3, KQ6 and KQ8 exist in the shape they do.</p>
+<p class="why"><b>Here:</b> every covariate is rebuilt <em>as-of the decision</em> from a frozen
+snapshot, so a comparison never uses information that did not exist when the decision was made.</p>
+<p class="ask"><b>Expect:</b> "How do you know the difference you measured isn't just selection?"</p>
+</div>
+
+<div class="g">
+<span class="term">Propensity score · IPW</span>
+<h4>Matching like with like, then weighting what is left</h4>
+<p>A propensity score is the modelled probability a patient would have received the treatment given
+their covariates. Match on it and you compare comparable patients. <strong>IPW</strong> — inverse
+probability weighting — instead re-weights the sample so the treated and untreated groups look alike
+on average.</p>
+<p class="why"><b>Here:</b> matching produces the pairs; IPW is the headline switch once balance is
+achieved. Appears in KQ3, KQ6 and KQ8.</p>
+<p class="ask"><b>Expect:</b> "Why match <em>and</em> weight? When does matching alone fail?"</p>
+</div>
+
+<div class="g">
+<span class="term">SMD · balance</span>
+<h4>Standardised mean difference — the check that matching actually worked</h4>
+<p>The difference in a covariate's mean between two groups, divided by the pooled standard
+deviation, so it is comparable across variables with different units. Below roughly 0.1 is the
+conventional threshold for "balanced".</p>
+<p class="why"><b>Here:</b> the first rung of the gate ladder. Fail it and the headline number is
+<em>literally unrepresentable in the output type</em> — a design choice worth stating exactly that
+way, because it means the failure cannot be ignored downstream.</p>
+<p class="ask"><b>Expect:</b> "What's your balance threshold, and what happens when you miss it?"</p>
+</div>
+
+<div class="g">
+<span class="term">Caliper</span>
+<h4>How far apart two matched patients are allowed to be</h4>
+<p>The maximum distance on the propensity score at which two patients may still be paired. Too wide
+and you match dissimilar patients; too narrow and you discard most of your sample.</p>
+<p class="why"><b>Here:</b> caliper <em>stability</em> is its own gate — the result must not swing
+when the caliper is varied, which is a stronger claim than simply picking one and reporting it.</p>
+<p class="ask"><b>Expect:</b> "How did you choose it, and does the answer survive changing it?"</p>
+</div>
+
+<div class="g">
+<span class="term">Right-censoring · survival analysis</span>
+<h4>The patients whose event has not happened <em>yet</em></h4>
+<p>A censored observation is one where you know the event has not occurred by a given time but not
+whether it ever will. Dropping them biases the result — the ones who take longest are exactly the
+ones you lose. Kaplan–Meier is the standard estimator that keeps them in.</p>
+<p class="why"><b>Here:</b> KQ5's decision-latency denominator is ungated, carrying unanswered labs
+as right-censored rather than silently excluding them.</p>
+<p class="ask"><b>Expect:</b> "What did you do with labs that were never answered?" — the honest
+answer is the whole point of the design.</p>
+</div>
+
+<div class="g">
+<span class="term">Bootstrap · seeded</span>
+<h4>Confidence intervals by resampling, made reproducible</h4>
+<p>Resample the data with replacement many times, recompute the statistic each time, and read the
+spread as a confidence interval. It needs no distributional assumption. <strong>Seeded</strong>
+means the random draw is fixed, so the same input always yields the same interval.</p>
+<p class="why"><b>Here:</b> every interval in the programme is seeded and replayable. An unreproducible
+confidence interval in a clinical setting is not evidence.</p>
+<p class="ask"><b>Expect:</b> "Why bootstrap rather than a closed-form interval?"</p>
+</div>
+
+<div class="g">
+<span class="term">Calibration · Brier score</span>
+<h4>When you say 70% confident, does it happen 70% of the time?</h4>
+<p>Calibration is agreement between stated confidence and observed frequency. A reliability diagram
+plots one against the other; the Brier score summarises it as mean squared error between predicted
+probability and outcome. A model can rank well and still be badly calibrated.</p>
+<p class="why"><b>Here:</b> KQ7 applies this to <em>humans</em> — checking clinicians' own
+low/medium/high confidence against 90-day outcomes.</p>
+<p class="ask"><b>Expect:</b> "Discrimination versus calibration — why do you care about both?"</p>
+</div>
+
+<div class="g">
+<span class="term">Small-cell suppression · power</span>
+<h4>Refusing to answer when the data cannot carry it</h4>
+<p>Below a minimum count, a rate is both statistically meaningless and re-identifying. Suppression
+withholds it. Power analysis asks the prior question: is this sample even large enough to detect the
+effect you are looking for?</p>
+<p class="why"><b>Here:</b> a 30-patient floor, and a power gate on the ladder. The underlying rows
+stay available in a drill-down, so a genuine association resurfaces once the data supports it.</p>
+<p class="ask"><b>Expect:</b> "What does the user see when you suppress, and why not just show it?"</p>
+</div>
+
+<div class="g">
+<span class="term">Pre-registration</span>
+<h4>Committing to the analysis before seeing the result</h4>
+<p>Fixing windows, thresholds and comparisons in advance, so the analysis cannot be tuned until it
+says something interesting. The defence against <em>p</em>-hacking and window-shopping.</p>
+<p class="why"><b>Here:</b> pre-registered windows and evaluation floors appear across the
+programme — 117 mentions in the source material.</p>
+<p class="ask"><b>Expect:</b> "What stopped you from moving the window until the result looked good?"</p>
+</div>
+
+<h3>Retrieval and machine learning</h3>
+
+<div class="g">
+<span class="term">As-of featurisation · leakage</span>
+<h4>Reconstructing the world as it was, not as it is</h4>
+<p><strong>Leakage</strong> is information from the future reaching a model or comparison about the
+past. <strong>As-of featurisation</strong> is the defence: rebuild every feature using only what was
+known at that instant.</p>
+<p class="why"><b>Here:</b> the single most-used idea in the material — 394 mentions. A latest-BMI
+lookup was a <strong>P0 leakage finding</strong>, now enforced by feature-freshness audit fields
+carried on every row. <em>This is the strongest answer available for "tell me about a subtle bug you
+found."</em></p>
+<p class="ask"><b>Expect:</b> "How do you know your training set doesn't contain the future?"</p>
+</div>
+
+<div class="g">
+<span class="term">Filtered kNN · hybrid retrieval · NDCG</span>
+<h4>Hard filters first, similarity second</h4>
+<p><em>k</em>-nearest-neighbour search finds the closest vectors. <em>Filtered</em> kNN applies
+structured constraints first, so similarity only ranks within an already-valid set. NDCG —
+normalised discounted cumulative gain — scores ranking quality with position weighting.</p>
+<p class="why"><b>Here:</b> clinical filters are contracts. A soft weight would let a very similar
+protocol-B decision leak into a protocol-A result. Hard filters also keep empty-result rate and NDCG
+separately measurable, which a blended score would hide.</p>
+<p class="ask"><b>Expect:</b> "Why not just weight the clinical criteria into the similarity score?"</p>
+</div>
+
+<div class="g">
+<span class="term">Outcome maturity · cold start</span>
+<h4>Some labels are not ready to be labels</h4>
+<p>An outcome window that has not elapsed cannot yet be a positive or a negative. Treating it as
+negative teaches the model that recent cases are safe. Cold start is the mirror problem: a new
+patient or tenant has no history to retrieve.</p>
+<p class="why"><b>Here:</b> KQ4 never trains on or scores an unmatured window; KQ7 treats immature
+decisions as not countable. KQ1 has an explicit cold-start quality gate.</p>
+<p class="ask"><b>Expect:</b> "What's your positive label, exactly — and when does it become one?"</p>
+</div>
+
+<h3>Data engineering discipline</h3>
+
+<div class="g">
+<span class="term">Canonical cache keys</span>
+<h4>A key that omits something is a correctness bug in a performance optimisation's clothing</h4>
+<p>Every input that can change the result belongs in the key: tenant, patient, window, tokenizer
+version, model version, snapshot manifest hash, last event sequence. Built from sorted JSON so
+field ordering cannot cause hash divergence.</p>
+<p class="why"><b>Here:</b> the sharpest hands-on detail in the material. KQ3 pins the matcher
+binary and the statistical plan as their own key fields; KQ4 orders a live model swap so the cache
+namespace is invalidated <em>before</em> the endpoint is repointed — reverse it and a coach reads a
+score from a model that no longer exists.</p>
+<p class="ask"><b>Expect:</b> "Walk me through invalidation." Then: "What if two things change at once?"</p>
+</div>
+
+<div class="g">
+<span class="term">Freshness over TTL</span>
+<h4>"How old is this?" is the wrong question</h4>
+<p>A time-to-live answers how old an entry is. The query needs to know whether it is still
+<em>correct</em>. Content freshness — snapshot hash plus correction epoch plus maximum source
+sequence — answers that directly.</p>
+<p class="why"><b>Here:</b> stated as an explicit rejection of TTL caching, with the reasoning given.
+KQ4 still uses a 6-hour TTL where staleness is genuinely bounded — knowing when each applies is the
+point.</p>
+<p class="ask"><b>Expect:</b> "Why not just cache for five minutes?"</p>
+</div>
+
+<div class="g">
+<span class="term">Event-time versus processing-time</span>
+<h4>Four timestamps, two you trust</h4>
+<p><code>event_time_ms</code> and <code>observed_at_ms</code> come from the record itself.
+<code>received_at_ms</code> and <code>written_at_ms</code> describe your pipeline, not the world.</p>
+<p class="why"><b>Here:</b> the untrusted pair is pinned to a load-fence constant and survives only
+as provenance, with a load-failing assertion that event time precedes receive time on every
+historical row.</p>
+<p class="ask"><b>Expect:</b> "What happens when events arrive out of order?"</p>
+</div>
+
+<div class="g">
+<span class="term">Determinism and replay</span>
+<h4>The same question, asked twice, gives the same answer</h4>
+<p>Frozen snapshots, seeded randomness, versioned computation, stable tie-breaking. KQ9 goes further
+to <em>byte-deterministic</em> replay — a regulator can reconstruct an exact past instant years
+later.</p>
+<p class="why"><b>Here:</b> KQ4 sorts by <code>(event_time_ms, source_event_seq, event_id)</code>
+before tokenisation, because two events sharing a millisecond would otherwise produce two different
+token strings and two different scores on replay.</p>
+<p class="ask"><b>Expect:</b> "How would you reproduce a number a clinician saw six months ago?"</p>
+</div>
+
+<h3>Governance and multi-tenancy</h3>
+
+<div class="g">
+<span class="term">Tenant isolation</span>
+<h4>Asserted on every row, not checked at the door</h4>
+<p>In a multi-tenant system, isolation enforced only at the API boundary fails the moment an
+internal path bypasses it. Row-level assertion fails closed instead.</p>
+<p class="why"><b>Here:</b> three-field tenant isolation, asserted per row; cache namespaces are
+per-tenant. <em>This connects directly to the axe Monitor tenant-isolation work at Deque — the same
+instinct, two companies apart.</em></p>
+<p class="ask"><b>Expect:</b> "How would a cross-tenant read happen, and what stops it?"</p>
+</div>
+
+<div class="g">
+<span class="term">Designing against misuse</span>
+<h4>Building an analytic that resists becoming a staff scorecard</h4>
+<p>Per-clinician analytics invite performance ranking. The design answer is structural: pseudonymous
+identifiers, audit-first access, deliberately unrankable views, and neutral output vocabulary.</p>
+<p class="why"><b>Here:</b> KQ8 emits only six neutral zone codes; KQ5's per-clinician views are
+explicitly unrankable. Governance designed to resist a use the data would otherwise permit.</p>
+<p class="ask"><b>Expect:</b> "Who could misuse this, and what did you do about it?" — a question
+most candidates have no answer to at all.</p>
+</div>
+
+<div class="g">
+<span class="term">Adversarial design review</span>
+<h4>Reviews that returned "do not implement as written"</h4>
+<p>Structured self-review under a named lens before any production code. Verdicts across the
+programme included ship-with-changes, redesign, and — hardest — <em>block-on-prereq</em>: "you do
+not yet have the data to answer this honestly, so do not build it."</p>
+<p class="why"><b>Here:</b> KQ10 absorbed twenty findings into a hardened v2; KQ2 sixteen; KQ3
+nineteen; KQ8 seventeen; KQ6 all thirteen of thirteen. KQ6's block-on-prereq was later met and the
+query went live.</p>
+<p class="ask"><b>Expect:</b> "Tell me about design feedback you received." The strongest version of
+this answer is the review you ran on yourself and then obeyed.</p>
+</div>
+
+<footer>
+<p><a href="index.html">← All case studies</a> · Ten shipped services, VoltusWave · Amura, 2026.
+Each query links to its full case study and its question-and-answer companion.</p>
+</footer>
+
+</main>
+</body>
+</html>
