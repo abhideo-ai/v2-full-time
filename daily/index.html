@@ -44,9 +44,23 @@
     </div>
 
     <div class="dl-group blocking">
-      <h3>Blocking — nothing exports until the card exists</h3>
+      <h3>Blocking — the journey doc feeds the master, the master feeds the card</h3>
       <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
       <ul class="dl-list">
+        <li data-id="journey-doc" data-needs="" data-p="1" data-due="2026-08-25">
+          <input type="checkbox" id="t20260825-journey-doc" data-id="journey-doc" />
+          <label for="t20260825-journey-doc">
+            <span class="dl-task">Spend time on <code>professional-journey-original.md</code> — his own words, his own hand</span>
+            <span class="dl-meta"><span class="pill red">P1</span></span>
+            <span class="dl-detail">He said this is key, and it sits upstream of everything else: the master résumé is <em>derived</em> from the journey document and loses when they disagree. Enriching it — roles, tools, decisions, numbers — is what makes the JD matching sharper. <strong>Do not restructure or rewrite it.</strong> When he adds detail, treat it as first-class intake: read it, reconcile it against what the master already claims, and flag contradictions rather than smoothing them over.</span>
+          </label>
+          <span class="dl-actions">
+            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
+            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
+            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
+            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
+          </span>
+        </li>
         <li data-id="clone-card" data-needs="" data-p="1" data-due="2026-08-25">
           <input type="checkbox" id="t20260825-clone-card" data-id="clone-card" />
           <label for="t20260825-clone-card">

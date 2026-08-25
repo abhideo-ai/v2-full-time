@@ -384,6 +384,30 @@ Naukri's "Job profile" textarea rejects `<` and `\`. Substitute: `<` → `under`
 
 ---
 
+## Intake flow — he pastes, we build
+
+**Set 2026-08-25, by him, after a sourcing run he had not asked for.**
+
+1. **He pastes the details** — job description, URL, screenshots, recruiter message, whatever
+   he has.
+2. **We build the workspace** from that. Every pasted JD gets the full build, no re-asking.
+3. **The database is the search layer.** He queries it; directories are storage, not an index.
+
+**Do not source seats.** Not from job boards, not from company career pages, not "to have
+something to apply to". A run on 2026-08-25 produced eight scored seats and he replied that
+they were no longer valid. Sourcing spends real time producing a list only he can validate.
+**Wait for the paste.**
+
+**Do not re-rank or recommend an order** unless he asks. Auditing agent output against the
+journey doc is required and stays required — report what the check found as a *finding*. Then
+stop. Adjudicating a claim is not the same as ranking his options for him.
+
+**OPEN — his call, not settled:** workspace layout. He floated "perhaps a single directory"
+instead of `Month-YYYY/DD/<slug>/`, on the reasoning that the database handles search. Treat
+the dated layout as current until he decides; `_resolve_slug_dir` in `upgrad_apply.py` already
+supports a **root-level `<repo>/<slug>/`** workspace, so a flat layout would work today with
+no code change.
+
 ## Execution model — workflows and subagents do the work
 
 **Default to the Workflow tool for anything substantive**, and fan the work out to

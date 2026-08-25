@@ -5,10 +5,17 @@
       "date": "2026-08-25",
       "groups": [
         {
-          "title": "Blocking — nothing exports until the card exists",
+          "title": "Blocking — the journey doc feeds the master, the master feeds the card",
           "kind": "blocking",
           "why": "All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.",
           "items": [
+            {
+              "id": "journey-doc",
+              "p": 1,
+              "needs": [],
+              "task": "Spend time on <code>professional-journey-original.md</code> — his own words, his own hand",
+              "detail": "He said this is key, and it sits upstream of everything else: the master résumé is <em>derived</em> from the journey document and loses when they disagree. Enriching it — roles, tools, decisions, numbers — is what makes the JD matching sharper. <strong>Do not restructure or rewrite it.</strong> When he adds detail, treat it as first-class intake: read it, reconcile it against what the master already claims, and flag contradictions rather than smoothing them over."
+            },
             {
               "id": "clone-card",
               "task": "Clone <code>august_master_resume</code>, rename the copy <code>august_ic_master_resume</code>",
