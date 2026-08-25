@@ -95,7 +95,9 @@ hygiene, not fit, and he has said 85 is fine.
 - **Never retroactively scrub a claim that has already gone out.** Unverified ≠ false. Before
   proposing any removal, say which it is; if you cannot, it is unverified and it **stays**.
 - **Never claim:** Kafka (he has Amazon Kinesis), MongoDB, ClickHouse, Azure, Google Cloud Platform,
-  SOC 2, Spring Cloud/WebFlux/Batch, **Kubernetes**. MySQL is historical (2015) only.
+  SOC 2, Spring Cloud/WebFlux/Batch. MySQL is historical (2015) only.
+  **Kubernetes and Terraform ARE claimable** — he confirmed both 2026-08-25; a previous handoff
+  had wrongly listed Kubernetes as never-claim.
   **Redis IS claimable. The graph neural network IS claimable** — he confirmed both 2026-08-25.
 - **Never fabricate to reach 95.** None of these three reaches it and none is closable by
   rewording — each is capped by absent experience. Say so plainly.

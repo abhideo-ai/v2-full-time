@@ -134,6 +134,37 @@ frame PostgreSQL↔MySQL as transferable.
   React (web), a measured Claude Code / Codex rollout, Datadog. Metrics: hotel conversions
   **+65%**, ELK cost **−46%**, 8 early clients, and **25 hotel suppliers integrated through a
   MuleSoft enterprise service bus** — all four user-supplied and safe to claim.
+- **Kubernetes and Terraform are CLAIMABLE — user-confirmed 2026-08-25.** He ran both,
+  hands-on, at VoltusWave. **This rests on his word alone, and that is sufficient** — the rule is
+  "journey doc **or** user-confirmed". Do not re-flag either. Consequence: Kubernetes is a hard
+  requirement on several IC seats, and any score that docked it as an unrecoverable cap must be
+  re-scored, not merely annotated.
+  ✅ **Corroborated 2026-08-25 by a read-only card dump.** Both sit in bullet 10 of the **17
+  VoltusWave bullets on `august_master_resume`** — *"Operationalised Amazon Web Services on
+  **Kubernetes, Terraform**, Elastic Container Service Fargate at 70% Spot — deploy time under
+  10 minutes, infrastructure cost down 25–30%"*. That single bullet also corroborates the two
+  user-confirmed metrics below, and attaches them to the VoltusWave second stint.
+- **⚠ TWO LIVE CARDS CARRY DIFFERENT VOLTUSWAVE BLOCKS — this caused a full session of confusion.**
+  - `august_ic_master_resume` (the export default) — VoltusWave = **10 bullets, identical to
+    `master/upgrad_resume.html`**. No Kubernetes, no Terraform, no Fargate, no k6.
+  - `august_master_resume` (the older, leadership-flavoured card) — VoltusWave = **17 bullets**,
+    and this is the block every handoff note meant. It carries Kubernetes, Terraform, ECS Fargate
+    at 70% Spot, k6-validated load testing, React Native across 2 app stores, the four named
+    archetypes, the `TraversalSource` wrapper and Rosenbaum γ + E-value.
+  **Dumping only the IC card produced a confident, wrong conclusion that the 17 bullets did not
+  exist. Dump BOTH cards before reasoning about what a card contains.**
+  `automation/dump_card.py --card <name>` is read-only and writes
+  `master/live_card_dump*.json` + `.md`. Both dumps are committed so this can never be lost again.
+- **The Deque gap is real and separate.** Both cards carry **14 Deque bullets**;
+  `master/upgrad_resume.html` carries **6**. Eight are unmerged, including Jenkins → GitHub Actions
+  with ISO 27001, PostgreSQL → Amazon RDS, a Puppeteer regression framework, the axe-core
+  spider/scanning pipeline, run-over-run regression comparison, and API versioning.
+- **⚠ The 17 bullets are NOT safe to paste wholesale.** Several state pre-registered acceptance
+  **targets** as achieved results, which the honesty rules forbid: bullet 16's *"warm-path P99
+  < 200 ms, NDCG@10 ≥ 0.75"*, bullet 17's Rosenbaum γ + E-value battery, and bullet 15's large
+  language model narrative guardrails (KQ9's shared contract is unsigned and its narrator ships
+  **off by default**). Bullet 5 carries the **"500 → 100,000 concurrent users"** wording the Status
+  section already flags as overstating a burst test. Merge selectively, per-claim, never as a block.
 - **User-confirmed 2026-08-25, safe to claim: infrastructure cost cut 25–30%, and deploy time
   from hours to under 10 minutes.** Neither appears in `professional-journey.md` or the
   original — an earlier pass flagged them as unsourced and he corrected it. The rule is
