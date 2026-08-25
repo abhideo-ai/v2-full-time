@@ -11,8 +11,8 @@
 # database whose contents matter — they are destructive by design.
 #
 # test_jobs_db.py and test_launcher.js read jobs_tracker and NEVER write to it:
-# it holds v1's ninety-two rows plus the live seats, and losing those is not a
-# test failure, it is data loss.
+# it holds v1's ninety-two rows (now archived, not deleted) plus the live seats, and
+# losing those is not a test failure, it is data loss.
 set -u
 cd "$(dirname "$0")/../.." || exit 1
 PY=automation/.venv/bin/python
@@ -56,9 +56,9 @@ node automation/tests/test_page.js || FAIL=1
 
 echo; echo "=== jobs layer, over HTTP ==="
 # Same suite, now with a server to talk to. Only the HTTP sections are printed —
-# sections 1-8 already ran above — but the exit code is the whole suite's.
+# sections 1-11 already ran above — but the exit code is the whole suite's.
 $PY automation/tests/test_jobs_db.py http://127.0.0.1:8106 >/tmp/jobsapi.$$.log 2>&1 || FAIL=1
-sed -n '/^9\. GET/,$p' /tmp/jobsapi.$$.log; rm -f /tmp/jobsapi.$$.log
+sed -n '/^12\. GET/,$p' /tmp/jobsapi.$$.log; rm -f /tmp/jobsapi.$$.log
 
 echo; echo "=== launcher (real server + real jobs_tracker) ==="
 node automation/tests/test_launcher.js \

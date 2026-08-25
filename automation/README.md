@@ -154,34 +154,82 @@ automation/.venv/bin/python automation/jobs_sync.py --scores --dry-run
   unreachable**, and the launcher then says the list is unavailable rather than
   rendering an empty grid, which would read as "no applications".
 - **`static/apps.js`** renders the rows; **`static/tabs.js`** keeps the tab
-  contract (pills carry `data-tab`, rows carry `data-status`) and now also owns
-  the search box, so tab and search compose instead of fighting over `hidden`.
-- **`resume.py new`** registers the seat in `jobs_tracker` as `resume_drafted`.
-  It no longer writes markup into `index.html`. **Never hand-write a card
-  there** — a row added by hand is a row no query can see.
+  contract (tab buttons carry `data-tab`, rows carry `data-status`) and owns the
+  search box, so tab and search compose instead of fighting over `hidden`.
+  **Counts are derived from the rows in the DOM, never passed in**, and a
+  `MutationObserver` on `#app-list` re-derives them whenever it changes — the
+  rows arrive asynchronously, and a count computed before the fetch resolves
+  read 0 above a full list. `initTabs()` still exists and still works; nothing
+  depends on it being called.
+- **`resume.py new`** registers the seat in `jobs_tracker` as `resume_drafted`,
+  which shows under **Ready to apply**. It no longer writes markup into
+  `index.html`. **Never hand-write a row there** — a row added by hand is a row
+  no query can see.
+- **`automation/intake_notes.json`** — hand-authored clauses for the intake-date
+  group headers, keyed by ISO date. **Ships empty and stays empty until he
+  writes one.** The date and the seat count are derived; the sentence about what
+  a group of seats *was* is not derivable and is never composed.
 
 ⛔ `applications.salary` is never selected, returned or rendered. Compensation
 is deferred by user directive.
 
 ### Status → launcher tab
 
-Eleven `application_status` values, nine tabs. Every row lands in exactly one
-tab; `tab_for()` raises `UnknownStatus` on anything unmapped rather than
-dropping a row, and `counts()` asserts the tabs total the row count.
+Twelve `application_status` values, seven tabs — v1's six plus `archived`. Every
+row lands in exactly one tab; `tab_for()` raises `UnknownStatus` on anything
+unmapped rather than dropping a row, and `counts()` asserts the tabs total the
+row count.
 
-| status | tab | why |
+**There is deliberately no `all` tab**, exactly as in v1. That is also what keeps
+the 92 archived rows out of every other view: `archived` is a tab, so it is the
+only way to reach them, and no default view can sweep them back in. `ready` is
+the tab that opens.
+
+| tab | statuses | why |
 |---|---|---|
-| `new` | **parked** | Scraped, never triaged: no score, no decision, no workspace. Not `building` (nothing is being built), not `closed` (nothing was decided). `parked` is "set aside, can come back". |
-| `recommended_apply` | **building** | The decision to pursue is made; the workspace is the next step. |
-| `recommended_skip` | **closed** | **The deliberate one — 49 rows.** Scored and adjudicated out before any build, each with its `rec_reasoning`. In `parked` they would bury the few builds he actually paused; in `building`/`ready` they would corrupt the ready-and-unsent count, which is the backlog gate v2 is organised around. `closed` is the archive: decided, not pursued. |
-| `resume_drafted` | **building** | Workspace under way. |
-| `resume_finalized` | **ready** | Exported and unsent — the backlog gate. |
-| `applied` | **sent** | |
-| `heard_back` | **responded** | |
-| `interviewing` | **interviewing** | |
-| `offer` | **interviewing** | There is no offer tab. An offer is the furthest-along *live* process, so it sits with the other live one rather than in `responded`, which reads as "they replied". |
-| `rejected` | **not-selected** | |
-| `withdrawn` | **closed** | He pulled out. Terminal, and deliberately not a rejection. |
+| **Ready to apply** | `recommended_apply` · `resume_drafted` · `resume_finalized` | The apply queue: decided to pursue, not yet sent. v1's tab was this broad (its stage map put jd-saved, changes-drafted and resume-finalized all in `ready`) and its count is the backlog gate — *"23 rows sitting in the ready tab, unsent"*. |
+| **Applied** | `applied` | It went out; nothing back yet. |
+| **No longer available** | `withdrawn` | He pulled out, or the seat went away. Terminal, and deliberately **not** a rejection — v1's record is explicit that conflating the two loses the only thing the row still says. |
+| **Heard back** | `heard_back` · `interviewing` · `offer` | They replied and the process is live. This tab set has no interviewing tab, and burying a live process in `other` would be the worst answer available. |
+| **Not selected** | `rejected` | |
+| **Other** | `new` · `recommended_skip` | The catch-all, which is what a catch-all is for. It also retires the judgement call v2 inherited: 49 `recommended_skip` rows were scored and adjudicated out before any build, and they belong neither in the apply queue (they would corrupt the backlog gate) nor among seats that closed on their own. |
+| **Archived** | `archived` | v1's 92 rows, moved aside by `migrations/003_archive_v1_rows.sql`. |
+
+### Archiving — `migrations/003_archive_v1_rows.sql`
+
+The first migration against `jobs_tracker` (001 and 002 are `v2_daily`'s). It
+adds `archived` to the enum and archives the **92 rows scraped before
+2026-08-25** — exactly v1's record; the four live seats were all created that
+day.
+
+**Archiving is a status change and nothing else. No row is deleted.** What each
+row *was* survives it, twice over and for different reasons:
+
+- **`applications.archived_from`** — the authoritative previous status. One
+  column, one query (`SELECT archived_from, count(*) … GROUP BY 1`), and an
+  exact reverse (`SET status = archived_from, archived_from = NULL`). A CHECK
+  constraint, `applications_archive_remembers`, makes it mandatory in both
+  directions, in the same spirit as 001's "a move-out must carry a reason".
+- **`status_events`** — one appended row per archive, for *when*. Only 49 of the
+  96 rows had any history at all, so the event log alone could not be trusted to
+  answer "what was this before?".
+
+**`updated_at` is deliberately preserved**: the BEFORE UPDATE trigger is
+disabled for the one statement, because stamping all 92 rows with the moment of
+the migration destroys "when did v1 last touch this" and collapses the archived
+tab into a single timestamp. The archive's own timestamp is in
+`status_events.created_at`.
+
+Where the 92 came from:
+
+| archived_from | rows |
+|---|---|
+| `recommended_skip` | 49 |
+| `new` | 15 |
+| `resume_finalized` | 14 |
+| `applied` | 10 |
+| `resume_drafted` | 3 |
+| `interviewing` | 1 |
 
 ### The two scores
 
@@ -197,7 +245,11 @@ dropping a row, and `counts()` asserts the tabs total the row count.
   freshness) / 55`, both to `/100`.
 
 **The two are not comparable** — different rubrics — which is why every row also
-carries `rubric` and the page says so under the search box.
+carries `rubric`, and why **the launcher does not print a v1 row's numbers in the
+score columns at all**: they read `v1` instead. "technical 20" beside
+"technical 88.4" invites a ranking that does not exist. The rescaled figures are
+still computed, still served, and shown in the row's expanded detail where they
+can be labelled.
 
 ## Other scripts in this directory
 

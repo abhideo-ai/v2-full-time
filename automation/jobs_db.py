@@ -15,6 +15,7 @@ thing the server imports cannot mutate v1's record by accident.
 Sibling of `db.py` (the daily log's store), same connection pattern, different
 database. The two never share a connection or a transaction.
 """
+import json
 import os
 import re
 from pathlib import Path
@@ -28,67 +29,71 @@ ROOT = Path(__file__).resolve().parent.parent
 # ---------------------------------------------------------------------------
 # Status -> launcher tab
 # ---------------------------------------------------------------------------
-# Eleven `application_status` values, nine launcher tabs. Every row lands in
-# exactly ONE tab and none may silently vanish — `tab_for` raises on an unknown
-# status rather than dropping the row, and `counts()` asserts the total.
+# Twelve `application_status` values, seven launcher tabs — v1's six plus
+# `archived`. He asked for v1's launcher back, and its tab set with it. Every
+# row lands in exactly ONE tab and none may silently vanish: `tab_for` raises on
+# an unknown status rather than dropping the row, and `counts()` asserts the
+# tabs total the row count.
+#
+# There is deliberately NO `all` tab, exactly as in v1. That is also what keeps
+# the 92 archived rows out of every other view: `archived` is a tab, so it is
+# the only place they appear, and no default view can accidentally include them.
 #
 # The reasoning, tab by tab:
 #
-#   new -> parked
-#       Scraped, never triaged: no score, no decision, no workspace. It is not
-#       `building` (nothing is being built) and not `closed` (nothing was
-#       decided). `parked` is the launcher's "set aside, can come back" bucket,
-#       which is exactly what an untriaged intake row is. 15 rows, 14 of them
-#       v1's freelancing pipeline.
+#   ready — "Ready to apply"
+#       recommended_apply · resume_drafted · resume_finalized
+#       The apply queue: decided to pursue, and not yet sent. v1's tab was this
+#       broad (its stage map put jd-saved, changes-drafted and resume-finalized
+#       all in `ready`) and its count is the backlog gate CLAUDE.md is organised
+#       around — "23 rows sitting in the ready tab, unsent".
 #
-#   recommended_apply -> building
-#       The decision to pursue is made; the workspace is the next step. It
-#       belongs with the active build queue, not in a queue tab that does not
-#       exist.
+#   applied — "Applied"
+#       applied. It went out and nothing has come back yet.
 #
-#   recommended_skip -> closed        *** the deliberate one — 49 rows ***
-#       These were scored and adjudicated out before any build started, each
-#       with its `rec_reasoning` on the row. Three tabs could plausibly hold
-#       them and two would do real damage:
-#         - `parked` would bury the handful of builds he actually paused and
-#           might revive under 49 rows he already declined.
-#         - `building`/`ready` would corrupt the ready-and-unsent count, which
-#           is the backlog gate and the one number v2 is organised around.
-#       `closed` is the archive: decided, not pursued, not coming back on its
-#       own. That is what these are. They stay visible and countable there.
+#   closed — "No longer available"
+#       withdrawn. He pulled out, or the seat went away. Terminal, and NOT a
+#       rejection: v1's record is explicit that conflating the two loses the
+#       only thing the row still says.
 #
-#   resume_drafted    -> building     workspace under way
-#   resume_finalized  -> ready        exported/finalised and unsent — the gate
-#   applied           -> sent
-#   heard_back        -> responded
-#   interviewing      -> interviewing
+#   heard-back — "Heard back"
+#       heard_back · interviewing · offer. They replied and the process is live.
+#       This tab set has no interviewing tab, and burying a live process in
+#       `other` would be the worst answer available.
 #
-#   offer -> interviewing
-#       There is no offer tab. An offer is the furthest-along LIVE process, so
-#       it sits with the other live one rather than in `responded`, which reads
-#       as "they replied". Zero rows today; revisit if a tab is ever added.
+#   not-selected — "Not selected"
+#       rejected.
 #
-#   rejected  -> not-selected
-#   withdrawn -> closed
-#       He pulled out. Terminal, and not a rejection — v1's record is explicit
-#       that conflating the two loses the only thing the row still says.
+#   other — "Other"
+#       new · recommended_skip. The catch-all, which is what a catch-all is for.
+#       It also retires the judgement call v2 inherited: 49 `recommended_skip`
+#       rows were scored and adjudicated out before any build, and they belong
+#       neither in the apply queue (they would corrupt the backlog gate) nor
+#       among seats that closed on their own.
+#
+#   archived — "Archived"
+#       archived. v1's 92 rows, moved aside on 2026-08-26 by
+#       `migrations/003_archive_v1_rows.sql`. Their previous status is preserved
+#       on the row in `archived_from` and is carried through to the page.
 TAB_FOR_STATUS = {
-    "new":               "parked",
-    "recommended_apply": "building",
-    "recommended_skip":  "closed",
-    "resume_drafted":    "building",
+    "new":               "other",
+    "recommended_apply": "ready",
+    "recommended_skip":  "other",
+    "resume_drafted":    "ready",
     "resume_finalized":  "ready",
-    "applied":           "sent",
-    "heard_back":        "responded",
-    "interviewing":      "interviewing",
-    "offer":             "interviewing",
+    "applied":           "applied",
+    "heard_back":        "heard-back",
+    "interviewing":      "heard-back",
+    "offer":             "heard-back",
     "rejected":          "not-selected",
     "withdrawn":         "closed",
+    "archived":          "archived",
 }
 
-# The pills in index.html, in their rendered order. `all` is virtual.
-TABS = ["building", "ready", "sent", "responded", "interviewing",
-        "parked", "closed", "not-selected"]
+# The tabs in index.html, in their rendered order. `ready` is the default.
+TABS = ["ready", "applied", "closed", "heard-back", "not-selected",
+        "other", "archived"]
+ARCHIVED_TAB = "archived"
 
 
 class UnknownStatus(KeyError):
@@ -184,6 +189,30 @@ def _href(path: str | None) -> str | None:
 
 
 # ---------------------------------------------------------------------------
+# Intake-date group notes
+# ---------------------------------------------------------------------------
+# The launcher groups rows by the date they came in, the way v1's did. The date
+# and the number of seats under it are DERIVED. The clause after them is not
+# derivable from anything in the database — in v1 it was written by hand — so it
+# is read from a file he can edit and is simply absent until he does. A header
+# that reads "2026-08-25 — 4 seats" is correct; one that invents a narrative
+# about what those seats were is the failure this workspace exists to avoid.
+NOTES_FILE = Path(__file__).resolve().parent / "intake_notes.json"
+
+
+def intake_notes() -> dict[str, str]:
+    """{"2026-08-25": "…"} — hand-authored, never generated. {} when unset."""
+    try:
+        raw = json.loads(NOTES_FILE.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+    notes = raw.get("notes") if isinstance(raw, dict) else None
+    if not isinstance(notes, dict):
+        return {}
+    return {k: v for k, v in notes.items() if isinstance(k, str) and isinstance(v, str) and v}
+
+
+# ---------------------------------------------------------------------------
 # Queries
 # ---------------------------------------------------------------------------
 def connect() -> psycopg.Connection:
@@ -193,14 +222,16 @@ def connect() -> psycopg.Connection:
 # `salary` is deliberately absent: compensation is deferred by user directive,
 # so it is not selected, not returned, and not renderable on the launcher.
 _SELECT = """
-    SELECT id, slug, type, company, role, status, location, source_url,
-           fit_score, fit_breakdown, applied_at, updated_at, scraped_at
+    SELECT id, slug, type, company, role, status, archived_from, location,
+           source_url, fit_score, fit_breakdown, applied_at, updated_at, scraped_at
       FROM applications
 """
 
 # Once a seat has been sent, when it was sent is the fact that matters; before
-# that it is when the row last moved.
-_APPLIED_TABS = {"sent", "responded", "interviewing", "not-selected"}
+# that it is when the row last moved. Judged on the status the row actually
+# reached — an archived row keeps that in `archived_from`, so archiving a sent
+# application does not silently turn its sent date back into an edit date.
+_SENT_STATUSES = {"applied", "heard_back", "interviewing", "offer", "rejected"}
 
 
 def _iso(value):
@@ -209,8 +240,9 @@ def _iso(value):
 
 def _row(r: dict, paths: dict[str, str]) -> dict:
     tab = tab_for(r["status"])
+    reached = r["archived_from"] or r["status"]
     path = paths.get(r["slug"])
-    at, at_kind = (r["applied_at"], "applied") if tab in _APPLIED_TABS and r["applied_at"] \
+    at, at_kind = (r["applied_at"], "applied") if reached in _SENT_STATUSES and r["applied_at"] \
         else (r["updated_at"] or r["scraped_at"], "updated")
     return {
         "id": r["id"],
@@ -219,15 +251,22 @@ def _row(r: dict, paths: dict[str, str]) -> dict:
         "company": r["company"],
         "role": r["role"],
         "status": r["status"],
+        # What the row was before it was archived. Never lost, never guessed:
+        # `migrations/003_archive_v1_rows.sql` records it and a CHECK constraint
+        # makes it mandatory. NULL on every live row.
+        "archived_from": r["archived_from"],
         "tab": tab,
         "location": r["location"] or None,
         "source_url": r["source_url"] if str(r["source_url"]).startswith("http") else None,
+        "source_note": None if str(r["source_url"]).startswith("http") else r["source_url"],
         "workspace": path,
         "href": _href(path),
         "fit_score": r["fit_score"],
         **scores(r["fit_breakdown"]),
         "at": _iso(at),
         "at_kind": at_kind,
+        # The intake date, and what the launcher groups rows by.
+        "intake": _iso(r["scraped_at"])[:10] if r["scraped_at"] else None,
     }
 
 
@@ -240,24 +279,39 @@ def applications() -> list[dict]:
 
 
 def counts(rows: list[dict]) -> dict:
-    """Per-tab counts. Asserts the tabs account for every row — a launcher that
-    quietly renders 90 of 96 rows is worse than one that fails loudly."""
+    """Per-tab counts plus the row total. Asserts the tabs account for every row
+    — a launcher that quietly renders 90 of 96 rows is worse than one that fails
+    loudly. There is no `all`: archived rows are reachable only through their own
+    tab, and a total that swept them back in would defeat archiving them."""
     per = {t: 0 for t in TABS}
     for r in rows:
-        per[r["tab"]] += 1
+        per[tab_for(r["status"])] += 1
     total = sum(per.values())
     if total != len(rows):
         raise AssertionError(f"tabs hold {total} rows but {len(rows)} were read")
-    return {"all": len(rows), **per}
+    return {"total": len(rows), **per}
+
+
+def groups(rows: list[dict]) -> list[dict]:
+    """Rows bucketed by intake date, newest first — what the page renders.
+
+    The date and the seat count are derived. `note` comes from
+    `intake_notes.json` and is None until he writes one; nothing here composes a
+    sentence about a group of seats it has only counted.
+    """
+    notes = intake_notes()
+    dates = sorted({r["intake"] or "" for r in rows}, reverse=True)
+    return [{"date": d or None, "note": notes.get(d)} for d in dates]
 
 
 def launcher() -> dict:
     rows = applications()
-    return {"store": "postgresql", "counts": counts(rows), "applications": rows}
+    return {"store": "postgresql", "counts": counts(rows),
+            "groups": groups(rows), "applications": rows}
 
 
 if __name__ == "__main__":
-    import json
     payload = launcher()
     print(json.dumps(payload["counts"], indent=2))
-    print(f"{len(payload['applications'])} application(s)")
+    print(f"{len(payload['applications'])} application(s)"
+          f" in {len(payload['groups'])} intake group(s)")

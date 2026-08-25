@@ -1,0 +1,16 @@
+{
+  "_readme": [
+    "Hand-authored notes for the launcher's intake-date group headers.",
+    "Key = the ISO date a seat was taken in (applications.scraped_at::date).",
+    "Value = the clause shown after the date and the seat count.",
+    "",
+    "NOTHING HERE IS DERIVED OR GENERATED. An absent key means the header reads",
+    "'2026-08-25 - 4 seats' and stops there, which is correct. A note that",
+    "characterises a group of seats is his to write; an agent that composes one",
+    "from a row count has invented it.",
+    "",
+    "Example (not active - it lives under \"notes\"):",
+    "  \"2026-08-23\": \"inbound LinkedIn outreach, no requisition\""
+  ],
+  "notes": {}
+}

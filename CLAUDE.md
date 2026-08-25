@@ -409,18 +409,36 @@ tomorrow** — the gap is where his read forms.
 ### The launcher renders from the database
 
 `index.html`'s Applications list comes from `jobs_tracker` via `GET /api/jobs`, not from
-markup. **Never hand-write a card into `#app-list`** — a row added by hand is a row no query
+markup. **Never hand-write a row into `#app-list`** — a row added by hand is a row no query
 can see, which is exactly how the page came to show 4 applications while the database held 92.
 
+- **One row per slug, grouped by intake date**, in v1's shape (set by him 2026-08-26 against
+  v1's launcher): underlined text tabs with count badges, a right-aligned search box, a
+  `COMPANY · TITLE · TECH · NON-TECH` strip per group, and an expandable detail row.
 - `automation/jobs_db.py` — read-only queries (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker`).
 - `automation/jobs_sync.py` — registers a seat, and re-reads every workspace's `score.json` to
   refresh its technical score. Idempotent; re-run it after any re-scoring.
-- Status→tab mapping and the two-score derivation are documented in `automation/README.md`.
-  `recommended_skip` → **closed** is deliberate: those 49 rows must not drag on the
-  ready-and-unsent backlog gate.
+- **Seven tabs over twelve statuses, and deliberately no `all`** — `Ready to apply · Applied ·
+  No longer available · Heard back · Not selected · Other · Archived`. The mapping and the
+  two-score derivation are documented in `automation/README.md`. `recommended_skip` → **Other**
+  is deliberate: those 49 rows must not drag on the ready-and-unsent backlog gate. Having no
+  `all` tab is what keeps archived rows out of every other view.
+- **v1's 92 rows are `archived`** — `migrations/003_archive_v1_rows.sql`, every row scraped
+  before 2026-08-25. **Nothing was deleted.** Each row's previous status is preserved in
+  `applications.archived_from` under a CHECK constraint, with a dated `status_events` entry,
+  and `updated_at` was deliberately left untouched so "when did v1 last touch this" survives.
+- **A v1 row's scores read `v1`, not a number.** They come off v1's five-axis triage rubric;
+  `technical 20` beside `technical 88.4` invites a ranking that does not exist. The rescaled
+  figures are still served and appear in the expanded row, labelled.
+- **Intake-date group headers say `<date> — N seats` and nothing more.** Any clause after that
+  is hand-authored in `automation/intake_notes.json`, which ships empty. The date and the count
+  are derived; a sentence characterising a group of seats is not, and is never composed.
 - ⛔ `applications.salary` is never selected or rendered — compensation is deferred.
 - Served by plain `http.server` there is no API, and the page **says the list is unavailable**
   rather than rendering an empty grid.
+- **Counts are derived from the rows in the DOM**, and `static/tabs.js` re-derives them from a
+  `MutationObserver` on `#app-list`. Counting only on `DOMContentLoaded` showed every tab
+  reading 0 above a full list, because the rows arrive from `/api/jobs` long afterwards.
 
 ### The daily log
 

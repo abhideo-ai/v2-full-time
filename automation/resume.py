@@ -142,7 +142,8 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
     for f in ("upgrad_resume.html", "jd.md", "paste_notes.json"):
         print(f"[resume]   {f}")
     if registered:
-        print('[resume] registered in jobs_tracker as "resume_drafted" — shows under "building"')
+        print('[resume] registered in jobs_tracker as "resume_drafted"'
+              ' — shows under "Ready to apply"')
     else:
         print(f"[resume] {slug} was already in jobs_tracker — left as it stands")
     print(f"[resume] next: paste the JD into {rel}/jd.md, re-vector per Rule 7,")

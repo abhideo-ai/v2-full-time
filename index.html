@@ -24,34 +24,40 @@
 
 <section>
   <h2>Applications</h2>
-  <div class="pills">
-    <a class="pill fact"   href="#" data-tab="all">all <strong class="n">0</strong></a>
-    <a class="pill fact"   href="#" data-tab="building">building <strong class="n">0</strong></a>
-    <a class="pill yellow" href="#" data-tab="ready">ready · unsent <strong class="n">0</strong></a>
-    <a class="pill note"   href="#" data-tab="sent">sent <strong class="n">0</strong></a>
-    <a class="pill green"  href="#" data-tab="responded">responded <strong class="n">0</strong></a>
-    <a class="pill green"  href="#" data-tab="interviewing">interviewing <strong class="n">0</strong></a>
-    <a class="pill fact"   href="#" data-tab="parked">parked <strong class="n">0</strong></a>
-    <a class="pill fact"   href="#" data-tab="closed">closed <strong class="n">0</strong></a>
-    <a class="pill red"    href="#" data-tab="not-selected">not selected <strong class="n">0</strong></a>
+  <!-- Seven tabs over twelve statuses. The mapping and the reasoning behind it
+       live in automation/jobs_db.py (TAB_FOR_STATUS) and automation/README.md.
+       There is deliberately no "all": `archived` holds v1's 92 rows and its own
+       tab is the only way to reach them. Counts are filled from the rows by
+       static/tabs.js — never written here. -->
+  <div class="app-controls">
+    <div class="status-tabs" role="tablist" aria-label="Filter applications by status">
+      <button class="status-tab active" type="button" data-tab="ready" role="tab" aria-selected="true">Ready to apply <span class="tab-count">0</span></button>
+      <button class="status-tab" type="button" data-tab="applied" role="tab" aria-selected="false">Applied <span class="tab-count">0</span></button>
+      <button class="status-tab" type="button" data-tab="closed" role="tab" aria-selected="false">No longer available <span class="tab-count">0</span></button>
+      <button class="status-tab" type="button" data-tab="heard-back" role="tab" aria-selected="false">Heard back <span class="tab-count">0</span></button>
+      <button class="status-tab" type="button" data-tab="not-selected" role="tab" aria-selected="false">Not selected <span class="tab-count">0</span></button>
+      <button class="status-tab" type="button" data-tab="other" role="tab" aria-selected="false">Other <span class="tab-count">0</span></button>
+      <button class="status-tab" type="button" data-tab="archived" role="tab" aria-selected="false">Archived <span class="tab-count">0</span></button>
+    </div>
+    <input id="app-search" class="app-search" type="search"
+           placeholder="Search company or role…" aria-label="Search company or role"
+           autocomplete="off" />
   </div>
-  <input id="app-search" class="app-search" type="search"
-         placeholder="Search company or role…" aria-label="Search company or role"
-         autocomplete="off" />
   <p class="app-legend">
     <strong>Technical</strong> is the score that matters — target 95+.
     <strong>Non-technical</strong> is informational and never a gate.
-    The two rubrics behind them are not comparable: seats scored in v2 carry a
-    weighted-rubric total, seats carried over from v1 are rescaled from their
-    five-axis breakdown, and an unscored seat reads &ldquo;—&rdquo;.
+    Seats carried over from v1 were scored on a different rubric entirely, so
+    their columns read &ldquo;v1&rdquo; rather than a number that would invite a
+    comparison; the rescaled figures are in the expanded row. An unscored seat
+    reads &ldquo;—&rdquo;.
   </p>
   <!-- Rows are rendered from the jobs_tracker database by static/apps.js.
-       Never hand-write a card here: the database is the search layer, and a row
+       Never hand-write a row here: the database is the search layer, and a row
        added by hand is a row no query can see. Register it with
        automation/jobs_sync.py instead — resume.py new already does. -->
   <p id="app-status" class="app-status">Loading applications…</p>
-  <div class="grid" id="app-list"></div>
-  <p id="tab-empty" hidden>No applications match.</p>
+  <div id="app-list"></div>
+  <p id="tab-empty" class="app-empty" hidden>No applications match.</p>
 </section>
 
 <section>

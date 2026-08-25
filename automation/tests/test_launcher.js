@@ -7,6 +7,10 @@
 //
 // The two failure modes matter as much as the happy path: the page must SAY the
 // list is unavailable, never render an empty grid that reads as "no applications".
+//
+// ⚠ Section 3 is a REGRESSION TEST for a real defect: every tab count read 0
+// while rows were plainly rendered underneath. Counts must be a function of the
+// DOM, not of whether someone remembered to call initTabs() after the fetch.
 const fs = require("fs"), { JSDOM } = require("jsdom");
 const REPO = require("path").resolve(__dirname, "../..");
 const [API, PLAIN, DOWN] = process.argv.slice(2);
@@ -30,7 +34,12 @@ async function boot(base) {
 }
 const rows    = d => [...d.querySelectorAll("#app-list [data-status]")];
 const visible = d => rows(d).filter(r => !r.hidden);
-const pill    = (d, t) => d.querySelector(`[data-tab="${t}"]`);
+const tab     = (d, t) => d.querySelector(`[data-tab="${t}"]`);
+const countOf = (d, t) => Number(tab(d, t).querySelector(".tab-count").textContent);
+const click   = async (w, t) => {
+  tab(w.document, t).dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  await settle(30);
+};
 const type    = async (w, q) => {
   const box = w.document.getElementById("app-search");
   box.value = q;
@@ -41,83 +50,142 @@ const type    = async (w, q) => {
 (async () => {
   const api = JSON.parse(await (await fetch(API + "/api/jobs")).text());
   const total = api.applications.length;
+  const TABS = ["ready", "applied", "closed", "heard-back", "not-selected", "other", "archived"];
 
-  console.log("\n1. Rendered from the database");
+  console.log("\n1. Rendered from the database, as rows and not cards");
   let w = await boot(API), d = w.document;
   ok(rows(d).length === total, `every row reached the page — ${rows(d).length} of ${total}`);
   ok(total > 4, `and it is the whole database, not the four directories — ${total} rows`);
   ok(d.getElementById("app-status").hidden, "the loading message goes away");
   ok(d.getElementById("tab-empty").hidden, "and it does not claim nothing matches");
-  ok(!d.documentElement.outerHTML.includes("<!-- <a class=\"card\" data-status=\"ready\""),
-     "the hand-written card template is gone from the markup");
+  ok(d.querySelectorAll("#app-list .card").length === 0, "nothing renders as a card any more");
+  ok(rows(d).every(r => r.tagName === "LI" && r.querySelector(".jrow")),
+     "every seat is an <li> with a .jrow of columns");
+  ok(d.querySelectorAll("#app-list .date-group").length === api.groups.length,
+     `one group per intake date — ${api.groups.length}`);
+  ok([...d.querySelectorAll(".date-group")].every(g => g.querySelector(".jhead")),
+     "each group carries its own COMPANY · TITLE · TECH · NON-TECH header strip");
 
-  console.log("\n2. The tab contract still holds");
-  ok(Number(pill(d, "all").querySelector(".n").textContent) === total, "the `all` pill counts them");
+  console.log("\n2. Counts, and the tab contract");
   let sum = 0;
-  for (const t of ["building", "ready", "sent", "responded", "interviewing",
-                   "parked", "closed", "not-selected"]) {
-    const n = Number(pill(d, t).querySelector(".n").textContent);
-    ok(n === api.counts[t], `${t} pill says ${n}, the API says ${api.counts[t]}`);
-    sum += n;
+  for (const t of TABS) {
+    ok(countOf(d, t) === api.counts[t], `${t} tab says ${countOf(d, t)}, the API says ${api.counts[t]}`);
+    sum += countOf(d, t);
   }
   ok(sum === total, `the tabs account for every row — ${sum} of ${total}`);
+  ok(!d.querySelector('[data-tab="all"]'), "there is no `all` tab to sweep archived rows back in");
   const readyN = api.counts.ready;
-  ok(d.title.startsWith(`${readyN} ready · unsent ·`),
-     `the title still leads with ready-and-unsent — got "${d.title}"`);
+  ok(readyN ? d.title.startsWith(`${readyN} ready · unsent ·`) : true,
+     `the title leads with ready-and-unsent — got "${d.title}"`);
+  ok(tab(d, "ready").classList.contains("active"), "`ready to apply` is the tab that opens");
 
-  console.log("\n3. Clicking a pill filters, as before");
-  pill(d, "ready").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
-  await settle(30);
-  ok(visible(d).length === readyN, `ready shows ${visible(d).length}, expected ${readyN}`);
-  ok(visible(d).every(r => r.dataset.status === "ready"), "and shows only ready rows");
-  ok(pill(d, "ready").getAttribute("aria-current") === "true", "the pill marks itself current");
-  pill(d, "all").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
-  await settle(30);
-  ok(visible(d).length === total, "back to all");
+  console.log("\n3. REGRESSION — a count never reads 0 while rows are on the page");
+  const present = t => rows(d).filter(r => r.dataset.status === t).length;
+  for (const t of TABS) {
+    ok(!(countOf(d, t) === 0 && present(t) > 0),
+       `${t}: ${present(t)} row(s) in the DOM, tab reads ${countOf(d, t)}`);
+  }
+  ok(TABS.some(t => countOf(d, t) > 0), "at least one tab is non-zero — the counts really ran");
+  // The structural guarantee: re-render the list WITHOUT calling initTabs and
+  // the counts must follow anyway. This is the defect, reproduced.
+  const list = d.getElementById("app-list");
+  const kept = [...list.children];
+  list.replaceChildren();
+  await settle(60);
+  ok(TABS.every(t => countOf(d, t) === 0), "an emptied list drops every count to 0");
+  list.append(...kept);                       // note: initTabs() is NOT called
+  await settle(60);
+  ok(TABS.every(t => countOf(d, t) === api.counts[t]),
+     "and re-rendered rows restore every count with no initTabs() call at all");
+  ok(rows(d).length === total, "with every row back on the page");
 
-  console.log("\n4. Search filters on company and role");
-  const probe = api.applications[0].company.split(" ")[0].toLowerCase();
+  console.log("\n4. Archived rows are reachable ONLY through the archived tab");
+  for (const t of TABS) {
+    await click(w, t);
+    ok(visible(d).every(r => r.dataset.status === t), `the ${t} tab shows only ${t} rows`);
+  }
+  await click(w, "ready");
+  ok(visible(d).every(r => r.dataset.status !== "archived"),
+     "no archived row is visible in the tab that opens by default");
+  ok(visible(d).length === api.counts.ready, `ready shows ${visible(d).length} of ${api.counts.ready}`);
+  await click(w, "archived");
+  ok(visible(d).length === api.counts.archived,
+     `archived shows all ${api.counts.archived} of them`);
+  ok(tab(d, "archived").getAttribute("aria-selected") === "true", "the tab marks itself selected");
+
+  console.log("\n5. Group headers say what is derivable and nothing else");
+  const groupsShown = [...d.querySelectorAll(".date-group")].filter(g => !g.hidden);
+  ok(groupsShown.length > 0, `${groupsShown.length} group(s) visible on the archived tab`);
+  ok(groupsShown.every(g => {
+    const shown = [...g.querySelectorAll("[data-status]")].filter(r => !r.hidden).length;
+    return g.querySelector(".gcount").textContent === `${shown} seat${shown === 1 ? "" : "s"}`;
+  }), "each header counts the rows it is actually showing");
+  ok([...d.querySelectorAll(".date-group")].every(g => g.hidden ||
+       [...g.querySelectorAll("[data-status]")].some(r => !r.hidden)),
+     "a group with nothing visible under it is hidden entirely");
+  ok(groupsShown.every(g => /^\d{4}-\d{2}-\d{2}$/.test(g.querySelector("h2").firstChild.textContent.trim())),
+     "every header opens with an ISO intake date");
+  const authored = api.groups.filter(g => g.note).length;
+  ok(groupsShown.every(g => /^—\s*\d+ seats?$/.test(g.querySelector(".descriptor").textContent.trim()))
+       || authored > 0,
+     `no header invents a narrative — ${authored} hand-authored note(s) on file`);
+
+  console.log("\n6. Search filters on company and role, and composes with the tab");
+  await click(w, "archived");
+  const probe = api.applications.find(a => a.status === "archived").company.split(" ")[0].toLowerCase();
   await type(w, probe);
   const hits = visible(d);
   ok(hits.length > 0 && hits.length < total, `"${probe}" narrows the list to ${hits.length}`);
   ok(hits.every(r => r.dataset.search.toLowerCase().includes(probe)), "every hit really matches");
+  ok(hits.every(r => r.dataset.status === "archived"), "a filtered tab stays filtered while searching");
   await type(w, "zzzznotacompany");
   ok(visible(d).length === 0, "a miss shows nothing");
   ok(!d.getElementById("tab-empty").hidden, "and says so");
   await type(w, "");
-  ok(visible(d).length === total, "clearing the box restores every row");
+  ok(visible(d).length === api.counts.archived, "clearing the box restores the tab");
 
-  console.log("\n5. Search and tab compose, they do not fight");
-  pill(d, "closed").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  console.log("\n7. Both scores are columns, and nothing incomparable is shown as a number");
+  const cell = (r, cls) => r.querySelector(cls).textContent.trim();
+  const find = slug => [...rows(d)].find(r => r.dataset.search.includes(slug));
+  const v1 = api.applications.find(a => a.rubric === "v1-five-axis");
+  if (v1) {
+    const r = find(v1.slug);
+    ok(cell(r, ".jc-tech") === "v1" && cell(r, ".jc-nt") === "v1",
+       "a v1-rubric row names its rubric instead of a number that would invite a ranking");
+    ok(r.querySelector(".jc-tech").title.includes("not comparable"), "and says why on hover");
+    ok(r.querySelector(".jrow-detail").textContent.includes("v1 five-axis triage"),
+       "the rescaled figures are still there, in the expanded row, labelled");
+  } else ok(true, "no v1-rubric row to check");
+  await click(w, "ready");
+  const v2 = api.applications.find(a => a.rubric === "v2-weighted");
+  if (v2) {
+    const r = find(v2.slug);
+    ok(/^\d+(\.\d)?$/.test(cell(r, ".jc-tech")), `a v2 seat shows its number — ${cell(r, ".jc-tech")}`);
+  } else ok(true, "no v2-scored seat to check");
+  const un = api.applications.find(a => a.technical == null && a.rubric == null);
+  if (un) ok(cell(find(un.slug), ".jc-tech") === "—", "an unscored seat reads as a dash, never a number");
+  else ok(true, "no unscored seat to check");
+  ok(rows(d).every(r => r.querySelector(".jc-tech") && r.querySelector(".jc-nt")),
+     "every row carries both score columns");
+
+  console.log("\n8. The caret expands to something real");
+  const first = visible(d)[0];
+  const det = first.querySelector(".jrow-detail");
+  ok(det && det.hidden, "the detail starts closed");
+  first.querySelector(".jtog").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
   await settle(30);
-  await type(w, probe);
-  ok(visible(d).every(r => r.dataset.status === "closed"
-                           && r.dataset.search.toLowerCase().includes(probe)),
-     "a filtered tab stays filtered while searching");
-  await type(w, "");
-  pill(d, "all").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  ok(!det.hidden && first.classList.contains("open"), "the caret opens it");
+  ok(det.textContent.includes("status:") && det.textContent.includes("slug:"),
+     "and it reveals real facts, not an empty box");
+  first.querySelector(".jtog").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
   await settle(30);
+  ok(det.hidden, "and closes it again");
 
-  console.log("\n6. Both scores are visible, and nothing is invented");
-  const scored = api.applications.find(a => a.technical != null);
-  const card = [...rows(d)].find(r => r.dataset.search.includes(scored.slug));
-  ok(card.querySelector(".app-score.tech").textContent.startsWith("technical "),
-     "the technical score is on the card");
-  ok(card.querySelector(".app-score.func"), "so is the non-technical one");
-  const unscored = api.applications.find(a => a.technical == null);
-  if (unscored) {
-    const u = [...rows(d)].find(r => r.dataset.search.includes(unscored.slug));
-    ok(u.querySelector(".app-score.tech").textContent === "technical —",
-       "an unscored seat reads as a dash, never a number");
-  } else ok(true, "no unscored seat to check");
-  ok(rows(d).every(r => r.querySelector(".app-score.tech") && r.querySelector(".app-score.func")),
-     "every row carries both badges");
-
-  console.log("\n7. Compensation never reaches the page");
+  console.log("\n9. Compensation never reaches the page");
   ok(!/salary|₹|lacs|lpa/i.test(d.getElementById("app-list").textContent),
-     "no compensation on any card — it is deferred");
+     "no compensation on any row — it is deferred");
 
-  console.log("\n8. Plain http.server — says so, does not render an empty list");
+  console.log("\n10. Plain http.server — says so, does not render an empty list");
   w = await boot(PLAIN); d = w.document;
   const s = d.getElementById("app-status");
   ok(!s.hidden && s.className.includes("bad"), "the page reports the failure");
@@ -126,7 +194,7 @@ const type    = async (w, q) => {
   ok(d.getElementById("tab-empty").hidden,
      "and it does NOT say \"no applications match\" — that would be a lie");
 
-  console.log("\n9. Database unreachable — 503, and the page still renders");
+  console.log("\n11. Database unreachable — 503, and the page still renders");
   const r503 = await fetch(DOWN + "/api/jobs");
   ok(r503.status === 503, `/api/jobs answers 503 — got ${r503.status}`);
   ok((await r503.json()).error.includes("database unreachable"), "and says why");

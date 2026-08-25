@@ -3318,16 +3318,58 @@ section.pasted .paste-area { border-color: var(--good); }
    these classes are applied in JS and appear nowhere in markup.
    ============================================================ */
 
+/* ---------- the tab strip: underlined text, not pills ----------
+   Pills wrapped onto a second line at inconsistent widths, and a coloured pill
+   read as "selected" when it was not. Text tabs with one accent underline have
+   exactly one selected state and it is unambiguous. */
+.app-controls {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin: 8px 0 20px;
+  border-bottom: 1px solid var(--rule);
+}
+.status-tabs { display: flex; flex-wrap: wrap; gap: 2px; flex: 1 1 auto; }
+.status-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 8px 11px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.status-tab:hover { color: var(--ink); }
+.status-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.status-tab .tab-count {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--muted);
+}
+.status-tab.active .tab-count { background: var(--accent-soft); color: var(--accent); }
+
 .app-search {
-  display: block;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 0 10px;
-  padding: 7px 11px;
-  font-family: var(--serif);
-  font-size: 14px;
+  flex: 0 1 240px;
+  margin: 0 0 8px auto;
+  padding: 7px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
   color: var(--ink);
-  background: #ffffff;
+  background: var(--paper-3);
   border: 1px solid var(--rule);
   border-radius: 6px;
 }
@@ -3351,48 +3393,94 @@ section.pasted .paste-area { border-color: var(--good); }
   padding: 10px 12px;
   max-width: 68ch;
 }
-
-.card.app strong { font-size: 15px; margin-bottom: 8px; }
-.card.app .path { margin-top: 8px; }
-
-.app-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 5px;
-}
-.app-meta > span {
+.app-empty {
   font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.04em;
-  border-radius: 4px;
-  padding: 2px 7px;
-  white-space: nowrap;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 24px 2px;
 }
 
-/* Technical carries the accent because it is the score that matters;
-   non-technical is deliberately quiet — informational, never a gate. */
-.app-score.tech {
-  background: var(--accent-soft);
-  border: 1px solid var(--accent);
-  color: var(--accent);
+/* ---------- intake-date groups ---------- */
+.date-group { margin: 22px 0 28px; }
+.date-group h2 {
+  font-size: 0.78em;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  margin: 0 0 10px;
+  padding: 0 0 6px;
+  border-bottom: 1px solid var(--rule);
   font-weight: 700;
 }
-.app-score.func {
-  background: var(--paper-2);
-  border: 1px solid var(--rule);
+.date-group h2 .descriptor {
   color: var(--muted);
+  margin-left: 10px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
 }
-.app-stat {
-  background: var(--paper-3);
-  border: 1px solid var(--rule);
-  color: var(--ink-soft);
+
+/* ---------- one row per slug ---------- */
+.app-list { list-style: none; margin: 0; padding: 0; }
+.app-list > li { padding: 0; border-bottom: 1px dashed var(--rule); }
+.app-list > li:last-child { border-bottom: 0; }
+
+.jhead, .jrow {
+  display: grid;
+  grid-template-columns: 22px minmax(150px, 1.6fr) minmax(220px, 3fr) 70px 84px;
+  align-items: baseline;
+  gap: 12px;
 }
-.app-loc {
-  background: transparent;
-  border: 1px solid transparent;
+.jhead {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--muted);
-  font-family: var(--serif);
-  font-size: 12px;
-  white-space: normal;
+  padding: 4px 0 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.jhead > span:nth-child(4), .jhead > span:nth-child(5) { text-align: right; }
+
+.jrow { padding: 9px 0; cursor: default; }
+.jrow .jtog {
+  background: none; border: 0; color: var(--muted); cursor: pointer;
+  font-size: 12px; padding: 0; line-height: 1.4; transition: transform 0.12s ease;
+}
+.jrow .jtog:hover { color: var(--accent); }
+.app-list > li.open .jtog { transform: rotate(90deg); color: var(--accent); }
+
+.jc { font-size: 0.9em; min-width: 0; overflow-wrap: anywhere; }
+.jc-co a { font-weight: 700; color: var(--ink); border-bottom: 0; }
+.jc-co a:hover { color: var(--accent); }
+.jc-src { color: var(--muted); font-size: 0.86em; margin-left: 6px; }
+.jc-title { color: var(--ink-soft); }
+.jc-tech, .jc-nt {
+  font-family: var(--mono); font-size: 0.82em; font-weight: 700;
+  white-space: nowrap; text-align: right;
+}
+.jc-tech { color: var(--good); }
+.jc-nt { color: var(--muted); }
+/* A v1-rubric row shows which rubric scored it, not a number that would read as
+   comparable to a v2 technical score. The figures are in the expanded row. */
+.jc-v1 { color: var(--muted); font-weight: 600; }
+
+.jrow-detail { padding: 2px 0 12px 34px; }
+.jrow-detail .jd-two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 34px; }
+.jrow-detail .jbul {
+  margin: 4px 0 8px; padding-left: 18px; font-size: 0.86em; color: var(--ink-soft);
+}
+.jrow-detail .jbul li { margin: 3px 0; }
+.jrow-detail .muted { color: var(--muted); }
+
+@media (max-width: 760px) {
+  .app-controls { align-items: stretch; }
+  .app-search { flex-basis: 100%; margin-left: 0; }
+  .jhead { display: none; }
+  .jrow { grid-template-columns: 22px 1fr auto; gap: 4px 10px; row-gap: 2px; }
+  .jc-title { grid-column: 2 / -1; }
+  .jc-tech, .jc-nt { grid-column: auto; font-size: 0.8em; text-align: left; }
+  .jrow-detail { padding-left: 22px; }
+  .jrow-detail .jd-two { grid-template-columns: 1fr; gap: 0; }
 }
