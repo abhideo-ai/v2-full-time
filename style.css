@@ -3269,26 +3269,4 @@ section.pasted .paste-area { border-color: var(--good); }
 .paste-area li { margin: 0 0 8px; line-height: 1.5; }
 .paste-area li:last-child { margin-bottom: 0; }
 
-/* Per-bullet copy. Hiration's experience editor takes one bullet per input, so
-   a multi-bullet paste collapses to a single line — every line needs its own
-   button. The row is FLEX, not absolute positioning: the shared .copy-btn rule
-   is `position:absolute; top:10px; right:10px`, so adding `left` to it set both
-   edges and stretched every button across the full width, on top of the text. */
-.paste-area ul.per-bullet { list-style: none; padding-left: 0; margin: 0; }
-.paste-area ul.per-bullet > li {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 8px 11px; margin: 0 0 6px;
-  border-radius: 6px; background: var(--paper-2); line-height: 1.55;
-}
-.paste-area ul.per-bullet > li:hover { background: #fff; box-shadow: var(--shadow); }
-.paste-area ul.per-bullet > li:last-child { margin-bottom: 0; }
-.copy-btn.mini {
-  position: static; flex: 0 0 auto; margin-top: 1px;
-  font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em;
-  text-transform: uppercase; font-weight: 600;
-  padding: 3px 9px; border-radius: 4px;
-  border: 1px solid var(--rule); background: #fff; color: var(--muted);
-  cursor: pointer;
-}
-.copy-btn.mini:hover { border-color: var(--accent); color: var(--accent); background: #fff; }
-.copy-btn.mini.copied { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+/* (per-bullet copy removed — the exporter writes every section itself) */
