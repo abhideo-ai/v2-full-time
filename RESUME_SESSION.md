@@ -147,22 +147,30 @@ the master carries **6**.
 
 ---
 
-## ⚠ URGENT — YOUR POSTGRESQL IS ONE RESTART FROM NOT COMING BACK
+## PostgreSQL: migrated 16 → 18, RESOLVED 2026-08-25
 
-**The running server's binaries have been deleted.** Verified 2026-08-25:
+**The problem, for the record:** a PostgreSQL 16 server had been running since 19 August while its
+Homebrew keg was deleted — `/opt/homebrew/opt/postgresql@16/bin/postgres` no longer existed on disk.
+It survived only because it was already in memory, every `UPDATE` on `applications` already failed
+(the `BEFORE UPDATE` trigger could not load `$libdir/plpgsql`), and `postgresql@18` could never start
+because 16 held port 5432.
 
-- The live process is `/opt/homebrew/opt/postgresql@16/bin/postgres` — **that path no longer exists**
-- Homebrew now has `postgresql@18`; the 16 keg was removed while the 16 server was still running
-- Data lives in `/opt/homebrew/var/postgresql@16` — 96 applications, the daily state, everything
-- **Every `UPDATE` on `applications` already fails** — the `BEFORE UPDATE set_updated_at()` trigger
-  cannot load `$libdir/plpgsql`. `v2_daily` has no triggers so the daily log is unaffected.
-  `jobs_sync.py` works around it by setting `updated_at` explicitly with triggers off.
+**He confirmed 18 is the version in use, so the fix was to migrate, not to reinstall 16.**
 
-**A backup was taken while the server was still up:** `~/pg-backup-2026-08-25/all-databases.sql`
-— 1.7 MB, 96/96 application rows, all four databases, no errors.
+Done, in this order: fresh `pg_dumpall` → fast-shutdown of 16 (SIGINT, since its own `pg_ctl` was
+gone) → start 18 on 5432 → restore → verify.
 
-**Fix:** `brew install postgresql@16`. Until then, do not restart PostgreSQL or reboot without
-expecting to reinstall first.
+**Verified after:** `jobs_tracker` 96 applications and 73 scoring events, `v2_daily` intact,
+`plpgsql` healthy, and the previously-failing `UPDATE applications` now succeeds. All endpoints 200,
+`./todo` reports `postgresql`, full suite passes.
+
+**Backups kept:** `~/pg-backup-2026-08-25/all-databases-final.sql` (the one restored, with the synced
+scores) and `all-databases.sql` (earlier). **The old 16 data directory is untouched at
+`/opt/homebrew/var/postgresql@16`** — it is the last fallback and is his to delete, not ours.
+
+⚠ `jobs_sync.py` still carries a workaround that retries with triggers disabled when `plpgsql` fails.
+It is now dead code that self-disables; harmless, but it can go whenever someone is in that file.
+
 
 ---
 
