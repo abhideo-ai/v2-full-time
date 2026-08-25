@@ -159,6 +159,17 @@ frame PostgreSQL↔MySQL as transferable.
   `master/upgrad_resume.html` carries **6**. Eight are unmerged, including Jenkins → GitHub Actions
   with ISO 27001, PostgreSQL → Amazon RDS, a Puppeteer regression framework, the axe-core
   spider/scanning pipeline, run-over-run regression comparison, and API versioning.
+- **✅ ALL 17 BULLETS USER-CONFIRMED ACCURATE, 2026-08-25** — his words: *"everything is
+  accurate."* Do not re-flag any of them for factual accuracy, and do not scrub any of them.
+  Two readings this settles:
+  - **6 sub-teams vs 5 is NOT a contradiction.** Bullet 3's *"6 sub-teams"* is the whole
+    VoltusWave org; bullet 8's *"5 sub-teams"* is how many adopted Go and DynamoDB. Both stand.
+    The "never 5" rule above governs the **org size**, not adoption counts.
+  - **ECS Fargate at 70% Spot, k6-validated load testing, React Native across 2 app stores with
+    Firebase Cloud Messaging and Apple Push Notification service, the HIPAA framework, and the
+    four named archetypes are all confirmed.** Earlier passes marked several "uncorroborated"
+    because they are absent from the journey doc and case studies. **Absence from an incomplete
+    record was never absence in production** — he was there. Do not re-flag.
 - **⚠ The 17 bullets are NOT safe to paste wholesale.** Several state pre-registered acceptance
   **targets** as achieved results, which the honesty rules forbid: bullet 16's *"warm-path P99
   < 200 ms, NDCG@10 ≥ 0.75"*, bullet 17's Rosenbaum γ + E-value battery, and bullet 15's large
