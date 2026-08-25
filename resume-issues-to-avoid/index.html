@@ -165,7 +165,78 @@
     <li>If bold is missing, the export pipeline stripped it. Switch tools (try <code>wkhtmltopdf</code>, LibreOffice headless export, or paste through Google Docs first then export).</li>
   </ul>
 
-  <h2>Review Checklist Before Export</h2>
+  <h2>Rules Added 25 Aug 2026</h2>
+
+<p>Learned while rebuilding the master and the Hiration card. Each one cost real time before it
+was written down.</p>
+
+<h3>10. Every Line Needs A Highlight — Even Without A Number</h3>
+<p><strong>Rule:</strong> every bullet <em>and</em> every skills line carries at least one bolded
+fact. A line with no bold is a line the eye slides past.</p>
+<p><strong>Even when there is no metric.</strong> The absence of a number is not permission to
+leave a line unhighlighted — bold the capability instead. In a skills block that means the
+capability label is bold and the parenthetical detail is plain:</p>
+<pre><code>&lt;strong&gt;Leakage-Safe Machine Learning&lt;/strong&gt; (As-Of Featurisation, Point-in-Time Correctness)
+&lt;strong&gt;Java + Spring Boot Microservices&lt;/strong&gt; (Java 8/17, Spring Boot 2.x, JSP)</code></pre>
+<p><strong>Caught:</strong> 18 of 29 skills lines had no bold at all after a rewrite. All 27
+experience bullets were fine — the gap was entirely in the skills blocks, which is exactly where
+nobody thinks to check.</p>
+
+<h3>11. Paste Blocks Are &lt;p&gt;, Never &lt;ul&gt; — But Must LOOK Like Bullets</h3>
+<p><strong>Rule:</strong> upGrad's paste sanitiser <strong>strips bold from list-rooted
+content</strong>. Anything pasted by hand must be standalone <code>&lt;p&gt;</code> elements.
+Hiration turns each pasted paragraph into a bullet itself.</p>
+<p><strong>But the sheet must still look like the résumé</strong>, so the bullet marker is drawn in
+CSS (<code>.paste-area p::before</code>). CSS markers are not in the clipboard, so the copied HTML
+stays clean while the page reads correctly.</p>
+<p><strong>The failure this prevents:</strong> bold silently disappears on paste and does not
+surface until the exported PDF — by which point the card has already been rebuilt.</p>
+
+<h3>12. A Copy Block Is One WHOLE Section</h3>
+<p><strong>Rule:</strong> one button, one complete section, one paste. Select the section in
+Hiration, delete it, paste. <strong>Never</strong> &ldquo;add this line to Engineering
+Excellence&rdquo; or &ldquo;paste these two bullets under the third one&rdquo;.</p>
+<p><strong>Why:</strong> a partial paste means reading the existing block, working out where the
+new text goes, and not duplicating what is already there — three chances to get it wrong,
+silently, in a field that cannot easily be diffed afterwards. If a section changed by one word, the
+block still carries the whole section.</p>
+
+<h3>13. Key Skills Is ONE Section, Not Three</h3>
+<p><strong>Rule:</strong> Key Skills renders as three sub-groups — Technology Leadership &amp;
+Strategy, Engineering Excellence, Business &amp; Delivery — but it is <strong>replaced whole</strong>
+when tailoring per job. All three groups, one paste.</p>
+<p><strong>Format:</strong> short capability labels, never sentences.
+<code>Multi-Tenant SaaS Architecture (Shared-Schema, Per-Tenant Isolation)</code> scans;
+<code>Multi-tenant architecture and tenant isolation — shared-schema design, per-tenant data
+separation, dedicated carve-outs for regulated customers</code> does not.</p>
+
+<h3>14. Never Retroactively Scrub A Submitted Claim</h3>
+<p><strong>Rule:</strong> removing a claim that has already gone out does not unsend it. It only
+creates a gap between the version a recruiter holds and the version they would see next, which is
+worse than the original ambiguity. The work is being <strong>ready to answer for it in a
+room</strong>, not editing the file.</p>
+<p><strong>The distinction that matters:</strong></p>
+<ul>
+  <li><strong>Unverified</strong> — absent from the record, but he may well remember it. These
+  <strong>stay</strong>. Flag for interview prep, never scrub.</li>
+  <li><strong>False</strong> — contradicted by a source we hold. These come off regardless of
+  whether they have been submitted, because the contradiction is what an interviewer will find.</li>
+</ul>
+<p>Before proposing any removal, say which of the two it is. If you cannot, it is unverified, and
+it stays.</p>
+
+<h3>15. Generate Paste Blocks FROM The Résumé, Never Retype Them</h3>
+<p><strong>Rule:</strong> a paste sheet that disagrees with the file the bot writes from is a
+silent, expensive bug — the card gets built from one version while the export uses another.
+<code>automation/resume.py sheet</code> generates every block from
+<code>upgrad_resume.html</code> and derives which sections changed by diffing against git.</p>
+
+<h3>16. The ATS Score Is Not The Target</h3>
+<p><strong>Rule:</strong> the applicant tracking system &ldquo;Resume Review&rdquo; score wobbles
+87&ndash;99 on <em>hygiene</em>, not on fit against the job description. Do not chase it. A résumé
+that scores 99 and does not match the seat is worth less than one that scores 88 and does.</p>
+
+<h2>Review Checklist Before Export</h2>
   <ul>
     <li>No bullet exceeds 25 words.</li>
     <li>No bullet ends with a period.</li>

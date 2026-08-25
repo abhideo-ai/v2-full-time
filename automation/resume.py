@@ -150,6 +150,11 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
 
     blocks, changed = [], 0
     for i, (sec_id, title) in enumerate(SECTIONS):
+        # Key Skills renders as one section on the card and is replaced whole,
+        # so only the combined block is emitted — three separate ones invite
+        # exactly the partial paste the whole-section rule forbids.
+        if sec_id.startswith('quick-skills-'):
+            continue
         now = paragraphs(html, sec_id)
         if not now:
             print(f"[resume] WARNING: {sec_id} is empty — the parser will skip it silently",
@@ -193,7 +198,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     ks = [(sid, t.split("— ", 1)[-1]) for sid, t in SECTIONS if sid.startswith("quick-skills-")]
     ks_body = ""
     for sid, sub in ks:
-        ks_body += f"\n        <p><strong>{sub}</strong></p>"
+        ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>"
         ks_body += "".join(f"\n        <p>{x}</p>" for x in paragraphs(html, sid))
     combined = f'''<h3 class="section-head">Key Skills — all three groups, one paste</h3>
 

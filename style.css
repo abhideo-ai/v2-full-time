@@ -3236,3 +3236,24 @@ section.pasted .paste-area { border-color: var(--good); }
 .ps-bar { display: flex; align-items: center; gap: 12px; margin: 0 0 18px; }
 .lede { color: var(--muted); font-size: 15px; max-width: 70ch; margin: 0 0 14px; }
 .ps-done { accent-color: var(--good); }
+
+/* Paste blocks DISPLAY as bullets so the sheet looks like the card, while the
+   copied HTML stays <p>. This is not cosmetic pedantry: upGrad strips bold from
+   list-rooted content, so real <ul> markup would lose every bolded fact on
+   paste. The marker is CSS, so it is not in the clipboard. */
+.paste-area p { position: relative; padding-left: 18px; margin: 0 0 9px; }
+.paste-area p:last-child { margin-bottom: 0; }
+.paste-area p::before {
+  content: "•"; position: absolute; left: 2px; top: 0;
+  color: var(--accent); font-weight: 700;
+}
+/* Sub-group headings inside the combined Key Skills block are not bullets. */
+.paste-area p.ks-group::before { content: none; }
+.paste-area p.ks-group {
+  padding-left: 0; margin: 14px 0 7px; font-family: var(--mono);
+  font-size: 11px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-soft);
+}
+.paste-area p.ks-group:first-of-type { margin-top: 0; }
+/* The export command is a command, not a bullet. */
+#sec-export p::before { content: none; }
+#sec-export p { padding-left: 0; }
