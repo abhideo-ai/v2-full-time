@@ -176,7 +176,17 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
         hyg = n.get("hygiene") or f"{len(now)} line(s)"
         tag = "Replace:" if diff else "No change:"
         cls = "paste-block" if diff else "paste-block nochange"
-        body = "\n        ".join(f"<p>{p}</p>" for p in now)
+        # PER-BULLET copy buttons. Hiration's experience editor takes ONE
+        # bullet per input, so a multi-bullet paste collapses into a single
+        # line. The whole-section block stays for fields that accept it (the
+        # summary, and any editor that does), but the per-bullet buttons are
+        # what actually work for experience and skills.
+        rows = "\n          ".join(
+            f'<li id="b-{sec_id}-{j}" class="copy-target">'
+            f'<button type="button" class="copy-btn mini" data-copy-target="#b-{sec_id}-{j}" '
+            f'data-copy-html="1">copy</button>{x}</li>'
+            for j, x in enumerate(now, 1))
+        body = f"<ul class=\"per-bullet\">\n          {rows}\n        </ul>"
         blocks.append(f'''<div class="ps-head">
     <h3 class="section-head">{i + 1}. {title}</h3>
     <label><input type="checkbox" class="ps-done" data-sec="{sec_id}" /> pasted</label>
@@ -198,8 +208,13 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
     ks = [(sid, t.split("— ", 1)[-1]) for sid, t in SECTIONS if sid.startswith("quick-skills-")]
     ks_body = ""
     for sid, sub in ks:
-        ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>"
-        ks_body += "".join(f"\n        <p>{x}</p>" for x in paragraphs(html, sid))
+        ks_body += f"\n        <p class=\"ks-group\"><strong>{sub}</strong></p>\n        <ul class=\"per-bullet\">"
+        ks_body += "".join(
+            f'\n          <li id="b-{sid}-{j}" class="copy-target">'
+            f'<button type="button" class="copy-btn mini" data-copy-target="#b-{sid}-{j}" '
+            f'data-copy-html="1">copy</button>{x}</li>'
+            for j, x in enumerate(paragraphs(html, sid), 1))
+        ks_body += "\n        </ul>"
     combined = f'''<h3 class="section-head">Key Skills — all three groups, one paste</h3>
 
   <section class="paste-block">
@@ -240,7 +255,12 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
 </header>
 
 <div class="tldr">
-  <strong>One button, one whole section, one paste</strong>
+  <strong>Two ways to paste — use whichever the field accepts</strong>
+  <strong>Per bullet:</strong> every line has its own small <code>copy</code> button. Hiration's
+  experience editor takes <em>one bullet per input</em>, so this is the one that works there —
+  click <code>copy</code>, paste, next.
+  <strong>Whole section:</strong> the big button at the top of each block copies everything at
+  once, for fields that accept a multi-line paste (the summary does).
   Every block is a <em>complete</em> section that replaces its counterpart outright — select the
   section in Hiration, delete it, paste. Never a fragment to merge into an existing block. Use the
   button, not a manual selection: upGrad silently drops bold from a hand-dragged copy and you will
