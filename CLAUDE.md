@@ -314,10 +314,14 @@ automation/.venv/bin/python automation/daily.py     # regenerate the page from d
 studies plus Q&A companions, ~198,000 words: what was implemented for Amura, a chronic-care
 platform covering 80+ conditions.
 
-**v2 is in progress and needs a few more points before it is final.** It lands in
-`killer-query-case-studies-v2/` — **never overwrite v1 in place.** v1 stays authoritative until
-v2 is complete, `professional-journey-original.md` line 231 and the launcher link both point at
-v1 and stay valid, and keeping both side by side is what makes the diff possible.
+**Do NOT wait for v2. Finish everything on v1.** Bullets, workspaces, prep artefacts — all of it
+gets built from v1 now. v2 needs a few more points and is **days-to-weeks away**; holding work
+back for it is the build-instead-of-send failure wearing a different hat.
+
+When v2 lands it goes in `killer-query-case-studies-v2/` — **never overwrite v1 in place.**
+`professional-journey-original.md` line 231 and the launcher link both point at v1 and stay
+valid, and keeping both side by side is what makes the diff possible. At that point: extract v2,
+diff it against v1, and revise only what actually moved.
 
 **The v1↔v2 diff is honesty work, not bookkeeping.** A claim that moves from *shipped* to
 *designed* between his own two versions must never reach a résumé as shipped. Extract both,
