@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Paste shape test</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · paste shape test</p>
+
+<header>
+  <p class="eyebrow">60 seconds · settles it permanently</p>
+  <h1>Which markup does upGrad keep?</h1>
+</header>
+
+<div class="tldr">
+  <strong>What to do</strong>
+  Open any experience section in the Hiration card. For each block below: click
+  <strong>Copy</strong>, paste into the card, and look at two things —
+  <strong>did the bold survive</strong>, and <strong>did you get three separate bullets</strong>?
+  Then undo and try the next. Tell me which letter wins and every section on the paste sheet
+  becomes a single click in that shape.
+</div>
+
+<div class="callout warn">
+  <b>Why I cannot just work this out.</b> The exporter sends
+  <code>&lt;ul&gt;&lt;li&gt;…&lt;strong&gt;</code> through a synthetic clipboard event and keeps
+  formatting; a real clipboard paste of the same markup loses the bold for you. Something between
+  the operating-system clipboard and Hiration's paste handler treats them differently, and I cannot
+  see inside that from here. Six candidates, one test each.
+</div>
+
+<h2>A · <code>&lt;ul&gt;&lt;li&gt;</code> with <code>&lt;strong&gt;</code></h2>
+<p class="dim">Exactly what the exporter sends. If this works, the earlier failure was something else.</p>
+<div class="paste-area copy-target" id="t-a">
+  <button type="button" class="copy-btn" data-copy-target="#t-a" data-copy-html="1">Copy A</button>
+  <ul><li>Alpha bullet with <strong>bold words</strong> inside</li><li>Beta bullet with <strong>another bold</strong> part</li><li>Gamma bullet, <strong>third bold</strong> here</li></ul>
+</div>
+
+<h2>B · <code>&lt;ul&gt;&lt;li&gt;</code> with <code>&lt;b&gt;</code></h2>
+<p class="dim">Some sanitisers whitelist <code>&lt;b&gt;</code> but not <code>&lt;strong&gt;</code>.</p>
+<div class="paste-area copy-target" id="t-b">
+  <button type="button" class="copy-btn" data-copy-target="#t-b" data-copy-html="1">Copy B</button>
+  <ul><li>Alpha bullet with <b>bold words</b> inside</li><li>Beta bullet with <b>another bold</b> part</li><li>Gamma bullet, <b>third bold</b> here</li></ul>
+</div>
+
+<h2>C · <code>&lt;div&gt;</code> per bullet with <code>&lt;strong&gt;</code></h2>
+<p class="dim">Draft.js treats each block-level element as its own block, and a <code>&lt;div&gt;</code> is not list-rooted.</p>
+<div class="paste-area copy-target" id="t-c">
+  <button type="button" class="copy-btn" data-copy-target="#t-c" data-copy-html="1">Copy C</button>
+  <div>Alpha bullet with <strong>bold words</strong> inside</div><div>Beta bullet with <strong>another bold</strong> part</div><div>Gamma bullet, <strong>third bold</strong> here</div>
+</div>
+
+<h2>D · <code>&lt;p&gt;</code> per bullet, all in one block</h2>
+<p class="dim">What the sheet had before. Bold survived; the three collapsed into one line.</p>
+<div class="paste-area copy-target" id="t-d">
+  <button type="button" class="copy-btn" data-copy-target="#t-d" data-copy-html="1">Copy D</button>
+  <p>Alpha bullet with <strong>bold words</strong> inside</p><p>Beta bullet with <strong>another bold</strong> part</p><p>Gamma bullet, <strong>third bold</strong> here</p>
+</div>
+
+<h2>E · <code>&lt;ul&gt;&lt;li&gt;</code> with an inline-styled <code>&lt;span&gt;</code></h2>
+<p class="dim">The rulebook says upGrad strips styled spans — worth one test to confirm.</p>
+<div class="paste-area copy-target" id="t-e">
+  <button type="button" class="copy-btn" data-copy-target="#t-e" data-copy-html="1">Copy E</button>
+  <ul><li>Alpha bullet with <span style="font-weight:700">bold words</span> inside</li><li>Beta bullet with <span style="font-weight:700">another bold</span> part</li><li>Gamma bullet, <span style="font-weight:700">third bold</span> here</li></ul>
+</div>
+
+<h2>F · <code>&lt;p&gt;</code> per bullet, each starting with a bullet glyph</h2>
+<p class="dim">If the field will not make bullets for us, we bring our own.</p>
+<div class="paste-area copy-target" id="t-f">
+  <button type="button" class="copy-btn" data-copy-target="#t-f" data-copy-html="1">Copy F</button>
+  <p>• Alpha bullet with <strong>bold words</strong> inside</p><p>• Beta bullet with <strong>another bold</strong> part</p><p>• Gamma bullet, <strong>third bold</strong> here</p>
+</div>
+
+<h2>Report back</h2>
+<p>For whichever letters you try, two answers each:</p>
+<ul class="checks">
+  <li><strong>Bold survived?</strong> yes / no</li>
+  <li><strong>Three separate bullets?</strong> yes / no — or did it collapse to one line</li>
+</ul>
+<p>The first letter that scores <strong>yes / yes</strong> wins, and I rebuild every block on the
+paste sheet in that shape — one button per section, formatting intact. If none of them do, the
+answer is that Hiration will not accept a rich paste at all, and the exporter is the only path —
+which is worth knowing definitively rather than after another hour of attempts.</p>
+
+<footer class="signoff">
+  <p><a href="paste_sheet.html">Paste sheet</a> · <a href="upgrad_resume.html">The résumé</a></p>
+</footer>
+
+</main>
+<script src="../static/copy.js" defer></script>
+</body>
+</html>
