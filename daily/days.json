@@ -1,5 +1,5 @@
 {
-  "_comment": "Source of truth for daily/index.html. Edit this, then run: automation/.venv/bin/python automation/daily.py. Newest day first. p = priority (1 critical path, 2 today but off it, 3 while you're in there). needs = task ids that must be done first; the page marks a task 'waiting' until they are. Unfinished tasks roll over automatically and are NEVER duplicated here. task/detail/why are trusted HTML and are not escaped.",
+  "_comment": "Source of truth for daily/index.html. Edit this, then run: automation/.venv/bin/python automation/daily.py. Newest day first. p = priority (1 critical path, 2 today but off it, 3 while you're in there). needs = task ids that must be done first. due = optional ISO date; a task with no `due` is due on its own day. reasons = the preset move-out reasons offered in the UI. Tick / park / push / drop state lives in PostgreSQL (v2_daily), never here, and unfinished tasks roll over automatically — so a task is NEVER duplicated in this file. task/detail/why are trusted HTML and are not escaped.",
   "days": [
     {
       "date": "2026-08-25",
@@ -113,6 +113,36 @@
           "body": "The confirm-or-reject items — roughly 300 customers versus instances, the 70–80% consolidation, two Rocket metrics, where the +65% conversion lift attaches, the 100,000-concurrent wording, the graph neural network, the narrative guardrails, the 27 ms / P95 16 ms pairing, and the nine bullets carrying scale markers instead of digits — are standing decisions only you can settle, not day-work. They live in <a href=\"../CLAUDE.md\">CLAUDE.md</a> and none of them block today's export."
         }
       ]
+    }
+  ],
+  "reasons": [
+    {
+      "key": "posting-closed",
+      "label": "Posting no longer active"
+    },
+    {
+      "key": "jd-changed",
+      "label": "JD changed materially since we built it"
+    },
+    {
+      "key": "comp-below",
+      "label": "Comp band below the floor"
+    },
+    {
+      "key": "leadership-seat",
+      "label": "Leadership seat — built, not sending"
+    },
+    {
+      "key": "duplicate",
+      "label": "Already applied, or duplicates another workspace"
+    },
+    {
+      "key": "blocked",
+      "label": "Blocked on something else"
+    },
+    {
+      "key": "other",
+      "label": "Other — say why"
     }
   ]
 }

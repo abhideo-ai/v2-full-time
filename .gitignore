@@ -23,3 +23,7 @@ automation/.upgrad_key
 ~$*.pptx
 ~$*.xlsx
 **/_word_source.html
+
+# node test toolchain (jsdom); install with `npm install jsdom`
+node_modules/
+package*.json

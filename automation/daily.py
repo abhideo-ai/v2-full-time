@@ -31,10 +31,10 @@ OUT = ROOT / "daily" / "index.html"
 PRIORITY_PILL = {1: "red", 2: "yellow", 3: "fact"}
 
 
-def load_days() -> list[dict]:
-    days = json.loads(DAYS_JSON.read_text())["days"]
-    days.sort(key=lambda d: d["date"], reverse=True)
-    return days
+def load_doc() -> dict:
+    doc = json.loads(DAYS_JSON.read_text())
+    doc["days"].sort(key=lambda d: d["date"], reverse=True)
+    return doc
 
 
 def validate(days: list[dict]) -> None:
@@ -110,6 +110,7 @@ def preflight() -> dict:
 def render_item(item: dict, day: str) -> str:
     prio = item.get("p", 2)
     needs = item.get("needs", [])
+    due = item.get("due", day)          # no explicit due date -> due on its own day
     # `t` prefix: an id starting with a digit is legal HTML but is NOT a valid
     # CSS identifier, so querySelector("#2026...") throws. Prefix, don't escape.
     box_id = f"t{day.replace('-', '')}-{item['id']}"
@@ -121,13 +122,19 @@ def render_item(item: dict, day: str) -> str:
             + "</span>"
         )
     detail = f'<span class="dl-detail">{item["detail"]}</span>' if item.get("detail") else ""
-    return f"""        <li data-id="{item['id']}" data-needs="{','.join(needs)}" data-p="{prio}">
+    return f"""        <li data-id="{item['id']}" data-needs="{','.join(needs)}" data-p="{prio}" data-due="{due}">
           <input type="checkbox" id="{box_id}" data-id="{item['id']}" />
           <label for="{box_id}">
             <span class="dl-task">{item['task']}</span>
             <span class="dl-meta"><span class="pill {PRIORITY_PILL[prio]}">P{prio}</span>{needs_html}</span>
             {detail}
           </label>
+          <span class="dl-actions">
+            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
+            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
+            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
+            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
+          </span>
         </li>"""
 
 
@@ -197,11 +204,26 @@ def render_day(day: dict, is_today: bool, pf: dict) -> str:
         if is_today
         else ""
     )
+    moved = (
+        "\n\n".join(
+            f'    <details class="dl-moved" id="moved-{kind}" hidden>\n'
+            f'      <summary>{title} <span class="n">0</span></summary>\n'
+            f'      <ul class="dl-list"></ul>\n'
+            f"    </details>"
+            for kind, title in (
+                ("parked", "Parked"), ("pushed", "Pushed to a later day"), ("dropped", "Dropped")
+            )
+        )
+        if is_today
+        else ""
+    )
     blocks = [b for b in (next_up, rolled) if b]
     blocks += [render_group(g, day["date"]) for g in day["groups"]]
     if is_today:
         blocks.append(preflight_callout(pf))
     blocks += [render_callout(c) for c in day.get("callouts", [])]
+    if moved:
+        blocks.append(moved)
     body = "\n\n".join(blocks)
     return f"""<details class="{classes}" data-day="{day['date']}"{' open' if is_today else ''}>
   <summary>{pretty}{today_pill}<span class="dl-count"></span></summary>
@@ -214,7 +236,9 @@ def render_day(day: dict, is_today: bool, pf: dict) -> str:
 
 
 def main() -> None:
-    days = load_days()
+    doc = load_doc()
+    days = doc["days"]
+    reasons = doc.get("reasons", [])
     validate(days)
     pf = preflight()
     stats = pipeline_stats()
@@ -227,6 +251,10 @@ def main() -> None:
         if len(days) > 1
         else '\n<p class="dl-archive-empty">No earlier days yet — this is day one of the log.</p>'
     )
+    reason_options = "".join(
+        f'<option value="{r["key"]}">{r["label"]}</option>' for r in reasons
+    )
+    reasons_json = json.dumps(reasons)
     OUT.write_text(f"""<!doctype html>
 <html lang="en">
 <head>
@@ -240,6 +268,8 @@ def main() -> None:
 <main class="page" id="main">
 
 <p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · daily log</p>
+
+<p class="dl-store" id="store-banner" hidden></p>
 
 <header>
   <p class="eyebrow">Individual-contributor (IC) roles · Principal / Staff / Architect</p>
@@ -259,7 +289,28 @@ def main() -> None:
 
 <h2>Earlier days</h2>{archive}
 
+<dialog id="move-dialog" class="dl-dialog">
+  <form>
+    <h3 id="move-title">Move out</h3>
+    <p class="dl-dialog-task" id="move-task"></p>
+    <label class="dl-field">Reason
+      <select id="move-reason">{reason_options}</select>
+    </label>
+    <label class="dl-field" id="move-until-field" hidden>Comes back on
+      <input type="date" id="move-until" />
+    </label>
+    <label class="dl-field">Note <span class="dim">(optional)</span>
+      <textarea id="move-note" rows="2" placeholder="what changed"></textarea>
+    </label>
+    <p class="dl-dialog-actions">
+      <button type="button" class="dl-act" id="move-cancel">Cancel</button>
+      <button type="button" class="dl-act primary" id="move-confirm">Move out</button>
+    </p>
+  </form>
+</dialog>
+
 </main>
+<script type="application/json" id="reasons">{reasons_json}</script>
 <script src="../static/todo.js" defer></script>
 </body>
 </html>
