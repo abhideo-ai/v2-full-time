@@ -1,0 +1,27 @@
+{
+  "quick-headline": {
+    "why": "The old headline led with multi-tenant SaaS and ended on a generic \"production AI on AWS\". Five drafts were scored by three independent judges — a recruiter lens, a hiring-engineer lens, an honesty auditor — and all three picked this one, <strong>46, 47 and 47 out of 50</strong>. It is the only draft that puts Java in the first content slot <em>and</em> says something about the AI work almost no other candidate can say.",
+    "heads_up": "Goes in Hiration's <strong>headline</strong> field — the only field the bot ever writes. Replace the whole line.",
+    "hygiene": "20 words · tagline exception applies, so SaaS and AI may stay unexpanded here · no leadership framing"
+  },
+  "quick-summary": {
+    "why": "The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of patient history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>.",
+    "heads_up": "Replace the whole summary. <strong>Bold must survive</strong> — use the Copy button, never a manual selection.",
+    "hygiene": "~115 words · every acronym expanded on first use in reading order · no \"currently\" attached to VoltusWave, which ended Apr 2026"
+  },
+  "quick-skills-ee": {
+    "why": "Six lines became ten. Two existing lines were <em>extended</em> rather than duplicated — stores gained <strong>Elasticsearch dense_vector</strong>, <strong>Redis</strong> and <strong>DuckDB and Parquet</strong>; the AWS line gained <strong>SageMaker</strong> and <strong>Neptune with Gremlin</strong>. Four are new: causal inference, leakage-safe machine learning, deterministic replayable systems, self-hosted models in-VPC. All of it appears repeatedly in your own case studies and none of it was on the résumé — DuckDB and Parquet in 8 studies each, Redis in 7, Ollama in 6, self-hosted LangSmith in 9.",
+    "heads_up": "Replaces the <strong>whole</strong> block. Two of the ten lines are edits to existing ones, so a partial paste would leave duplicates.",
+    "hygiene": "10 lines · skills lines carry <strong>no number requirement</strong> — that rule is for experience bullets"
+  },
+  "quick-vp": {
+    "why": "One <strong>factual correction</strong> and four new bullets. The RAG bullet claimed the pipeline ran over an Amazon Neptune context graph; KQ1's own stack table names <strong>Elasticsearch</strong> the \"Authoritative serving index — dense_vector filtered kNN\" and says the graph \"serves audit and drill-down only, so serving latency never depends on its tail\". KQ9 is the Neptune query — the old bullet collapsed two systems into one. The four new bullets carry the Amura work: adversarial self-review, confounder gates, the relapse model, in-VPC self-hosting.",
+    "heads_up": "Replaces the whole role. <strong>This is ten bullets and needs trimming to six or seven</strong> for the three-page limit — six are chat-platform work, four are Amura. Which to cut is a per-job call.",
+    "hygiene": "All bullets ≤25 words · <code>Hardened</code>, <code>Extracted</code>, <code>Sequenced</code>, <code>Secured</code> verified free across the whole résumé · <code>Engineered</code> kept on the corrected bullet per Rule 7 · no achieved Amura metric, because none exists"
+  },
+  "quick-teletext": {
+    "hygiene": "4 bullets · unchanged · <strong>the +65% hotel conversions is the one unresolved claim on this résumé</strong> — your journey document flags it twice and your original contains no 65% conversion claim at all"
+  },
+  "quick-deque": { "hygiene": "6 bullets · unchanged · ~300 instances and 70–80% consolidation are still unconfirmed" },
+  "quick-rocket": { "hygiene": "4 bullets · unchanged · bugs −50% and sales +20% still unconfirmed · title is Software Engineer III, never \"Director\"" }
+}

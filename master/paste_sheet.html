@@ -3,46 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Master — section-by-section paste</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>master — section-by-section paste</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
 <main class="page" id="main">
 
-<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · section-by-section paste</p>
+<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · paste sheet</p>
 
 <header>
-  <p class="eyebrow">Card build · 4 sections changed of 10</p>
+  <p class="eyebrow">Card build · 4 of 10 sections changed since b023e76</p>
   <h1>Paste into the Hiration card, section by section</h1>
 </header>
 
 <div class="tldr">
-  <strong>How to use this</strong>
-  <strong>One button, one whole section, one paste.</strong> Every block below is a
-  <em>complete</em> section that replaces its counterpart in the card outright — select the section
-  in Hiration, delete it, paste. Never a fragment to merge into an existing block. Use the button and
-  not a manual selection: upGrad silently drops bold from a hand-dragged copy, and you will not see
-  it until the exported PDF. Four sections changed; the other six are included unchanged so the whole
-  card can be built without leaving this page.
+  <strong>One button, one whole section, one paste</strong>
+  Every block is a <em>complete</em> section that replaces its counterpart outright — select the
+  section in Hiration, delete it, paste. Never a fragment to merge into an existing block. Use the
+  button, not a manual selection: upGrad silently drops bold from a hand-dragged copy and you will
+  not see it until the exported PDF.
 </div>
 
-<div class="callout warn">
-  <b>Before any of this: the card must exist.</b> Clone <code>august_master_resume</code>, rename the
-  copy <code>august_ic_master_resume</code>. The base already carries all ten experience entries, the
-  five pre-2016 roles, dates, education and certifications — you are overwriting text in an existing
-  skeleton, not creating sections. Dates, Personal Information and sections 11–15 are
-  <strong>card-only</strong> and live in <a href="upgrad_resume.html">the master résumé</a>; the bot
-  never writes them.
+<div class="callout">
+  <b>Generated</b> from <code>master/upgrad_resume.html</code> by
+  <code>automation/resume.py sheet</code>. Which sections changed is derived by diffing against <code>b023e76</code>, so it cannot go stale. Do not edit this page — edit the résumé and regenerate.
 </div>
 
 <h2 class="quick-paste-title">Section by section</h2>
 
+  
+
+  <!-- ============================================================ -->
   <h3 class="section-head">1. Headline</h3>
 
   <section class="paste-block">
     <h3 class="paste-block-title"><span class="num">①</span><span class="label">Replace:</span> Headline</h3>
-    <p class="paste-block-why"><strong>Why:</strong> The old headline led with <em>multi-tenant SaaS platforms</em> and ended on a generic “production AI on AWS”. Five drafts were scored by three independent judges — a recruiter lens, a hiring-engineer lens and an honesty auditor — and all three picked this one, <strong>46, 47 and 47 out of 50</strong>. It is the only draft that puts Java in the first content slot <em>and</em> says something about the AI work that almost no other candidate can say.</p>
+    <p class="paste-block-why"><strong>Why:</strong> The old headline led with multi-tenant SaaS and ended on a generic "production AI on AWS". Five drafts were scored by three independent judges — a recruiter lens, a hiring-engineer lens, an honesty auditor — and all three picked this one, <strong>46, 47 and 47 out of 50</strong>. It is the only draft that puts Java in the first content slot <em>and</em> says something about the AI work almost no other candidate can say.</p>
     <p class="paste-block-heads-up"><strong>Heads-up:</strong> Goes in Hiration's <strong>headline</strong> field — the only field the bot ever writes. Replace the whole line.</p>
     <p class="paste-block-hygiene"><strong>Hygiene:</strong> 20 words · tagline exception applies, so SaaS and AI may stay unexpanded here · no leadership framing</p>
     <div class="paste-area copy-target" id="sec-quick-headline">
@@ -56,9 +52,9 @@
 
   <section class="paste-block">
     <h3 class="paste-block-title"><span class="num">②</span><span class="label">Replace:</span> Summary</h3>
-    <p class="paste-block-why"><strong>Why:</strong> The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the whole summary. <strong>Bold must survive</strong> — use the Copy button, not a manual selection.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> ~115 words · every acronym expanded on first use in reading order · no “currently” attached to VoltusWave, which ended Apr 2026</p>
+    <p class="paste-block-why"><strong>Why:</strong> The old summary never mentioned the Amura programme at all. This keeps the Java three-era span and the multi-tenant consolidation, then adds the ten shipped services, causal inference, leakage-safe machine learning over 9–10 years of patient history, and self-hosted models keeping patient data in the client boundary. It closes with the two figures you confirmed — <strong>25–30% infrastructure cost</strong> and <strong>deploy time from hours to under 10 minutes</strong>.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the whole summary. <strong>Bold must survive</strong> — use the Copy button, never a manual selection.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> ~115 words · every acronym expanded on first use in reading order · no "currently" attached to VoltusWave, which ended Apr 2026</p>
     <div class="paste-area copy-target" id="sec-quick-summary">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-summary" data-copy-html="1">Copy whole section →</button>
         <p>Principal-level software architect, <strong>19+ years</strong>, strongest in <strong>Java and Spring Boot</strong> — about <strong>11 years across three eras</strong>, from server-side Java in 2008 to <strong>Spring Boot 2.x on Java 8/17</strong> through February 2025. Consolidated per-customer deployments onto shared <strong>multi-tenant</strong> software as a service (SaaS) infrastructure with dedicated isolation for regulated banking customers, and moved every instance onto central single sign-on (SSO) with <strong>zero user disruption</strong>. Then shipped <strong>ten analytics and artificial intelligence (AI) services</strong> for a chronic-care platform on Amazon Web Services (AWS): causal inference and leakage-safe machine learning over <strong>9–10 years of patient history</strong>, deterministic code owning every number, and self-hosted models keeping patient data inside the client boundary. Cut infrastructure cost <strong>25–30%</strong> and deploy time from hours to <strong>under 10 minutes</strong>.</p>
@@ -70,9 +66,9 @@
 
   <section class="paste-block nochange">
     <h3 class="paste-block-title"><span class="num">③</span><span class="label">No change:</span> Skills — Technology Leadership &amp; Strategy</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Untouched. Included so you can paste it while building the card without hunting for it.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is. Nothing here was edited.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 5 lines · unchanged</p>
+    <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 5 line(s)</p>
     <div class="paste-area copy-target" id="sec-quick-skills-tls">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-skills-tls" data-copy-html="1">Copy whole section →</button>
         <p><strong>Multi-tenant architecture and tenant isolation</strong> — shared-schema design, per-tenant data separation, dedicated carve-outs for regulated customers</p>
@@ -88,9 +84,9 @@
 
   <section class="paste-block">
     <h3 class="paste-block-title"><span class="num">④</span><span class="label">Replace:</span> Skills — Engineering Excellence</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Six lines became ten. Two existing lines were <em>extended</em> rather than duplicated — the stores line gained <strong>Elasticsearch dense_vector</strong>, <strong>Redis</strong> and <strong>DuckDB and Parquet</strong>; the AWS line gained <strong>SageMaker</strong> and <strong>Neptune with Gremlin</strong>. Four are new: causal inference, leakage-safe machine learning, deterministic replayable systems, and self-hosted models in-VPC. All of it appears repeatedly in your own case studies and none of it was on the résumé — DuckDB and Parquet in 8 studies each, Redis in 7, Ollama in 6, self-hosted LangSmith in 9.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the <strong>whole</strong> block — two of the ten lines are edits to existing ones, so pasting only the four new lines would leave duplicates.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> Skills lines carry <strong>no number requirement</strong> — that rule is for experience bullets · no metric you cannot supply</p>
+    <p class="paste-block-why"><strong>Why:</strong> Six lines became ten. Two existing lines were <em>extended</em> rather than duplicated — stores gained <strong>Elasticsearch dense_vector</strong>, <strong>Redis</strong> and <strong>DuckDB and Parquet</strong>; the AWS line gained <strong>SageMaker</strong> and <strong>Neptune with Gremlin</strong>. Four are new: causal inference, leakage-safe machine learning, deterministic replayable systems, self-hosted models in-VPC. All of it appears repeatedly in your own case studies and none of it was on the résumé — DuckDB and Parquet in 8 studies each, Redis in 7, Ollama in 6, self-hosted LangSmith in 9.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replaces the <strong>whole</strong> block. Two of the ten lines are edits to existing ones, so a partial paste would leave duplicates.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 10 lines · skills lines carry <strong>no number requirement</strong> — that rule is for experience bullets</p>
     <div class="paste-area copy-target" id="sec-quick-skills-ee">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-skills-ee" data-copy-html="1">Copy whole section →</button>
         <p><strong>Java 8/17, Spring Boot 2.x</strong>, Java Server Pages (JSP) — microservices, versioned interfaces, Representational State Transfer (REST) API design</p>
@@ -111,9 +107,9 @@
 
   <section class="paste-block nochange">
     <h3 class="paste-block-title"><span class="num">⑤</span><span class="label">No change:</span> Skills — Business &amp; Delivery</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Untouched. One optional governance line was drafted for here and not applied — see the note at the end.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 lines · unchanged</p>
+    <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 line(s)</p>
     <div class="paste-area copy-target" id="sec-quick-skills-bd">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-skills-bd" data-copy-html="1">Copy whole section →</button>
         <p>Enterprise onboarding and consolidation at <strong>multi-hundred-instance scale</strong></p>
@@ -126,13 +122,13 @@
   </section>
 
   <!-- ============================================================ -->
-  <h3 class="section-head">6. VoltusWave — Principal Software Architect (Mar 2025 – Apr 2026)</h3>
+  <h3 class="section-head">6. VoltusWave — Principal Software Architect</h3>
 
   <section class="paste-block">
-    <h3 class="paste-block-title"><span class="num">⑥</span><span class="label">Replace:</span> VoltusWave — Principal Software Architect (Mar 2025 – Apr 2026)</h3>
-    <p class="paste-block-why"><strong>Why:</strong> One <strong>factual correction</strong> and four new bullets. The RAG bullet claimed the pipeline ran over an Amazon Neptune context graph; KQ1's own stack table names <strong>Elasticsearch</strong> the “Authoritative serving index — dense_vector filtered kNN” and says the graph “serves audit and drill-down only, so serving latency never depends on its tail”. KQ9 is the Neptune query — the old bullet collapsed two systems into one. The four new bullets carry the Amura work: adversarial self-review, confounder gates, the relapse model, and in-VPC self-hosting.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replace the whole role. <strong>This is now ten bullets and needs trimming to six or seven</strong> for the three-page limit — six are chat-platform work and four are Amura. Which to cut is a per-job call.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> All bullets ≤25 words · leading verbs <code>Hardened</code>, <code>Extracted</code>, <code>Sequenced</code>, <code>Secured</code> verified free across the whole résumé · <code>Engineered</code> kept on the corrected bullet, per Rule 7 · no achieved Amura metric, because none exists</p>
+    <h3 class="paste-block-title"><span class="num">⑥</span><span class="label">Replace:</span> VoltusWave — Principal Software Architect</h3>
+    <p class="paste-block-why"><strong>Why:</strong> One <strong>factual correction</strong> and four new bullets. The RAG bullet claimed the pipeline ran over an Amazon Neptune context graph; KQ1's own stack table names <strong>Elasticsearch</strong> the "Authoritative serving index — dense_vector filtered kNN" and says the graph "serves audit and drill-down only, so serving latency never depends on its tail". KQ9 is the Neptune query — the old bullet collapsed two systems into one. The four new bullets carry the Amura work: adversarial self-review, confounder gates, the relapse model, in-VPC self-hosting.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Replaces the whole role. <strong>This is ten bullets and needs trimming to six or seven</strong> for the three-page limit — six are chat-platform work, four are Amura. Which to cut is a per-job call.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> All bullets ≤25 words · <code>Hardened</code>, <code>Extracted</code>, <code>Sequenced</code>, <code>Secured</code> verified free across the whole résumé · <code>Engineered</code> kept on the corrected bullet per Rule 7 · no achieved Amura metric, because none exists</p>
     <div class="paste-area copy-target" id="sec-quick-vp">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-vp" data-copy-html="1">Copy whole section →</button>
         <p>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</p>
@@ -149,13 +145,13 @@
   </section>
 
   <!-- ============================================================ -->
-  <h3 class="section-head">7. Deque Software (Dec 2019 – Feb 2025)</h3>
+  <h3 class="section-head">7. Deque Software</h3>
 
   <section class="paste-block nochange">
-    <h3 class="paste-block-title"><span class="num">⑦</span><span class="label">No change:</span> Deque Software (Dec 2019 – Feb 2025)</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Untouched. Two claims inside it are still unconfirmed — <strong>~300 enterprise instances</strong> and <strong>70–80% consolidation</strong>.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 bullets · unchanged</p>
+    <h3 class="paste-block-title"><span class="num">⑦</span><span class="label">No change:</span> Deque Software</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 6 bullets · unchanged · ~300 instances and 70–80% consolidation are still unconfirmed</p>
     <div class="paste-area copy-target" id="sec-quick-deque">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-deque" data-copy-html="1">Copy whole section →</button>
         <p>Implemented multi-tenant isolation across <strong>approximately 300 enterprise instances</strong>, adding an organisation ID to every table and resolving tenant from the <strong>JSON Web Token (JWT)</strong></p>
@@ -168,13 +164,13 @@
   </section>
 
   <!-- ============================================================ -->
-  <h3 class="section-head">8. Rocket Software (Aug 2018 – Jul 2019)</h3>
+  <h3 class="section-head">8. Rocket Software</h3>
 
   <section class="paste-block nochange">
-    <h3 class="paste-block-title"><span class="num">⑧</span><span class="label">No change:</span> Rocket Software (Aug 2018 – Jul 2019)</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Untouched. Two metrics here are still unconfirmed — <strong>bugs −50%</strong> and <strong>sales +20%</strong>.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is. Title is <strong>Software Engineer III</strong> — never “Director”.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged</p>
+    <h3 class="paste-block-title"><span class="num">⑧</span><span class="label">No change:</span> Rocket Software</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged · bugs −50% and sales +20% still unconfirmed · title is Software Engineer III, never "Director"</p>
     <div class="paste-area copy-target" id="sec-quick-rocket">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-rocket" data-copy-html="1">Copy whole section →</button>
         <p>Anchored decomposition of <strong>IBM Db2 Configuration Manager</strong> into <strong>Java and Spring Boot</strong> microservices, defining boundaries across <strong>z/OS and Linux, UNIX and Windows</strong> platforms</p>
@@ -185,13 +181,13 @@
   </section>
 
   <!-- ============================================================ -->
-  <h3 class="section-head">9. VoltusWave — Co-Founder &amp; VP of Technology (Mar 2017 – Apr 2018)</h3>
+  <h3 class="section-head">9. VoltusWave — Co-Founder &amp; VP of Technology</h3>
 
   <section class="paste-block nochange">
-    <h3 class="paste-block-title"><span class="num">⑨</span><span class="label">No change:</span> VoltusWave — Co-Founder &amp; VP of Technology (Mar 2017 – Apr 2018)</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Untouched. Historical and unambiguous — this title stays as-is.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 3 bullets · unchanged</p>
+    <h3 class="paste-block-title"><span class="num">⑨</span><span class="label">No change:</span> VoltusWave — Co-Founder &amp; VP of Technology</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 3 line(s)</p>
     <div class="paste-area copy-target" id="sec-quick-voltuswave-cofounder">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-voltuswave-cofounder" data-copy-html="1">Copy whole section →</button>
         <p>Co-founded VoltusWave and launched its first <strong>application Platform-as-a-Service (aPaaS)</strong> product for web and Android, winning <strong>8 early enterprise clients</strong></p>
@@ -201,13 +197,13 @@
   </section>
 
   <!-- ============================================================ -->
-  <h3 class="section-head">10. Teletext India (Mar 2016 – Mar 2017)</h3>
+  <h3 class="section-head">10. Teletext India</h3>
 
   <section class="paste-block nochange">
-    <h3 class="paste-block-title"><span class="num">⑩</span><span class="label">No change:</span> Teletext India (Mar 2016 – Mar 2017)</h3>
-    <p class="paste-block-why"><strong>Why:</strong> Untouched — but the <strong>+65% hotel conversions</strong> bullet is the one unresolved claim on this résumé. Your journey document flags it twice and your original contains no 65% conversion claim at all.</p>
-    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Paste as-is <em>unless</em> you decide the 65% now. The evidenced alternative is innRoad's <strong>60–70% screen-load improvement</strong>, in your own handwriting and currently unused.</p>
-    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged · one open claim</p>
+    <h3 class="paste-block-title"><span class="num">⑩</span><span class="label">No change:</span> Teletext India</h3>
+    <p class="paste-block-why"><strong>Why:</strong> Unchanged since <code>b023e76</code>. Included so the whole card can be built from one page.</p>
+    <p class="paste-block-heads-up"><strong>Heads-up:</strong> Unchanged — paste only if you are rebuilding the card from scratch.</p>
+    <p class="paste-block-hygiene"><strong>Hygiene:</strong> 4 bullets · unchanged · <strong>the +65% hotel conversions is the one unresolved claim on this résumé</strong> — your journey document flags it twice and your original contains no 65% conversion claim at all</p>
     <div class="paste-area copy-target" id="sec-quick-teletext">
       <button type="button" class="copy-btn" data-copy-target="#sec-quick-teletext" data-copy-html="1">Copy whole section →</button>
         <p>Codified a scatter-gather integration across <strong>25 hotel suppliers</strong> on a <strong>MuleSoft enterprise service bus</strong>, succeeding where a prior <strong>.NET 2.0</strong> upgrade had failed</p>
@@ -217,27 +213,9 @@
     </div>
   </section>
 
-<h2>Considered and not applied</h2>
-<p class="dim">Deliberately given no copy button. Nothing here is a section, so pasting any of it
-by hand would mean editing into the middle of a block — which is the one thing this sheet exists to
-avoid. If you want any of it, say so and it goes into its section, and the whole section gets
-reissued as a block.</p>
-<ul class="checks">
-  <li><strong>Dates, Personal Information, and sections 11–15</strong> — card-only, hand-edited in
-  Hiration. They are in <a href="upgrad_resume.html">the master résumé</a>. The one that matters is
-  <strong>El Paso</strong>: the v1 card calls it .NET; it is a <strong>Senior Java Developer</strong>
-  role, and leaving it hides four of the eleven Java years.</li>
-  <li><strong>One optional governance line</strong> for Business &amp; Delivery, drafted and not
-  applied: <em>Analytics governance by design — small-cell suppression, pseudonymous and deliberately
-  unrankable per-clinician views, neutral output vocabulary that resists scorecard misuse.</em></li>
-  <li><strong>Two bullets drafted and not used</strong> — <code>Bridged</code> (cross-domain LangGraph
-  orchestration) and <code>Seeded</code> (byte-deterministic replay). VoltusWave is already at ten.</li>
-</ul>
-
 <footer class="signoff">
-  <p><a href="upgrad_resume.html">The master résumé</a> ·
-     <a href="CHANGES.html">What changed, and why</a> ·
-     <a href="README.md">Parser contract</a></p>
+  <p><a href="upgrad_resume.html">The résumé</a> · regenerate with
+     <code>automation/resume.py sheet</code></p>
 </footer>
 
 </main>
