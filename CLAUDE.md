@@ -284,7 +284,15 @@ versus a SOC, the security operations centre.
   Built, Spearheaded, Improved, Increased. *(Established, Launched, Designed, Reduced and
   Owned are burnt — their roots appear mid-bullet as establishing / launched / design /
   reducing / ownership.)*
-- **Fresh verbs — older roles only — still free: Translated, Calibrated. That is all.**
+- **⚠ THIS LIST WAS STALE AND IS CORRECTED 2026-08-25.** Verified directly against
+  `master/upgrad_resume.html`: **Translated, Calibrated, Replatformed, Piloted, Eliminated,
+  Bridged, Curated, Seeded and Salvaged each already lead a bullet.** All nine were documented
+  as free and none was. **Never trust this list — regenerate it from the file.**
+- **Verified free against the master, 2026-08-25:** Instrumented, Brokered, Halved, Trimmed,
+  Increased, Improved, Unified, Partitioned, Released, Staged, Wired, Sustained, Scoped,
+  Specified. *(`Built` is NOT free — `Build`-versus-buy sits mid-bullet in the skills block.
+  `Tuned` looks taken by `Neptune` but that is a substring, not a shared root.)*
+- ~~**Fresh verbs — older roles only — still free: Translated, Calibrated. That is all.**~~
   Thirteen of the original fifteen went into the master.
 - **Verified free against the master, for Rule 7 top-ups:** Instrumented, Replatformed,
   Brokered, Piloted, Eliminated, Halved, Bridged, Curated, Seeded, Salvaged, Trimmed.
