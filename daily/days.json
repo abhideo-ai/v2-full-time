@@ -1,0 +1,118 @@
+{
+  "_comment": "Source of truth for daily/index.html. Edit this, then run: automation/.venv/bin/python automation/daily.py. Newest day first. p = priority (1 critical path, 2 today but off it, 3 while you're in there). needs = task ids that must be done first; the page marks a task 'waiting' until they are. Unfinished tasks roll over automatically and are NEVER duplicated here. task/detail/why are trusted HTML and are not escaped.",
+  "days": [
+    {
+      "date": "2026-08-25",
+      "groups": [
+        {
+          "title": "Blocking — nothing exports until the card exists",
+          "kind": "blocking",
+          "why": "All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.",
+          "items": [
+            {
+              "id": "clone-card",
+              "task": "Clone <code>august_master_resume</code>, rename the copy <code>august_ic_master_resume</code>",
+              "detail": "Clone, never start from blank. The base already carries all ten experience entries — the five the bot writes plus the five pre-2016 roles — along with dates, education and certifications. Building the IC card is <em>overwriting text in an existing skeleton</em>, not creating sections.",
+              "p": 1,
+              "needs": []
+            },
+            {
+              "id": "verify-dates",
+              "task": "Verify the clone kept the dates — VoltusWave Mar 2025 → <strong>Apr 2026</strong>, Deque Dec 2019 → Feb 2025",
+              "detail": "Dates live in the card, never in the HTML — the bot overwrites bullet text only. They are correct on <code>august_master_resume</code>; check rather than assume the clone preserved them.",
+              "p": 1,
+              "needs": [
+                "clone-card"
+              ]
+            },
+            {
+              "id": "fix-el-paso",
+              "task": "Fix El Paso (paste sheet §14) — the v1 card calls it .NET; it is a <strong>Senior Java Developer</strong> role",
+              "detail": "Java Server Pages (JSP), Java Enterprise Edition (Java EE), Tennessee Gas Pipeline. Leaving it as .NET hides four of the eleven Java years — the single highest-value correction on this list.",
+              "p": 1,
+              "needs": [
+                "clone-card"
+              ]
+            },
+            {
+              "id": "paste-1-10",
+              "task": "Paste §§1–10 from the <a href=\"../master/master_paste.html\">paste sheet</a> — headline, summary, three skills blocks, five experience roles",
+              "detail": "Use the copy buttons; they carry <code>data-copy-html=\"1\"</code> so bold reaches the clipboard. Every bullet on that sheet is a standalone <code>&lt;p&gt;</code> by design — upGrad strips bold from list-rooted content, so pasting out of a list silently loses every bold fact.",
+              "p": 1,
+              "needs": [
+                "clone-card"
+              ]
+            },
+            {
+              "id": "first-export",
+              "task": "First export — smoke-test the whole chain",
+              "detail": "Run from the repo root; the persistent browser profile sits there, so the working directory matters. <code>UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py --slug master --no-pause --reset</code> — <code>--slug</code> is required, and the resolver accepts a root-level directory, so <code>master</code> resolves to <code>master/</code>, which already holds a valid <code>upgrad_resume.html</code>. It clones the IC card to <code>master_ats_resume</code> and writes <code>master/Abhisheik_Deo_Resume.pdf</code>. No job workspace needed to prove the chain works.",
+              "p": 1,
+              "needs": [
+                "paste-1-10"
+              ]
+            },
+            {
+              "id": "verify-pdf",
+              "task": "Verify the exported PDF against all six checks",
+              "detail": "Dates correct (VoltusWave ended <strong>Apr 2026</strong>) · bold renders visibly heavier · contact details and the <code>abhisheikdeo</code> slug · no <code>[fill in metric]</code> · at most 3 pages · content matches the paste sheet. Ignore the applicant tracking system (ATS) \"Resume Review\" score — it wobbles 87–99 on hygiene, not on fit.",
+              "p": 1,
+              "needs": [
+                "first-export",
+                "verify-dates",
+                "fix-el-paso",
+                "personal-info"
+              ]
+            },
+            {
+              "id": "personal-info",
+              "task": "Check the Personal Information modal — Hyderabad · phone · email · LinkedIn <strong>abhisheikdeo</strong>",
+              "detail": "The slug is <code>abhisheikdeo</code>, not <code>abhideo</code> — that is the email domain. Exact phone and email are in <a href=\"../master/master_paste.html\">§0 of the paste sheet</a>. Card-only: the bot only ever writes the headline field.",
+              "p": 2,
+              "needs": [
+                "clone-card"
+              ]
+            },
+            {
+              "id": "paste-11-15",
+              "task": "Correct the other four pre-2016 roles by hand — §11 CURA, §12 innRoad, §13 McDonald's, §15 LyntonWeb",
+              "detail": "Card-only; the bot never touches these. They exist already, carried over from v1, so the work is correcting their text in place.",
+              "p": 3,
+              "needs": [
+                "clone-card"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Parallel — does not wait on the card",
+          "kind": "parallel",
+          "why": "The card work above is all manual UI work. Sourcing is not blocked by any of it, and with nothing in the pipeline there is no backlog reason to hold off.",
+          "items": [
+            {
+              "id": "source-ic",
+              "task": "Source 2–3 IC seats — Principal / Staff / Architect / Solution Architect / Senior Engineer",
+              "detail": "Never source a leadership seat and never rank an inbound one into the apply-first queue. Verify each posting against the company's own site: postings lie about location, title, and whether the seat is even open.",
+              "p": 2,
+              "needs": []
+            },
+            {
+              "id": "paste-jds",
+              "task": "Paste each job description (JD) here — every one gets the full build",
+              "detail": "That fork is closed; there is nothing to re-ask. A leadership JD that <em>arrives</em> still gets built too — the only open question there is whether to <em>send</em> it.",
+              "p": 2,
+              "needs": []
+            }
+          ]
+        }
+      ],
+      "callouts": [
+        {
+          "kind": "",
+          "title": "Deliberately not on this list.",
+          "body": "The confirm-or-reject items — roughly 300 customers versus instances, the 70–80% consolidation, two Rocket metrics, where the +65% conversion lift attaches, the 100,000-concurrent wording, the graph neural network, the narrative guardrails, the 27 ms / P95 16 ms pairing, and the nine bullets carrying scale markers instead of digits — are standing decisions only you can settle, not day-work. They live in <a href=\"../CLAUDE.md\">CLAUDE.md</a> and none of them block today's export."
+        }
+      ]
+    }
+  ]
+}
