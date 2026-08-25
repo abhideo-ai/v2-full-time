@@ -167,8 +167,15 @@ frame PostgreSQL↔MySQL as transferable.
   booked as an unrecoverable 2.0-point floor.
   ⚠ **Scope it correctly: this is the CHAT PLATFORM, not Amura.** The Amura corpus names no
   broker at all (see the Kafka/Kinesis guardrail above). Never let HA evidence migrate across.
-  ⚠ **Open — ask him which certification** (HIPAA and ISO 27001 are both in his headline). Do not
-  guess it into a bullet.
+  ✅ **SETTLED 2026-08-25: the certification is HIPAA.** He answered directly. Name it in the
+  bullet; it no longer reads "a certification requirement". ⚠ Keep it distinct from Deque's
+  *"achieving ISO 27001"* — different employer, different certification, and a reader can merge
+  them. Be ready to say so out loud.
+  ✅ **LOAD BALANCING IS HIS — user-confirmed 2026-08-25.** He owned the load-balancing layer.
+  It is a *required* line on several JDs and previously scored zero because the re-score
+  correctly refused to infer a balancer from multi-availability-zone plus failover. Claimable
+  now. **Open: the specific shape** (Application vs Network Load Balancer, target groups, health
+  checks) — do not guess a product into a bullet; "load balancing" alone is what he confirmed.
 - **✅ TERRAFORM AND KUBERNETES WERE ADOPTED AS A COMPANY-WIDE STANDARD — user-confirmed
   2026-08-25**, not merely run by him. This is an *adoption* artefact, the same shape as bullet 8's
   Go and DynamoDB across five sub-teams, and it satisfies a "standards implemented and adopted,

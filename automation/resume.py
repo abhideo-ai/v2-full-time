@@ -84,8 +84,8 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
 
     Everything repeated 15-20 times a night belongs here, not in a human's
     hands: the directory, the résumé copy, the empty notes sidecar, a jd.md to
-    paste into, a per-workspace favicon so open tabs stay tellable apart, and
-    the launcher card so the workspace is reachable and counted.
+    paste into, a per-workspace favicon so open tabs stay tellable apart, and a
+    row in `jobs_tracker` so the seat is reachable, countable and queryable.
     """
     master = ROOT / "master" / "upgrad_resume.html"
     if not master.exists():
@@ -118,24 +118,33 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
     except Exception:                                            # noqa: BLE001
         pass
 
-    # Register on the launcher so it is reachable and counted in the tabs.
-    idx = ROOT / "index.html"
-    s = idx.read_text()
-    href = f"{rel.as_posix()}/index.html"
-    if href not in s:
-        card = (f'    <a class="card" data-status="building" href="{href}">\n'
-                f'      <strong>{title}</strong><span class="path">{rel.as_posix()}/</span></a>\n')
-        anchor = '  <div class="grid" id="app-list">\n'
-        if anchor in s:
-            idx.write_text(s.replace(anchor, anchor + card, 1))
-        else:
-            print("[resume] WARNING: could not find #app-list — add the launcher card by hand",
-                  file=sys.stderr)
+    # Register in jobs_tracker so the seat is reachable, countable and
+    # QUERYABLE. This used to append a card to index.html; the launcher now
+    # renders from the database, so writing markup here would produce a row
+    # nothing can search. A failure is a warning, never fatal — the workspace on
+    # disk is the valuable part, and `jobs_sync.py` can register it afterwards.
+    registered = False
+    try:
+        import jobs_sync
+        registered = jobs_sync.register(
+            slug,
+            company or slug,
+            role or "[role]",
+            status="resume_drafted",
+            source_url=f"(no URL supplied — workspace {rel.as_posix()})",
+        )
+    except Exception as exc:                                     # noqa: BLE001
+        print(f"[resume] WARNING: could not register {slug} in jobs_tracker ({exc})",
+              file=sys.stderr)
+        print("[resume]          fix the database, then: jobs_sync.py", file=sys.stderr)
 
     print(f"[resume] created {rel}/")
     for f in ("upgrad_resume.html", "jd.md", "paste_notes.json"):
         print(f"[resume]   {f}")
-    print(f"[resume] registered on the launcher as \"building\"")
+    if registered:
+        print('[resume] registered in jobs_tracker as "resume_drafted" — shows under "building"')
+    else:
+        print(f"[resume] {slug} was already in jobs_tracker — left as it stands")
     print(f"[resume] next: paste the JD into {rel}/jd.md, re-vector per Rule 7,")
     print(f"[resume]       then: resume.py sheet --slug {slug}")
 

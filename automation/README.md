@@ -124,6 +124,81 @@ experience-bullet bold renders heavier** (the verify stage only checks that text
 is present, not that bold survived). If bold is flat, re-run with
 `--bullets-as-paragraphs` (loses the bullet glyph, preserves bold).
 
+## The launcher reads PostgreSQL (`jobs_db.py` · `jobs_sync.py`)
+
+The workspace launcher (`index.html`) used to carry its application cards as
+hand-written markup, appended by `resume.py new`. That is why the page showed
+**four** rows while `jobs_tracker` held **ninety-two**. The database is the
+search layer; directories are storage, not an index — so the page renders from
+the database instead.
+
+```
+automation/.venv/bin/python automation/serve.py       # GET /api/jobs
+automation/.venv/bin/python automation/jobs_db.py     # per-tab counts, on the CLI
+automation/.venv/bin/python automation/jobs_sync.py   # seed + refresh scores
+automation/.venv/bin/python automation/jobs_sync.py --scores --dry-run
+```
+
+- **`jobs_db.py`** — read-only queries against `jobs_tracker`
+  (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker`). Sibling of `db.py`, which
+  owns `v2_daily`; the two never share a connection. Nothing here writes, so the
+  module `serve.py` imports cannot mutate v1's record.
+- **`jobs_sync.py`** — the write side, deliberately in its own file. `seed`
+  registers the seats that existed only as directories (ON CONFLICT DO NOTHING,
+  so a re-run never overwrites a status changed since); `scores` re-reads every
+  workspace's `score.json` and refreshes `fit_score` / `fit_breakdown` from its
+  `weighted_total`. **Scores are never hardcoded** — three of the four moved on
+  2026-08-25 alone — so re-run this whenever a rubric is re-adjudicated.
+- **`serve.py`** — `GET /api/jobs` returns `{store, counts, applications}`.
+  Same error handling as the daily endpoints: **503 when the database is
+  unreachable**, and the launcher then says the list is unavailable rather than
+  rendering an empty grid, which would read as "no applications".
+- **`static/apps.js`** renders the rows; **`static/tabs.js`** keeps the tab
+  contract (pills carry `data-tab`, rows carry `data-status`) and now also owns
+  the search box, so tab and search compose instead of fighting over `hidden`.
+- **`resume.py new`** registers the seat in `jobs_tracker` as `resume_drafted`.
+  It no longer writes markup into `index.html`. **Never hand-write a card
+  there** — a row added by hand is a row no query can see.
+
+⛔ `applications.salary` is never selected, returned or rendered. Compensation
+is deferred by user directive.
+
+### Status → launcher tab
+
+Eleven `application_status` values, nine tabs. Every row lands in exactly one
+tab; `tab_for()` raises `UnknownStatus` on anything unmapped rather than
+dropping a row, and `counts()` asserts the tabs total the row count.
+
+| status | tab | why |
+|---|---|---|
+| `new` | **parked** | Scraped, never triaged: no score, no decision, no workspace. Not `building` (nothing is being built), not `closed` (nothing was decided). `parked` is "set aside, can come back". |
+| `recommended_apply` | **building** | The decision to pursue is made; the workspace is the next step. |
+| `recommended_skip` | **closed** | **The deliberate one — 49 rows.** Scored and adjudicated out before any build, each with its `rec_reasoning`. In `parked` they would bury the few builds he actually paused; in `building`/`ready` they would corrupt the ready-and-unsent count, which is the backlog gate v2 is organised around. `closed` is the archive: decided, not pursued. |
+| `resume_drafted` | **building** | Workspace under way. |
+| `resume_finalized` | **ready** | Exported and unsent — the backlog gate. |
+| `applied` | **sent** | |
+| `heard_back` | **responded** | |
+| `interviewing` | **interviewing** | |
+| `offer` | **interviewing** | There is no offer tab. An offer is the furthest-along *live* process, so it sits with the other live one rather than in `responded`, which reads as "they replied". |
+| `rejected` | **not-selected** | |
+| `withdrawn` | **closed** | He pulled out. Terminal, and deliberately not a rejection. |
+
+### The two scores
+
+`applications` predates CLAUDE.md's two-score model and carries one composite
+`fit_score`, so both numbers are read out of `fit_breakdown`:
+
+- **v2 seats** — `jobs_sync.py` writes `{"rubric": "v2-weighted", "technical": N}`
+  straight from the workspace's `score.json` `weighted_total`. No non-technical
+  number is computed in v2, so it renders `—`. Nothing is invented to fill it.
+- **v1 seats** — the five-axis breakdown splits along the same line, so this is
+  a rescale of v1's own axes, not a new judgement:
+  `technical = hard_reqs / 40`, `non-technical = (level + domain + location +
+  freshness) / 55`, both to `/100`.
+
+**The two are not comparable** — different rubrics — which is why every row also
+carries `rubric` and the page says so under the search box.
+
 ## Other scripts in this directory
 
 - **`html_to_pdf.py`** — standalone renderer, unrelated to upGrad: turns any

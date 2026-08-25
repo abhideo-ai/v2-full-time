@@ -35,19 +35,22 @@
     <a class="pill fact"   href="#" data-tab="closed">closed <strong class="n">0</strong></a>
     <a class="pill red"    href="#" data-tab="not-selected">not selected <strong class="n">0</strong></a>
   </div>
-  <div class="grid" id="app-list">
-    <a class="card" data-status="building" href="August-2026/25/wipro-principal-software-architect/index.html">
-      <strong>Wipro — Principal Software Architect</strong><span class="path">August-2026/25/wipro-principal-software-architect/</span></a>
-    <a class="card" data-status="building" href="August-2026/25/o9-senior-architect-agentic/index.html">
-      <strong>o9 Solutions (via Recruit Right) — Senior Architect — Software & Agentic Engineering</strong><span class="path">August-2026/25/o9-senior-architect-agentic/</span></a>
-    <a class="card" data-status="building" href="August-2026/25/principal-architect-ai-native/index.html">
-      <strong>Foreign MNC (via Axihire) — Principal / Chief Architect — AI-Native & Agentic Systems</strong><span class="path">August-2026/25/principal-architect-ai-native/</span></a>
-    <a class="card" data-status="building" href="August-2026/25/yes-madam-lead-architect/index.html">
-      <strong>Yes Madam — Lead Architect</strong><span class="path">August-2026/25/yes-madam-lead-architect/</span></a>
-    <!-- <a class="card" data-status="ready" href="August-2026/25/<slug>/index.html">
-           <strong>Company — Role</strong><span class="path">August-2026/25/&lt;slug&gt;/</span></a> -->
-  </div>
-  <p id="tab-empty">No applications yet.</p>
+  <input id="app-search" class="app-search" type="search"
+         placeholder="Search company or role…" aria-label="Search company or role"
+         autocomplete="off" />
+  <p class="app-legend">
+    <strong>Technical</strong> is the score that matters — target 95+.
+    <strong>Non-technical</strong> is informational and never a gate.
+    The two rubrics behind them are not comparable: seats scored in v2 carry a
+    weighted-rubric total, seats carried over from v1 are rescaled from their
+    five-axis breakdown, and an unscored seat reads &ldquo;—&rdquo;.
+  </p>
+  <!-- Rows are rendered from the jobs_tracker database by static/apps.js.
+       Never hand-write a card here: the database is the search layer, and a row
+       added by hand is a row `./todo`, the tabs and every query cannot see. -->
+  <p id="app-status" class="app-status">Loading applications…</p>
+  <div class="grid" id="app-list"></div>
+  <p id="tab-empty" hidden>No applications match.</p>
 </section>
 
 <section>
@@ -81,5 +84,6 @@
 
 </main>
 <script src="static/tabs.js" defer></script>
+<script src="static/apps.js" defer></script>
 </body>
 </html>

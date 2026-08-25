@@ -3310,3 +3310,89 @@ section.pasted .paste-area { border-color: var(--good); }
 }
 .copy-btn.wide:hover { background: var(--ink); border-color: var(--ink); }
 .copy-btn.wide.copied { background: var(--good); border-color: var(--good); }
+
+/* ============================================================
+   Launcher — the Applications list (index.html)
+   ------------------------------------------------------------
+   Rendered from the jobs_tracker database by static/apps.js, so
+   these classes are applied in JS and appear nowhere in markup.
+   ============================================================ */
+
+.app-search {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 0 10px;
+  padding: 7px 11px;
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.app-search:focus { outline: none; border-color: var(--accent); }
+.app-search::placeholder { color: var(--muted); }
+
+.app-legend {
+  margin: 0 0 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+.app-status { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+.app-status.bad {
+  color: var(--bad);
+  background: var(--bad-soft);
+  border: 1px solid var(--bad);
+  border-radius: 6px;
+  padding: 10px 12px;
+  max-width: 68ch;
+}
+
+.card.app strong { font-size: 15px; margin-bottom: 8px; }
+.card.app .path { margin-top: 8px; }
+
+.app-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+.app-meta > span {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+/* Technical carries the accent because it is the score that matters;
+   non-technical is deliberately quiet — informational, never a gate. */
+.app-score.tech {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+.app-score.func {
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  color: var(--muted);
+}
+.app-stat {
+  background: var(--paper-3);
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+}
+.app-loc {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-family: var(--serif);
+  font-size: 12px;
+  white-space: normal;
+}
