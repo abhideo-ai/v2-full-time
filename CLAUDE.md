@@ -165,6 +165,25 @@ them for you.
 ⚠ These are **confirm-or-reject** items, not fabrications to scrub. Several already sit on the
 master PDF and have gone out in submitted applications.
 
+**Do NOT retroactively remove a claim that has already gone out.** Reaffirmed by him 2026-08-25.
+Removing it does not unsend it — it only creates a gap between the version a recruiter holds and
+the version they would see next, which is worse than the original ambiguity. The work is being
+**ready to answer for it in a room**, not editing the file. Surface it in prep; leave the résumé
+wording alone.
+
+**The one exception — UNVERIFIED is not the same as FALSE.**
+
+- **Unverified** — absent from the record, but he may well remember it. The +65%, the Rocket
+  metrics, ~300 instances, 70–80%. These **stay** on the résumé. Flag them for prep, never scrub.
+- **False** — contradicted by a source we hold. These come off regardless of whether they have
+  been submitted, because the contradiction is what an interviewer will find. The RAG bullet
+  claiming retrieval ran over an Amazon Neptune context graph was this: KQ1's own stack table
+  names Elasticsearch the authoritative serving index and puts Neptune deliberately off the
+  serving path. That was corrected on 2026-08-25 — the only such correction to date.
+
+Before proposing any removal, say which of the two it is. If you cannot, it is unverified, and it
+stays.
+
 **Client names stay off written artefacts.** Spoken, the regulated-bank customers are
 load-bearing evidence for the isolation work — do not strip them from spoken prep.
 
