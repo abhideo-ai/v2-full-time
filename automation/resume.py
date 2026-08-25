@@ -79,20 +79,57 @@ def committed(path: Path, ref: str = "HEAD") -> str | None:
     return r.stdout if r.returncode == 0 else None
 
 
-def cmd_new(slug: str) -> None:
+def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> None:
+    """Scaffold a full job workspace, résumé seeded from the master.
+
+    Everything repeated 15-20 times a night belongs here, not in a human's
+    hands: the directory, the résumé copy, the empty notes sidecar, a jd.md to
+    paste into, a per-workspace favicon so open tabs stay tellable apart, and
+    the launcher card so the workspace is reachable and counted.
+    """
     master = ROOT / "master" / "upgrad_resume.html"
     if not master.exists():
         raise SystemExit(f"[resume] no master at {master}")
     today = date.today()
-    dest_dir = ROOT / today.strftime("%B-%Y") / today.strftime("%d") / slug
-    dest = dest_dir / "upgrad_resume.html"
-    if dest.exists():
-        raise SystemExit(f"[resume] {dest.relative_to(ROOT)} already exists — refusing to overwrite")
+    rel = Path(today.strftime("%B-%Y")) / today.strftime("%d") / slug
+    dest_dir = ROOT / rel
+    if (dest_dir / "upgrad_resume.html").exists():
+        raise SystemExit(f"[resume] {rel}/upgrad_resume.html exists — refusing to overwrite")
     dest_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy(master, dest)
+
+    shutil.copy(master, dest_dir / "upgrad_resume.html")
     (dest_dir / "paste_notes.json").write_text("{}\n")
-    print(f"[resume] created {dest.relative_to(ROOT)}")
-    print(f"[resume] re-vector it per Rule 7, then: resume.py sheet --slug {slug}")
+    title = f"{company} — {role}" if company and role else slug
+    (dest_dir / "jd.md").write_text(
+        f"# {title}\n\n<!-- Paste the job description here verbatim. URL, location, comp if stated. -->\n")
+
+    # Per-workspace favicon: 15-20 open tabs are indistinguishable otherwise.
+    try:
+        subprocess.run([sys.executable, str(ROOT / "automation" / "workspace_favicon.py"),
+                        "--slug", slug], cwd=ROOT, capture_output=True, check=False)
+    except Exception:                                            # noqa: BLE001
+        pass
+
+    # Register on the launcher so it is reachable and counted in the tabs.
+    idx = ROOT / "index.html"
+    s = idx.read_text()
+    href = f"{rel.as_posix()}/index.html"
+    if href not in s:
+        card = (f'    <a class="card" data-status="building" href="{href}">\n'
+                f'      <strong>{title}</strong><span class="path">{rel.as_posix()}/</span></a>\n')
+        anchor = '  <div class="grid" id="app-list">\n'
+        if anchor in s:
+            idx.write_text(s.replace(anchor, anchor + card, 1))
+        else:
+            print("[resume] WARNING: could not find #app-list — add the launcher card by hand",
+                  file=sys.stderr)
+
+    print(f"[resume] created {rel}/")
+    for f in ("upgrad_resume.html", "jd.md", "paste_notes.json"):
+        print(f"[resume]   {f}")
+    print(f"[resume] registered on the launcher as \"building\"")
+    print(f"[resume] next: paste the JD into {rel}/jd.md, re-vector per Rule 7,")
+    print(f"[resume]       then: resume.py sheet --slug {slug}")
 
 
 def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
@@ -205,11 +242,13 @@ def main() -> None:
     ap.add_argument("command", choices=["new", "sheet"])
     ap.add_argument("--slug", default=None)
     ap.add_argument("--since", default="HEAD", help="git ref to diff against (default HEAD)")
+    ap.add_argument("--company", default=None)
+    ap.add_argument("--role", default=None)
     a = ap.parse_args()
     if a.command == "new":
         if not a.slug:
             raise SystemExit("[resume] new needs --slug")
-        cmd_new(a.slug)
+        cmd_new(a.slug, a.company, a.role)
     else:
         cmd_sheet(a.slug, a.since)
 

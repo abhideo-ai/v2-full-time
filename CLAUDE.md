@@ -326,6 +326,26 @@ automation/.venv/bin/python automation/daily.py     # regenerate the page from d
   inventing one. That refusal is deliberate: an agent has to come back and ask.
 - Tests: `bash automation/tests/run.sh` (the page suite needs `npm install jsdom`).
 
+### Making a résumé, and its paste sheet
+
+```
+automation/.venv/bin/python automation/resume.py new   --slug <slug> [--company X --role Y]
+automation/.venv/bin/python automation/resume.py sheet [--slug <slug>] [--since <git-ref>]
+```
+
+- **`new`** scaffolds a whole job workspace: the dated directory, `upgrad_resume.html` copied
+  from the master, an empty `paste_notes.json`, a `jd.md` to paste into, a per-workspace favicon,
+  and the launcher card registered as `building`. Everything repeated 15–20 times a night.
+- **`sheet`** emits `<workspace>/paste_sheet.html` — every section as ONE copy block, generated
+  **from** the résumé so it cannot disagree with what the bot writes. Which sections changed is
+  derived by diffing against git; `--since <ref>` is needed when the change is already committed,
+  because diffing a committed file against HEAD correctly reports nothing changed.
+- The *reason* a section changed cannot be derived — it comes from `paste_notes.json`
+  (`{"quick-summary": {"why": …, "heads_up": …, "hygiene": …}}`). A changed section with no note
+  says so rather than inventing one.
+- `automation/add_breadcrumbs.py` and `automation/expand_acronyms.py` — both idempotent, both
+  safe to re-run when new pages land.
+
 ### Case studies — VoltusWave · Amura
 
 `killer-query-case-studies/` is **v1**, complete and committed (46227bd). Ten killer-query case
@@ -583,42 +603,65 @@ recording failed.
 
 ---
 
-## Status — 2026-08-25
+## Status — 2026-08-25, end of session
 
-**Built:**
+**The master résumé is written.** `master/upgrad_resume.html` — one file, ten parsed sections
+plus the card-only material, verified against the real parser, **27 experience bullets with 27
+unique leading verbs**. New headline and summary carrying the Amura work, four new Engineering
+Excellence lines, four new VoltusWave bullets, and the Neptune→Elasticsearch correction.
 
-- `master/upgrad_resume.html` — the ten parsed sections, verified against the real parser, no
-  silent skips. 23 leading verbs, all unique.
-- **One master file.** `master/upgrad_resume.html` carries Personal Information, the dates table,
-  the ten parsed sections and the five card-only pre-2016 roles. `master_paste.html` and
-  `upgrad_resume.template.html` were folded into it on 2026-08-25.
-- Root `index.html` — minimal launcher with status tabs (`static/tabs.js`). A workspace joins
-  by adding one `<a class="card" data-status="…">` to `#app-list`; counts are computed.
-- `automation/workspace_favicon.py` — per-workspace favicon so open tabs stay tellable apart.
-- **The daily log** — `daily/index.html` generated from `daily/days.json`, state in PostgreSQL
-  (`v2_daily`), `automation/serve.py` in place of `http.server`, and `./todo` on the command
-  line. Priorities, dependencies, automatic rollover, and move-out (park / push / drop) that
-  always records at least one reason. See *Layout & automation → The daily log*.
+**⚠ His live Hiration card is still the v1 LEADERSHIP résumé and must be rebuilt.** It says
+*"Engineering Leader"* in the headline and *"Engineering Manager"* in the summary, carries
+**no Java anywhere**, asserts *"Neptune + GNN"* and *"GNN models in production"*, claims ISO 27001,
+and opens with the typo *"ands-on"*. None of that is in the master here. Rebuilding the card from
+`master/paste_sheet.html` is the next physical step, and it is his hand-work.
 
-**Not built yet:**
+**Built this session:**
 
-- **The Hiration card itself.** Nothing has ever been exported, so the chain is unproven end
-  to end. Clone `august_master_resume`, rename, overwrite from the paste sheet.
-- Per-workspace launcher pages, and any job workspaces.
+- **The daily log** — `daily/index.html` from `daily/days.json`, state in PostgreSQL (`v2_daily`),
+  `automation/serve.py` replacing `http.server`, `./todo` on the command line. Priorities,
+  dependencies, rollover, move-out with reasons and revivability. 36 + 50 test assertions.
+- **`automation/resume.py`** — `new` scaffolds a job workspace, `sheet` generates the paste sheet.
+- **The case studies** — `killer-query-case-studies/` (v1, all shipped), a `summary.html` with the
+  concept glossary, and ten per-query interview-prep pages under `prep/`.
+- **One master file** — `master_paste.html` and `upgrad_resume.template.html` folded in; the parser
+  now reads `<p>` bullets as well as `<ul><li>`, which is what made that possible.
 
-**The next real step is his, not ours:** build the card, then a first export and PDF verify.
+**The plan he set for tonight (25 Aug, from ~19:20, running into the morning):**
+build the Hiration card, export and verify the master PDF, then **15–20 job workspaces**. He pastes
+the JDs; we build. The bot exports serially on one shared browser, and he has accepted that queue.
 
-**Blocking or open:**
+**Decided this session — all recorded in the sections above:**
 
-- **The card name is not finalised.** `august_ic_master_resume` is the default in three files;
-  until a card exists under that exact name every export fails loudly (which is intended).
-- **El Paso is the one section that must change.** The v1 card calls it .NET; it is a Java
-  role, and leaving it hides four of the eleven Java years.
-- **Nine bullets carry scale markers, not digits** — the Deque service count, how many
-  products inherited the VoltusWave roadmap, the McDonald's store count. He supplies these.
-- **Confirm-or-reject, his call alone:** ~300 customers vs instances; the 70–80%
-  consolidation; two Rocket metrics (bugs −50%, sales +20%); where the +65% conversion lift
-  attaches; 8% month-over-month sustained or one-time; the 100,000-concurrent wording,
-  currently written as burst testing.
-- **Deliberately not claimed** until he settles them: the graph neural network, the large
-  language model narrative guardrails, the 27 ms / P95 16 ms pairing.
+- Workflows and subagents do the work, including résumé creation and JD scoring, with a mandatory
+  adversarial verify pass. Technical score is the one that matters, target 95+, never fabricate.
+- He pastes JDs; **we do not source seats**, and we do not re-rank or recommend an order unasked.
+- A copy block is **one whole section that replaces its counterpart**, never a fragment.
+- **Redis is claimable.** Everything in the v1 case studies **shipped**. There are **no Amura
+  outcome metrics** — scale and design markers only. The **25–30% infrastructure cost** and
+  **hours → under 10 minutes** deploy time are **user-confirmed**; do not re-flag them.
+- v2 of the case studies lands beside v1, never over it — but **do not wait for it**.
+
+**Open — his call alone, nothing here is ours to settle:**
+
+- **The +65% hotel conversions**, live on the résumé. The journey doc flags it twice as unresolved
+  and his original has no 65% conversion claim at all. The evidenced alternative sits unused:
+  *"screens lading time was improved by 60-70%"* at innRoad, in his own handwriting.
+- **VoltusWave carries 10 bullets** — six chat-platform, four Amura — and will not fit three pages.
+  Trimming is per-job, not a master edit.
+- **The graph neural network.** Zero occurrences of "graph neural network" or "GNN" across all 22
+  case-study files; KQ4's ladder is logistic → PrefixSpan → Transformer. Deliberately absent from
+  this master, still on his live card. It attaches to the Context Graph, which those ten do not
+  document, so absence there is not absence in production.
+- **ISO 27001** — on his live card, nowhere in his source documents.
+- **Confirm-or-reject:** ~300 customers vs instances; the 70–80% consolidation; two Rocket metrics
+  (bugs −50%, sales +20%); 8% month-over-month sustained or one-time; the 100,000-concurrent
+  wording, currently written as burst testing.
+- **The large language model narrative guardrails.** Split, not yes-or-no: KQ1's claim grammar is
+  live inside its retrieval service, but KQ9's shared contract is unsigned and its narrator ships
+  **off by default**. A bullet claiming KQ9 must carry KQ9's hedge.
+- **El Paso on the card** — the v1 card calls it .NET; it is a Senior Java Developer role, and
+  leaving it hides four of the eleven Java years.
+- **The journey document now lags the master** on the entire Amura programme, and it is meant to
+  lead. Folding that material back in is `journey-doc`, P1 on `./todo`, and he has said it is the
+  task that matters most to him.
