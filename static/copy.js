@@ -36,7 +36,13 @@ document.addEventListener("click", async (e) => {
   // transform was itself the cause of bold loss on paste into upGrad. v2's
   // known-good path is a manual browser copy that keeps <strong> untouched.
   // Google Docs / Word / Notion / LinkedIn all honor <strong> fine too.
-  const html = `<div>${clone.innerHTML.trim()}</div>`;
+  // Collapse whitespace BETWEEN tags. The exporter sends
+  // "<ul><li>a</li><li>b</li></ul>" with no gaps and Draft.js keeps the bold;
+  // the paste sheet is pretty-printed, so the clipboard carried whitespace text
+  // nodes between <ul> and <li>. Paste sanitisers mishandle those, and it is
+  // the one structural difference between the path that works and the one that
+  // loses formatting. Whitespace INSIDE a tag's text is untouched.
+  const html = `<div>${clone.innerHTML.replace(/>\s+</g, "><").trim()}</div>`;
   // LinkedIn (and any plain-text target) strips HTML on paste, so the
   // text/plain alternate is what actually lands there. Inject "• " before
   // each <li> and a newline after, plus a blank line after each <p>, so

@@ -20,12 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.title = n ? `${n}/${boxes.length} · ${BASE}` : BASE;
   };
 
+  // The checkbox sits in div.ps-head, which is a SIBLING of the <section> it
+  // labels — not inside it. closest("section") therefore returned null and
+  // threw on load, which silently killed every checkbox on the page.
+  const sectionFor = b => {
+    const head = b.closest(".ps-head");
+    return head ? head.nextElementSibling : b.closest("section");
+  };
+
   boxes.forEach(b => {
+    const sec = sectionFor(b);
     b.checked = done[b.dataset.sec] === true;
-    b.closest("section").classList.toggle("pasted", b.checked);
+    if (sec) sec.classList.toggle("pasted", b.checked);
     b.addEventListener("change", () => {
       done[b.dataset.sec] = b.checked;
-      b.closest("section").classList.toggle("pasted", b.checked);
+      if (sec) sec.classList.toggle("pasted", b.checked);
       save(); tally();
     });
   });
