@@ -707,6 +707,18 @@ recording failed.
 
 ---
 
+## Session handoff — `RESUME_SESSION.md`
+
+**Read `RESUME_SESSION.md` first at the start of every session.** It carries what was in flight when
+the last context was cleared and the single next action.
+
+**Rewrite it whenever the context is about to be cleared, and whenever the picture changes
+materially.** It is a living file, not a log — it describes the CURRENT state and the NEXT action.
+Overwrite it wholesale; git carries the history. Keep it readable in a minute.
+
+`PENDING.md` sits alongside it for run IDs and analysis that outlives one session. This Status
+section stays the durable record; `RESUME_SESSION.md` is the "where were we".
+
 ## Status — 2026-08-25, ~21:50
 
 **THE MASTER PDF IS EXPORTED AND VERIFIED.** `master/Abhisheik_Deo_Resume.pdf` — 3 pages,
