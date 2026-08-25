@@ -59,6 +59,19 @@ document.addEventListener("click", async (e) => {
   // error to notice. Bold loss does not surface until the exported PDF.
   const wantsRich = btn.dataset.copyHtml === "1";
 
+  // ---- diagnostics. Filter the console on "[copy]" to see only these. ----
+  const strongCount = (html.match(/<strong>/g) || []).length;
+  console.group(`[copy] ${btn.dataset.copyTarget || "(ancestor .copy-target)"}`);
+  console.log("[copy] target found      :", !!target, target && target.id);
+  console.log("[copy] data-copy-html    :", btn.dataset.copyHtml, "-> wantsRich:", wantsRich);
+  console.log("[copy] <strong> in HTML  :", strongCount, strongCount ? "OK" : "*** NONE — nothing to lose ***");
+  console.log("[copy] <li> in HTML      :", (html.match(/<li>/g) || []).length);
+  console.log("[copy] ClipboardItem     :", typeof ClipboardItem !== "undefined" ? "present" : "*** ABSENT ***");
+  console.log("[copy] clipboard.write   :", !!(navigator.clipboard && navigator.clipboard.write));
+  console.log("[copy] isSecureContext   :", window.isSecureContext);
+  console.log("[copy] execCommand avail :", typeof document.execCommand === "function");
+  console.log("[copy] HTML to clipboard :", html.slice(0, 300) + (html.length > 300 ? " …" : ""));
+
   // Select real DOM and let the browser put rich text on the clipboard itself.
   // Works everywhere execCommand does, which is everywhere.
   const richCopyViaSelection = () => {
@@ -75,8 +88,12 @@ document.addEventListener("click", async (e) => {
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
+    const sel2 = window.getSelection();
+    console.log("[copy]   selection range :", sel2.rangeCount,
+                "| selected chars:", (sel2.toString() || "").length);
     let ok = false;
-    try { ok = document.execCommand("copy"); } catch { ok = false; }
+    try { ok = document.execCommand("copy"); }
+    catch (e) { ok = false; console.error("[copy]   execCommand threw:", e); }
     sel.removeAllRanges();
     holder.remove();
     return ok;
@@ -90,12 +107,19 @@ document.addEventListener("click", async (e) => {
         "text/plain": new Blob([text], { type: "text/plain" }),
       })]);
       done = true;
+      console.log("[copy] PATH TAKEN        : 1 — ClipboardItem (rich, bold preserved)");
     }
-    if (!done && wantsRich) done = richCopyViaSelection();
+    if (!done && wantsRich) {
+      done = richCopyViaSelection();
+      console.log("[copy] PATH TAKEN        : 2 — execCommand selection ->",
+                  done ? "OK (rich, bold preserved)" : "*** FAILED ***");
+    }
     if (!done) {
       // Plain text is the last resort and LOSES BOLD, so say so rather than
       // reporting success and letting it surface in the PDF.
       await navigator.clipboard.writeText(text);
+      console.warn("[copy] PATH TAKEN        : 3 — writeText (PLAIN TEXT, BOLD LOST)");
+      console.groupEnd();
       btn.classList.add("copied");
       btn.textContent = "Copied (plain text — bold lost)";
       return;
@@ -104,11 +128,14 @@ document.addEventListener("click", async (e) => {
     // you've pasted while working top-to-bottom. Re-clicking re-copies and
     // keeps it marked. .copied class drives the green in style.css; the
     // data-copied attribute keeps the older inline-CSS pages (ANSR) working.
+    console.log("[copy] RESULT            : copied");
+    console.groupEnd();
     btn.classList.add("copied");
     btn.dataset.copied = "1";
     btn.textContent = "Copied";
   } catch (err) {
-    console.error("clipboard write failed:", err);
+    console.error("[copy] RESULT            : FAILED", err);
+    console.groupEnd();
     btn.textContent = "Copy failed";
   }
 });
