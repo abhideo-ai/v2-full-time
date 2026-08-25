@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VoltusWave + Deque merge proposal</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../index.html">Full-time JD workspace</a> · master · merge proposal</p>
+
+<header>
+  <p class="eyebrow">Staged, not landed · <code>master/upgrad_resume.html</code> was not touched</p>
+  <h1>VoltusWave + Deque — merged superset blocks</h1>
+</header>
+
+<div class="tldr">
+  <strong>What this is.</strong> Three sources reconciled into two whole sections:
+  the <strong>17 VoltusWave bullets</strong> on <code>august_master_resume</code>
+  (<code>PR-child-0</code>), the <strong>10</strong> currently in
+  <code>master/upgrad_resume.html</code> (<code>#quick-vp</code>), and the
+  <strong>14 Deque bullets</strong> on the card (<code>PR-child-1</code>) against the
+  <strong>6</strong> in <code>#quick-deque</code>. Overlapping pairs were merged, not
+  concatenated. <strong>Result: 24 VoltusWave bullets and 11 Deque bullets.</strong>
+  Every one satisfies the hygiene rules — 25 words or fewer, unique leading verb across all ten
+  roles, at least one number or scale marker, at least one bolded fact, no trailing period,
+  acronyms expanded on first use.
+</div>
+
+<div class="warn">
+  <strong>Read this before pasting anything.</strong>
+  <p>This is a <strong>superset for selection</strong>, not a drop-in replacement. The master is
+  three pages at <strong>39 bullets total</strong>. These two blocks alone carry
+  <strong>35</strong>, against the <strong>16</strong> those two roles carry today — so landing
+  both whole takes the résumé to roughly <strong>58 bullets</strong> and it will not hold three
+  pages. Pick per job, or land a subset.</p>
+  <p><strong>Two bullets ship in two variants</strong> — see <a href="#variants">The two
+  variants</a>. That is why the VoltusWave section appears as two complete blocks rather than
+  one. They are identical except for those two lines.</p>
+  <p><strong>Nothing here has been written to the master or to any Hiration card.</strong>
+  <code>master/upgrad_resume.html</code> is unchanged. You land it.</p>
+</div>
+
+<!-- ================================================================= -->
+<h2>VoltusWave — Principal Software Architect (Mar 2025 – Apr 2026)</h2>
+
+<h3>Notes — what merged into what</h3>
+<p class="meta">C = the 17 card bullets on <code>august_master_resume</code>.
+V = the 10 in <code>master/upgrad_resume.html</code>. Numbering follows each source's own order.</p>
+
+<table>
+<tr><th>Merged bullet</th><th>From</th><th>Which source won, and why</th></tr>
+
+<tr><td>1. Kinesis two-stream Enhanced Fan-Out</td><td>V1 + C4</td>
+<td><strong>V won.</strong> Both describe the same design at the same numbers (4 → 1,200 shards).
+V expands Enhanced Fan-Out in prose and names the purpose — absorbing traffic spikes — where C4
+compresses it to a parenthetical. C4's <em>ECS Fargate at 70% Spot</em> was not folded in here: it
+already appears in bullet 23, and stating it twice is duplication, not evidence.</td></tr>
+
+<tr><td>2. Node.js → Go port</td><td>C6</td>
+<td><strong>C only.</strong> The rewrite <em>decision</em> is absent from the master — V2 states the
+result without the migration that produced it. Kept as its own bullet.
+Wording changed from C6's "rewrite" to "port" because <code>Rewrote</code> leads a CURA bullet, and
+from "100K-scale" to "100,000-connection" because <code>Scaled</code> leads bullet 3.</td></tr>
+
+<tr><td>3. Go chat service at 100,000 concurrent</td><td>V2 + C5</td>
+<td><strong>V won on framing, C contributed k6.</strong> V's "burst testing" is the honest
+description and it is already the live wording; C5's <em>"from 500 to 100,000 concurrent users"</em>
+is on your confirm-or-reject list as overstating that burst test, so it is not applied here — see
+<a href="#not-applied">Considered and not applied</a>. <strong>k6-validated</strong> is a tool fact
+with no metric risk and it is in.</td></tr>
+
+<tr><td>4. DynamoDB / PostgreSQL / OpenSearch data layer</td><td>C7</td>
+<td><strong>C only.</strong> Nothing in the master covers the persistence design or the P95 under
+30 ms at 100,000-user load. "Data architecture" became "data layer" — <code>Architected</code>
+leads bullet 1.</td></tr>
+
+<tr><td>5. Datadog observability</td><td>V3</td><td><strong>V only.</strong> No card counterpart. Verbatim.</td></tr>
+
+<tr><td>6. Patient onboarding, 10,000+ patients</td><td>V4</td><td><strong>V only.</strong> No card counterpart. Verbatim.</td></tr>
+
+<tr><td>7. RAG on Elasticsearch dense_vector</td><td>V5</td>
+<td><strong>V only, verbatim, and deliberately so.</strong> This bullet carries the
+Neptune→Elasticsearch correction — Neptune stays off the serving path. It is the one place the
+résumé states that, and it must not drift.</td></tr>
+
+<tr><td>8. Precedent retrieval + SageMaker embedders</td><td>C16</td>
+<td><strong>C only — and this is one of the two variant bullets.</strong> Distinct from bullet 7:
+that one is the RAG pipeline's shape, this one is retrieval performance and the self-hosted
+embedders. Both name Elasticsearch dense-vector; that is the same index doing two jobs, not a
+duplicate claim.</td></tr>
+
+<tr><td>9. Context Graph on Neptune with GNN</td><td>C2</td>
+<td><strong>C only.</strong> The graph neural network is settled and sits in word-position four of
+the headline, yet no experience bullet backs it. This is that bullet. C2's trailing
+<em>"large language model clinical workflows"</em> was dropped — bullet 14 carries the LLM work
+concretely.
+<strong>Not a contradiction with bullet 7:</strong> Neptune holds the Context Graph and is off the
+<em>retrieval serving</em> path. Worth being able to say that out loud.</td></tr>
+
+<tr><td>10. 10-query platform, 4 archetypes</td><td>C12</td>
+<td><strong>C only.</strong> The four named archetypes are the clearest single statement of the
+programme's shape. <code>Launched</code> is burnt (<em>launched</em> sits mid-bullet in the
+co-founder block), so the verb changed to <strong>Assembled</strong>.</td></tr>
+
+<tr><td>11. Event sourcing, Parquet snapshot exporter</td><td>C13</td>
+<td><strong>C only.</strong> Kept C13's own hedge — <em>"targeted rebuild"</em> became
+<em>"targeting P95 rebuild within 5 minutes"</em>. The card states this as a target and so does
+this bullet. "Event-sourced architecture" became "event sourcing" to keep the
+<code>Architected</code> root to one place.</td></tr>
+
+<tr><td>12. Multi-tenant isolation, TraversalSource wrapper</td><td>C14</td>
+<td><strong>C only.</strong> The <code>TraversalSource</code> wrapper, Parquet partitioning,
+runtime assertions and per-tenant Neptune are the mechanism behind the isolation claim, and none of
+it is in the master. <code>Secured</code> leads bullet 13, so the verb changed to
+<strong>Sealed</strong>.</td></tr>
+
+<tr><td>13. PHI inside the client VPC</td><td>V10</td><td><strong>V only.</strong> No card counterpart. Verbatim.</td></tr>
+
+<tr><td>14. LLM narrative guardrails</td><td>C15</td>
+<td><strong>C only — the second variant bullet.</strong> <code>Deployed</code> leads bullet 5, so
+the verb changed to <strong>Enforced</strong>.</td></tr>
+
+<tr><td>15. HIPAA control framework</td><td>C11</td>
+<td><strong>C only.</strong> HIPAA appears in the headline and the skills block but nowhere in
+experience. <code>Established</code> is burnt (<em>establishing</em> sits mid-bullet in the
+co-founder block), so the verb changed to <strong>Formalised</strong>.</td></tr>
+
+<tr><td>16. Adversarial self-review, twenty findings</td><td>V7</td><td><strong>V only.</strong> No card counterpart. Verbatim.</td></tr>
+
+<tr><td>17. Confounder-gated cohort comparisons</td><td>V8</td>
+<td><strong>V won over C17's first clause.</strong> Both mention propensity matching; V8 says what
+it <em>bought</em> — an unbalanced headline is unrepresentable in the output type. C17's overlap was
+removed there rather than here.</td></tr>
+
+<tr><td>18. Bootstrap + Rosenbaum γ + E-value battery</td><td>C17</td>
+<td><strong>C, with its propensity-matching clause stripped</strong> because bullet 17 already
+carries it. What survives is what bullet 17 does not have: B=2000 resamples, the sensitivity
+battery, and the shared <code>match_manifest_id</code> that ties runs together.</td></tr>
+
+<tr><td>19. Relapse early-warning model</td><td>V9</td>
+<td><strong>V only, content verbatim — but the leading verb changed.</strong>
+<code>Sequenced</code> collides with <em>Sequence Mining</em>, the archetype named in bullet 10, so
+this now opens <strong>Distilled</strong>. See the collision table.</td></tr>
+
+<tr><td>20. Engineering 0 → 20+, 6 sub-teams</td><td>C3</td>
+<td><strong>C only.</strong> <code>Grew</code> is burnt (<em>growing revenue</em> sits mid-bullet in
+the Teletext block), so the verb changed to <strong>Recruited</strong>.</td></tr>
+
+<tr><td>21. Go + DynamoDB across 5 sub-teams</td><td>C8</td>
+<td><strong>C only.</strong> <code>Drove</code> leads bullet 24 — the master's own wording of the
+Claude Code rollout — so this one changed to <strong>Brokered</strong>.</td></tr>
+
+<tr><td>22. React Native across 2 app stores</td><td>C9</td>
+<td><strong>C only.</strong> <code>Owned</code> is burnt (<em>database ownership</em> sits
+mid-bullet in the Deque block), so the verb changed to <strong>Published</strong>.</td></tr>
+
+<tr><td>23. Kubernetes, Terraform, ECS Fargate 70% Spot</td><td>C10</td>
+<td><strong>C only — and it is load-bearing.</strong> This single bullet is where Kubernetes and
+Terraform enter the résumé, and it is where the 25–30% infrastructure cost cut and the
+hours-to-under-10-minutes deploy time attach to a role. <code>Operationalised</code> shares a root
+with <em>operations</em> and <em>operational cost</em> in two other blocks, so the verb changed to
+<strong>Provisioned</strong>. AWS and ECS are written out because their expansions already appear
+earlier in the résumé.</td></tr>
+
+<tr><td>24. Claude Code + OpenAI Codex rollout</td><td>V6 + C1</td>
+<td><strong>V won, C contributed one phrase.</strong> V6's "measured rollout" is the better framing.
+C1's <em>daily architectural exploration</em> is genuine added substance and is in — reworded to
+<strong>daily design exploration</strong>, because "architectural" shares a root with
+<code>Architected</code> leading bullet 1. C1's "under hands-on review" and V6's "under review" say
+the same thing; V's is shorter.</td></tr>
+</table>
+
+<div class="callout">
+  <p><strong>6 sub-teams and 5 sub-teams both stand.</strong> Bullet 20's <strong>6</strong> is the
+  whole VoltusWave organisation — backend, React Native, web, artificial intelligence, QA, DevOps.
+  Bullet 21's <strong>5</strong> is how many adopted Go and DynamoDB. Different measures, both
+  preserved exactly as the card states them. The "never 5" rule governs org size, and bullet 20
+  obeys it.</p>
+  <p><strong>Bullets 17 and 19 carry no numeric marker.</strong> Both are master bullets I did not
+  rewrite (only 19's leading verb changed). Their scale markers are qualitative — an outcome-maturity
+  gate, an unrepresentable-by-construction output type. Flagging it rather than inventing a number.</p>
+  <p><strong>Two roots were already doubled in the master before this merge</strong> and this file
+  does not make them worse than they are: <code>Implemented</code> leads Deque while
+  <em>implementation</em> sits mid-bullet in VoltusWave, and <code>Cut</code> leads Teletext while
+  <em>cutting</em> sits mid-bullet in VoltusWave. Pre-existing, not introduced here.</p>
+</div>
+
+<h3 id="variants">The two variants</h3>
+<p>Bullets <strong>8</strong> and <strong>14</strong> state figures that the case studies record as
+<em>pre-registered acceptance targets</em> rather than measured results. You confirmed the bullets
+are accurate, so nothing is deleted. Both readings are below. <strong>Pick one; do not mix without
+saying so</strong> — the two copy blocks that follow are consistent, an A block and a B block.</p>
+
+<table>
+<tr><th></th><th>Variant A — figures as stated</th><th>Variant B — figures as design targets</th></tr>
+<tr>
+  <td><strong>8</strong></td>
+  <td>Tuned precedent retrieval on <strong>Elasticsearch dense-vector</strong> search with self-hosted <strong>Amazon SageMaker</strong> embedders — warm-path <strong>P99 under 200 ms</strong>, normalised discounted cumulative gain <strong>0.75 at rank 10</strong></td>
+  <td>Tuned precedent retrieval on <strong>Elasticsearch dense-vector</strong> search with self-hosted <strong>Amazon SageMaker</strong> embedders, designed against warm-path <strong>P99 under 200 ms</strong> and <strong>0.75 normalised discounted cumulative gain</strong></td>
+</tr>
+<tr>
+  <td><strong>14</strong></td>
+  <td>Enforced <strong>large language model (LLM)</strong> narrative guardrails — pinned model, temperature 0, chain hash, field-level claim grammar — rejecting <strong>100% of uncited claims</strong></td>
+  <td>Enforced <strong>large language model (LLM)</strong> narrative guardrails — pinned model, temperature 0, chain hash, field-level claim grammar — designed and reviewed to reject <strong>100% of uncited claims</strong></td>
+</tr>
+</table>
+
+<p class="meta">Every technical detail survives in B — the embedders, the pinned model, temperature 0,
+the chain hash, the field-level claim grammar, both numbers. Only the verb phrase moves from
+<em>achieved</em> to <em>designed against</em>. B never presents a target as a result.</p>
+
+<div class="callout">
+  <p><strong>One more the same shape, and it is your call whether to treat it the same way.</strong>
+  Bullet <strong>18</strong>'s Rosenbaum γ + E-value battery is named alongside these two in
+  <code>CLAUDE.md</code>. I did not generate a variant for it because the brief scoped variants to
+  the other two, and because C17 states a method rather than a figure — <em>B=2000 resamples</em> is
+  a parameter, not a measured outcome. Say the word and it gets the same A/B treatment.</p>
+</div>
+
+<h3>Copy block — VoltusWave, <em>Variant A</em> (figures as stated)</h3>
+<p class="meta">One button, one whole section, 24 bullets. Select the VoltusWave section in
+Hiration, delete it, paste.</p>
+<div class="section copy-target" id="merged-vp-a">
+  <button class="copy-btn" data-copy-target="#merged-vp-a" data-copy-html="1">Copy</button>
+  <p>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</p>
+  <p>Spearheaded the complete port of the core chat service from <strong>Node.js</strong> to <strong>Go</strong> for <strong>100,000-connection</strong> concurrency</p>
+  <p>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> at <strong>P95 under 16 ms</strong> in k6-validated burst testing, on ~50 calls per message</p>
+  <p>Reimagined the data layer across <strong>DynamoDB</strong>, <strong>PostgreSQL</strong> and <strong>OpenSearch</strong> with partition-key and indexing design holding <strong>P95 under 30 ms</strong> at 100,000-user load</p>
+  <p>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</p>
+  <p>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</p>
+  <p>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</p>
+  <p>Tuned precedent retrieval on <strong>Elasticsearch dense-vector</strong> search with self-hosted <strong>Amazon SageMaker</strong> embedders — warm-path <strong>P99 under 200 ms</strong>, normalised discounted cumulative gain <strong>0.75 at rank 10</strong></p>
+  <p>Pioneered a Context Graph on <strong>Amazon Neptune</strong> with <strong>graph neural network (GNN)</strong> models, powering virtual-care decision intelligence across <strong>80+ chronic conditions</strong></p>
+  <p>Assembled a <strong>10-query</strong> decision-intelligence platform on <strong>4 reusable archetypes</strong> — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal — over <strong>Amazon Neptune</strong></p>
+  <p>Instituted event sourcing on <strong>DynamoDB single-table</strong> design with a deterministic <strong>Parquet</strong> snapshot exporter and correction-event backbone, targeting <strong>P95 rebuild within 5 minutes</strong></p>
+  <p>Sealed multi-tenant isolation across <strong>10 production pipelines</strong> — a <strong>TraversalSource</strong> wrapper, Parquet partitioning, runtime assertions and per-tenant <strong>Amazon Neptune</strong> for the healthcare-data tier</p>
+  <p>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</p>
+  <p>Enforced <strong>large language model (LLM)</strong> narrative guardrails — pinned model, temperature 0, chain hash, field-level claim grammar — rejecting <strong>100% of uncited claims</strong></p>
+  <p>Formalised a <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> control framework across <strong>10 production pipelines</strong> — data protection, access governance, audit trails for clinical workflows</p>
+  <p>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</p>
+  <p>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</p>
+  <p>Strengthened statistical rigour across <strong>6 production pipelines</strong> with <strong>B=2000 bootstrap resamples</strong> and a <strong>Rosenbaum γ plus E-value</strong> sensitivity battery, keyed by shared match_manifest_id</p>
+  <p>Distilled patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</p>
+  <p>Recruited engineering from <strong>0 to 20+</strong> across backend, React Native, web, artificial intelligence, quality assurance (QA) and DevOps in <strong>6 sub-teams</strong></p>
+  <p>Brokered company-wide adoption of <strong>Go</strong> and <strong>DynamoDB</strong> across <strong>5 sub-teams</strong>, setting cross-organisational technical strategy backed by design-doc discipline</p>
+  <p>Published <strong>React Native</strong> applications across <strong>2 app stores</strong> end to end, wiring <strong>Firebase Cloud Messaging</strong> and <strong>Apple Push Notification service (APNs)</strong> for push messaging</p>
+  <p>Provisioned <strong>Amazon Web Services</strong> on <strong>Kubernetes</strong> and <strong>Terraform</strong> with <strong>Elastic Container Service Fargate at 70% Spot</strong> — deploy time <strong>under 10 minutes</strong>, infrastructure cost down <strong>25–30%</strong></p>
+  <p>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering daily design exploration, first-cut implementation and test scaffolding under review</p>
+</div>
+
+<h3>Copy block — VoltusWave, <em>Variant B</em> (figures as design targets)</h3>
+<p class="meta">Identical to Variant A except bullets 8 and 14.</p>
+<div class="section copy-target" id="merged-vp-b">
+  <button class="copy-btn" data-copy-target="#merged-vp-b" data-copy-html="1">Copy</button>
+  <p>Architected a two-stream <strong>Amazon Kinesis</strong> design with Enhanced Fan-Out, expanding <strong>4 to 1,200 shards</strong> to absorb traffic spikes on a chat platform</p>
+  <p>Spearheaded the complete port of the core chat service from <strong>Node.js</strong> to <strong>Go</strong> for <strong>100,000-connection</strong> concurrency</p>
+  <p>Scaled a <strong>Go</strong> chat service to <strong>100,000 concurrent connections</strong> at <strong>P95 under 16 ms</strong> in k6-validated burst testing, on ~50 calls per message</p>
+  <p>Reimagined the data layer across <strong>DynamoDB</strong>, <strong>PostgreSQL</strong> and <strong>OpenSearch</strong> with partition-key and indexing design holding <strong>P95 under 30 ms</strong> at 100,000-user load</p>
+  <p>Deployed <strong>Datadog</strong> observability across production services, cutting the error rate to <strong>under 3%</strong> and making reliability measurable for the first time</p>
+  <p>Delivered patient onboarding off a third-party messaging tool onto the in-house platform, moving <strong>10,000+ patients</strong> onto the product as primary channel</p>
+  <p>Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path</p>
+  <p>Tuned precedent retrieval on <strong>Elasticsearch dense-vector</strong> search with self-hosted <strong>Amazon SageMaker</strong> embedders, designed against warm-path <strong>P99 under 200 ms</strong> and <strong>0.75 normalised discounted cumulative gain</strong></p>
+  <p>Pioneered a Context Graph on <strong>Amazon Neptune</strong> with <strong>graph neural network (GNN)</strong> models, powering virtual-care decision intelligence across <strong>80+ chronic conditions</strong></p>
+  <p>Assembled a <strong>10-query</strong> decision-intelligence platform on <strong>4 reusable archetypes</strong> — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal — over <strong>Amazon Neptune</strong></p>
+  <p>Instituted event sourcing on <strong>DynamoDB single-table</strong> design with a deterministic <strong>Parquet</strong> snapshot exporter and correction-event backbone, targeting <strong>P95 rebuild within 5 minutes</strong></p>
+  <p>Sealed multi-tenant isolation across <strong>10 production pipelines</strong> — a <strong>TraversalSource</strong> wrapper, Parquet partitioning, runtime assertions and per-tenant <strong>Amazon Neptune</strong> for the healthcare-data tier</p>
+  <p>Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1</strong> for every model call</p>
+  <p>Enforced <strong>large language model (LLM)</strong> narrative guardrails — pinned model, temperature 0, chain hash, field-level claim grammar — designed and reviewed to reject <strong>100% of uncited claims</strong></p>
+  <p>Formalised a <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> control framework across <strong>10 production pipelines</strong> — data protection, access governance, audit trails for clinical workflows</p>
+  <p>Hardened ten production analytics services through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one design and holding another dark until its upstream contract shipped</p>
+  <p>Extracted confounder-gated cohort comparisons behind propensity matching and <strong>standardised mean difference</strong> balance checks, making an unbalanced headline unrepresentable in the output type</p>
+  <p>Strengthened statistical rigour across <strong>6 production pipelines</strong> with <strong>B=2000 bootstrap resamples</strong> and a <strong>Rosenbaum γ plus E-value</strong> sensitivity battery, keyed by shared match_manifest_id</p>
+  <p>Distilled patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, gated never to train on an outcome window that had not matured</p>
+  <p>Recruited engineering from <strong>0 to 20+</strong> across backend, React Native, web, artificial intelligence, quality assurance (QA) and DevOps in <strong>6 sub-teams</strong></p>
+  <p>Brokered company-wide adoption of <strong>Go</strong> and <strong>DynamoDB</strong> across <strong>5 sub-teams</strong>, setting cross-organisational technical strategy backed by design-doc discipline</p>
+  <p>Published <strong>React Native</strong> applications across <strong>2 app stores</strong> end to end, wiring <strong>Firebase Cloud Messaging</strong> and <strong>Apple Push Notification service (APNs)</strong> for push messaging</p>
+  <p>Provisioned <strong>Amazon Web Services</strong> on <strong>Kubernetes</strong> and <strong>Terraform</strong> with <strong>Elastic Container Service Fargate at 70% Spot</strong> — deploy time <strong>under 10 minutes</strong>, infrastructure cost down <strong>25–30%</strong></p>
+  <p>Drove a measured <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering daily design exploration, first-cut implementation and test scaffolding under review</p>
+</div>
+
+<!-- ================================================================= -->
+<h2>Deque Software (Dec 2019 – Feb 2025)</h2>
+
+<h3>Notes — what merged into what</h3>
+<p class="meta">K = the 14 card bullets (<code>PR-child-1</code>, identical on both cards).
+D = the 6 in <code>master/upgrad_resume.html</code>.</p>
+
+<table>
+<tr><th>Merged bullet</th><th>From</th><th>Which source won, and why</th></tr>
+
+<tr><td>1. Multi-tenant isolation, ~300 instances</td><td>D1</td>
+<td><strong>D only.</strong> The org-ID-per-table and JWT tenant resolution are the mechanism; no
+card bullet states it. Verbatim.</td></tr>
+
+<tr><td>2. 70–80% onto shared axe Monitor instances</td><td>D2 + K7</td>
+<td><strong>D won on structure, K contributed the stack.</strong> Both state 70–80% consolidation.
+D2 has the fact that makes it architecture rather than a migration — one codebase served both the
+shared tenants and the regulated banks on dedicated databases. K7 supplies what D2 lacked:
+<strong>axe Monitor on Spring Boot 2.x and Java 8/17</strong>. Merged into one bullet;
+K7's leading verb <code>Architected</code> would have collided with VoltusWave anyway.</td></tr>
+
+<tr><td>3. Keycloak → Red Hat SSO</td><td>D3 + K10 + K11</td>
+<td><strong>Three-way merge.</strong> K10 and K11 are the same migration split across two card
+bullets, and D3 is the same migration again with the Java and Spring Boot detail. K11's
+<em>users, roles, clients, groups</em> is the one thing neither of the others had, and it is the
+detail an interviewer will push on. All three collapse into one.</td></tr>
+
+<tr><td>4. Billing and subscription service</td><td>D4 + K9</td>
+<td><strong>D won, K contributed the entitlement clause.</strong> K9's per-customer PostgreSQL on
+Aurora is already stated twice over — bullet 2's dedicated databases and bullet 5's Aurora upgrade —
+so what came across is the part neither carries: feature access gated by subscription status.
+"in the portfolio" dropped for word count.</td></tr>
+
+<tr><td>5. PostgreSQL 9.6 → Aurora 13.x</td><td>D5 + K3</td>
+<td><strong>D won on the target, K contributed both metrics.</strong> These are the same migration
+at two levels of precision: K3 says "PostgreSQL to AWS RDS", D5 says Aurora PostgreSQL 13.x, and
+Aurora <em>is</em> RDS — the specific name wins, the generic one is dropped. K3's
+<strong>3–4 hours a day of backups</strong> and <strong>40% fewer deploy errors</strong> are the
+only hard numbers on that whole migration and they are in. "Amazon" dropped before Aurora for word
+count; it is expanded in the Summary.</td></tr>
+
+<tr><td>6. Monolith → 10–15 services</td><td>D6</td><td><strong>D only.</strong> No card counterpart. Verbatim.</td></tr>
+
+<tr><td>7. Jenkins → GitHub Actions, ISO 27001</td><td>K4</td>
+<td><strong>K only.</strong> One of the eight unmerged Deque bullets. Kept "achieving ISO 27001"
+as the card words it.</td></tr>
+
+<tr><td>8. Puppeteer regression framework</td><td>K5</td>
+<td><strong>K only.</strong> <code>Engineered</code> leads a VoltusWave bullet, so the verb changed
+to <strong>Slashed</strong> and the metric moved to the front. Nothing added beyond what K5
+states.</td></tr>
+
+<tr><td>9. axe-core scanning + run-over-run comparison</td><td>K12 + K13</td>
+<td><strong>Merged.</strong> K12 is the pipeline, K13 is what the pipeline produces; they only mean
+something together. <code>Built</code> is burnt (<em>Build</em>-versus-buy sits mid-bullet in the
+skills block) and <code>Delivered</code> leads a VoltusWave bullet, so the merged bullet opens
+<strong>Orchestrated</strong>.</td></tr>
+
+<tr><td>10. Shared platform APIs, 20+ clients</td><td>K2 + K8 + K14</td>
+<td><strong>Three-way merge.</strong> K2 and K14 are near-duplicates of each other — both say
+"shared platform APIs", "20+ enterprise clients", "backward compatibility" — and K8 is the same
+surface seen from the front end. One bullet carries all three: Jira integration, API versioning,
+customer-specific front ends on one Spring Boot backend, backward compatibility. K2's verb
+<em>secured</em> collides with a VoltusWave leading verb, so this opens
+<strong>Exposed</strong>.</td></tr>
+
+<tr><td>11. Time-to-market, 2+ weeks per sprint</td><td>K1</td>
+<td><strong>K only.</strong> <code>Led</code> is a weak opener and the metric is the point, so it
+leads with <strong>Accelerated</strong> and the 2+ weeks moved forward. SaaS and QA are left
+unexpanded here because both are expanded earlier in the résumé's reading order — SaaS in the
+Summary, QA in VoltusWave bullet 20.</td></tr>
+</table>
+
+<h3>Copy block — Deque</h3>
+<p class="meta">One button, one whole section, 11 bullets.</p>
+<div class="section copy-target" id="merged-deque">
+  <button class="copy-btn" data-copy-target="#merged-deque" data-copy-html="1">Copy</button>
+  <p>Implemented multi-tenant isolation across <strong>approximately 300 enterprise instances</strong>, adding an organisation ID to every table and resolving tenant from the <strong>JSON Web Token (JWT)</strong></p>
+  <p>Steered <strong>70–80%</strong> of customers onto shared <strong>axe Monitor</strong> instances on <strong>Spring Boot 2.x and Java 8/17</strong>, one codebase also serving regulated banks on dedicated databases</p>
+  <p>Forged central authentication in <strong>Java and Spring Boot</strong>, migrating every instance — users, roles, clients, groups — from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong>, zero disruption</p>
+  <p>Productized a billing and subscription service consumed by <strong>every product</strong>, porting it from <strong>Node.js/TypeScript</strong> to <strong>Java and Spring Boot</strong> and gating feature access by subscription</p>
+  <p>Stewarded a <strong>zero-downtime</strong> upgrade from <strong>PostgreSQL 9.6</strong> to <strong>Aurora PostgreSQL 13.x</strong> across every axe Auditor instance, cutting backups <strong>3–4 hours daily</strong> and deploy errors <strong>40%</strong></p>
+  <p>Championed decomposition of a monolith into <strong>10–15 services</strong>, splitting on independent scaling and database ownership rather than on team boundaries</p>
+  <p>Modernised continuous integration and continuous delivery (CI/CD) from <strong>Jenkins</strong> to <strong>GitHub Actions</strong>, achieving <strong>ISO 27001</strong> and <strong>50% faster</strong> release cycles</p>
+  <p>Slashed regression testing time <strong>over 50%</strong> with an end-to-end automated testing framework built on <strong>Puppeteer</strong></p>
+  <p>Orchestrated website discovery and accessibility scanning through spider jobs and <strong>axe-core</strong>, comparing every scheduled run to flag new, fixed and regressed uniform resource locators (URLs)</p>
+  <p>Exposed shared platform application programming interfaces (APIs) to <strong>20+ enterprise clients</strong> — Jira integration, API versioning, customer-specific front ends on one <strong>Spring Boot</strong> backend, backward compatibility</p>
+  <p>Accelerated time-to-market <strong>2+ weeks per sprint</strong>, leading multi-tenant SaaS delivery across engineering, quality assurance (QA) and support</p>
+</div>
+
+<!-- ================================================================= -->
+<h2 id="not-applied">Considered and not applied</h2>
+<p><strong>No copy buttons in this section, deliberately.</strong> Nothing here is staged for
+pasting. It is recorded so that a decision to leave it out is visible rather than silent.</p>
+
+<table>
+<tr><th>Content</th><th>Source</th><th>Why it is not in a block</th></tr>
+
+<tr><td><em>"from 500 to 100,000 concurrent users"</em> — the 500 baseline</td><td>C5</td>
+<td><strong>Your call, and it is already on the confirm-or-reject list.</strong>
+<code>CLAUDE.md</code> records this wording as overstating the burst test — one request per user, no
+sustained load, no 500 baseline. Open claims are yours to settle, so the merged bullet keeps the
+master's "burst testing" framing. Say the word and the 500 goes back in.</td></tr>
+
+<tr><td><em>"~27 ms average latency"</em> and <em>"100% success"</em></td><td>C5</td>
+<td><strong>Same reason.</strong> The 27 ms / P95 16 ms pairing is on the confirm-or-reject list —
+P95 below mean is a strength if you name the tail, and that is a conversation, not a résumé line.
+The merged bullet carries P95 under 16 ms only, as the master already does.</td></tr>
+
+<tr><td><em>ECS Fargate at 70% Spot</em>, stated a second time</td><td>C4</td>
+<td>It is in bullet 23. C4 and C10 both carry it; twice is duplication, not evidence.</td></tr>
+
+<tr><td><em>"large language model clinical workflows"</em></td><td>C2</td>
+<td>Bullet 14 states the LLM work concretely — guardrails, pinned model, claim grammar. The
+generic phrase adds nothing next to it, and bullet 9 needed the words.</td></tr>
+
+<tr><td><em>"propensity matching with shared match_manifest_id"</em>, the propensity clause</td><td>C17</td>
+<td>Bullet 17 already carries propensity matching and says what it bought. The
+<code>match_manifest_id</code> itself survives, in bullet 18.</td></tr>
+
+<tr><td><em>"architectural"</em> in "daily architectural exploration"</td><td>C1</td>
+<td>The substance is in bullet 24 as <strong>daily design exploration</strong>. The word itself
+shares a root with <code>Architected</code>, which leads bullet 1.</td></tr>
+
+<tr><td>K6 — <em>"Raised API quality for 20+ enterprise-client SaaS, coaching engineers on
+documentation, code review, and scalable contracts"</em></td><td>K6</td>
+<td><strong>The only card bullet dropped outright.</strong> Two reasons, both structural rather than
+factual. Its API-quality-for-20+-clients content is fully carried by merged Deque bullet 10, and
+<em>coaching</em> shares a root with <code>Coached</code>, which leads a Rocket bullet. Nothing in it
+is disputed — it is redundant, not doubtful.</td></tr>
+
+<tr><td>K9's <em>per-customer PostgreSQL databases on Aurora</em></td><td>K9</td>
+<td>Stated twice already — merged Deque bullets 2 and 5. Its distinct half, feature access by
+subscription status, is in bullet 4.</td></tr>
+
+<tr><td>K3's <em>"AWS RDS"</em> naming</td><td>K3</td>
+<td>Aurora is RDS, and Aurora PostgreSQL 13.x is the more specific true statement. Both of K3's
+metrics are in.</td></tr>
+
+<tr><td>D2's <em>"with one codebase serving both deployment models"</em>, as worded</td><td>D2</td>
+<td>Not dropped — reworded to <em>"one codebase also serving regulated banks on dedicated
+databases"</em>, which says the same thing and names which two models, in fewer words.</td></tr>
+</table>
+
+<!-- ================================================================= -->
+<h2>Verb collisions resolved</h2>
+<p>Checked against <strong>all ten roles</strong> in <code>master/upgrad_resume.html</code>,
+including the card-only pre-2016 sections, plus the headline, summary and skills blocks — and
+against the merged text itself. Roots were grepped across the whole file, not just leading words.</p>
+
+<table>
+<tr><th>Card verb</th><th>Collides with</th><th>Where the collision lives</th><th>Changed to</th></tr>
+<tr><td>Architected (C4)</td><td>Architected</td><td>VoltusWave bullet 1 — merged into it, no second opener needed</td><td>— merged</td></tr>
+<tr><td>Scaled (C5)</td><td>Scaled</td><td>VoltusWave bullet 3 — merged into it</td><td>— merged</td></tr>
+<tr><td>Drove (C8)</td><td>Drove</td><td>VoltusWave bullet 24</td><td><strong>Brokered</strong></td></tr>
+<tr><td>Secured (C14)</td><td>Secured</td><td>VoltusWave bullet 13</td><td><strong>Sealed</strong></td></tr>
+<tr><td>Deployed (C15)</td><td>Deployed</td><td>VoltusWave bullet 5</td><td><strong>Enforced</strong></td></tr>
+<tr><td>Grew (C3)</td><td><em>growing</em></td><td>Teletext — "growing revenue 8% month over month"</td><td><strong>Recruited</strong></td></tr>
+<tr><td>Owned (C9)</td><td><em>ownership</em></td><td>Deque — "database ownership"</td><td><strong>Published</strong></td></tr>
+<tr><td>Operationalised (C10)</td><td><em>operations</em>, <em>operational</em></td><td>Co-founder block, Teletext block</td><td><strong>Provisioned</strong></td></tr>
+<tr><td>Established (C11)</td><td><em>establishing</em></td><td>Co-founder — "establishing delivery process"</td><td><strong>Formalised</strong></td></tr>
+<tr><td>Launched (C12)</td><td><em>launched</em></td><td>Co-founder — "launched its first aPaaS product"</td><td><strong>Assembled</strong></td></tr>
+<tr><td>Optimized (C16)</td><td><em>Optimization</em></td><td>Skills — Business &amp; Delivery, "Performance Optimization &amp; Cost Management"</td><td><strong>Tuned</strong></td></tr>
+<tr><td>Embedded (C1)</td><td><em>embeddings</em></td><td>VoltusWave bullet 13, and skills</td><td>— merged into <code>Drove</code></td></tr>
+<tr><td>Spearheaded (C6)</td><td>free</td><td>—</td><td><strong>Spearheaded</strong>, kept</td></tr>
+<tr><td>Pioneered (C2), Reimagined (C7), Instituted (C13), Strengthened (C17)</td><td>free</td><td>—</td><td>kept as the card has them</td></tr>
+<tr><td>Architected (K7)</td><td>Architected</td><td>VoltusWave bullet 1</td><td>— merged into <code>Steered</code></td></tr>
+<tr><td>Designed (K2, K8)</td><td><em>design</em>, <em>Design</em></td><td>Skills, and VoltusWave bullets 4 and 21</td><td><strong>Exposed</strong></td></tr>
+<tr><td>Engineered (K5)</td><td>Engineered</td><td>VoltusWave bullet 7</td><td><strong>Slashed</strong></td></tr>
+<tr><td>Built (K12)</td><td><em>Build</em>-versus-buy</td><td>Skills block</td><td><strong>Orchestrated</strong></td></tr>
+<tr><td>Delivered (K13)</td><td>Delivered</td><td>VoltusWave bullet 6</td><td>— merged into <code>Orchestrated</code></td></tr>
+<tr><td>Implemented (K9)</td><td>Implemented</td><td>Deque bullet 1</td><td>— merged into <code>Productized</code></td></tr>
+<tr><td>Led (K1, K10)</td><td>weak opener, and duplicated across two card bullets</td><td>—</td><td><strong>Accelerated</strong> / merged into <code>Forged</code></td></tr>
+<tr><td>Migrated (K3)</td><td><em>migrating</em></td><td>Deque bullet 3</td><td>— merged into <code>Stewarded</code></td></tr>
+<tr><td>Modernised (K4), Orchestrated (K11), Raised (K6)</td><td>free / dropped</td><td>—</td><td><strong>Modernised</strong> kept · <strong>Orchestrated</strong> reused for K12+K13 · K6 dropped</td></tr>
+</table>
+
+<h3>One collision the merge created, and how it was fixed</h3>
+<p>Bullet 10's archetype list names <strong>Sequence Mining</strong>. That shares a root with
+<code>Sequenced</code>, which opened the master's relapse-model bullet. The archetype name is his
+and cannot move, so the <em>verb</em> moved: that bullet is now
+<strong>Distilled patient event histories…</strong>, content otherwise untouched. It is the only
+existing master bullet whose wording this proposal changes at all, and only its first word.</p>
+
+<h3>One grep hit that is not a collision</h3>
+<p>Grepping the stem <code>tun</code> matches <strong>Neptune</strong>. That is a substring, not a
+shared root — <em>tune</em> and <em>Neptune</em> are unrelated words — so
+<strong>Tuned</strong> opening bullet 8 is clean. Noted here so the next regeneration pass does not
+re-litigate it.</p>
+
+<h3>All 58 leading verbs after the merge</h3>
+<p class="meta"><strong>VoltusWave (24):</strong> Architected · Spearheaded · Scaled · Reimagined ·
+Deployed · Delivered · Engineered · Tuned · Pioneered · Assembled · Instituted · Sealed · Secured ·
+Enforced · Formalised · Hardened · Extracted · Strengthened · Distilled · Recruited · Brokered ·
+Published · Provisioned · Drove<br />
+<strong>Deque (11):</strong> Implemented · Steered · Forged · Productized · Stewarded · Championed ·
+Modernised · Slashed · Orchestrated · Exposed · Accelerated<br />
+<strong>Unchanged (23):</strong> Anchored · Coached · Surfaced · Partnered · Co-founded · Mobilized ·
+Helmed · Codified · Cut · Reconciled · Lifted · Eliminated · Rewrote · Replatformed · Calibrated ·
+Piloted · Curated · Salvaged · Translated · Shipped · Refactored · Bridged · Seeded</p>
+
+<div class="callout">
+  <p><strong>The Verb pool section of <code>CLAUDE.md</code> is now stale, and this is the finding,
+  not a fix.</strong> It lists <em>Translated, Calibrated, Replatformed, Piloted, Eliminated,
+  Bridged, Curated, Seeded, Salvaged</em> as free. All nine now lead pre-2016 bullets in the master.
+  Genuinely still free after this merge: <strong>Instrumented, Halved, Trimmed, Increased, Improved,
+  Unified, Partitioned, Released, Staged, Wired, Sustained, Scoped, Specified</strong>. Every verb
+  in the two blocks above was verified against the file, not against that list.</p>
+</div>
+
+<h2>What was left in place, on purpose</h2>
+<ul>
+  <li><strong>The master file.</strong> <code>master/upgrad_resume.html</code> is byte-for-byte
+  unchanged. You land this; nothing was written on your behalf.</li>
+  <li><strong>Every one of the 17 card bullets is represented</strong>, in a merged bullet or in the
+  record above. None was softened or dropped for lack of corroboration.</li>
+  <li><strong>The Neptune-off-the-serving-path correction</strong> in bullet 7 stands exactly as the
+  master has it.</li>
+  <li><strong>The open confirm-or-reject items</strong> — the 500 baseline, the 27 ms pairing, the
+  70–80% consolidation, the ~300 customers-or-instances question — are surfaced, never resolved
+  here.</li>
+  <li><strong>ISO 27001 is left unexpanded</strong> in Deque bullet 7, matching the master's own
+  treatment in the headline and the skills block. HIPAA <em>is</em> expanded in VoltusWave bullet 15,
+  even though the skills block uses it unexpanded first — a pre-existing gap in the master this file
+  does not widen.</li>
+</ul>
+
+</main>
+<script src="../static/copy.js" defer></script>
+</body>
+</html>

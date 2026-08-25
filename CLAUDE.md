@@ -333,7 +333,20 @@ A weighted rubric (criterion, weight, /10, evidence) backs the technical score. 
 binding constraint and the smallest lift. **Real-world gates — compensation, levelling,
 legitimacy — are named separately from both scores.**
 
-**Compensation:** current **₹72L**, expected **₹75L–₹1Cr**. The ₹75L floor is a ~4% step,
+**⛔ COMPENSATION IS DEFERRED — set by him 2026-08-25.** His words: *"forget about
+compensation… it'll come up when we hear back and get to that stage."* Same shape as the
+interview-prep rule: the trigger is **a company responding and the conversation actually reaching
+that stage**, not a score, not a workspace being built, not a JD listing a band.
+
+Until then: **do not research it, do not surface it, do not gate on it, do not name it as a
+red flag, and never let it drag a score.** A listing whose band looks low is not a reservation
+worth writing down. Do not compare any band to any floor in a workspace artefact. If a JD states a
+band, record it as a neutral fact in `jd.md` and stop there.
+
+**When it does arrive** — a recruiter asks, or a process reaches that stage — the figures below
+are his standing answer. They are kept here for that moment, not for analysis:
+
+**Compensation (for when it comes up, not before):** current **₹72L**, expected **₹75L–₹1Cr**. The ₹75L floor is a ~4% step,
 not a stretch; a band topping out under ₹72L is a pay cut. Midpoint ₹87.5L if one figure
 is required. **Current CTC ₹72L is sensitive, but the absolute ended 2026-08-11 — he decides, not the
 rule.** Default: never volunteer it unprompted and never put it in a draft on your own
