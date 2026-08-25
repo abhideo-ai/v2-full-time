@@ -64,11 +64,33 @@ trade-offs *now* does — HNSW `ef_construction` vs `M`, recall-versus-latency, 
 when a dedicated store actually beats a hybrid engine. A week of reading, not a quarter. **Do not
 re-litigate this gap as a capability cap.**
 
-## Gap prep running
+## ⛔ Gap prep is STOPPED — do not rebuild it unprompted
 
-`wf_58f6f5c4-caa` → `~/Documents/interview-prep/gap-prep/index.html`. Seven gaps, ordered by how
-CERTAIN the question is. Each gets: the honest concession first, the nearest real thing, the bridge
-and where it stops, what to learn this week, and three likely questions with one-sentence headlines.
+Killed by him 2026-08-25: **"DO NOT build the prep now… we wait until I hear back from the
+company."** Correct, and it is the v1 lesson repeating — preparing for rooms he has not been
+invited to is the same failure as building workspaces he does not send. **Nothing has been
+submitted yet.**
+
+**The trigger is a company responding.** Not a score, not a workspace being ready, not a hunch.
+When one replies, build the prep for THAT seat's gaps, not for all seven at once.
+
+The stopped run is `wf_58f6f5c4-caa` and is resumable with `resumeFromRunId` — completed agents
+replay from cache, so nothing is wasted if it is picked up later. The gap analysis itself is
+already banked in the three `score.json` files; only the prep *page* was deferred.
+
+**The seven gaps, ranked by how certain the question is** (from the rubrics, kept here so the
+analysis is not lost):
+
+1. **Graph neural network** — highest risk in his whole profile. Real and confirmed, sits in
+   word-position four of his headline, and appears **zero times across all 22 case-study files**.
+   A headline claim with no artefact to rehearse from. Only he can supply the node/edge schema,
+   the task, the framework, the training data and how it was served.
+2. **Kubernetes** — absent from the master, but **his live card claims it**. Needs his answer.
+3. **Spring Boot 3 / Java 21** — never shipped, not rusty. Concurrency proof is Go.
+4. **Grafana / Prometheus** — absent. Datadog and ELK transfer conceptually; PromQL does not.
+5. **Deep-learning years** — ~14 months applied against o9's "5+ years".
+6. **Model registry, Spark** — retraining and drift ARE evidenced; a registry is never named.
+7. **Vector DB internals** — ramp item. His read stands; see above.
 
 **The graph neural network is first and is the highest-risk item in his whole profile** — he
 confirmed it is real, it sits in word-position four of his headline, and the phrase appears **zero
