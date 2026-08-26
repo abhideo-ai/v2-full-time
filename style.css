@@ -23,6 +23,12 @@
 
 /* ---------- palette + tokens ---------- */
 :root {
+  /* The shell is wide so boards, rubric tables and row lists get the screen.
+     --measure keeps PROSE readable inside it: a 1600px-wide paragraph is harder
+     to read than a 900px one, so text blocks cap out while layout does not. */
+  --shell: min(1680px, 95vw);
+  --measure: 82ch;
+
   --paper:        #f7f4ee;
   --paper-2:      #efeae0;
   --paper-3:      #fdfaf3;
@@ -123,7 +129,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }
 
 /* ---------- layout primitives ---------- */
 .page, .wrap, main.page, main.wrap, body > main {
-  max-width: 980px;
+  max-width: var(--shell);
   margin: 0 auto;
   padding: 60px 32px 96px;
 }
@@ -3695,3 +3701,30 @@ span.callout {
 
 span.warn:empty,
 span.callout:empty { display: none; }
+
+/* Wide shell, readable prose. Layout containers (boards, grids, tables, row lists)
+   take the full width; running text caps at --measure so it stays scannable. */
+.page > p,
+.page > ul,
+.page > ol,
+.page > blockquote,
+.page > .tldr,
+.page > .callout,
+.page > .note,
+.page > .warn,
+.page > header,
+.dl-archive-note,
+.kb-help,
+.kb-lane-why,
+.kb-zone-why,
+.dl-why { max-width: var(--measure); }
+
+/* ...but never cap the things that exist to be wide. */
+.kb-lanes,
+.tablewrap,
+.grid,
+.quick-nav,
+#app-list,
+.app-list,
+.wl-rubric,
+.date-group { max-width: none; }
