@@ -29,7 +29,9 @@ log), `jobs_db` is `jobs_tracker` (read-only, the launcher).
 """
 import argparse
 import json
+import socket
 import sys
+import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -141,12 +143,44 @@ def main() -> None:
         print(f"[serve] WARNING: jobs_tracker unreachable ({exc})", file=sys.stderr)
         print("[serve] the launcher will say the list is unavailable", file=sys.stderr)
     handler = partial(Handler, directory=str(ROOT))
-    with ThreadingHTTPServer((args.host, args.port), handler) as httpd:
-        print(f"[serve] http://{args.host}:{args.port}/daily/", file=sys.stderr)
+
+    # Bind BOTH loopback families, not just 127.0.0.1.
+    #
+    # macOS resolves "localhost" to ::1 before 127.0.0.1. Binding only the IPv4
+    # loopback left ::1 free, so a stray `python3 -m http.server 8006` could take
+    # it and silently shadow this server for anyone browsing to localhost:8006 --
+    # the page then reports "the server answered 404" while curl against
+    # 127.0.0.1 says everything is fine. That happened twice in one night.
+    #
+    # Holding both means a competing server fails loudly with EADDRINUSE instead.
+    # Still loopback-only: neither :: nor 0.0.0.0, because this process writes to
+    # a database and must not be reachable from the network.
+    servers = []
+    for family, host in ((socket.AF_INET, args.host), (socket.AF_INET6, "::1")):
+        if family is socket.AF_INET6 and args.host != "127.0.0.1":
+            continue                       # explicit --host: honour it exactly
+        klass = type("Srv", (ThreadingHTTPServer,), {"address_family": family})
         try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\n[serve] stopped", file=sys.stderr)
+            servers.append(klass((host, args.port), handler))
+        except OSError as exc:
+            if family is socket.AF_INET6:
+                print(f"[serve] note: no IPv6 loopback ({exc}); IPv4 only", file=sys.stderr)
+                continue
+            raise
+    if not servers:
+        raise SystemExit(f"[serve] could not bind port {args.port}")
+
+    for srv in servers[1:]:
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+    bound = ", ".join(f"{s.server_address[0]}" for s in servers)
+    print(f"[serve] http://localhost:{args.port}/daily/  (bound: {bound})", file=sys.stderr)
+    try:
+        servers[0].serve_forever()
+    except KeyboardInterrupt:
+        print("\n[serve] stopped", file=sys.stderr)
+    finally:
+        for s in servers:
+            s.server_close()
 
 
 if __name__ == "__main__":
