@@ -94,7 +94,10 @@ def register(slug: str, company: str, role: str, *, status: str = "resume_drafte
     row = {
         "slug": slug, "company": company, "role": role, "status": status,
         "location": location,
-        "source_url": source_url or f"(no URL supplied — workspace {slug})",
+        # A URL or NULL. Never prose: the launcher reads this column as an href,
+        # so "(no URL supplied)" rendered as a broken link that looked real.
+        # Migration 007 made the column nullable precisely so this can be None.
+        "source_url": source_url if (source_url or "").startswith(("http://", "https://")) else None,
     }
     with jobs_db.connect() as conn, conn.cursor() as cur:
         cur.execute(_INSERT, row)

@@ -717,6 +717,18 @@ Naukri's "Job profile" textarea rejects `<` and `\`. Substitute: `<` → `under`
 
 1. **He pastes the details** — job description, URL, screenshots, recruiter message, whatever
    he has.
+   **⛔ ALWAYS ASK FOR THE URL — set by him 2026-08-26.** If he pastes a job description without a
+   link, ask for it before building. A workspace whose posting cannot be reopened cannot be
+   re-checked, and postings change, close and get re-listed under new requisition numbers. The URL
+   goes at the top of `jd.md` and into `applications.source_url`.
+   **`resume.py new` now REFUSES without one**: pass `--url <posting URL>`, or `--no-url "<reason>"`
+   when the seat genuinely has none — an inbound recruiter InMail has no public listing, and that is
+   a different fact from a URL nobody captured. The same shape as `./todo` refusing to move a task
+   out with no reason: the tool comes back and asks rather than inventing.
+   ⚠ **Never write prose into `source_url`.** The launcher reads that column as an `href`, so
+   `"(no URL supplied)"` rendered as a broken link that looked real. It is a URL or it is NULL —
+   `db/migrations/007` made the column nullable for exactly this, and both `resume.py` and
+   `jobs_sync.register()` were manufacturing prose until 2026-08-26.
 2. **We build the workspace** from that. Every pasted JD gets the full build, no re-asking.
 3. **The database is the search layer.** He queries it; directories are storage, not an index.
 

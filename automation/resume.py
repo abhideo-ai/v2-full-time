@@ -79,7 +79,8 @@ def committed(path: Path, ref: str = "HEAD") -> str | None:
     return r.stdout if r.returncode == 0 else None
 
 
-def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> None:
+def cmd_new(slug: str, company: str | None = None, role: str | None = None,
+            url: str | None = None, no_url: str | None = None) -> None:
     """Scaffold a full job workspace, résumé seeded from the master.
 
     Everything repeated 15-20 times a night belongs here, not in a human's
@@ -108,8 +109,18 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
         encoding="utf-8")
     (dest_dir / "paste_notes.json").write_text("{}\n")
     title = f"{company} — {role}" if company and role else slug
+    # The URL goes in the file, at the top, where it is the first thing read.
+    # A workspace whose posting cannot be reopened is a workspace that cannot be
+    # re-checked -- postings change, close, and get re-listed under new numbers.
+    if url:
+        src = f"**URL:** {url}\n"
+    else:
+        src = (f"**URL:** none — {no_url}\n\n"
+               "> No posting URL exists for this seat. That is recorded deliberately rather than\n"
+               "> left blank, so a later reader knows it was asked and answered, not forgotten.\n")
     (dest_dir / "jd.md").write_text(
-        f"# {title}\n\n<!-- Paste the job description here verbatim. URL, location, comp if stated. -->\n")
+        f"# {title}\n\n{src}\n"
+        "<!-- Paste the job description here verbatim, below this line. -->\n")
 
     # Per-workspace favicon: 15-20 open tabs are indistinguishable otherwise.
     try:
@@ -131,7 +142,7 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
             company or slug,
             role or "[role]",
             status="resume_drafted",
-            source_url=f"(no URL supplied — workspace {rel.as_posix()})",
+            source_url=url,   # None when there genuinely is no posting
         )
     except Exception as exc:                                     # noqa: BLE001
         print(f"[resume] WARNING: could not register {slug} in jobs_tracker_v2 ({exc})",
@@ -390,11 +401,28 @@ def main() -> None:
     ap.add_argument("--since", default="HEAD", help="git ref to diff against (default HEAD)")
     ap.add_argument("--company", default=None)
     ap.add_argument("--role", default=None)
+    ap.add_argument("--url", default=None,
+                    help="the posting URL. Required for `new` unless --no-url gives a reason.")
+    ap.add_argument("--no-url", default=None, metavar="REASON",
+                    help="record that no posting URL exists, and why "
+                         "(e.g. 'inbound recruiter InMail, no public listing')")
     a = ap.parse_args()
     if a.command == "new":
         if not a.slug:
             raise SystemExit("[resume] new needs --slug")
-        cmd_new(a.slug, a.company, a.role)
+        # Refuse rather than invent. The same shape as ./todo refusing to move a
+        # task out with no reason: an absent URL is either a real URL nobody
+        # captured, or a seat that genuinely has none -- and those are different
+        # facts. Manufacturing "(no URL supplied)" into a URL column is what put
+        # broken links on the launcher and cost a migration to undo.
+        if not a.url and not a.no_url:
+            raise SystemExit(
+                "[resume] new needs --url <posting URL>.\n"
+                "         If this seat genuinely has no public posting -- an inbound recruiter\n"
+                "         InMail, say -- pass --no-url \"<reason>\" instead. One or the other.")
+        if a.url and not a.url.startswith(("http://", "https://")):
+            raise SystemExit(f"[resume] --url must start with http:// or https://, got {a.url!r}")
+        cmd_new(a.slug, a.company, a.role, a.url, a.no_url)
     else:
         cmd_sheet(a.slug, a.since)
 
