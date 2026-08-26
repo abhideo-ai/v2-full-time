@@ -192,8 +192,10 @@ ok("archived_from" not in sample,
    "and no `archived_from` — the column does not exist in v2's database")
 ok(all(r["source_url"] is None or r["source_url"].startswith("http") for r in rows),
    "a source_url that is not a URL is nulled rather than rendered as a dead link")
-ok(all((r["source_url"] is None) != (r["source_note"] is None) for r in rows),
-   "a row carries its source either as a URL or as the note it actually is, never both")
+ok(all(r["source_url"] is not None or r["source_note"] is not None for r in rows),
+   "every row explains where it came from — a URL, a note, or both")
+ok(any(r["source_url"] and r["source_note"] for r in rows),
+   "and a row may carry BOTH: o9 was applied to via naukri while the URL is the traced requisition")
 
 print("\n10. Intake groups are derived; the note is not")
 groups = jobs_db.groups(rows)

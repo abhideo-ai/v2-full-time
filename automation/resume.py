@@ -142,7 +142,8 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None,
             company or slug,
             role or "[role]",
             status="resume_drafted",
-            source_url=url,   # None when there genuinely is no posting
+            source_url=url,      # None when there genuinely is no posting
+            source_note=no_url,  # ...and the reason lands here, not in jd.md alone
         )
     except Exception as exc:                                     # noqa: BLE001
         print(f"[resume] WARNING: could not register {slug} in jobs_tracker_v2 ({exc})",

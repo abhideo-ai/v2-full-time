@@ -450,6 +450,37 @@ can see, which is exactly how the page came to show 4 applications while the dat
   `MutationObserver` on `#app-list`. Counting only on `DOMContentLoaded` showed every tab
   reading 0 above a full list, because the rows arrive from `/api/jobs` long afterwards.
 
+### Capture the history — `application_events`
+
+**Set by him 2026-08-26: *"we should capture our history properly."*** `status_events` records that
+a row moved `resume_drafted → applied`. It cannot record that a recruiter sent an InMail, that he
+replied, that two job descriptions came back four hours later, or that a CV was requested. Those
+are what a process is actually made of, and they are what **v1 never had** — one process ended in an
+unexplained rejection with no recording, another produced no debrief at all.
+
+`db/migrations/009_application_events.sql` creates the timeline. Six kinds: `inbound` · `outbound` ·
+`document` · `call` · `status` · `note`.
+
+- **`actor` is REQUIRED.** *"Someone sent a JD"* is the shape of a record you cannot use later.
+  A named human for their side, `Abhisheik` for his.
+- **`detail` holds the message VERBATIM** where one exists. A paraphrase six weeks later is not
+  evidence of what was said. Paul Abbott's two messages and Harisri Parthasarathi's InMail are
+  stored in full.
+- **`artefact`** is the repo-relative path when a file changed hands — a JD PDF, an exported résumé.
+- Append-only in spirit: **correct by adding an event, never by editing one.**
+
+```
+psql -d jobs_tracker_v2 -v ON_ERROR_STOP=1 -c "select
+     set_config('ev.slug','<slug>',false), set_config('ev.kind','inbound',false),
+     set_config('ev.actor','<who>',false), set_config('ev.summary','<one line>',false),
+     set_config('ev.detail','<verbatim>',false), set_config('ev.at','<ISO ts>',false)" \
+  -f db/operations/log_event.sql
+```
+
+**Log an event every time something happens** — an InMail arrives, a reply goes out, a document
+changes hands, a call is scheduled or held. The cost is one command; the cost of not having it is
+the v1 lesson.
+
 ### The daily log
 
 `daily/index.html` — what is due, what is blocked, what is next. **Generated, never authored:**

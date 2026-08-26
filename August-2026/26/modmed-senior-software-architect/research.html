@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ModMed — Senior Software Architect · research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> · August 2026 · 26 · modmed-senior-software-architect · research</p>
+
+<header>
+  <p class="eyebrow">Company research · 26 Aug 2026</p>
+  <h1>ModMed — <span class="nowrap">Senior Software Architect</span></h1>
+  <p class="subtitle">Modernizing Medicine, Hyderabad. An electronic health record company with a centralized architecture team headquartered four continents away. What checks out, what does not, and the questions that decide it.</p>
+</header>
+
+<div class="meta">
+  <span><b>Source</b> LinkedIn Jobs 4400708113</span>
+  <span><b>Received</b> 2026-08-26</span>
+  <span><b>Location</b> Hyderabad — where he already lives</span>
+  <span><b>Shape</b> Individual contributor</span>
+  <span><b>Recruiter</b> Prabhakar Teguri, in-house</span>
+  <span><b>Compensation</b> deferred by instruction — absent from this page</span>
+</div>
+
+<div class="banner">
+  <p><b>Two things are excluded from this page on standing instruction, and their absence is deliberate rather than an oversight.</b> <b>Compensation</b> is deferred until a company responds and a conversation reaches that stage, so no band, no aggregator figure, no comparison and no pay-related employee-review content appears anywhere below, including where a source volunteered it. <b>Interview preparation</b> is not built until a company responds; open claims are flagged for later preparation and nothing more.</p>
+</div>
+
+<!-- ==================================================================
+     GLOSSARY — concepts, not expansions. He has never worked inside a
+     United States healthcare provider-software company. The unfamiliar
+     material is the regulatory and commercial vocabulary of that
+     industry, not the technology stack, which is almost entirely his.
+     ================================================================== -->
+
+<h2>First, the vocabulary</h2>
+
+<p class="lede">His most recent programme was Amura, a chronic-care platform, so clinical data is not new to him. What is new is the <b>United States provider-software industry</b> — its regulator, its certification regime, its billing economics and the specific way an electronic health record vendor gets into legal trouble. Every term below is defined as a <em>concept</em>, because knowing the expansion of the abbreviation is not the part that helps.</p>
+
+<dl class="context-grid">
+  <dt>Electronic health record (EHR)</dt>
+  <dd>The system a clinician documents inside during and after a patient visit: history, examination, diagnosis, orders, prescriptions, notes. It is the operational system of record for care. Distinct from an <b>electronic medical record (EMR)</b> mostly by ambition — an EHR is meant to travel between organisations, an EMR was originally a single practice's chart. In practice the industry uses the words interchangeably and ModMed uses EHR.</dd>
+
+  <dt>Ambulatory and specialty practice</dt>
+  <dd><b>Ambulatory</b> means outpatient: the patient walks in and goes home. It is the opposite of inpatient hospital care. ModMed sells to ambulatory <b>specialty</b> practices — dermatology, ophthalmology, orthopaedics, gastroenterology, ear-nose-and-throat and others — not to hospitals. That is the whole company strategy: rather than one general EHR, eleven deliberately different ones whose workflows and clinical vocabularies are built per specialty. <b>Architecturally this is the interesting part</b>, because it is a multi-product platform problem dressed as a single product, and it is why a centralized architecture team exists at all.</dd>
+
+  <dt>Practice management (PM) and revenue cycle management (RCM)</dt>
+  <dd>PM is scheduling, registration and the front desk. RCM is the money: coding a visit into billing codes, submitting a claim to an insurer, chasing denials, collecting. <b>RCM is not a side product</b> — it is roughly half of what a modern EHR vendor sells, and a large share of ModMed's Hyderabad hiring is RCM coding and RCM operations rather than engineering. This matters for reading the site, and it is picked up below.</dd>
+
+  <dt>Protected health information (PHI)</dt>
+  <dd>Health information that identifies a person, as defined by United States law. Broader than it sounds: an appointment date attached to a name is PHI. <b>Personally identifiable information (PII)</b> is the wider, non-health category. A breach notice that names both, as ModMed's 2025 one does, means the clinical and the identity data were in the same exfiltrated files.</dd>
+
+  <dt>Health Insurance Portability and Accountability Act (HIPAA) — and its three rules</dt>
+  <dd>United States federal law governing PHI. It is three separate regimes that engineers routinely merge: the <b>Privacy Rule</b> (who may see and disclose PHI), the <b>Security Rule</b> (the technical and administrative safeguards — access control, audit logging, encryption, integrity), and the <b>Breach Notification Rule</b> (what must be reported, to whom, how fast). <b>He has HIPAA experience and it is user-confirmed</b>, attached to the Go chat service and the two-stream Kinesis design, where a certification requirement drove multi-availability-zone deployment, failover and disaster recovery. What ModMed adds is the other two rules at scale, plus everything below.</dd>
+
+  <dt>Covered entity vs business associate, and the business associate agreement (BAA)</dt>
+  <dd>A <b>covered entity</b> is the doctor, hospital or insurer. A <b>business associate</b> is a vendor handling PHI on their behalf — which is exactly what ModMed is. The <b>BAA</b> is the contract that pushes HIPAA obligations down the chain, and it flows onward to subcontractors. The consequence for a Hyderabad architect: the United States Department of Health and Human Services has asserted that HIPAA reaches business associates located outside the United States, so an India entity handling United States PHI is inside the regime, not adjacent to it.</dd>
+
+  <dt>Digital Personal Data Protection Act, 2023 (DPDP Act) — India</dt>
+  <dd>India's data-protection statute. <b>The collision worth naming:</b> HIPAA compliance does not confer DPDP compliance and the reverse is equally untrue. They overlap on governance and security controls and diverge on consent, data-principal rights and breach timelines. An India-based engineering site processing United States patient data sits under both, which is a genuine architecture constraint (residency, access paths, key custody, logging) rather than a legal footnote.</dd>
+
+  <dt>Assistant Secretary for Technology Policy / Office of the National Coordinator (ASTP/ONC)</dt>
+  <dd>The United States federal office that runs the <b>Health IT Certification Program</b>. Certification is nominally voluntary, but practices need certified software to claim federal incentive payments, so in commercial reality it is mandatory. <b>This is the part with no analogue in his record</b>: a certified EHR carries dozens of prescribed criteria that the software must demonstrably meet, and re-certification is a recurring engineering programme, not a one-time audit.</dd>
+
+  <dt>HTI-1, HTI-2, HTI-5</dt>
+  <dd>Successive ASTP/ONC rulemakings amending that programme. HTI-1 added transparency requirements for algorithm-based clinical decision support. HTI-2 amended the information-blocking regulations. <b>HTI-5, proposed January 2026 and open for comment to 27 February 2026</b>, proposes eliminating 34 and revising 7 of the 60 existing certification criteria — a deregulatory swing. The point for an architect is that the compliance surface moves under you on a rulemaking cycle, so the design has to absorb regulatory churn.</dd>
+
+  <dt>Information blocking</dt>
+  <dd>A United States legal prohibition on interfering with the access, exchange or use of electronic health information. It is enforced against health-IT developers. <b>Its practical effect is architectural</b>: a design decision that makes data harder to export can be a regulatory violation rather than a product choice, which inverts the usual instinct to lock data in.</dd>
+
+  <dt>Health Level Seven Fast Healthcare Interoperability Resources (HL7 FHIR), US Core, TEFCA</dt>
+  <dd>FHIR is the modern representational state transfer (REST) and JavaScript Object Notation (JSON) standard for exchanging clinical data. <b>US Core</b> is the American profile of it that certification actually tests against. <b>TEFCA</b>, the Trusted Exchange Framework and Common Agreement, is the national network-of-networks for exchange between organisations. ModMed has a public requisition for a Senior Software Engineer in Application Programming Interfaces and Interoperability, so this is a live workstream, not theory.</dd>
+
+  <dt>Anti-Kickback Statute (AKS) and the False Claims Act (FCA)</dt>
+  <dd>Two United States laws that seem far from software until you see how they bite an EHR vendor. The AKS forbids paying or receiving anything of value to induce referrals for federally-funded care. The FCA punishes causing false claims to be submitted to the government. <b>An EHR sits in the middle of both</b>, because what the software nudges a clinician to order, and what it auto-populates onto a claim, is evidence. The industry has a run of settlements on exactly this shape, ModMed's included, and it is why an EHR architect's design decisions carry a compliance dimension that a hotel-booking or accessibility platform simply does not have.</dd>
+
+  <dt>Black Book Research</dt>
+  <dd>A healthcare technology market-research firm whose rankings come from surveys of verified users of the software, scored across defined key performance indicators. <b>It is a customer-satisfaction ranking, not a technical audit</b>, and the sample size is the thing to look at. Its nearest peer is KLAS Research. This is one of the three award claims in the posting, and it is the one that checks out.</dd>
+
+  <dt>The Globee Awards</dt>
+  <dd>A commercial business-awards programme. Entrants submit nominations and pay an entry fee that varies by category and deadline; the organiser states that fees do not influence scoring and that judging is a structured numerical process by volunteer judges. <b>Not a reason to disbelieve a win</b>, but it is a self-nominated award, which is a different class of evidence from a user survey — and it matters below, because this particular claim could not be independently confirmed.</dd>
+
+  <dt>Global capability centre (GCC)</dt>
+  <dd>An offshore engineering and operations site owned by the company itself, rather than work outsourced to a services vendor. ModMed's Hyderabad site is a GCC. <b>The distinction that decides this job is inside the category, not at its edge</b>: a captive site can be a genuine co-owner of the product, or an execution arm that builds what another country designs. Both are called GCCs and both are in HITEC City.</dd>
+
+  <dt>Domain-driven design (DDD)</dt>
+  <dd>An approach to large systems that makes the business domain the organising principle — bounded contexts with their own models and vocabulary, explicit boundaries between them, and deliberate translation at the seams. Named as required on this posting. <b>Its natural home is exactly a multi-specialty platform</b>, where dermatology and ophthalmology genuinely are different domains that share infrastructure.</dd>
+
+  <dt>Event streaming</dt>
+  <dd>A durable, ordered, replayable log of events that many consumers read independently at their own pace, as opposed to a queue where a message is consumed once. The posting names Kafka and NATS as examples of the category. <b>His Amazon Kinesis work is the same category</b> — see the honesty note below, which is load-bearing.</dd>
+
+  <dt>Distributed cache grid</dt>
+  <dd>An in-memory data tier spread across many nodes so that cached state survives a node loss and scales past one machine's memory. Named products in this category include Hazelcast, Apache Ignite and Oracle Coherence. <b>The concept is what the posting asks for</b>; the named products are not the only way to satisfy it.</dd>
+
+  <dt>Reactive and functional programming</dt>
+  <dd>Reactive means non-blocking, back-pressure-aware processing of asynchronous streams, so a thread is never parked waiting on input or output. Functional means composing behaviour from pure transformations rather than mutating shared state. The posting asks for <em>familiarity</em>, not expertise.</dd>
+
+  <dt>Clearlake's O.P.S. framework</dt>
+  <dd>The named operating playbook that Clearlake Capital, ModMed's majority owner since March 2025, applies to its portfolio companies. Private-equity operating frameworks are systematic programmes of operational change rather than a passive shareholding. <b>Relevant here only as context for how a site's mandate can move</b>, in either direction.</dd>
+</dl>
+
+<div class="callout">
+  <p><b>Three honesty flags from <code>jd.md</code> are carried into this page unresolved, exactly as recorded.</b></p>
+  <p><b>Event streaming.</b> The posting writes "Event Streaming (e.g. Kafka, NATS)". Per the scoring rule, an "e.g." qualifier is read generously, and his <b>Amazon Kinesis</b> work satisfies the category. Kinesis is <b>confirmed in production</b> on the chat platform. The two-stream Enhanced Fan-Out design is his, and <code>professional-journey.md</code> records in his own words that its limits were never load-tested, for budget reasons — worth knowing before a room asks. <b>Kafka and NATS are never written as his.</b></p>
+  <p><b>Reactive and functional programming.</b> Spring WebFlux is not his and is not claimed. The posting asks for familiarity only, so this is a ramp item, not a capability cap.</p>
+  <p><b>Distributed cache grids.</b> <b>Redis is claimable</b>, user-confirmed, and sat in the production request path of systems he owned — Amura's per-tenant-namespaced risk cache and its canonical keyed cache. A named grid product (Hazelcast, Ignite, Coherence) is not his. Worth telling rather than hiding: one Amura query <em>declined</em> a per-request Redis layer in favour of an in-process cache, which is a deliberate engineering call.</p>
+  <p><b>One boundary that must not blur.</b> The Amura corpus names <b>no message broker at all</b> — Kafka and Kinesis both return zero hits across all twenty-two case-study files. The Kinesis and high-availability work belongs to the <b>chat platform</b>, a different system. Never cite Amura as streaming evidence.</p>
+</div>
+
+<!-- ================================ VERDICT ================================ -->
+
+<h2>Verdict</h2>
+
+<div class="tldr">
+  <strong>The read, in three sentences</strong>
+  <p><b>This is the closest technical match to arrive in this workspace</b> — Java and Spring Boot named as deep expertise against his single deepest thread, multi-tenant cloud software-as-a-service against the axe Monitor consolidation, Docker and Kubernetes both user-confirmed, an employer that publicly committed to Amazon Web Services as its strategic cloud in April 2026, and HIPAA already on his résumé — sitting in Hyderabad, where he already lives, at an in-house recruiter two degrees away with fifteen mutual connections.</p>
+  <p><b>The company is real, funded, growing and acquisitive</b>: majority-owned by Clearlake Capital since March 2025 at a reported five-point-three-billion-dollar valuation, verified first place across all eleven of its specialty electronic health records in two consecutive Black Book surveys, and buying Bonsai Health in April 2026 to serve nearly fifty thousand providers, which is precisely the platform-consolidation work a centralized architecture team inherits.</p>
+  <p><b>The one question that decides the seat is where architectural authority actually sits</b>, because ModMed's own requisition for the same job title reports to a Director of Software Architecture in Boca Raton, Florida, and no equivalent architecture leadership is publicly visible in Hyderabad — which does not settle it either way, but does mean it has to be asked out loud before anything else.</p>
+</div>
+
+<div class="callout good">
+  <p><b>Location is not a question on this one, at all.</b> He lives in Hyderabad. The site is in HITEC City. The posting is listed as in-office, which is a neutral fact rather than a finding, and schedule density is never scored in this workspace. <b>Relocation, commute and week-shape are all off the table</b>, which is unusual and worth saying plainly: everything that normally consumes a first call here is already resolved.</p>
+</div>
+
+<h3>What is established, and what is not</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Question</th><th>Status</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><td>Is the requisition real and on ModMed's own site?</td><td><span class="tag ok">Yes</span></td><td><code>modmed.com/careers</code> redirects with a 301 to ModMed's own Workday tenant, <code>modmed.wd501.myworkdayjobs.com/ModMed12</code>. A Hyderabad Senior Software Architect posting is live and syndicated to Built In, foundit and LinkedIn, listed as reposted within the last two weeks.</td></tr>
+<tr><td>Does the title match the posting?</td><td><span class="tag ok">Yes</span></td><td>"Senior Software Architect", Hyderabad, Telangana, in-office, System Design Architecture team. Identical wording across three independent boards.</td></tr>
+<tr><td>Is the Hyderabad seat the same job as the one on ModMed's Workday front page?</td><td><span class="tag warn">No — different requisition</span></td><td>Workday R3948, also titled Senior Software Architect, is <b>Boca Raton, Florida</b>, hybrid three days, posted 10 June, reporting to the Director of Software Architecture, and asks for Kubernetes, serverless, service mesh and SAFe with <b>no Java, Spring, DDD or event streaming</b>. Same title, two different jobs. The Java one is the Hyderabad one.</td></tr>
+<tr><td>Is the company stable and funded?</td><td><span class="tag ok">Yes</span></td><td>Clearlake Capital completed a majority growth investment announced 3 March 2025, buying out Warburg Pincus after eight years; reported at a five-point-three-billion-dollar valuation. Co-chief-executives continued with no management change announced.</td></tr>
+<tr><td>Is it growing?</td><td><span class="tag ok">Yes</span></td><td>"Over 40,000 providers" in March 2025 to "nearly 50,000" in April 2026; ModMed Scribe 2.0 from 240,000 to over one million artificial-intelligence-assisted patient visits between March and June 2026; Bonsai Health acquired April 2026; a multi-year Amazon Web Services agreement announced 13 April 2026.</td></tr>
+<tr><td>Are there public layoffs or restructuring?</td><td><span class="tag">Nothing found</span></td><td>No layoff announcement, no Worker Adjustment and Retraining Notification filing, no press report surfaced. Employee reviews mention periodic reorganisations. <b>Absence of a public announcement is not proof of absence.</b></td></tr>
+<tr><td>Does the Hyderabad site have engineering leadership?</td><td><span class="tag ok">Yes</span></td><td>A Director, Software Engineering (Neeraj Ramani, ex-Pega, ex-Oracle India) is publicly identifiable at ModMed India, plus a Vice President and India Human Resources Country Leader. ModMed India ran a chief-executive-level roundtable with the analyst firm Zinnov on using India for high-value transformation.</td></tr>
+<tr><td>Does the Hyderabad site have <em>architecture</em> leadership?</td><td><span class="tag warn">Not publicly visible</span></td><td>The only named architecture management chain that surfaces is the Director of Software Architecture on the Boca Raton requisition. <b>This is the decisive unknown and it cannot be closed from outside.</b></td></tr>
+<tr><td>Is the seat individual-contributor?</td><td><span class="tag ok">Yes, as written</span></td><td>Mentorship, code review, technical guidance and standard-setting. No direct reports, hiring or appraisals named anywhere in the posting. Consistent with the Boca Raton sibling requisition, which mentors staff and senior engineers.</td></tr>
+<tr><td>Black Book: number one electronic health record in eleven specialties?</td><td><span class="tag ok">Verified — and understated</span></td><td>Confirmed for 2025 (announced 16 January 2025, second consecutive sweep, 33,516 respondents) <b>and repeated for 2026</b> (announced 15 January 2026, 33,178 verified users, more than 239 competitors). The posting cites only the older one.</td></tr>
+<tr><td>Globee Gold, Technology Team of the Year 2025?</td><td><span class="tag warn">Not independently verified</span></td><td>Every trace of this claim leads back to ModMed's own job postings. The 15th Annual 2025 Globee Awards for Business winners were announced 23 October 2025; the winners list itself returns HTTP 403 to these tools, and no ModMed press release for it surfaced although ModMed does press-release its awards. <b>Unverified, not disproven.</b></td></tr>
+<tr><td>Florida Venture Forum, Venture-Backed Company of the Year?</td><td><span class="tag warn">Not verified, and stale on its face</span></td><td>No year is given in the posting and none could be found; the only sources are job postings. Separately, <b>ModMed has not been venture-backed since March 2025</b> — it is private-equity majority-owned. Whatever the award was, it describes a company that no longer exists in that form.</td></tr>
+<tr><td>Does "4,500+ employees" hold up?</td><td><span class="tag bad">No</span></td><td>ModMed's own about-us page says "more than 2,500 employees worldwide". Third-party workforce data puts it at roughly 2,270 to 2,970 across 2025–2026. <b>The posting's headline figure is not supported by ModMed's own site.</b></td></tr>
+<tr><td>Is the recruiter real and in-house?</td><td><span class="tag ok">Yes</span></td><td>Prabhakar Teguri, Lead Talent Acquisition Specialist at ModMed India, Hyderabad, with a live LinkedIn profile and a visible trail of ModMed Hyderabad requisitions across Indian job boards. Second degree, fifteen mutual connections.</td></tr>
+<tr><td>Any security history worth knowing?</td><td><span class="tag bad">Yes — a 2025 breach</span></td><td>A targeted intrusion on 9–10 July 2025, confirmed 29 July, exfiltrating files containing personally identifiable information and protected health information. <b>198,795 individuals</b>, per the federal Office for Civil Rights portal figure released 13 January 2026. A class settlement is pending final approval on 17 November 2026.</td></tr>
+<tr><td>Any regulatory history?</td><td><span class="tag warn">Yes — resolved, 2022</span></td><td>A forty-five-million-dollar False Claims Act and Anti-Kickback Statute settlement announced November 2022, covering conduct between January 2010 and July 2017. Resolved, and ModMed states it has fully resolved all government claims.</td></tr>
+<tr><td>Is Amazon Web Services the cloud?</td><td><span class="tag ok">Yes, explicitly</span></td><td>ModMed announced a multi-year agreement on 13 April 2026 naming Amazon Web Services the cloud provider for its AI-Powered Practice, describing itself as born in the cloud on Amazon Web Services since day one.</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ================================ RED FLAGS ================================ -->
+
+<h2>Red flags</h2>
+
+<p class="lede">Ranked by evidence, not by how bad they sound. Only the first is decision-shaping.</p>
+
+<div class="danger">
+  <p><b>1 — The architecture chain of command appears to run through Florida, and nothing public shows it running through Hyderabad.</b> <span class="tag bad">Sharpest</span></p>
+  <p>The posting describes "the centralized System Design Architecture team", which "owns the technological roadmap and architectural ownership of the entire software suite". That is an unusually strong charter, and it is the reason to take this seat seriously. But the only place ModMed publicly describes that team's management is on its own Workday requisition <b>R3948</b>, a Senior Software Architect in <b>Boca Raton, Florida</b>, which states the role sits within the Architecture Organization and <b>reports to the Director of Software Architecture</b>. No India-based architecture director, principal architect or head of architecture surfaces anywhere in public data. What does surface in Hyderabad is a Director of Software Engineering, a Vice President for India Human Resources, a Director for Revenue Cycle Management hired in August 2026, and an open engineering mix of Software Engineer 1, Software Engineer 2, Senior Software Engineer 1 and Principal Cloud Engineer.</p>
+  <p class="why"><b>Why this is the whole decision and not a quibble.</b> A centralized architecture team headquartered in another country resolves one of two ways. Either Hyderabad holds real seats on that team with genuine decision rights over the roadmap, in which case this is a strong individual-contributor architect job in the city he lives in. Or Hyderabad executes designs authored in Florida, in which case the title says architect and the work is senior engineering with a review function — a materially different job that no amount of stack overlap compensates for. <b>Public evidence leans toward the second but is nowhere near sufficient to conclude it</b>, and the innocent explanation is entirely plausible: this requisition may itself be the first architecture seat being planted in Hyderabad, which would be a genuinely good reason for no India architecture leadership to be visible yet. That reading is testable in one phone call and untestable any other way.</p>
+  <p><b>Sources:</b> <a href="https://modmed.wd501.myworkdayjobs.com/en-US/ModMed12/job/Senior-Software-Architect_R3948">ModMed Workday R3948, Boca Raton</a> · <a href="https://builtin.com/job/senior-software-architect/9920527">Built In — Hyderabad Senior Software Architect</a> · <a href="https://builtin.com/company/modmed/jobs">Built In — ModMed open roles by location</a> · <a href="https://www.linkedin.com/in/neeraj-ramani/">Director, Software Engineering, ModMed India</a> · <a href="https://hrtoday.in/modmed-appoints-rishika-gautam-kapoor-as-director-revenue-cycle-management/">Director, Revenue Cycle Management, Hyderabad, Aug 2026</a></p>
+</div>
+
+<div class="danger">
+  <p><b>2 — A confirmed 2025 data breach exposing protected health information for 198,795 people, with a class settlement still pending.</b></p>
+  <p>A threat actor accessed and copied files from ModMed's internal servers on 9–10 July 2025. Suspicious activity was identified on 21 July and unauthorised access confirmed on 29 July. The exposed material spans full names, dates of birth, addresses, contact details, Social Security numbers, medical record numbers, patient account numbers, provider and practice names, billing and diagnostic codes, prescriptions, diagnosis and treatment information, financial account information, government identification numbers and health insurance information. ModMed's position is that full medical records were not involved and that the exposure varies by individual. The federal Office for Civil Rights portal figure, released 13 January 2026, is <b>198,795 individuals</b>. A class action, <em>Cavallaro-Kearins v. Modernizing Medicine, Inc.</em>, case 9:25-cv-81443-EA in the Southern District of Florida, has a settlement with notice mailed 29 July 2026, an opt-out deadline of 19 October 2026 and a final approval hearing on <b>17 November 2026</b>, which is after any realistic start date. Reporting also indicates some of the data subsequently appeared for sale.</p>
+  <p class="why"><b>This cuts both ways and the second edge is sharper than the first.</b> The posting explicitly asks the architect to "shape security architecture practices" and names collaboration with internal information security. A company that was breached fourteen months ago and is still working through the settlement has a real, funded, executive-visible reason to hire for exactly that — which is a far better mandate than a security line item written because job descriptions have one. <b>The risk is the opposite case</b>: that the security charter is boilerplate, the remediation was owned entirely by information security and cloud operations in Florida, and the architect inherits the consequences without the authority. That is question three below.</p>
+  <p><b>Sources:</b> <a href="https://www.hipaajournal.com/data-breache-modmed-lifebridge-health-right-at-home/">HIPAA Journal, 27 Oct 2025</a> · <a href="https://www.claimdepot.com/data-breach/modernizing-medicine-2025">Office for Civil Rights figure, 198,795, released 13 Jan 2026</a> · <a href="https://modernizingmedicinedatasettlement.com/">Official settlement site, case 9:25-cv-81443-EA</a> · <a href="https://databreaches.net/2025/10/24/modmed-revealed-they-were-victims-of-a-cyberattack-in-july-then-some-data-showed-up-for-sale/">DataBreaches.net, 24 Oct 2025</a></p>
+</div>
+
+<div class="warn">
+  <p><b>3 — The posting's company boilerplate does not survive checking, in three places.</b></p>
+  <p><b>The employee count is wrong.</b> The posting claims "4,500+". ModMed's own about-us page says "more than 2,500 employees worldwide", and independent workforce data puts the figure between roughly 2,270 and 2,970 across 2025 and 2026. Nothing supports 4,500.</p>
+  <p><b>Two of three award claims cannot be independently confirmed.</b> The Globee Gold for Technology Team of the Year traces only to ModMed's own job postings; the Globee winners list is inaccessible to these tools and ModMed appears not to have press-released it, though it does press-release awards routinely. The Florida Venture Forum "Venture-Backed Company of the Year" has no year attached, no press release and no independent source, and it describes a status ModMed no longer holds, having been private-equity majority-owned since March 2025.</p>
+  <p><b>The Black Book claim is dated.</b> The posting cites the 2025 sweep. ModMed repeated it in January 2026. The boilerplate has not been refreshed in more than a year.</p>
+  <p class="why"><b>Do not inflate this into a character judgement.</b> Stale recruiting boilerplate is ordinary at a company of this size and says nothing about the engineering organisation. It is listed because it establishes one useful thing: <b>the posting's non-technical claims are not load-bearing evidence</b> and should not be quoted back as facts. The technical requirements section, by contrast, is specific, internally consistent and matches a real Workday requisition, so it can be trusted.</p>
+  <p><b>Sources:</b> <a href="https://www.modmed.com/who-we-are/about-us/">ModMed about-us</a> · <a href="https://www.reveliolabs.com/companies/modernizing-medicine/employees/">Revelio Labs headcount</a> · <a href="https://www.modmed.com/press-release/modmed-sweeps-black-book-rankings-again/">Black Book 2026 sweep, 15 Jan 2026</a> · <a href="https://www.modmed.com/press-release/modmed-once-again-ranks-1-in-all-of-its-specialty-specific-ehrs-in-the-2025-black-book-survey/">Black Book 2025 sweep, 16 Jan 2025</a> · <a href="https://globeeawards.com/judging-and-awards-process/">Globee judging and fee model</a></p>
+</div>
+
+<div class="warn">
+  <p><b>4 — "Senior Software Architect" is the middle rung of a graded ladder, not the top of it.</b></p>
+  <p>ModMed runs at least three architect grades. Indian job boards carry <b>Senior Software Architect</b> at a 10–12 year band and, separately, <b>Senior Software Architect 2</b> at a 14–16 year band in the same city, the latter oriented toward performance engineering. A <b>Software Architect 1</b> title also exists in ModMed's public postings. The requisition in hand asks for 10-plus years with 3-plus in a lead design or architectural role. <b>He has nineteen years</b>, and <code>professional-journey.md</code> is built around that number.</p>
+  <p class="why">This is a levelling conversation, not a red flag about the company, and it is worth having early rather than after a process. The experience bands on aggregator sites are frequently the aggregator's own derivation rather than the employer's, so the question is which grade this requisition actually carries — and whether Senior Software Architect 2 is open to him instead or as well, since it is posted in the same city. A recruiter working from a real requisition will know both answers immediately.</p>
+  <p><b>Sources:</b> <a href="https://www.foundit.in/job/senior-software-architect-modmed-india-hyderabad-secunderabad-telangana-44183573">foundit — Senior Software Architect, 10–12 yrs</a> · <a href="https://www.foundit.in/job/senior-software-architect-2-modmed-india-hyderabad-secunderabad-telangana-58158367">foundit — Senior Software Architect 2, 14–16 yrs</a> · <a href="https://builtin.com/job/software-architect-1-java-hybrid/3281924">Built In — Software Architect 1, Java</a></p>
+</div>
+
+<div class="warn">
+  <p><b>5 — The Hyderabad site's visible job mix skews toward mid-level engineering and revenue-cycle operations.</b></p>
+  <p>Aggregated open roles in Hyderabad include Software Engineer 1, Software Engineer 2, Senior Software Engineer 1, Principal Cloud Engineer and Manager of Information Technology Systems, alongside Manager of Revenue Cycle Management Coding and Revenue Cycle Management Coding Analyst. Indian executive-search boards additionally carry ModMed Hyderabad postings for Director of Operations, Manager and Director of Customer Success, and Manager of Revenue Cycle Management. LinkedIn's ModMed India entity page lists Hyderabad as its location.</p>
+  <p class="why"><b>Read this carefully rather than dismissively.</b> A large revenue-cycle-management operation in the same building is completely normal for an electronic health record vendor and is not a knock on the engineering. What it does mean is that "extensive employee base in Hyderabad" in the posting is a headcount statement, not an engineering-seniority statement — so the size of the site says nothing about how senior the <em>engineering</em> population is, and therefore nothing about who an architect there would be architecting for. That is the population question in the forcing questions below.</p>
+  <p><b>Sources:</b> <a href="https://builtin.com/company/modmed/jobs">Built In — ModMed open roles</a> · <a href="https://www.iimjobs.com/j/modmed-technologies-director-operations-15-16-yrs-1568400">iimjobs — ModMed Hyderabad operations roles</a> · <a href="https://in.linkedin.com/company/modmed-india">ModMed India on LinkedIn</a></p>
+</div>
+
+<div class="warn">
+  <p><b>6 — Employee sentiment is mixed, thin for India specifically, and recurring on reorganisations and management variance.</b></p>
+  <p>Glassdoor's company-wide page carries roughly 3.7 out of 5 across about 465 reviews, with 64% recommending, culture and values around 4.1, work-life balance around 3.9 and career opportunities around 3.5. Recurring themes in the free text are periodic reorganisations, wide variance in management quality between teams, and a sense among longer-tenured reviewers that the company has changed. Indeed maintains a separate "ModMed" company page distinct from its "Modernizing Medicine, Inc." page; the former sits at roughly 2.6 out of 5 across only ten reviews, with job security and advancement the weakest dimension, and a country filter for India returned nothing, so <b>it cannot be confirmed as a Hyderabad-only sample</b>. Glassdoor's Hyderabad location page returned HTTP 403 to these tools and could not be read directly.</p>
+  <p class="why"><b>Two deliberate exclusions.</b> Compensation-related review content was excluded on standing instruction and does not appear above, even though sources volunteered it. And review counts this small are anecdotes: they generate questions and never establish patterns. The one durable, usable signal is the management-variance theme, which is worth converting into a question about who the hiring manager is and how the architecture team actually works, rather than into a conclusion.</p>
+  <p><b>Sources:</b> <a href="https://www.glassdoor.com/Overview/Working-at-Modernizing-Medicine-EI_IE722245.11,31.htm">Glassdoor — Modernizing Medicine</a> · <a href="https://www.indeed.com/cmp/Modmed/reviews">Indeed — ModMed</a></p>
+</div>
+
+<div class="note">
+  <p><b>7 — Context, not a flag: a resolved 2022 federal settlement, and the industry pattern behind it.</b></p>
+  <p>ModMed agreed in November 2022 to pay forty-five million dollars to resolve False Claims Act and Anti-Kickback Statute allegations covering conduct between January 2010 and July 2017: marketing arrangements with the pathology laboratory Miraca Life Sciences, later Inform Diagnostics, and donations of its electronic health record to providers in a way the government alleged drove laboratory referrals and inaccurate reporting for federal incentive payments. Miraca separately settled for sixty-three-and-a-half million dollars in January 2019. A former ModMed vice president of product management brought the whistleblower case. ModMed has since published that it has fully resolved all government claims.</p>
+  <p class="why">Historical, settled, and it pre-dates both the current ownership and the current chief technology officer. <b>It is listed for one reason only</b>: it is the concrete illustration of the glossary entry above, and it explains why an electronic health record company staffs compliance roles like the Compliance Director for artificial intelligence in revenue cycle management that sits open on ModMed's Workday tenant today. For an architect, the transferable point is that in this industry a design decision about what the software suggests or auto-fills is a compliance artefact.</p>
+  <p><b>Sources:</b> <a href="https://www.justice.gov/archives/opa/pr/modernizing-medicine-agrees-pay-45-million-resolve-allegations-accepting-and-paying-illegal">United States Department of Justice</a> · <a href="https://www.healthcareitnews.com/news/modernizing-medicine-pay-45m-resolve-false-claims-act-allegations">Healthcare IT News</a> · <a href="https://www.modmed.com/press-release/modmed-fully-resolves-all-government-claims/">ModMed statement</a></p>
+</div>
+
+<!-- ================================ GREEN FLAGS ================================ -->
+
+<h2>Green flags</h2>
+
+<div class="success">
+  <p><b>1 — The required stack maps onto his record more exactly than anything else this workspace has scored.</b></p>
+  <div class="tablewrap">
+  <table>
+  <thead><tr><th>Posting requires</th><th>His evidence</th><th>Read</th></tr></thead>
+  <tbody>
+  <tr><td>Deep expertise in Java, Spring, Spring Boot</td><td>Roughly eleven years of Java across three eras — El Paso Corporation 2008–2012, Rocket Software 2018–2019, Deque Software 2019–2025 — with six continuous years on Spring Boot 2.x and Java 8/17 on the axe Monitor platform</td><td><span class="tag ok">Core strength</span></td></tr>
+  <tr><td>Microservices, domain-driven design, distributed systems</td><td>Monolith decomposition into Java and Spring Boot microservices at Rocket; service extraction and shared cross-product platform services at Deque; a Go chat service and two-stream design at VoltusWave</td><td><span class="tag ok">Met</span></td></tr>
+  <tr><td>Relational and NoSQL databases</td><td>Per-customer PostgreSQL on Amazon Aurora at Deque; DynamoDB adopted across five sub-teams at VoltusWave; Elasticsearch as the authoritative serving index on Amura</td><td><span class="tag ok">Met, both halves</span></td></tr>
+  <tr><td>Event streaming (e.g. Kafka, NATS)</td><td>Amazon Kinesis, confirmed in production on the chat platform, with a two-stream Enhanced Fan-Out design</td><td><span class="tag ok">Met on the "e.g." rule</span></td></tr>
+  <tr><td>Cloud-native, Docker, Kubernetes</td><td>Kubernetes and Terraform user-confirmed and corroborated by his live card: Amazon Web Services on Kubernetes and Terraform with Elastic Container Service Fargate at 70% Spot, adopted as a company-wide standard rather than merely operated</td><td><span class="tag ok">Met</span></td></tr>
+  <tr><td>Low-latency, observable applications at enterprise scale</td><td>Datadog instrumentation at VoltusWave taking production errors below three percent; ELK cost down 46%</td><td><span class="tag ok">Met</span></td></tr>
+  <tr><td>Distributed cache grids <em>(familiarity)</em></td><td>Redis in the production request path — a per-tenant-namespaced risk cache at six-hour time-to-live, and a canonical keyed cache, both on FastAPI</td><td><span class="tag warn">Concept met, no named grid product</span></td></tr>
+  <tr><td>Reactive/functional programming <em>(familiarity)</em></td><td>No Spring WebFlux. Asynchronous and streaming work exists but not under this label</td><td><span class="tag warn">Ramp item, not a cap</span></td></tr>
+  <tr><td>Continuous integration and delivery</td><td>Jenkins to GitHub Actions at Deque in an ISO 27001 environment; deploy time from hours to under ten minutes at VoltusWave</td><td><span class="tag ok">Met</span></td></tr>
+  </tbody>
+  </table>
+  </div>
+  <p class="why"><b>Only two amber cells, both explicitly marked "familiarity" by the posting itself.</b> Neither is a genuinely core required technology in the sense that caps a score. The Java, Spring Boot and multi-tenant software-as-a-service core is the strongest column this workspace has produced.</p>
+</div>
+
+<div class="success">
+  <p><b>2 — Amazon Web Services is the cloud, explicitly and publicly, which removes every never-claim cloud from the conversation.</b></p>
+  <p>ModMed announced a multi-year agreement on 13 April 2026 naming Amazon Web Services the cloud provider for its AI-Powered Practice, and describes itself as having used Amazon Web Services as its primary cloud since day one. The Boca Raton sibling requisition mentions "AWS/Azure/GCP best practices" as generic phrasing, but the company's own announcement settles which one is real. <b>Microsoft Azure and Google Cloud Platform are both on the never-claim list and neither needs to come up.</b> Every cloud claim he can make is an Amazon Web Services claim, and this employer is an Amazon Web Services shop.</p>
+  <p><b>Sources:</b> <a href="https://press.aboutamazon.com/aws/2026/4/modmed-selects-aws-as-the-cloud-provider-for-the-ai-powered-practice">Amazon press centre, 13 Apr 2026</a> · <a href="https://www.modmed.com/press-release/modmed-selects-aws-as-the-cloud-provider-for-the-ai-powered-practice/">ModMed press release</a></p>
+</div>
+
+<div class="success">
+  <p><b>3 — He already carries HIPAA, and carries it for the right reason.</b></p>
+  <p>HIPAA is user-confirmed and on the résumé. Critically, it is not a compliance-training line: it was the <em>driver</em> for real architecture. His words are that the Go chat service and the two data streams carry high-availability design, multi-availability-zone deployment, failover and disaster recovery <b>because certification was required</b>, and the certification is HIPAA. That is the exact causal chain an electronic health record architecture interview probes for, and he has lived it rather than read it.</p>
+  <p class="why"><b>What ModMed adds is ramp, and it is worth naming honestly.</b> The Health IT Certification Program, information blocking, HL7 FHIR and US Core, and the TEFCA exchange framework are all new surface. None of them is a capability gap in the architecture sense — they are domain rules a strong architect absorbs in a quarter — but they are real, and an internal dashboard should say so. <b>Keep HIPAA distinct from Deque's ISO 27001</b>: different employer, different certification, and a reader can merge them.</p>
+</div>
+
+<div class="success">
+  <p><b>4 — The charter as written is a genuine architecture charter, not a senior-engineer title upgrade.</b></p>
+  <p>"Technological roadmap and architectural ownership of the entire software suite" across eleven specialty products is a real platform mandate. The concrete work is visible in the public record and it is the right kind: an April 2026 acquisition (Bonsai Health, an agentic artificial-intelligence patient-engagement platform founded by the PatientPop founders) to be integrated and scaled to nearly fifty thousand providers; a published 2026 product roadmap adding a Billing Assistant and a Front Office Assistant; and a cloud programme under a fresh multi-year Amazon Web Services agreement. <b>Acquisition integration, cross-product framework extraction and cloud consolidation are precisely what a centralized architecture team inherits</b>, and they are the work he has actually done — the Deque customer consolidation onto shared instances, the Keycloak to Red Hat single sign-on migration with zero user disruption, and the shared cross-product platform services.</p>
+  <p><b>Sources:</b> <a href="https://www.modmed.com/press-release/modmed-acquires-bonsai-health-to-accelerate-ai-powered-patient-engagement/">Bonsai Health acquisition, 20 Apr 2026</a> · <a href="https://www.businesswire.com/news/home/20251118161287/en/ModMed-Announces-Product-Roadmap-for-the-AI-Powered-Practice">2026 product roadmap</a> · <a href="https://www.businesswire.com/news/home/20260624167719/en/ModMed-Scribe-2.0-Surpasses-One-Million-AI-Powered-Patient-Visits">Scribe 2.0, one million visits, Jun 2026</a></p>
+</div>
+
+<div class="success">
+  <p><b>5 — The seat is individual-contributor in shape, which is the whole point of this workspace.</b></p>
+  <p>Mentorship, code review, technical guidance, security-architecture standard-setting, and navigating technical debt against speed to market. No direct reports, no hiring, no appraisals named anywhere. The sibling Boca Raton requisition independently corroborates the shape by describing mentorship of staff and senior engineers rather than management of them. <b>This is a Principal-or-Staff-equivalent individual-contributor seat, sourced correctly, and it needs no re-framing to fit the rule.</b></p>
+</div>
+
+<div class="success">
+  <p><b>6 — The company is funded, growing, and the ownership change is eighteen months old and settled.</b></p>
+  <p>Clearlake Capital's majority growth investment was announced 3 March 2025 and has completed; Warburg Pincus exited after eight years; press reporting put the valuation at five-point-three billion dollars. Co-founders Dan Cane and Dr Michael Sherling continued as co-chief-executives alongside Joe Harpaz, with no management change announced. The chief technology officer, Venkatesh Jayaraman, joined in 2023 from Vertex, with prior leadership roles at Citrix Systems and Motorola, and owns product engineering including cloud operations. Customer scale moved from over forty thousand providers in March 2025 to nearly fifty thousand in April 2026.</p>
+  <p class="why"><b>Stated plainly and without spin:</b> private-equity majority ownership means an operating playbook is being applied, and Clearlake names its O.P.S. framework in its own announcement. That is a real environment fact, and it cuts in <em>both</em> directions for a Hyderabad architect — offshore capability build-out is one of the standard levers, which would argue for the India site gaining mandate rather than losing it. There is no public evidence of layoffs or contraction, and eighteen months post-close with no announced management change is a settled picture rather than a turbulent one.</p>
+  <p><b>Sources:</b> <a href="https://www.prnewswire.com/news-releases/modmed-a-leading-healthcare-saas-platform-announces-significant-majority-growth-investment-from-clearlake-capital-302389656.html">Clearlake investment announcement, 3 Mar 2025</a> · <a href="https://www.axios.com/pro/health-tech-deals/2025/03/03/clearlake-buys-modmed-stake-from-warburg-valuing-company-at-53b">Axios on valuation</a> · <a href="https://www.modmed.com/press-release/venkatesh-jayaraman-joins-modmed-as-chief-technology-officer/">Chief technology officer appointment</a></p>
+</div>
+
+<div class="success">
+  <p><b>7 — The one verifiable award is the one that means something, and it is stronger than the posting says.</b></p>
+  <p>Black Book Research ranked ModMed first across all eleven of its specialty-specific electronic health records in its 2025 survey, announced 16 January 2025 and described as the second consecutive sweep, from 33,516 respondents. It <b>repeated in 2026</b>, announced 15 January 2026, from more than 33,178 verified electronic health record users against more than 239 competitors. This is a customer-satisfaction survey rather than a technical audit, so read it for what it is: strong evidence that the products work for the people using them, across three consecutive years. <b>The posting cites only the 2025 result.</b></p>
+  <p><b>Sources:</b> <a href="https://www.modmed.com/press-release/modmed-sweeps-black-book-rankings-again/">2026 sweep</a> · <a href="https://www.modmed.com/press-release/modmed-once-again-ranks-1-in-all-of-its-specialty-specific-ehrs-in-the-2025-black-book-survey/">2025 sweep</a></p>
+</div>
+
+<div class="success">
+  <p><b>8 — The route in is a warm one to a verified in-house recruiter, in the right city.</b></p>
+  <p>Prabhakar Teguri is a real, verifiable Lead Talent Acquisition Specialist at ModMed India, based in Hyderabad, with a visible trail of ModMed Hyderabad requisitions across Indian job boards spanning engineering, operations, customer success and revenue cycle management. Second degree, fifteen mutual connections. This is fully assessed in its own section below.</p>
+</div>
+
+<!-- ================================ HYDERABAD ================================ -->
+
+<h2>The Hyderabad organisation — the decisive question</h2>
+
+<p class="lede">This section exists because for an architect seat, nothing else matters as much. The finding is that public evidence is <b>real but partial</b>, and points more toward an execution-weighted site than an authority-weighted one, while leaving the innocent explanation wide open.</p>
+
+<h3>What is established about the site</h3>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Fact</th><th>Date</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Global capability centre opened in HITEC City, Hyderabad, approximately 20,000 square feet</td><td>Announced March 2024</td><td><a href="https://www.biospectrumindia.com/news/93/24300/us-based-modmed-opens-global-capability-centre-in-hyderabad.html">BioSpectrum India</a></td></tr>
+<tr><td>100 employees at opening, target to double, recruiting across engineering, product development and support</td><td>March 2024</td><td><a href="https://www.investmentmonitor.ai/news/modmed-opens-a-new-global-capability-centre-in-hyderabad/">Investment Monitor</a></td></tr>
+<tr><td>Legal entity: ModMed Technologies India Private Limited</td><td>—</td><td><a href="https://www.naukri.com/modmed-technologies-india-private-limited-overview-6545881">Naukri entity page</a></td></tr>
+<tr><td>ModMed India LinkedIn page lists Hyderabad as its location</td><td>Current</td><td><a href="https://in.linkedin.com/company/modmed-india">LinkedIn</a></td></tr>
+<tr><td>Director, Software Engineering in Hyderabad — Neeraj Ramani, previously Pega and Oracle India</td><td>Current</td><td><a href="https://www.linkedin.com/in/neeraj-ramani/">LinkedIn</a></td></tr>
+<tr><td>Vice President, India Human Resources Country Leader — Meenakshi Chhillar</td><td>Current</td><td><a href="https://bmhrmagazine.com/meenakshi-chhillar-joins-modmed-india-as-vice-president-india-hr-country-leader/">Business Manager HR</a></td></tr>
+<tr><td>Director, Revenue Cycle Management appointed in Hyderabad</td><td>August 2026</td><td><a href="https://hrtoday.in/modmed-appoints-rishika-gautam-kapoor-as-director-revenue-cycle-management/">HR Today</a></td></tr>
+<tr><td>ModMed India co-hosted a chief-executive-level roundtable with the analyst firm Zinnov on using India for high-value transformation</td><td>Recent, undated on source</td><td><a href="https://in.linkedin.com/company/modmed-india">ModMed India LinkedIn</a></td></tr>
+<tr><td>Open Hyderabad engineering roles: Software Engineer 1, Software Engineer 2, Senior Software Engineer 1, Principal Cloud Engineer, Manager of Information Technology Systems</td><td>Current</td><td><a href="https://builtin.com/company/modmed/jobs">Built In</a></td></tr>
+<tr><td>Open Hyderabad non-engineering roles: Revenue Cycle Management coding manager and analyst, plus operations, customer success and revenue-cycle director and manager roles on Indian executive boards</td><td>Current</td><td><a href="https://www.iimjobs.com/j/modmed-technologies-director-operations-15-16-yrs-1568400">iimjobs</a></td></tr>
+<tr><td>Two distinct architect grades posted in Hyderabad: Senior Software Architect, and Senior Software Architect 2 oriented to performance engineering</td><td>Current</td><td><a href="https://www.foundit.in/job/senior-software-architect-2-modmed-india-hyderabad-secunderabad-telangana-58158367">foundit</a></td></tr>
+<tr><td>No India-based architecture director, head of architecture or principal architect is publicly identifiable</td><td>As of 26 Aug 2026</td><td>Negative finding across LinkedIn, job boards and press</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>The read, stated plainly</h3>
+
+<div class="callout">
+  <p><b>The site is real, growing and moving up the value chain — that much is not in doubt.</b> A global capability centre that opened at 100 people in March 2024 and now carries directors for software engineering, revenue cycle management and human resources, that posts two distinct architect grades, and that convenes an analyst-hosted roundtable about doing high-value work in India, is not a back-office annex. It is a site with ambition and executive attention.</p>
+  <p><b>What cannot be established is whether architectural <em>authority</em> has moved with it.</b> The only publicly visible architecture management chain is in Boca Raton. That is consistent with two very different worlds. In the first, the architecture team is genuinely distributed, Hyderabad architects hold real roadmap ownership, and the Florida director is simply where the reporting line happens to land — normal in any multi-site engineering organisation, and no different from the American manager a senior Indian engineer often reports to. In the second, design authority sits with Florida, Hyderabad executes, and the architect title describes influence rather than ownership.</p>
+  <p><b>Two pieces of evidence tilt slightly toward optimism.</b> Posting <em>two</em> architect grades in one city is an odd thing to do if the intent is a single liaison seat; it looks more like the start of a bench. And private-equity-backed operating programmes routinely expand offshore capability rather than contract it. <b>Neither is proof.</b> The honest answer is that this is a one-phone-call question that no amount of desk research will close, which is why it is question one below.</p>
+</div>
+
+<!-- ================================ REGULATORY ================================ -->
+
+<h2>The regulatory surface an electronic health record architect actually carries</h2>
+
+<p class="lede">He has HIPAA. The question this section answers is what ModMed's context adds on top of it, and the honest answer is: a lot of domain surface, none of it a capability gap.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Layer</th><th>What it demands of an architect</th><th>His position</th></tr></thead>
+<tbody>
+<tr><td><b>HIPAA Security Rule</b></td><td>Access control, audit logging, integrity, encryption at rest and in transit, and the ability to evidence all of it</td><td><span class="tag ok">Direct experience</span> — HIPAA user-confirmed, and it drove the multi-availability-zone, failover and disaster-recovery design on the chat platform. Least-privilege and role-based access control are on the résumé from Deque.</td></tr>
+<tr><td><b>HIPAA Privacy and Breach Notification Rules</b></td><td>Disclosure boundaries in the data model; the ability to reconstruct, after an incident, exactly whose records were in which file</td><td><span class="tag warn">Adjacent</span> — his multi-tenant isolation and per-tenant namespacing work is the right primitive, but the reporting obligation itself is new surface.</td></tr>
+<tr><td><b>Business associate obligations and the India entity</b></td><td>The business associate agreement chain reaches ModMed Technologies India Private Limited; the federal regulator has asserted jurisdiction over business associates outside the United States</td><td><span class="tag ok">Strength, and a talking point</span> — his Deque work is exactly this shape: regulated-bank customers carved out of shared instances, US–India teams, per-customer PostgreSQL isolation. <b>Client names stay off written artefacts</b> but are load-bearing spoken evidence.</td></tr>
+<tr><td><b>India's Digital Personal Data Protection Act, 2023</b></td><td>A second, non-equivalent regime over the same systems: consent, data-principal rights, breach timelines, penalties to ₹250 crore per violation</td><td><span class="tag warn">New</span> — genuinely new surface, and a good question rather than a gap, because how ModMed reconciles the two regimes is an architecture decision someone has already made.</td></tr>
+<tr><td><b>Health IT Certification Program (ASTP/ONC)</b></td><td>Dozens of prescribed criteria the software must demonstrably meet, re-certified on a cycle, with HTI-5 proposing to eliminate 34 and revise 7 of 60 criteria as of January 2026</td><td><span class="tag bad">Absent from his record</span> — <b>the largest genuinely new thing on this page.</b> Not a capability gap in the architecture sense, but it is a real body of domain knowledge and it should be named plainly rather than glossed.</td></tr>
+<tr><td><b>Information blocking</b></td><td>Design decisions that impede lawful export of electronic health information can constitute a violation</td><td><span class="tag warn">New concept, familiar mechanics</span> — the inversion of instinct is the interesting part, and it is learnable quickly.</td></tr>
+<tr><td><b>HL7 FHIR, US Core, TEFCA</b></td><td>Standards-conformant application programming interfaces and participation in national exchange networks</td><td><span class="tag ok">Transferable</span> — REST and JSON application programming interface design, API versioning at Deque, and the MuleSoft enterprise service bus integration of 25 hotel suppliers are the same integration muscle against a different specification.</td></tr>
+<tr><td><b>Anti-Kickback Statute and False Claims Act exposure</b></td><td>What the software recommends, defaults or auto-populates onto a claim is legal evidence</td><td><span class="tag warn">New, and the most interesting</span> — this is where a healthcare architect's job differs most from anything in his record, and it is a genuinely good thing to be curious about out loud.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note">
+  <p><b>The framing that works, and the one that does not.</b> Outward-facing material leads with strengths and never volunteers gaps, so the certification-programme surface belongs in preparation and internal notes, not in an application answer or an outreach message. In a room, the honest and strong version is that he has carried a certification-driven architecture before, that HIPAA specifically was the forcing function for the high-availability design he owned, and that the Health IT Certification Program is a body of rules he would need to learn rather than a kind of engineering he has not done. <b>That is true, it is not defensive, and it is the accurate description.</b></p>
+  <p><b>One collision to keep clean:</b> HIPAA is his from VoltusWave's chat platform. ISO 27001 is Deque's. Different employer, different certification, and a listener will merge them if he does not separate them himself.</p>
+</div>
+
+<!-- ================================ RECRUITER ================================ -->
+
+<h2>The recruiter — what an in-house lead at second degree actually implies</h2>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Signal</th><th>Finding</th></tr></thead>
+<tbody>
+<tr><td>Is he real and at ModMed?</td><td><span class="tag ok">Verified</span> — Prabhakar Teguri, Lead Talent Acquisition Specialist at ModMed India, live LinkedIn profile, Hyderabad.</td></tr>
+<tr><td>Is he in-house or agency?</td><td><span class="tag ok">In-house</span> — his posting trail is exclusively ModMed requisitions across Indian boards (iimjobs, hirist), spanning engineering, operations, customer success and revenue cycle management. An agency recruiter's trail spans multiple client companies. His does not.</td></tr>
+<tr><td>Is he local to the seat?</td><td><span class="tag ok">Yes</span> — Hyderabad, same city as the role and as him.</td></tr>
+<tr><td>Connection strength</td><td>Second degree, fifteen mutual connections. Above the threshold where a connection request reads as cold.</td></tr>
+<tr><td>Does the posting confirm the channel?</td><td><span class="tag ok">Yes</span> — ModMed's own anti-fraud notice states valid mail comes from <code>first.lastname@modmed.com</code> and that it never charges recruitment fees or hires through informal messaging apps. A message from that domain is verifiable against ModMed's own published rule.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="callout good">
+  <p><b>What this changes in practice.</b> An in-house talent-acquisition lead sits inside the hiring organisation, which means three things an agency intermediary cannot offer: he can name the hiring manager and the reporting line, he knows whether the requisition is funded and which grade it carries, and there is no third party whose incentive is to place a candidate rather than to answer a question. <b>Every forcing question below is answerable by him</b>, which is unusual — most of the questions this workspace generates have to wait for a hiring-manager round.</p>
+  <p><b>The trade is that he is one person covering many functions</b>, not an engineering-specialist recruiter, so architecture-depth questions may come back second-hand. That is a reason to get onto a call rather than to keep writing, which is also what the recruiter-reply rule already says.</p>
+  <p><b>Two operating rules apply to any reply.</b> Answer exactly what was asked, in the order asked, then put a call on the table, with no added questions of his own however useful they look. Lead with available immediately, nothing to serve. Include <b>+91 93640 27487</b> whenever the reply invites a call, and propose a slot roughly two days out rather than tomorrow. <b>All the questions below are for the call, out loud.</b></p>
+</div>
+
+<!-- ================================ QUESTIONS ================================ -->
+
+<h2>Forcing questions</h2>
+
+<p class="lede">Ordered so that the three that most quickly reveal whether this seat is what it says it is come first. Each is written so that a vague answer is itself the information.</p>
+
+<div class="panel">
+<h3>The three that matter most</h3>
+<ol>
+  <li>
+    <p><b>"Who does this seat report to, and where do they sit? And how many of the System Design Architecture team are in Hyderabad today versus Boca Raton?"</b></p>
+    <p class="why">This is the decision, compressed into one question a recruiter can answer immediately from the requisition. ModMed's own Boca Raton requisition for the same title reports to a Director of Software Architecture in Florida, and no India architecture leadership is publicly visible. A specific number — "four of us in Hyderabad, eleven in Boca" — is a real answer. "It's a global team" is also an answer, and a different one. <b>If this is the first architecture seat in Hyderabad, that is genuinely interesting and worth hearing said out loud</b>, because a founding seat and a satellite seat are opposite jobs with the same title.</p>
+  </li>
+  <li>
+    <p><b>"Tell me about an architectural decision the Hyderabad side of the team made in the last six months that Florida did not overrule."</b></p>
+    <p class="why">The un-fakeable version of question one. Charters are written by whoever writes job descriptions; decisions are made by whoever has authority. A specific example — a datastore choice, a service boundary, a framework standard — settles it in a sentence. An inability to produce one is not an accusation and may simply mean the recruiter does not track that, in which case it becomes the first question for the hiring-manager round. <b>Ask it as curiosity about the work, not as a test.</b></p>
+  </li>
+  <li>
+    <p><b>"After the July 2025 security incident, what changed in the architecture, and is that work part of this seat's remit?"</b></p>
+    <p class="why">The posting asks the architect to shape security architecture practices and to collaborate with internal information security. This question tests whether that is a real, funded, executive-visible charter or a line item — and a company fourteen months past a breach affecting nearly two hundred thousand people, with a class settlement still pending final approval in November, will have a definite answer either way. <b>It also does something no other question does</b>: it signals that he researched the company properly, without any adversarial edge, because the incident is public and the remediation is the interesting part. Asked plainly and without drama, it reads as an architect thinking about the actual problem.</p>
+  </li>
+</ol>
+</div>
+
+<h3>The rest, in order of value</h3>
+<ol start="4">
+  <li><b>"Which grade is this requisition — Senior Software Architect, or Senior Software Architect 2? Both are posted in Hyderabad."</b> <span class="why">He has nineteen years. Public bands put the first at 10–12 and the second at 14–16. Asking which one, and whether both are open, is a normal levelling question best asked before a process rather than after one. It also tests whether the recruiter is working from a live requisition.</span></li>
+  <li><b>"What does the architecture team actually own — is it review and standards, or does it hold the roadmap and write code?"</b> <span class="why">The posting says roadmap and architectural ownership of the entire suite, which is a strong claim. The distinction between an architecture function that governs and one that builds is the difference between two jobs, and it is not derivable from any posting.</span></li>
+  <li><b>"How big is the engineering population in Hyderabad, as distinct from revenue cycle management and operations? And what's the seniority mix?"</b> <span class="why">The visible Hyderabad job mix runs Software Engineer 1 through Senior Software Engineer 1 alongside a substantial revenue-cycle operation. An architect's leverage depends entirely on who is downstream of the designs. This is a factual question with a factual answer.</span></li>
+  <li><b>"Which products would I cover? All eleven specialties, or a subset?"</b> <span class="why">Eleven specialty electronic health records under one architecture team is either an enviable platform mandate or an impossible span. The answer shapes what the first year actually looks like.</span></li>
+  <li><b>"How is the Bonsai Health integration being run, and does architecture own it?"</b> <span class="why">Acquired April 2026, to be scaled to nearly fifty thousand providers. Acquisition integration is the canonical centralized-architecture workload, and it is the closest analogue to work he has genuinely done. If architecture owns it, that is a concrete and attractive first project.</span></li>
+  <li><b>"How does the India entity handle protected health information under both HIPAA and the Digital Personal Data Protection Act — is patient data accessible from Hyderabad, or is access mediated?"</b> <span class="why">A real architecture question with real design consequences, and one that reveals how mature the site's data-governance posture is. It is also the question that most clearly signals he understands what an offshore healthcare site actually is.</span></li>
+  <li><b>"What's the state of Health IT Certification Program work — is HTI-5 changing the roadmap, and does architecture carry certification criteria?"</b> <span class="why">Asked as engagement with the domain, not as a confession of unfamiliarity. HTI-5 was proposed in January 2026 and proposes eliminating 34 of 60 certification criteria; anyone in this industry has an opinion about it, and the answer reveals how much of the architect's year is regulatory.</span></li>
+  <li><b>"What's the current Java and Spring Boot footprint — how much of the platform, and what versions?"</b> <span class="why">The posting names deep Java, Spring and Spring Boot expertise, which is his strongest column. It is worth confirming the platform is genuinely Java-centric rather than the posting describing one service among several.</span></li>
+  <li><b>"What does the interview process look like, and who runs the technical round?"</b> <span class="why">Whether an architect, the Director of Software Architecture, or an engineering manager runs it says what the seat is really being hired for. Also practical scheduling information.</span></li>
+  <li><b>"What's the on-call expectation for architects, and is there a United States-hours overlap requirement?"</b> <span class="why">Schedule density is never scored here and six- and seven-day weeks are fine, so this is not a filter. But a Florida-anchored architecture team implies an overlap window, and 24/7 on-call is a separate axis worth establishing now rather than after an offer.</span></li>
+</ol>
+
+<div class="tip">
+  <p><b>Where these go.</b> All of them belong on a call, out loud. A written reply to the recruiter answers exactly what was asked, in the order asked, and then puts a call on the table — <b>with no added questions</b>, because every extra written question is one more thing standing between him and a phone call. The only item worth considering in writing is the requisition or grade question in item 4, and that is his call to make, not this page's.</p>
+</div>
+
+<!-- ================================ OPEN CLAIMS ================================ -->
+
+<h2>Open claims to carry forward — surfaced, not resolved</h2>
+
+<div class="banner">
+  <p><b>These are his to settle and nobody else's.</b> They are listed because this seat makes some of them more likely to be probed, not because this page has any view on them. <b>The résumé wording is not touched.</b> Interview preparation is not built until a company responds.</p>
+</div>
+
+<ul class="checks">
+  <li><b>The two-stream Kinesis design and the "500 to 100,000 concurrent users" wording.</b> This posting names event streaming and low-latency systems as requirements, so the chat-platform streaming work will be the centrepiece of any technical round. The journey document records in his own words that the two-stream architecture's limits were never load-tested for budget reasons, and that the hundred-thousand figure came from a burst test at one request per user with no sustained load and no five-hundred baseline. <b>Confirm-or-reject, his call.</b></li>
+  <li><b>The 27 millisecond and P95 16 millisecond pairing.</b> A P95 below the mean is a strength if he names the tail, and "low-latency, observable applications at enterprise scale" is a stated requirement here.</li>
+  <li><b>The graph neural network.</b> Settled as real and in the headline, in word-position four. Not open, but it is a certainty in any technical round and this employer is actively shipping artificial-intelligence assistants, so it will come up.</li>
+  <li><b>Deque's 70–80% consolidation figure, and whether roughly 300 refers to customers or instances.</b> The multi-tenant consolidation story is the single strongest analogue to ModMed's eleven-product platform problem, which makes these numbers more likely to be asked about here than on a typical seat.</li>
+  <li><b>The four Rocket Software metrics.</b> The Rocket monolith decomposition into Java and Spring Boot microservices is directly relevant to a microservices-and-domain-driven-design posting; the decomposition itself is confirmed in his own words and only the numbers are open.</li>
+</ul>
+
+<!-- ================================ LIMITS ================================ -->
+
+<h2>Limits of this research</h2>
+
+<div class="panel">
+<ul>
+  <li><b>Compensation was excluded by instruction</b>, including where sources volunteered it. No band, aggregator figure, benefit, comparison or pay-related review content appears anywhere on this page. Employee-review sections deliberately omit the compensation dimension that the underlying sources report.</li>
+  <li><b>Interview preparation was not built</b>, by instruction. Open claims are flagged for later preparation; no question bank, no mock answers, no practice material.</li>
+  <li><b>Several sources returned HTTP 403 to these tools and could not be read directly:</b> the Globee Awards winners list, Glassdoor's Hyderabad location page, foundit's individual job pages, Naukri's ModMed listing page, and the United States Department of Justice press release. Findings that depend on them are sourced to secondary coverage and labelled where that matters. <b>The Globee claim in particular is unverified rather than disproven</b>, and the distinction is deliberate.</li>
+  <li><b>The Hyderabad architecture-authority finding is a negative finding</b> — an absence of publicly visible India architecture leadership, not evidence that none exists. Senior individuals frequently have thin or no public footprint, especially at a site two years old. It is stated as an open question because that is what it is.</li>
+  <li><b>ModMed's own Workday tenant could not be enumerated.</b> Only individual requisitions surfaced through search were readable, so the count and mix of open Hyderabad architecture roles is from aggregators (Built In, foundit, iimjobs), not from the source system. Aggregators lag and sometimes carry filled requisitions.</li>
+  <li><b>The experience bands attached to the two architect grades (10–12 and 14–16 years) come from an Indian job aggregator</b>, which frequently derives such bands itself rather than taking them from the employer. Treat them as indicative and confirm on the call.</li>
+  <li><b>Employee reviews are anecdotes at small sample sizes</b>, one page of which could not be confirmed as India-specific at all. They are used above to generate questions and nowhere to establish a pattern.</li>
+  <li><b>The Zinnov roundtable item has no date on its source</b> and is reported as an indication of intent, not as a dated event.</li>
+  <li><b>Not established by any source:</b> the current Hyderabad headcount (the last public figure is a March 2024 target of 200); how many architecture-team seats exist in total or in India; whether this requisition is the first architecture seat in Hyderabad; the reporting line for the Hyderabad requisition specifically; and whether the LinkedIn posting and any given Workday requisition identifier are the same seat. <b>Anyone quoting a number for these is guessing.</b></li>
+  <li><b>Postings expire.</b> Every link above was live on 26 August 2026 and may not be by the time he reads it.</li>
+</ul>
+</div>
+
+<p class="signoff">Research compiled 2026-08-26 · seven research angles, verified against ModMed's own site, filings and press releases where they exist · no compensation content and no interview preparation, both by instruction · <b>the decisive question is unresolved by design and belongs on the call</b></p>
+
+</main>
+</body>
+</html>

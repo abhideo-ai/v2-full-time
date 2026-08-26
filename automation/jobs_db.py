@@ -229,7 +229,7 @@ def connect() -> psycopg.Connection:
 # so it is not selected, not returned, and not renderable on the launcher.
 _SELECT = """
     SELECT id, slug, type, company, role, status, location,
-           source_url, fit_score, fit_breakdown, applied_at, updated_at, scraped_at
+           source_url, source_note, fit_score, fit_breakdown, applied_at, updated_at, scraped_at
       FROM applications
 """
 
@@ -256,8 +256,12 @@ def _row(r: dict, paths: dict[str, str]) -> dict:
         "status": r["status"],
         "tab": tab,
         "location": r["location"] or None,
-        "source_url": r["source_url"] if str(r["source_url"]).startswith("http") else None,
-        "source_note": None if str(r["source_url"]).startswith("http") else r["source_url"],
+        # Two facts, two columns, since 008. A seat can legitimately carry both:
+        # o9 was applied to through naukri.com while the URL points at the o9
+        # requisition its description was traced to. The prefix guard stays as a
+        # belt-and-braces against prose ever reaching an href again.
+        "source_url": r["source_url"] if str(r["source_url"] or "").startswith("http") else None,
+        "source_note": r["source_note"],
         "workspace": path,
         "href": _href(path),
         "fit_score": r["fit_score"],

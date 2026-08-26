@@ -80,8 +80,8 @@ SEEDS = [
 ]
 
 _INSERT = """
-    INSERT INTO applications (slug, type, company, role, source_url, location, status)
-    VALUES (%(slug)s, 'full_time', %(company)s, %(role)s, %(source_url)s,
+    INSERT INTO applications (slug, type, company, role, source_url, source_note, location, status)
+    VALUES (%(slug)s, 'full_time', %(company)s, %(role)s, %(source_url)s, %(source_note)s,
             %(location)s, %(status)s::application_status)
     ON CONFLICT (slug) DO NOTHING
     RETURNING id
@@ -89,7 +89,8 @@ _INSERT = """
 
 
 def register(slug: str, company: str, role: str, *, status: str = "resume_drafted",
-             source_url: str | None = None, location: str | None = None) -> bool:
+             source_url: str | None = None, location: str | None = None,
+             source_note: str | None = None) -> bool:
     """Put one seat on the launcher. True if it was new. Never overwrites."""
     row = {
         "slug": slug, "company": company, "role": role, "status": status,
@@ -98,6 +99,7 @@ def register(slug: str, company: str, role: str, *, status: str = "resume_drafte
         # so "(no URL supplied)" rendered as a broken link that looked real.
         # Migration 007 made the column nullable precisely so this can be None.
         "source_url": source_url if (source_url or "").startswith(("http://", "https://")) else None,
+        "source_note": source_note,
     }
     with jobs_db.connect() as conn, conn.cursor() as cur:
         cur.execute(_INSERT, row)
