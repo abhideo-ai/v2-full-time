@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hand-paste worklist &mdash; Keyloop Principal Architect</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page narrow" id="main">
+
+  <nav class="breadcrumb">
+    <a href="../../../index.html">Full-time JD workspace</a> &middot;
+    <a href="index.html">Keyloop &mdash; Principal Architect</a> &middot;
+    <span>Hand-paste worklist</span>
+  </nav>
+
+  <p class="eyebrow">Card-only work &middot; 8 items &middot; 4 before sending</p>
+  <h1>Hand-paste worklist</h1>
+  <p class="sub">Everything the exporter cannot write, in value-per-minute order</p>
+
+  <p class="lede"><code>upgrad_apply.py</code> writes <b>ten sections and nothing else</b>. Its
+  <code>stage_edit</code> builds one applier per section &mdash; summary into
+  <code>#SUM-child-0</code>, skills into <code>#KS-child-0</code>, five roles into
+  <code>#PR-child-0</code>&hellip;<code>4</code>, headline last &mdash; and every experience
+  applier is <code>replace_bullets(page, sel, e["bullets"])</code>. <b>It never writes a
+  designation, a company, a date, education, certification, the photo, or any of the five
+  pre-2016 roles.</b> All of that is card-only, and all of it is on this page.</p>
+
+  <div class="meta">
+    <span><b>Before sending Keyloop</b> items 1&ndash;4</span>
+    <span><b>Master-card hygiene</b> items 5&ndash;8</span>
+    <span><b>His call, never resolved here</b> items 3b, 6, 7</span>
+    <span><b>Estimated hand time, items 1&ndash;3</b> ~8 min</span>
+    <span><b>Card</b> <code>august_ic_master_resume</code></span>
+    <span><b>Sources</b> <code>master/live_card_dump.json</code> (committed, read-only) + the exported PDF</span>
+  </div>
+
+  <h2>Sequencing &mdash; read this before touching anything</h2>
+
+  <p class="callout warn"><strong>Edit the MASTER card, then re-export. Not the seat card.</strong>
+  <code>stage_clone</code> copies <code>august_ic_master_resume</code> into
+  <code>keyloop-principal-architect_ats_resume</code>, and <code>--reset</code> deletes and
+  re-clones it. Fixing the seat card fixes Keyloop only and leaves the master wrong for every seat
+  after it; fixing the master and re-exporting with <code>--reset</code> fixes Keyloop <em>and</em>
+  everything downstream from one hand-edit. Do items 1&ndash;3 on the master, then run item 4.</p>
+
+  <p class="callout warn"><strong>Editing <code>#p-cura</code>, <code>#p-innroad</code>,
+  <code>#p-mcd</code>, <code>#p-elpaso</code> or <code>#p-lynton</code> in the workspace HTML
+  changes nothing in the export.</strong> Those five blocks are byte-identical between
+  <code>master/upgrad_resume.html</code> and this workspace&rsquo;s
+  <code>upgrad_resume.html</code>, and <b>none of the five matches what the card actually
+  prints</b>. They are a reading copy. This worklist is the only route to the PDF.</p>
+
+  <hr />
+
+  <h2>Before sending Keyloop</h2>
+
+  <h3>1 &middot; El Paso still prints as a .NET role &mdash; three bullets, by hand</h3>
+
+  <div class="meta">
+    <span><b>Target</b> <code>#PR-child-8</code> (role index 8, El&nbsp;Paso)</span>
+    <span><b>Automatable</b> No</span>
+    <span><b>Time</b> ~5 min</span>
+    <span><b>Blocking</b> Yes</span>
+  </div>
+
+  <p><b>What is wrong now.</b> Verbatim from PDF page 3 and from
+  <code>master/live_card_dump.json</code> role index 8, under the heading
+  <b>&ldquo;Senior Java Developer &middot; El Paso Corporation&rdquo;</b>:</p>
+
+  <ul>
+    <li>&ldquo;Rebuilt a legacy Citrix-hosted Java application into a modern <strong>.NET 2.0</strong> stack on <strong>SQL Server 2005</strong>&rdquo;</li>
+    <li>&ldquo;Steered a scalable, maintainable .NET platform that replaced the outdated system while preserving core business functions&rdquo;</li>
+    <li>&ldquo;Anchored large-scale enterprise modernisation for a high-stakes energy-sector client&rdquo;</li>
+  </ul>
+
+  <p><b>Why it is a correction and not a trim.</b> <code>professional-journey.md</code> line 68
+  records El Paso as <em>&ldquo;Java running under Citrix, rewritten to JSP / J2EE&rdquo;</em>, and
+  line 72: <em>&ldquo;the master r&eacute;sum&eacute; describes El Paso as a .NET role and
+  therefore hides four of the eleven years.&rdquo;</em> A source we hold contradicts the printed
+  text, so this is CLAUDE.md&rsquo;s <b>false</b> category, not its <b>unverified</b> category.
+  It comes off even though it has already gone out &mdash; verified: ModMed&rsquo;s <em>sent</em>
+  PDF carries an identical El Paso block.</p>
+
+  <p><b>The title is already right.</b> The card dump reads
+  <code>title='Senior Java Developer'</code> at index 8 and page 3 prints it. So
+  <code>fix_master_card.py</code> would evaluate <code>title_ok = True</code>, skip the title, and
+  fall straight through to <code>replace_bullets</code> &mdash; the one operation CLAUDE.md records
+  as showing in the editor and then <b>not surviving the save</b>. Running it is a no-op at best.
+  The three bullets are his.</p>
+
+  <p><b>What it should say</b> &mdash; the block already in <code>#p-elpaso</code>, verbatim, bold
+  included. Paste one bullet at a time into the existing list item (the paste matrix gives
+  <code>&lt;p&gt;</code>-alone bold but no list structure, and here the list structure is
+  Draft.js&rsquo;s own, so nothing is lost). If a paste misbehaves, type the text in place and use
+  the editor&rsquo;s own bold control &mdash; that path involves no clipboard at all.</p>
+
+  <div class="copy-block copy-target" id="wl-elpaso-1">
+    <button class="copy-btn" data-copy-target="#wl-elpaso-1" data-copy-html="1">Copy</button>
+    <p>Translated a Citrix-hosted <strong>Java</strong> application onto <strong>JSP and Java Enterprise Edition</strong> for Tennessee Gas Pipeline, an <strong>11,800-mile</strong> interstate system</p>
+  </div>
+
+  <div class="copy-block copy-target" id="wl-elpaso-2">
+    <button class="copy-btn" data-copy-target="#wl-elpaso-2" data-copy-html="1">Copy</button>
+    <p>Shipped the Nominations, Flowing Gas and Contracts modules covering the federal scheduling workflow for interstate gas transport across <strong>4 years</strong></p>
+  </div>
+
+  <div class="copy-block copy-target" id="wl-elpaso-3">
+    <button class="copy-btn" data-copy-target="#wl-elpaso-3" data-copy-html="1">Copy</button>
+    <p>Refactored the data layer through a <strong>SQL Server 2000 to 2005</strong> upgrade, with stored-procedure rewrites and index design across the scheduling modules</p>
+  </div>
+
+  <p class="callout good"><strong>It also retires two leading-verb duplicates that print today.</strong>
+  Word-boundaried across this workspace&rsquo;s r&eacute;sum&eacute;, <code>steer*</code> and
+  <code>anchor*</code> each return exactly one hit &mdash; but the <em>card</em> spends them twice.
+  Page&nbsp;2 prints <em>&ldquo;Steered 70&ndash;80% of customers onto shared instances&rdquo;</em>
+  (Deque) and <em>&ldquo;Anchored decomposition of IBM Db2 Configuration Manager&rdquo;</em>
+  (Rocket); page&nbsp;3 then prints <em>&ldquo;Steered a scalable, maintainable .NET
+  platform&rdquo;</em> and <em>&ldquo;Anchored large-scale enterprise modernisation&rdquo;</em>.
+  Translated / Shipped / Refactored are each n=1, word-boundaried, in this workspace&rsquo;s file
+  &mdash; regenerated from the file, not read off CLAUDE.md&rsquo;s list. Hygiene on all three:
+  19, 20 and 22 words (tokens containing <code>[A-Za-z0-9]</code> only), 3/1/1 bolded facts, no
+  trailing period.</p>
+
+  <p><b>Risk.</b> The save-survival limit is documented for the automated path, not the hand path,
+  and I have not opened the editor. Verify by re-exporting and reading page 3: expect
+  <em>&ldquo;Translated a Citrix-hosted Java&hellip;&rdquo;</em> and zero occurrences of
+  <em>&ldquo;.NET 2.0 stack&rdquo;</em>.</p>
+
+  <h3>2 &middot; CERTIFICATION duplicates EDUCATION &mdash; delete the section</h3>
+
+  <div class="meta">
+    <span><b>Target</b> The CERTIFICATION section (not a <code>PR_*</code> element)</span>
+    <span><b>Automatable</b> No</span>
+    <span><b>Time</b> ~1 min</span>
+    <span><b>Blocking</b> Yes &mdash; cheapest visible win on the page</span>
+  </div>
+
+  <p><b>What is wrong now.</b> Page 3 prints, under <b>EDUCATION</b>: &ldquo;PG Diploma in
+  Artificial Intelligence and Machine Learning / IIIT Bangalore / Jan &rsquo;21&rdquo;. Then, under
+  <b>CERTIFICATION</b>, as the entire contents of the section: &ldquo;PG Diploma in Artificial
+  Intelligence and Machine Learning, IIIT Bangalore&rdquo;. The same credential, twice, three lines
+  apart.</p>
+
+  <p><b>What should be there: nothing.</b> Grepped <code>professional-journey.md</code> for
+  <code>certified</code>, <code>certificate</code>, <code>certification</code>, <code>Scrum</code>,
+  <code>PMP</code>, <code>Oracle Certified</code>, <code>Sun Certified</code> and
+  <code>AWS Certified</code>. One hit, line 194 &mdash; <em>&ldquo;three hundred instances means
+  three hundred of everything &mdash; upgrades, backups, certificates, identity
+  providers&rdquo;</em> &mdash; which is prose about TLS certificates, not a credential. Line 40
+  records exactly two credentials and files the diploma under <b>Education</b>: <em>&ldquo;MS
+  Computer Science, University of Houston (Aug 2004 &ndash; Dec 2007). PG Diploma in AI/ML, IIIT
+  Bangalore (Jan 2021).&rdquo;</em></p>
+
+  <p><b>So: keep it under EDUCATION, delete the CERTIFICATION section.</b> Do not do it the other
+  way round &mdash; moving the diploma out of Education would contradict line 40 and would sit
+  badly beside CLAUDE.md&rsquo;s <em>&ldquo;the IIIT postgraduate diploma in AI/ML coexists but is
+  not the highest degree&rdquo;</em>.</p>
+
+  <p><b>Risk.</b> Low. <span class="dim">Unverifiable:</span> whether Hiration lets a section be
+  removed or only emptied. If only emptied, the heading may still print on its own &mdash; which is
+  worse than the duplicate. Check page 3 of the re-export before deciding it is done.</p>
+
+  <h3>3 &middot; Personal Information modal &mdash; two things, one modal</h3>
+
+  <div class="meta">
+    <span><b>Target</b> Hiration Personal Information modal</span>
+    <span><b>Automatable</b> No &mdash; the bot only edits <code>#personal_title_1</code></span>
+    <span><b>Time</b> ~2 min</span>
+  </div>
+
+  <p><b>3a &mdash; neither phone number is dialable from outside India.</b> Page 1 prints
+  &ldquo;9364027487 / 9704968861&rdquo;. No country code on either, and two numbers where one would
+  do. CLAUDE.md&rsquo;s standing number is <b>+91 93640 27487</b>. <code>research.html</code>
+  records Keyloop as <em>&ldquo;a private-equity-owned dealer-systems company headquartered in
+  Reading with its chief technology officer in Tel Aviv&rdquo;</em>, so an international reader is
+  a realistic one.</p>
+
+  <p><b>3b &mdash; the photo. His call; I am not recommending a direction.</b> Page 1 carries a
+  circularly-clipped studio headshot, top-right. Verified: the PDF contains exactly one image
+  object (<code>/Subtype /Image</code>, n=1), and so do the other three exports in this intake
+  &mdash; so whichever way he decides, it is one card change covering every seat. The two
+  conventions genuinely differ, and both readings are defensible here: the seat is Hyderabad-based,
+  where a CV photo is ordinary; the employer is UK-headquartered, where CVs conventionally omit one
+  and some recruiter guidance treats it as a bias exposure. Nothing in this repo touches it &mdash;
+  <code>grep -i</code> for <code>photo</code>, <code>headshot</code>, <code>avatar</code>,
+  <code>profile picture</code> across <code>automation/*.py</code> and <code>master/*.md</code>
+  returns zero.</p>
+
+  <p><b>Risk.</b> <span class="dim">Unverifiable:</span> the exact control&rsquo;s position inside
+  the modal. I have not opened the Hiration UI and CLAUDE.md forbids running browser automation to
+  check rendering.</p>
+
+  <h3>4 &middot; Re-export &mdash; this is what makes items 1&ndash;3 reach the PDF</h3>
+
+  <div class="copy-block copy-target" id="wl-export">
+    <button class="copy-btn" data-copy-target="#wl-export">Copy</button>
+    <p>UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py --slug keyloop-principal-architect --no-pause --reset</p>
+  </div>
+
+  <p><code>--reset</code> is required: without it <code>stage_clone</code> finds the existing
+  <code>keyloop-principal-architect_ats_resume</code> and opens it instead of re-cloning, so the
+  corrected master never reaches this seat. Run from the repo root &mdash;
+  <code>.playwright-profile/</code> lives there. Then verify page 3.</p>
+
+  <hr />
+
+  <h2>Master-card hygiene &mdash; can follow the send</h2>
+
+  <h3>5 &middot; Two pages is not reachable from this list. Here is the honest arithmetic</h3>
+
+  <p><b>What page 3 actually holds:</b> McDonald&rsquo;s (title + company + 3 bullets), El Paso
+  (title + company + 3 bullets), LyntonWeb (title + company + 1 bullet), EDUCATION (heading + 4
+  lines), CERTIFICATION (heading + 1 line) &mdash; roughly <b>20 printed lines</b>. Page 2 is
+  full.</p>
+
+  <p><b>What card-only editing can free, at its absolute ceiling.</b> From the committed dump, the
+  five pre-2016 roles hold <b>12 bullets in total</b>: CURA 2, innRoad 3, McDonald&rsquo;s 3,
+  El Paso 3, LyntonWeb 1. Deleting <em>every one of them</em> frees about 12 lines; deleting
+  CERTIFICATION frees 2. That is <b>~14 against the ~20 needed</b> &mdash; and it would leave five
+  roles printing as bare headers with nothing underneath, which reads worse than a third page. Each
+  of those 12 deletions is also a hand operation, because bullet edits on these roles are precisely
+  the thing CLAUDE.md records as not surviving the automated save.</p>
+
+  <p class="callout warn"><strong>So: no.</strong> Compressing the pre-2016 roles cannot produce a
+  two-page r&eacute;sum&eacute;, and pursuing it spends the riskiest available edits on the smallest
+  available gain.</p>
+
+  <p><b>The achievable alternative, and it is not on this page.</b> Key Skills occupies
+  <b>55.2% of page 1</b> and grew <b>+54%</b> in the tailoring pass (Skills-EE 2252 characters
+  against the master&rsquo;s 1457). It is one of the ten exporter-written sections and CLAUDE.md
+  treats Key Skills as <em>one</em> copy block replaced whole &mdash; so it is one edit, one export,
+  one verification, with no save-survival risk at all. Order: trim Key Skills, re-export, re-measure
+  page 3, and only then decide whether McDonald&rsquo;s 3&rarr;2 and El Paso 3&rarr;2 is worth the
+  hand work.</p>
+
+  <p><b>Merging the pre-2016 roles into one &ldquo;Earlier experience&rdquo; block:</b>
+  <span class="dim">unverifiable.</span> <code>dump_card.py</code> reports only
+  <code>card</code>, <code>headline</code> and <code>roles</code> &mdash; it does not enumerate what
+  section types Hiration offers. To answer it I would need a headed session with the section-add
+  menu open, or confirmation that the editor accepts a role carrying zero bullets.</p>
+
+  <h3>6 &middot; The Deque title &mdash; I am declining to recommend one</h3>
+
+  <div class="meta">
+    <span><b>Target</b> <code>#PR_designation_1</code></span>
+    <span><b>Automatable</b> The typographic fix only</span>
+    <span><b>Blocking</b> No</span>
+  </div>
+
+  <p><b>What prints now</b>, from the dump at index 1 and from PDF page 2:
+  <code>Lead SDE/Sr. Staff Engineer / Staff Software Engineer</code>.</p>
+
+  <p><b>Why I will not pick one.</b> <code>professional-journey.md</code> line 515 heads the section
+  <em>&ldquo;<b>OPEN &rarr; title progression</b>&rdquo;</em> and open question <b>#15</b> at the
+  end of the document reads <em>&ldquo;Deque: Hyderabad or Bangalore? McDonald&rsquo;s: Software
+  Architect or Technical Architect? Deque title progression?&rdquo;</em> &mdash; unresolved. Line
+  515 also records that the three-part string is what <b>every</b> canonical artefact prints
+  (r&eacute;sum&eacute; PDF, Naukri, Foundit, Instahyre) and that it was chosen deliberately over
+  his own notes. Shortening it is a seniority decision on a live employment title; CLAUDE.md
+  forbids title inflation, forbids agents settling open claims, and the string has already gone out
+  on four applications.</p>
+
+  <p><b>The one safe change is typographic.</b> <code>Lead SDE/Sr.</code> is missing the space the
+  second slash has. If he wants it: one character at <code>#PR_designation_1</code>.
+  <code>fix_master_card.py</code> could do this &mdash; designation is a contenteditable div with a
+  stable id and the script&rsquo;s <code>expect</code> guard refuses a role whose current title is
+  not what it was told &mdash; but its <code>FIXES</code> map currently holds only index 8, so it is
+  a two-line addition first.</p>
+
+  <p class="callout warn"><strong>Question for him:</strong> keep the full progression, or print a
+  single title? If a single title, which one? Nothing changes until he answers.</p>
+
+  <h3>7 &middot; innRoad and LyntonWeb &mdash; the card and the HTML actively disagree</h3>
+
+  <p>Both sit on open confirm-or-reject questions. <b>Do not paste either block in either
+  direction.</b></p>
+
+  <table>
+    <thead><tr><th>Role</th><th>What the card prints</th><th>What the HTML says</th><th>Open question</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>innRoad</b><br /><code>#PR-child-6</code></td>
+        <td>&ldquo;Converted a legacy ASP.NET 2.0 application into a modern single-page application using <b>Knockout.js</b> and a Boilerplate JavaScript framework&rdquo;</td>
+        <td>&ldquo;Replatformed an ASP.NET application into a single-page app on <b>Angular</b> with .NET WCF services, for a 60&ndash;70% drop in screen load time&rdquo;</td>
+        <td><b>#19</b> &mdash; Angular or Knockout.js?</td>
+      </tr>
+      <tr>
+        <td><b>LyntonWeb</b><br /><code>#PR-child-9</code></td>
+        <td>&ldquo;Developed <b>Paymaster</b>, a PayPal-style payments application, for a Mexican financial institution&rdquo;</td>
+        <td>&ldquo;Bridged suppliers and buyers through a .NET portal on SQL Server 2005, with Mexican PayPal integrated for settlement&rdquo; + an invoice-sweeping Windows service</td>
+        <td><b>#20</b> &mdash; is Paymaster the supplier/buyer portal?</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><b>innRoad carries consequences past the r&eacute;sum&eacute;.</b> Journey line 362:
+  <em>&ldquo;&#9888; R&Eacute;SUM&Eacute; CONFLICT&hellip; One of them is wrong.&rdquo;</em> Line
+  366 records that both wordings are his own, a month apart &mdash; Knockout.js from
+  <code>updating-resume.md</code> on 18 Jul 2026, Angular written 18 Aug 2026 &mdash;
+  <em>&ldquo;which is why only you can settle it&rdquo;</em>. Line 368: prep artefacts across the
+  repo actively disclaim Angular by name and three v1 scores took Angular deductions, so if
+  innRoad Angular is real those scores are understated and the disclaimers are wrong.</p>
+
+  <p><b>LyntonWeb.</b> Journey line 287: <em>&ldquo;Is &lsquo;Paymaster&rsquo; the product you
+  built, and is &lsquo;Mexican Paypal&rsquo; the same thing &mdash; i.e. Paymaster <em>was</em> the
+  payments piece of the supplier/buyer portal? Or were they two separate products?&hellip; They
+  need to agree.&rdquo;</em></p>
+
+  <h3>8 &middot; The LinkedIn label &mdash; no action, and the reviewer is wrong about it</h3>
+
+  <p>Page 1 prints the bare word <b>LinkedIn</b>. The external review reads that as a missing URL.
+  Decompressing the PDF&rsquo;s object streams returns exactly one link annotation:
+  <code>https://www.linkedin.com/in/abhisheikdeo/</code> &mdash; the correct slug,
+  <code>abhisheikdeo</code> and not <code>abhideo</code>. The claim is <b>false about the
+  file</b>. It is also moot for this application: the Lever form carries a dedicated structured
+  LinkedIn URL field. <b>No action.</b></p>
+
+  <p class="callout good"><strong>Dates check out.</strong> VoltusWave prints <b>Mar &rsquo;25
+  &ndash; Apr &rsquo;26</b> and Deque <b>Dec &rsquo;19 &ndash; Feb &rsquo;25</b>, matching the
+  journey document&rsquo;s timeline table and CLAUDE.md&rsquo;s requirement that VoltusWave end
+  Apr 2026. Nothing else on the card was found wrong.</p>
+
+  <p><b>One observation, not a finding, on EDUCATION ordering.</b> Page 3 prints the <b>PG Diploma
+  (Jan &rsquo;21)</b> above the <b>MS in Computer Science, University of Houston (Aug &rsquo;04
+  &ndash; Dec &rsquo;07)</b>. That is ordinary reverse-chronological ordering, so it is not wrong
+  &mdash; but CLAUDE.md is emphatic that the MS is the highest degree and is never to be
+  downgraded, and top-of-section is where a skimming reader looks. Worth a decision at the same
+  time as item 2, since both live in the same block. <b>His call, and I am not recommending a
+  direction.</b></p>
+
+</main>
+<script src="../../../static/copy.js" defer></script>
+</body>
+</html>
