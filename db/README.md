@@ -225,3 +225,70 @@ select slug, source_url, source_note from applications order by slug;
 ```
 
 Full read-only health check across all three databases: `psql -d postgres -f db/verify.sql`.
+
+---
+
+## `resume_bullets` — DERIVED today, and nothing reads it
+
+Migration 010 created `resume_bullets` and `automation/jobs_sync.py --bullets` populates it by
+parsing every `upgrad_resume.html`, master included. **488 rows across 7 sources.**
+
+**Today it is a read-only index and the files are still the source of truth.** The exporter reads
+`upgrad_resume.html`; nothing reads this table. Editing a row changes nothing about what gets
+exported and is overwritten by the next sync. **A wrong bullet is fixed in the résumé, then
+re-synced — never in the row.**
+
+```sql
+-- What did one seat's VoltusWave bullets say?
+select ord, text from resume_bullets
+ where source = :'slug' and section_id = 'quick-vp' order by ord;
+
+-- The same role across every seat, side by side.
+select source, ord, text from resume_bullets
+ where section_id = 'quick-vp' order by source, ord;
+
+-- Which seats still carry a byte-identical copy of the master's résumé.
+select distinct source from resume_bullets
+ where source_sha256 = (select source_sha256 from resume_bullets where source='master' limit 1);
+
+-- Bullets unique to one seat — nowhere in the master.
+select r.source, r.section_id, r.ord, r.text from resume_bullets r
+ where r.source <> 'master'
+   and not exists (select 1 from resume_bullets m
+                    where m.source='master' and m.text = r.text);
+
+-- Leading-verb collisions ACROSS seats, which grep cannot do cleanly.
+select lower(leading_verb) as verb, count(distinct source) as seats,
+       array_agg(distinct section_id) as sections
+  from resume_bullets where section_kind='experience' and leading_verb is not null
+ group by 1 having count(distinct section_id) > 1 order by 2 desc;
+
+-- Hygiene misses: over 25 words, or no bolded fact, or no number.
+-- Experience only — the summary is prose and the skills block is labels.
+select source, section_id, ord, word_count, has_bold, has_number, left(text,60)
+  from resume_bullets
+ where section_kind='experience'
+   and (word_count > 25 or not has_bold or not has_number)
+ order by source, section_id, ord;
+```
+
+⛔ **`has_number` is a mechanical proxy** — a digit or a `%`. CLAUDE.md's rule is "a number, %,
+scale marker, or measurable outcome" and the last two are human judgement. A `false` is worth a
+look; a `true` is not a pass, and it is never a reason to add a number.
+
+### Planned: the database as the source
+
+He asked for the direction to flip — bullets authored in the database, `upgrad_resume.html`
+generated from it, PDF exported from that. **That is the forward model and it is NOT implemented.**
+The design, including a **round-trip proof run against all seven real résumés** (488 bullets,
+0 losses, `<strong>` counts preserved exactly), is in **`db/DESIGN-bullets.md`**.
+
+Read that before changing anything here. Two things in it are load-bearing:
+
+- **A rendered artefact is a view — in every format.** HTML page, PDF, `.docx`, plain text. Fixing
+  a wrong bullet means fixing the source and regenerating. Never the artefact, never the row.
+- **A locally generated PDF does not replace the upGrad/Hiration export.** Hiration produces the
+  ATS-scored PDF he submits through upGrad, and `_paste_html` in `upgrad_apply.py` is the only
+  path that carries both bold and bullets into the card. Local PDFs and `.docx` files serve the
+  *other* need — "email me your CV", portals that want Word, forms that want plain text. **Both
+  paths stay. Do not delete the exporter thinking the database replaced it.**
