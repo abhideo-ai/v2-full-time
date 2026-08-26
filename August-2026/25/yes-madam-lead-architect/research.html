@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yes Madam — Lead Architect · research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> · August 2026 · 25 · yes-madam-lead-architect · research</p>
+
+<header>
+  <p class="eyebrow">Company research · compiled 26 Aug 2026</p>
+  <h1>Yes Madam — <span class="nowrap">Lead Architect</span></h1>
+  <p class="subtitle">A profitable, freshly funded home-services platform with a live architecture problem in its own past. What is verified against the company's own sources, what is inference, and what to ask on the first call.</p>
+</header>
+
+<div class="meta">
+  <span><b>Source of the posting</b> Naukri</span>
+  <span><b>Stated location</b> Sector 63, Noida — work from office</span>
+  <span><b>Stated experience</b> 12+ years</span>
+  <span><b>Seat shape</b> Individual contributor architect</span>
+  <span><b>Technical score</b> 88.375 — scored in <a href="index.html">index.html</a>, untouched by this page</span>
+</div>
+
+<div class="banner">
+  <p><b>Nothing on this page moves the technical score, and nothing on it is a reason not to apply.</b> The findings below are <b>real-world gates</b> — legitimacy, engineering-culture signal, and one security incident that sits squarely inside this seat's own job description. They are named separately from the rubric by design. <b>Compensation appears nowhere on this page</b>, by his standing instruction; the listing states a band and it is recorded in <code>jd.md</code> as a neutral fact and nowhere else.</p>
+</div>
+
+<!-- ==================================================================
+     GLOSSARY — concepts, not just expansions.
+     He has not worked in consumer home-services marketplaces, so the
+     unfamiliar vocabulary is the business shape and the Indian
+     startup-finance terms, not the technology.
+     ================================================================== -->
+
+<h2>First, the vocabulary</h2>
+
+<p class="lede">He has built business-to-business software as a service (SaaS), healthcare and chat platforms. He has not worked in a consumer home-services marketplace, and the terms that decide what this architect job actually <em>is</em> come from that business shape rather than from the technology stack. Two genuine name collisions are called out below — both are the kind that quietly produce a wrong claim.</p>
+
+<dl class="context-grid">
+  <dt>At-home services marketplace</dt>
+  <dd>A platform that sells a service performed at the customer's address rather than a product shipped to it. Structurally it is <b>three-sided</b>: the customer who books, the service professional who travels and performs, and a city operations team that recruits, trains, supplies and disciplines those professionals. The architectural consequence is that the hard problems are matching, scheduling, routing, partner state and payouts — not content delivery.</dd>
+
+  <dt>Service partner (and why "gig worker" is only half right)</dt>
+  <dd>The beautician or therapist who performs the service. Yes Madam's own positioning is that over 12,000 of them are women, and Inc42 reports the company has moved its top performers onto a <b>0% commission bracket</b>, earning its margin instead on single-use product kits it manufactures and supplies (<a href="https://inc42.com/startups/how-yes-madam-is-rewriting-commissions-playbook-in-home-salon-services/">Inc42</a>). <b>Why an architect should care:</b> a commission engine, a product-consumption ledger and a payout system are all real subsystems, and a company that changes its commission model changes them all.</dd>
+
+  <dt>Booking — the unit of scale here</dt>
+  <dd>One scheduled appointment, not one page view and not one request. When this company reports "3 lakh monthly bookings" it is reporting <em>transactions</em>, not traffic. <b>This is the single most important framing point on the page:</b> a job description asking for "high concurrency" has to be tested against a business whose headline number is measured per month, not per second.</dd>
+
+  <dt>Lakh · crore (Indian numbering)</dt>
+  <dd>1 lakh = 100,000. 1 crore (Cr) = 10 million, so ₹1 crore is ten million rupees. Used throughout the funding coverage cited below.</dd>
+
+  <dt>Bootstrapped · maiden institutional round · Series A</dt>
+  <dd><b>Bootstrapped</b> means funded from its own revenue rather than by investors. A <b>maiden institutional round</b> is the first cheque from a professional fund as opposed to from founders, friends or television angels. <b>Series A preference shares</b> are the share class issued in that round, carrying rights ordinary shares do not. Yes Madam was bootstrapped from 2016 until May 2026 — which is unusual, and is the single most flattering fact about the business.</dd>
+
+  <dt>Info Edge · B8 Fund · Naukri · AmbitionBox — <span class="warn">a collision worth knowing</span></dt>
+  <dd>Info Edge is a listed Indian internet company whose own site names <b>Naukri.com, Job Hai and AmbitionBox</b> among its brands (<a href="https://www.infoedge.in/">infoedge.in</a>). Its B8 growth fund is Yes Madam's sole institutional investor. <b>The collision:</b> the job board this posting came from, the review site the posting's company rating comes from, and the money behind the company all trace to the same parent. That is ordinary for a portfolio company and is <em>not</em> evidence of anything improper — but it does mean the usual trick of cross-checking a seat across independent sources does not work here, and that matters below.</dd>
+
+  <dt>CERT-In — Indian Computer Emergency Response Team</dt>
+  <dd>India's national cybersecurity agency, and the body an organisation is expected to notify about a security incident. It appears below because a security researcher, not the company, notified it in 2023.</dd>
+
+  <dt>Grafana and Prometheus versus k6 — <span class="warn">the collision that would produce a false claim</span></dt>
+  <dd><b>Grafana</b> is a dashboarding product and <b>Prometheus</b> is a metrics database; both sit in this job description's required Observability section. <b>k6</b> is a load-testing tool that <em>Grafana Labs owns</em>, and k6 is on his live résumé card. <b>Having used k6 is not having used Grafana or Prometheus.</b> Same corporate name, different products, and the shared name is exactly the sort of thing that turns into an unsupportable line. Both stay off the résumé; the JD's ELK Stack line — Elasticsearch, Logstash and Kibana — is the part of that section he actually has.</dd>
+
+  <dt>ELK Stack</dt>
+  <dd>Elasticsearch, Logstash and Kibana — the open-source search, log-shipping and dashboard trio used as a logging and observability platform. Named in the job description's Observability section alongside Grafana and Prometheus.</dd>
+
+  <dt>Work from office (WFO)</dt>
+  <dd>Fully on-site, no remote or hybrid component stated. Recorded as a plain fact about the seat. <b>Relocation is open and is not scored</b>, so it is neither a red nor a green flag here — but it is worth one cheap question, because the company runs a Hyderabad office of its own.</dd>
+
+  <dt>Shark Tank India</dt>
+  <dd>The Indian franchise of the televised investment show. Relevant only as a dated scale marker: the company's pre-show booking volume is the baseline every 2026 growth figure is quoted against.</dd>
+</dl>
+
+<!-- ================================ VERDICT ================================ -->
+
+<h2>Verdict</h2>
+
+<div class="tldr">
+  <strong>Three sentences</strong>
+  <p><b>The company is real, independently verifiable and freshly capitalised for exactly this kind of hire</b> — the Sector 63 Noida address, the Java and Spring Boot backend, the 55-plus cities and the May 2026 round earmarked for technology all corroborate outside the posting, and the business grew ₹45 Cr → ₹94 Cr → ₹195 Cr while staying profitable and unfunded.</p>
+  <p><b>The sharpest risk is not the publicity stunt everyone remembers from December 2024; it is a March 2023 unauthenticated database that exposed roughly 900,000 customers' and gig workers' records</b> — names, addresses, location coordinates, payment links and device IMEI numbers — because this seat's own job description assigns it the standards for API design and security, which makes that incident the job's inbox rather than gossip about the employer.</p>
+  <p><b>And the "high traffic, high concurrency, millions of users" framing needs converting into a number before he can judge the work</b>: against roughly 300,000 bookings a month at a company of about 395 people, the honest read is that this is a standards-and-modernisation seat at a platform that grew fast while bootstrapped — which may well be a better fit for him than a raw throughput seat, but it is a different job and he should know which he is being hired for.</p>
+</div>
+
+<div class="callout">
+  <p><b>What is deliberately not treated as a negative.</b> <b>Relocation is open</b>, so Noida is neutral. <b>Six- and seven-day weeks are not scored</b>, and no schedule-density finding appears below. Two axes that <em>are</em> worth surfacing and are separate from both: whether the seat carries <b>24/7 on-call</b>, and the <b>travel cadence</b> to the company's ten other city offices. Both are in the forcing questions.</p>
+</div>
+
+<!-- ================================ JD VERIFICATION ================================ -->
+
+<h2>Every posting claim, checked against the company's own sources</h2>
+
+<p class="lede">Postings misstate location, title and whether a seat is even open. Each row below states what the posting claims, whether it survives contact with a source the company controls or a filing-grade one, and where the check stopped.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Posting claim</th><th>Status</th><th>Basis</th></tr></thead>
+<tbody>
+<tr>
+  <td>Location is Sector 63, Noida</td>
+  <td><span class="tag ok">Confirmed</span></td>
+  <td>Yes Madam's own address page lists <em>"C-45, Sector 63 Rd, C Block, Sector 63, Noida, Hazratpur Wajidpur, Uttar Pradesh - 201301"</em> (<a href="https://www.yesmadam.com/our-address">yesmadam.com/our-address</a>). The posting's location is the company's own Noida site.</td>
+</tr>
+<tr>
+  <td>The company is Gurugram-based <span class="dim">(carried in this workspace's own durable notes, not in the posting)</span></td>
+  <td><span class="tag bad">Correction — it is Noida-based</span></td>
+  <td>LinkedIn's company page states headquarters <em>"Noida, Uttar Pradesh"</em> (<a href="https://in.linkedin.com/company/yesmadamofficial">LinkedIn</a>); Tracxn records headquarters Noida (<a href="https://tracxn.com/d/companies/yes-madam/__rJafvP1vg6ib16trd4umgAx5dVi_7kRx8HRTB5lBXRs">Tracxn</a>); Entrackr calls it <em>"Noida-based"</em> (<a href="https://entrackr.com/news/yes-madam-raises-maiden-rs-50-cr-funding-at-rs-750-cr-valuation-11871481">Entrackr</a>); TechCrunch called it <em>"Noida-based"</em> in 2023 (<a href="https://techcrunch.com/2023/03/03/yes-madam-india-data-exposed/">TechCrunch</a>). <b>Gurugram is one of eleven city offices</b> on the company's own address page — <em>"Plot No. 54A, VM Tower, Sector 18, Sarhol Village, Gurugram, Haryana - 122015"</em> — not the base.</td>
+</tr>
+<tr>
+  <td>Operates in 55+ cities</td>
+  <td><span class="tag ok">Confirmed</span></td>
+  <td><em>"operates in 55+ cities across India"</em> with <em>"more than 12,000 professionals"</em> (<a href="https://entrackr.com/news/yes-madam-raises-maiden-rs-50-cr-funding-at-rs-750-cr-valuation-11871481">Entrackr</a>), corroborated by <a href="https://www.businesstoday.in/technology/startups/story/yes-madam-raises-rs-50-crore-in-funding-from-info-edge-growth-fund-533145-2026-05-25">Business Today</a> and <a href="https://bestmediainfo.com/mediainfo/mediainfo-marketing/yes-madam-raises-rs-50-crore-funding-from-info-edge-to-expand-profitable-beauty-business-11871654">Best Media Info</a>. The company's own address page lists <b>eleven physical offices</b> — cities served and offices are different counts.</td>
+</tr>
+<tr>
+  <td>Founded 2016 by Mayank Arya, Aditya Arya and Akanksha Vishnoi</td>
+  <td><span class="tag warn">Confirmed, with source noise</span></td>
+  <td>2016 and those three founders in <a href="https://entrackr.com/news/yes-madam-raises-maiden-rs-50-cr-funding-at-rs-750-cr-valuation-11871481">Entrackr</a>, <a href="https://tracxn.com/d/companies/yes-madam/__rJafvP1vg6ib16trd4umgAx5dVi_7kRx8HRTB5lBXRs">Tracxn</a>, <a href="https://in.linkedin.com/company/yesmadamofficial">LinkedIn</a> and <a href="https://www.businesstoday.in/technology/startups/story/yes-madam-raises-rs-50-crore-in-funding-from-info-edge-growth-fund-533145-2026-05-25">Business Today</a>. <b>But sources disagree on the year:</b> Inc42's 2026 commission feature says <em>"Founded in 2019"</em> (<a href="https://inc42.com/startups/how-yes-madam-is-rewriting-commissions-playbook-in-home-salon-services/">Inc42</a>) and Inc42's 2023 data-exposure piece says 2017 (<a href="https://inc42.com/buzz/at-home-salon-platform-yes-madam-exposes-customer-gig-worker-data/">Inc42</a>). Immaterial to the seat; recorded so nobody re-discovers it as a discrepancy.</td>
+</tr>
+<tr>
+  <td>The company is a Java and Spring Boot shop</td>
+  <td><span class="tag ok">Corroborated outside the posting</span></td>
+  <td>An earlier Yes Madam engineering posting names <em>"Core Java/J2EE applications using Spring boot, JPA, REST API"</em> and <em>"building large-scale applications that are high performance, scalable, and resilient in a microservices environment"</em> (<a href="https://www.geeksforgeeks.org/jobs/YesMadam-Javafullstack">GeeksforGeeks jobs, Java Fullstack Developer, Noida, 7–10 years</a>). <b>Read it for the language, not the stack</b> — see the caution in the red flags.</td>
+</tr>
+<tr>
+  <td>The seat is open and posted</td>
+  <td><span class="tag warn">Visible on one channel only</span></td>
+  <td><b>Not verifiable on any channel the company controls.</b> <a href="https://www.yesmadam.com/">yesmadam.com</a> renders as a JavaScript shell carrying only a logo and the line <em>"Professional Salon Services at Home"</em> to a plain fetch; no careers page resolved. Publicly visible Yes Madam openings elsewhere are field and salon roles — beautician, hair stylist, spa therapist, tele-calling. The architect seat appears on Naukri, which Info Edge owns, and Info Edge is the company's investor.</td>
+</tr>
+<tr>
+  <td>Company rating 3.9 from 185 reviews</td>
+  <td><span class="tag">Unverified</span></td>
+  <td>AmbitionBox timed out and the Naukri company page returned HTTP 403 to every attempt. Glassdoor's Yes Madam page shows different figures on a much smaller base and mixes salon field staff with office staff. <b>Treat the 3.9 as an unchecked number from the posting, and note that AmbitionBox is also an Info Edge property.</b></td>
+</tr>
+<tr>
+  <td>The seat is individual contributor</td>
+  <td><span class="tag ok">Consistent with the posting's own wording</span></td>
+  <td>The job description says <em>"Provide technical mentorship to Senior Engineers, Tech Leads, development teams"</em> and assigns architecture, standards and reviews — no direct reports, no hiring, no appraisals anywhere in it. Nothing external contradicts this, and nothing external confirms it either. <b>Worth asking out loud.</b></td>
+</tr>
+<tr>
+  <td>Who the seat reports to</td>
+  <td><span class="tag bad">Unknown — and public sources conflict</span></td>
+  <td>Aggregator profiles surface at least two different names as chief technology officer or technology head, plus a director of engineering. <b>These are unreliable, frequently stale sources and this is explicitly not a finding about the company</b> — it is a finding about the evidence. It justifies one question and nothing more.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- ================================ RED FLAGS ================================ -->
+
+<h2>Red flags</h2>
+
+<div class="danger">
+  <p><b>1 — March 2023: an unauthenticated database exposed roughly 900,000 customers' and gig workers' records. This is the sharpest finding on the page, and it is the one that belongs to this seat.</b></p>
+  <p>TechCrunch reported on <b>3 March 2023</b> that Yes Madam left a database <em>"connected to the internet without a password"</em>, reachable by anyone who knew its address, from <b>at least 20 February 2023</b>. The exposed data covered <em>"full names, mobile numbers, mailing addresses and email addresses"</em>, plus <em>"location data, including their latitude and longitude values, as well as payment links, and user device details, such as the model names and IMEI numbers"</em> — International Mobile Equipment Identity numbers, the per-handset serial. It also exposed <em>"profile images, names and mobile numbers of gig workers on the platform"</em>. Security researcher Anurag Sen of CloudDefense.ai found it and put the count at <b>more than 900,000 users</b>. Sen, not the company, notified <b>CERT-In</b>.</p>
+  <p class="why"><b>Why this outranks the 2024 stunt for this specific seat.</b> The job description makes this role responsible for <em>"standards for coding, API design, security, performance"</em> and lists <em>"application security and compliance best practices"</em> among the good-to-haves. A publicly documented failure of exactly that control is not a character judgement about the employer — it is the strongest available evidence about the state of the estate he would be inheriting, and it is the one topic where a first call can produce a genuinely diagnostic answer.</p>
+  <p><b>The detail that is still open, and it is the one that matters.</b> Co-founder Mayank Arya <em>"confirmed to TechCrunch that it had put in place a fix"</em>. When TechCrunch asked whether the company had logs showing who else had accessed the data, <em>"Arya did not comment further"</em>. Three and a half years on, whether the platform can answer that question today is unknown — and it is answerable in one sentence by anyone who owns the architecture.</p>
+  <p><b>Sources:</b> <a href="https://techcrunch.com/2023/03/03/yes-madam-india-data-exposed/">TechCrunch, 3 Mar 2023</a> · <a href="https://inc42.com/buzz/at-home-salon-platform-yes-madam-exposes-customer-gig-worker-data/">Inc42, 4 Mar 2023</a> · <span class="dim">Business Standard's coverage returned HTTP 403 and was not read.</span></p>
+</div>
+
+<div class="danger">
+  <p><b>2 — December 2024: a fabricated internal firing email was published as a marketing campaign. Reputational gate. It does not touch the technical score.</b></p>
+  <p>Stated factually, and it is worth being precise because the story circulated in several distorted forms. On <b>9–10 December 2024</b>, a Yes Madam copywriter, Anushka Dutta, posted a "leaked" internal human resources email to LinkedIn. The email said that following a workplace-stress survey, employees who had reported high stress were being dismissed <em>"effective immediately"</em>; the figure that travelled with it was <b>over 100 employees</b>. It went global within hours.</p>
+  <p>The company then said the email was fabricated and part of a planned campaign. Its statement: <em>"We sincerely apologize for any distress caused by recent social media posts suggesting we dismissed employees for being stressed. We would never take such an inhuman step."</em> Separately: <em>"No one was fired at Yes Madam."</em> It described the exercise as <em>"a planned effort to highlight the serious issue of workplace stress"</em> and announced a <b>de-stress leave policy</b> — six paid days a year — plus complimentary home spa sessions and an in-office programme it called "Happy 2 Heal". Fortune's headline framed it as a <em>"stunt gone wrong"</em>. Criticism at the time centred on the campaign exploiting a sensitive subject for attention; the fetched coverage records social criticism calling it tone-deaf and does not carry named mental-health professionals on the record, contrary to how the episode is sometimes summarised.</p>
+  <p class="why"><b>What it does and does not support.</b> It establishes that the company was willing to put a fabricated internal communication into public circulation, and that an employee's own account was the vehicle. It is two years old, it produced a policy change, and no source found says anyone lost a job over it. <b>It is not disqualifying, it must not touch the technical score, and it does not belong in any outward-facing artefact.</b> It is worth one calm, non-accusatory question on a call — see the forcing questions.</p>
+  <p><b>Sources:</b> <a href="https://fortune.com/2024/12/10/yesmadam-fires-stressed-employees-india-stunt/">Fortune, 10 Dec 2024</a> · <a href="https://www.thenewsminute.com/news/yes-madam-did-not-sack-stressed-out-people-it-was-a-pr-campaign">The News Minute</a> · <a href="https://indianstartupnews.com/news/yes-madam-clarifies-on-firing-over-100-employees-for-being-stressed-says-no-one-was-fired-it-was-an-awareness-initiative-8416411">Indian Startup News</a> · <span class="dim">Snopes returned HTTP 402 and Business Standard HTTP 403; neither was read.</span></p>
+</div>
+
+<div class="danger">
+  <p><b>3 — There is no public engineering surface, and no independent copy of this posting to check it against.</b></p>
+  <p>No careers page resolved on the company's own domain. No engineering blog and no company GitHub organisation surfaced in any search. The Yes Madam roles visible on public boards are field and salon roles. The architect seat appears on <b>Naukri</b> — and <b>Naukri, Job Hai and AmbitionBox are all Info Edge brands</b> by Info Edge's own account (<a href="https://www.infoedge.in/">infoedge.in</a>), while Info Edge's B8 growth fund is Yes Madam's sole institutional investor.</p>
+  <p class="why"><b>This is an observation, not an allegation.</b> A portfolio company using its investor's job board is entirely ordinary and says nothing about the seat's legitimacy. <b>What it means practically is narrower and does matter:</b> the usual cross-check — same requisition, two independent channels, compare title, level and reporting line — is unavailable here. Every fact about the seat's shape has to come from the recruiter or the hiring manager, which raises the value of the forcing questions and lowers the value of any further searching.</p>
+  <p><span class="dim"><b>Method caution on the one engineering artefact found.</b> The 2022 Java Fullstack posting corroborates Java, Spring Boot, REST and microservices language — but its stack list also runs <em>"Python, Ruby, Java, PHP, and .Net"</em> and <em>"Backbone, Angular, Vue or React"</em>, which reads as a generic template rather than a description of a real estate. It also named MongoDB and Google Cloud, <b>neither of which appears anywhere in the 2026 job description</b>. Do not read a stack migration into that difference; read it as a four-year-old templated posting. <a href="https://www.geeksforgeeks.org/jobs/YesMadam-Javafullstack">Source</a>.</span></p>
+</div>
+
+<div class="warn">
+  <p><b>4 — The posting's scale language runs ahead of the scale that is publicly measurable. Inference, clearly marked.</b></p>
+  <p>The job description asks for experience <em>"designing systems handling high traffic, high concurrency, large-scale workloads"</em> and lists <em>"systems serving millions of users"</em> among the good-to-haves. Set against what is reported: <b>roughly 300,000 bookings a month</b>, up from about 70,000 at the 2024 Shark Tank appearance (<a href="https://www.businesstoday.in/technology/startups/story/yes-madam-raises-rs-50-crore-in-funding-from-info-edge-growth-fund-533145-2026-05-25">Business Today</a>); <b>12,000+ service professionals</b>; <b>395 employees as of 30 April 2026</b> (<a href="https://tracxn.com/d/companies/yes-madam/__rJafvP1vg6ib16trd4umgAx5dVi_7kRx8HRTB5lBXRs">Tracxn</a>); <b>₹195 Cr FY26 revenue</b>.</p>
+  <p class="why"><b>The inference, stated as an inference:</b> a booking-marketplace workload of that size is a real engineering problem — dispatch, slotting, partner state, payouts, city-level operations, a partner mobile app and a customer app — but it is not obviously a throughput problem. The likeliest reading is that "Lead Architect" here means <b>standards, modernisation and consolidation of a platform that grew fast on its own cash</b>, which is a different job from tuning a hot path. <b>That reading may well favour him</b> — it is closer to the axe Monitor consolidation and the VoltusWave standards work than a pure throughput seat would be — but it should be confirmed, not assumed, and it changes which of his evidence he leads with.</p>
+  <p><span class="dim">Calibration point, not a criticism of the company: Urban Company, the largest organised competitor, operates <em>"in 59 cities across four countries"</em> and listed publicly in September 2025, debuting 58% above its issue price on an offering subscribed over 100 times (<a href="https://techcrunch.com/2025/09/16/indias-urban-company-soars-58-above-ipo-price-in-years-most-subscribed-offering">TechCrunch</a>). Its revenue and profit figures were <b>not</b> established by any source read here and are deliberately not quoted.</span></p>
+</div>
+
+<div class="warn">
+  <p><b>5 — The seat's required Observability section contains the two technologies he cannot claim.</b></p>
+  <p>Named as required: <em>"Grafana, Prometheus, ELK Stack"</em>. <b>Grafana and Prometheus are on the never-claim list and stay off the résumé and out of the room</b>, and the k6 collision described in the glossary is precisely the route by which they might otherwise creep in. ELK is genuinely his. This is stated here as a real-world fact about the seat, and the rubric in <a href="index.html">index.html</a> is where it is weighed — this page does not re-score it.</p>
+  <p class="why">The useful move is not to soften anything; it is to find out whether that stack is already running or is something this seat would choose. If Yes Madam has no observability platform yet, a named-tool gap is a ramp item on a greenfield decision. If it is already in production, it is a real ramp. One question separates the two.</p>
+</div>
+
+<!-- ================================ GREEN FLAGS ================================ -->
+
+<h2>Green flags</h2>
+
+<div class="success">
+  <p><b>1 — The business is genuinely working, and it is documented rather than claimed.</b></p>
+  <p>Revenue <b>₹45 Cr FY24 → ₹94 Cr FY25 → ₹195 Cr FY26</b>, described as <em>"100% year-on-year growth for three consecutive years"</em> while maintaining profitability (<a href="https://bestmediainfo.com/mediainfo/mediainfo-marketing/yes-madam-raises-rs-50-crore-funding-from-info-edge-to-expand-profitable-beauty-business-11871654">Best Media Info</a>). Entrackr, working from the filing, records a <b>₹1.8 Cr profit in FY25</b> and puts FY25 revenue at ₹93 Cr against the ₹94 Cr the company-sourced coverage carries (<a href="https://entrackr.com/news/yes-madam-raises-maiden-rs-50-cr-funding-at-rs-750-cr-valuation-11871481">Entrackr</a>). <b>Bootstrapped and profitable from 2016 to 2026 is rare</b>, and the investor said so in as many words: <em>"It's rare to see such capital efficiency in a consumer tech company"</em> — Amit Behl, Info Edge Growth Fund.</p>
+</div>
+
+<div class="success">
+  <p><b>2 — The new capital is explicitly earmarked for technology, which is the best available evidence that this seat is real and funded.</b></p>
+  <p>Four separate outlets report the same allocation. Business Today: the company plans to <em>"accelerate city expansion, deepen investments in technology and improve customer experience while maintaining profitability and operational discipline."</em> Best Media Info: <em>"accelerate expansion across cities, deepen its partner ecosystem, invest in technology, and enhance the overall customer experience."</em> Entrackr: <em>"expand into new cities, strengthen its partner network, invest in technology, and improve customer experience."</em> <b>A newly created senior architecture seat three months after a round that names technology as a use of proceeds is the ordinary, boring explanation — and it is the good one.</b></p>
+  <p><b>Sources:</b> <a href="https://www.businesstoday.in/technology/startups/story/yes-madam-raises-rs-50-crore-in-funding-from-info-edge-growth-fund-533145-2026-05-25">Business Today</a> · <a href="https://bestmediainfo.com/mediainfo/mediainfo-marketing/yes-madam-raises-rs-50-crore-funding-from-info-edge-to-expand-profitable-beauty-business-11871654">Best Media Info</a> · <a href="https://entrackr.com/news/yes-madam-raises-maiden-rs-50-cr-funding-at-rs-750-cr-valuation-11871481">Entrackr</a></p>
+</div>
+
+<div class="success">
+  <p><b>3 — The required stack is unusually clean against the never-claim list.</b></p>
+  <p>Required: Java, Spring Boot, microservices, REST application programming interfaces, system design, caching, asynchronous processing, event-driven architecture, fault tolerance, <b>load balancing</b>, Amazon Web Services, Docker, <b>Kubernetes</b>, continuous integration and delivery, SQL <em>"preferably MySQL"</em>, NoSQL <em>"preferably Redis"</em>. <b>Every one of those is claimable</b> — Kubernetes, Redis and load balancing are all user-confirmed, and MySQL is real but historical, which the "preferably" qualifier accommodates honestly. <b>Kafka appears only under good-to-have</b>, not as a requirement — which matters, because Kafka is the never-claim item most likely to be a hard gate on a distributed-systems seat, and here it is not one.</p>
+</div>
+
+<div class="success">
+  <p><b>4 — The seat reads as a genuine individual-contributor architect role, in its own words.</b></p>
+  <p>Architecture, standards, design principles, architectural reviews, and <em>"technical mentorship to Senior Engineers, Tech Leads, development teams"</em>. No direct reports, no appraisals, no hiring anywhere in the job description. <b>That is the v2 target shape exactly</b> — Principal/Staff/Architect, not Director or Head of Engineering — and it did not have to be inferred from a title.</p>
+</div>
+
+<div class="success">
+  <p><b>5 — A ~395-person company taking its first institutional cheque is a place where architecture authority is plausibly real.</b></p>
+  <p class="why">Inference, marked as such, and it is the optimistic reading of red flag 4. A platform that reached ₹195 Cr and 55-plus cities on its own cash almost certainly did so by shipping rather than by standardising. The job description's own list — <em>"drive modernization and platform transformation: containerization, CI/CD, cloud adoption, observability"</em> and <em>"identify and address technical debt and architectural bottlenecks"</em> — describes that situation accurately. <b>Setting standards where none are entrenched is a materially better architect job than inheriting someone else's.</b> The March 2023 incident is, uncomfortably, part of the same evidence: it is what an unstandardised fast-growth estate looks like, and it is also the mandate.</p>
+</div>
+
+<div class="success">
+  <p><b>6 — There is listed-company oversight behind the investor.</b></p>
+  <p class="why">Info Edge is publicly listed and reports on its investments, which puts a layer of external reporting behind a company that until three months ago had none. Modest, but it is one more source of forward visibility than a purely private bootstrapped company offers. <span class="dim">Inference from Info Edge's status as a listed entity with a disclosed portfolio (<a href="https://www.infoedge.in/">infoedge.in</a>); no specific disclosure about Yes Madam was located.</span></p>
+</div>
+
+<!-- ================================ FORCING QUESTIONS ================================ -->
+
+<h2>Forcing questions</h2>
+
+<p class="lede">Sharp, answerable on a first call, and ordered so that the three that most quickly reveal whether this seat is real and worth his time come first. Each is written so that a vague answer is itself the finding.</p>
+
+<div class="panel">
+<h3>The three that matter most</h3>
+<ol>
+  <li>
+    <p><b>"What changed in the platform after the 2023 data exposure — and today, do your data stores keep access logs?"</b></p>
+    <p class="why"><b>The second half is the question.</b> In March 2023 the company confirmed a fix and then declined to say whether it could tell who else had reached the data. A recruiter cannot answer this; anyone who owns the architecture can answer it in one sentence. It resolves three things at once: whether security is genuinely part of this seat or decoration in the job description, how the company handles being asked about its worst engineering day, and whether the estate has since acquired the basic instrumentation an architect would need. <b>Asked neutrally as an engineering question, not as an accusation, it reads as diligence.</b></p>
+  </li>
+  <li>
+    <p><b>"What are the real peak numbers — bookings per minute at peak, requests per second on the partner app — and what breaks first today?"</b></p>
+    <p class="why">This converts <em>"high traffic, high concurrency, large-scale workloads"</em> into a number, which is the single largest unknown about the work. <b>"What breaks first" is the half that cannot be bluffed.</b> If the honest answer is that nothing breaks and the problem is that nobody owns the design, that is a <em>better</em> seat for him, not a worse one — but he needs to know it before deciding which of his evidence leads.</p>
+  </li>
+  <li>
+    <p><b>"Who does this role report to, who owns architecture today, and how many backend engineers would I be setting standards for?"</b></p>
+    <p class="why">Three facts, one question, all cheap to answer. Public sources conflict on who runs technology, so the reporting line is genuinely unknown from outside. The headcount half is the one that sizes the job: standards for eight engineers and standards for eighty are different roles carrying the same title, and at a ~395-person company where most headcount is city operations, the backend number could be either.</p>
+  </li>
+</ol>
+</div>
+
+<h3>The rest, in order of value</h3>
+<ol start="4">
+  <li><b>"Is this a newly created seat funded by the May round, or a backfill — and if it is a backfill, why is it open?"</b> <span class="why">The round explicitly named technology as a use of proceeds, so "newly created" is the expected and reassuring answer. A backfill at architect level three months after a first institutional round is a different story and worth hearing.</span></li>
+  <li><b>"Is observability already running — Grafana, Prometheus, ELK — or is that something this seat would choose?"</b> <span class="why">Directly separates a real ramp from a greenfield decision on his one genuine named-tool gap in the required section. Ask it as a scoping question about the estate, which is what it is.</span></li>
+  <li><b>"Is there a messaging backbone in production today, or is event-driven architecture still a design goal?"</b> <span class="why">The job description requires understanding of <em>"messaging, event-driven architecture"</em> but lists Kafka only as good-to-have — an unusual combination that usually means the estate does not have one yet. If so, the technology choice is open, and that is a materially different conversation.</span></li>
+  <li><b>"The requisition says Sector 63 Noida, work from office. Your own address page lists a Madhapur, Hyderabad office — is this seat Noida-only?"</b> <span class="why">Costs nothing, and it is grounded in the company's own published address list rather than in a preference. Relocation is open either way, so this is information, not a condition.</span></li>
+  <li><b>"Does the seat carry 24/7 on-call, and what's the travel cadence to the city offices?"</b> <span class="why">Two axes that are separate from location and from schedule density, neither of which is scored. Both are far easier to establish now than after an offer.</span></li>
+  <li><b>"What's the oldest thing still running in production, and what is the modernisation backlog you'd want closed in year one?"</b> <span class="why">The most direct test of whether "drive modernization and platform transformation" is a real backlog with named systems or a phrase in the posting. A hiring manager with a real mandate answers this immediately and specifically.</span></li>
+  <li><b>"How does the company think about the December 2024 stress-survey campaign now — did anything change internally?"</b> <span class="why">Worth asking once, calmly, late in the call, and framed as a question about what changed rather than about what happened. The company's own answer at the time was a policy change, so there is a straightforward answer available; whether it is given straightforwardly is the signal. <b>Do not lead with this and do not press it — it is two years old and it is not the decision.</b></span></li>
+  <li><b>"What does the interview process look like, and who runs the technical round?"</b> <span class="why">Whether an architect, the chief technology officer or a delivery lead runs it tells him what the seat is actually being hired for.</span></li>
+</ol>
+
+<div class="tip">
+  <p><b>Where these go.</b> Per this workspace's recruiter-reply rule, a written reply answers exactly what was asked, in the order asked, and then puts a call on the table — <b>with no added questions</b>, however useful they look. Every extra written question is one more thing between him and a phone call. <b>All twelve above belong on the call cheat-sheet and get asked out loud.</b></p>
+</div>
+
+<!-- ================================ LIMITS ================================ -->
+
+<h2>Limits of this research</h2>
+
+<div class="panel">
+<ul>
+  <li><b>Compensation was not researched and appears nowhere above</b>, by his standing instruction of 2026-08-25. The listing states a band; it is recorded as a neutral fact in <code>jd.md</code> and is not surfaced, compared or gated on here.</li>
+  <li><b>No interview preparation is included</b>, by his instruction of 2026-08-26. The forcing questions are diligence questions for him to ask, not answers for him to give.</li>
+  <li><b>Sources that could not be read:</b> Business Standard (HTTP 403), Snopes (HTTP 402), AmbitionBox (connection timeout), the Naukri company page (HTTP 403), AppBrain (HTTP 403), and the Google Play listing (content truncated). The December 2024 account above therefore rests on Fortune, The News Minute and Indian Startup News rather than on the fact-check.</li>
+  <li><b>The company's own website is a JavaScript application</b> and returns only a logo and a tagline to a plain fetch. The address page is the exception and was read in full. <b>Anyone re-running this and concluding "no careers page exists" should note the distinction:</b> none resolved, which is not the same as none existing behind the application shell.</li>
+  <li><b>Not established by any source read here:</b> engineering headcount; who this seat reports to; whether the seat is newly created; whether the March 2023 exposure produced any regulatory outcome after CERT-In was notified; whether the 3.9 / 185-review rating in the posting is current; and Urban Company's revenue or profit figures, which were deliberately left unquoted rather than taken from an aggregator.</li>
+  <li><b>An app-install figure of five million-plus was seen in search results but the listing itself could not be fetched</b>, so it is not used as evidence anywhere above.</li>
+  <li><b>Source disagreements recorded rather than smoothed:</b> founding year (2016 in most sources, 2017 and 2019 in two Inc42 pieces); FY25 revenue (₹93 Cr from the filing-based report, ₹94 Cr in company-sourced coverage); the founder count (three in the funding coverage, a fourth name in one Shark Tank recap).</li>
+  <li><b>Employee reviews were not used to establish any pattern.</b> Glassdoor's Yes Madam page carries a small number of reviews mixing salon field staff with office staff, and no rating from it is quoted above.</li>
+  <li><b>There is no live social signal on this employer.</b> Verified 2026-08-26: a last-30-days sweep returned nothing on Yes Madam, with only one of eight sources active. <b>Anything claiming recent buzz about this company is invented.</b> Every finding above predates that window.</li>
+  <li><b>The Info Edge observation in red flag 3 is a note about evidence availability, not about the company's conduct.</b> If it is ever repeated, it must travel with that qualification.</li>
+</ul>
+</div>
+
+<p class="signoff">Research compiled 2026-08-26 · every claim cited to a source that was fetched and read, or marked as inference · no compensation content and no interview preparation, by instruction · <b>nothing on this page moves the technical score of 88.375</b></p>
+
+</main>
+</body>
+</html>

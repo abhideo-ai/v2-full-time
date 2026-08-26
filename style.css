@@ -2371,8 +2371,24 @@ tr.expansion-row > td {
 .wl-head h1 { margin: 0; font-size: 30px; }
 .wl-head .wl-role { font-size: 17px; color: var(--ink-soft); font-weight: 400; }
 
-.wl-status { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
-.wl-status .pill { font-size: 12px; }
+/* align-items is load-bearing. A flex container defaults to `stretch`, so every
+   pill grew to the tallest one's height and border-radius: 999px turned the
+   stretched box into an oval with its text pinned to the top. The .pills
+   container was fixed the same way; this one was missed. */
+.wl-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.wl-status .pill {
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 3px 11px;
+  align-self: center;
+}
 
 .wl-sub { color: var(--muted); margin: 6px 0 0; font-size: 14px; max-width: 78ch; }
 .wl-sub strong { color: var(--ink-soft); }

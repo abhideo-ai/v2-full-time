@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>o9 Solutions — Senior Architect, Software &amp; Agentic Engineering · research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<a class="skip-link" href="#verdict">Skip to the verdict</a>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> · August 2026 · 25 · o9-senior-architect-agentic · research</p>
+
+<header>
+  <p class="eyebrow">Company research · compiled 26 Aug 2026</p>
+  <h1>o9 Solutions — <span class="nowrap">Senior Architect,</span> Software &amp; Agentic Engineering</h1>
+  <p class="subtitle">Sourced through an agency listing that named no client. The client is o9, the requisition is real, and o9's own careers system says something the listing does not.</p>
+</header>
+
+<div class="meta">
+  <span><b>Source</b> Naukri, posted by Recruit Right Solutions as "Hiring for Foreign MNC"</span>
+  <span><b>Client</b> o9 Solutions, Inc. — named in the job-description body</span>
+  <span><b>Location</b> Bengaluru · hybrid</span>
+  <span><b>Requisition</b> <b>JR102297</b> — identified during this research</span>
+  <span><b>Technical score</b> 81.4 (<a href="index.html">weighted rubric</a>)</span>
+  <span><b>Sent</b> no</span>
+</div>
+
+<div class="banner">
+  <p><b>The single most useful thing this research produced is a requisition number.</b> The agency listing carries no client name, no requisition identifier and no posting date. o9's own careers system — the Workday-hosted site at <code>o9solutions.wd5.myworkdayjobs.com</code> — carries a requisition, <b>JR102297</b>, whose body reproduces the pasted job description word for word. So the seat is real and the description is o9's own text, not an agency rewrite. <b>It also revealed a second, different requisition sharing the same title, and a five-month-old posting date.</b> Both are below.</p>
+</div>
+
+<div class="toc">
+  <h4>On this page</h4>
+  <ol>
+    <li><a href="#glossary">First, the vocabulary</a></li>
+    <li><a href="#verdict">Verdict</a></li>
+    <li><a href="#verification">Every job-description claim, checked against o9's own site</a></li>
+    <li><a href="#red">Red flags</a></li>
+    <li><a href="#green">Green flags</a></li>
+    <li><a href="#questions">Forcing questions</a></li>
+    <li><a href="#limits">Limits of this research</a></li>
+  </ol>
+</div>
+
+<!-- ==================================================================
+     GLOSSARY — concepts, not just expansions. He has never worked in
+     supply-chain planning, so the domain vocabulary is the unfamiliar
+     part. The MLOps half he knows; it is expanded anyway because the
+     acronym rule applies to every artefact, not only résumé bullets.
+     ================================================================== -->
+
+<h2 id="glossary">First, the vocabulary</h2>
+
+<p class="lede">He has never worked in supply-chain planning. The terms below are the ones that decide what this platform actually <em>does</em> — and two of them are collisions where a familiar word means something different here than it does in his own record.</p>
+
+<dl class="context-grid">
+  <dt>Supply-chain planning (SCP)</dt>
+  <dd>Deciding, ahead of time, how much of a thing to make, buy, move and hold, and where. Not logistics execution — no trucks, no warehouses. It is a forecasting-and-allocation problem run over a company's own history, and the output is a <em>plan</em> that people and systems then act on. This matters to his fit: it is a longitudinal-data problem before it is an artificial-intelligence (AI) problem.</dd>
+
+  <dt>Integrated business planning (IBP) · sales and operations planning (S&amp;OP)</dt>
+  <dd>The management ritual SCP software sells into: a monthly cycle where sales, supply, finance and operations reconcile one number. The commercial point of o9's product is that these functions historically planned in separate spreadsheets and disagreed. "Breaking silos" is the whole pitch.</dd>
+
+  <dt>Value leakage</dt>
+  <dd>o9's own term, in its own marketing copy, for money lost to bad or slow planning decisions — stockouts, excess inventory, missed promotions. It is how o9 frames its return on investment. Treat it as a sales frame, not a measured quantity.</dd>
+
+  <dt>Enterprise Knowledge Graph (EKG)</dt>
+  <dd>o9's core data structure: a graph model of a business — products, plants, customers, suppliers, demand signals — continuously fed from enterprise systems and external market data, so that a question can be answered by traversing relationships instead of joining tables. <b>This is the thing the seat would own the architecture of, and it is also the thing at the centre of o9's litigation against SAP.</b> It is close in spirit to his own Context Graph work, though the domain is different.</dd>
+
+  <dt>Digital Brain</dt>
+  <dd>o9's product name for the whole platform sitting on top of the EKG. <b>A collision worth naming:</b> "digital brain" and "digital twin" get used interchangeably in this market's copy, but a digital twin normally means a simulation of a physical asset. o9's is a model of a <em>planning process</em>, not of a machine.</dd>
+
+  <dt>Neurosymbolic AI</dt>
+  <dd>Deliberately combining a neural model — a large language model (LLM), a deep network — with <em>symbolic</em> computation: explicit rules, constraint solvers, optimisation, formal logic. The argument is that a language model can read and reason over context but cannot be trusted to produce a feasible production schedule, so the hard constraints are enforced by a solver rather than by the model. <b>This is o9's stated architectural direction and it is the most important term on this page for him</b> — see green flag 2.</dd>
+
+  <dt>APEX operating model</dt>
+  <dd>o9's branded end-state for customers: fully integrated, largely autonomous, AI-driven planning. It appears in o9's own job postings as the "north star". A marketing frame, but a live one — it is what the chief technology officer (CTO) is publicly measured against.</dd>
+
+  <dt>VUCA</dt>
+  <dd>Volatility, uncertainty, complexity, ambiguity. Borrowed from military planning, now standard supply-chain vocabulary for "the world stopped being predictable". o9 uses it constantly. Knowing it is table stakes in this domain.</dd>
+
+  <dt>Go-live</dt>
+  <dd>The moment a customer's o9 implementation starts running their real planning cycle. o9 reports go-live counts as a commercial metric. Relevant because it reveals the shape of the company: a large part of o9's India headcount exists to deliver go-lives, not to build the platform.</dd>
+
+  <dt>Model registry</dt>
+  <dd>A versioned catalogue of trained machine-learning (ML) models — which version is in production, what data trained it, what it scored, how to roll back. Named explicitly in the requirements. <b>It is the one named MLOps artefact his record never evidences</b>, which the rubric already records; retraining pipelines and drift detection it does evidence.</dd>
+
+  <dt>Drift — model drift and data drift</dt>
+  <dd>Model drift: the world changes and a model's accuracy decays without anything breaking. Data drift: the inputs change shape or distribution. Both are silent failures, which is why continuous monitoring is a named duty here rather than an afterthought.</dd>
+
+  <dt>MLOps · CI/CD for ML</dt>
+  <dd>Machine-learning operations. Applying continuous-integration and continuous-delivery (CI/CD) discipline — automated build, test, release — to models rather than only to code, so that retraining and redeployment are a pipeline, not a person.</dd>
+
+  <dt>Retrieval-augmented generation (RAG)</dt>
+  <dd>Fetching relevant context from a data store at query time and putting it in front of the language model, instead of relying on what the model memorised in training. Named in the requirements alongside vector databases.</dd>
+
+  <dt>Transformers · state-space models · diffusion models</dt>
+  <dd>Three families of deep-network architecture. Transformers underpin most current language models. State-space models are a rival sequence architecture that scales better on very long sequences — directly relevant to supply-chain time series. Diffusion models generate by iteratively denoising, best known for images but increasingly used for time series. <b>These three appear in the listing's skill tags but not in the job-description body</b>, which turns out to matter — see red flag 1.</dd>
+
+  <dt>Distributed computing frameworks · Spark</dt>
+  <dd>Engines that run a computation across a cluster rather than one machine. Apache Spark, and its Python interface PySpark, is the default in this market. <b>A collision worth naming:</b> DuckDB and Parquet — which he does have — solve an adjacent problem (fast analytical queries over columnar files) but are not a distributed cluster engine. Multiple o9 postings name PySpark and Databricks directly, so this is a real house tool, not job-description boilerplate.</dd>
+
+  <dt>"Solution Architect" at o9</dt>
+  <dd><b>The most misleading collision on this page.</b> At o9, and especially at o9 Bengaluru, "Solution Architect" and "Technical Architect" overwhelmingly mean <em>customer implementation</em> — configuring the platform for a client, running blueprint workshops, building data interfaces, hypercare after go-live. It is a consulting track. It is <b>not</b> what this seat is. Every employee-review signal attached to those titles therefore describes a different job, and that distinction carries a lot of weight below.</dd>
+
+  <dt>Individual contributor (IC)</dt>
+  <dd>A seat with technical authority and no direct reports or appraisals. o9's own postings use the phrase explicitly for some architect roles. Load-bearing here because this workspace builds IC seats only.</dd>
+</dl>
+
+<!-- ================================ VERDICT ================================ -->
+
+<h2 id="verdict">Verdict</h2>
+
+<div class="tldr">
+  <strong>The read, in three sentences</strong>
+  <p><b>The seat is real and the pasted description is o9's own requisition text verbatim</b> — it is <b>JR102297</b> on o9's Workday careers site, a Bengaluru platform-architecture role at a Gartner-recognised, well-capitalised product company whose stated architectural direction, <em>neurosymbolic</em> AI, happens to be the exact argument his own portfolio is built around.</p>
+  <p><b>But three things about the posting do not line up, and all three point the same way:</b> the requisition has been open since <b>26 March 2026</b>, a second and entirely different requisition sits under the same title in the same city, and o9's own newest architect posting says the technology organisation <em>is being restructured right now</em> — with the ground-up core AI function being built in the United States, not Bengaluru.</p>
+  <p><b>So this is worth a call and the call has one job:</b> establish which requisition he is actually being sourced against and where that seat sits in the new structure — because on the evidence available, the difference between the two candidate requisitions is the difference between a platform-architecture seat he fits well and an applied-mathematics research seat gated on a doctorate.</p>
+</div>
+
+<div class="callout">
+  <p><b>Location and schedule are not scored, and nothing below treats them as negatives.</b> Bengaluru is neutral — relocation is open. Schedule density is neutral. Two things <em>are</em> surfaced as separate axes and both belong on the call: <b>travel cadence</b> to customer sites, and <b>call-window and on-call expectations</b> against United States and European time zones, which is the specific thing o9's India reviews complain about. Separately worth asking, and purely as an option rather than a requirement: <b>o9 has an R&amp;D office in Hyderabad</b>, where he already lives.</p>
+</div>
+
+<div class="note">
+  <p><b>Compensation appears nowhere on this page, by instruction.</b> It is deferred until a conversation actually reaches that stage. The listing's stated band is recorded as a neutral fact in <code>jd.md</code> and is not carried, compared or reasoned about here.</p>
+</div>
+
+<!-- ================================ VERIFICATION ================================ -->
+
+<h2 id="verification">Every job-description claim, checked against o9's own site</h2>
+
+<p class="lede">Postings misstate title, location and whether a seat is even open. Each claim in <code>jd.md</code> was checked against o9's own careers system rather than against another job board. The checks were run on 26 August 2026.</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr><th>Claim in the listing</th><th>Verdict</th><th>What o9's own site says</th></tr></thead>
+<tbody>
+<tr>
+  <td>The client is <b>o9 Solutions</b></td>
+  <td><span class="tag ok">Confirmed</span></td>
+  <td>The job-description body names o9 directly, and the text matches requisition <b>JR102297</b> on o9's own careers site sentence for sentence, including the o9 boilerplate about Google, PepsiCo, Walmart, T-Mobile, AB InBev and Starbucks.</td>
+</tr>
+<tr>
+  <td>The seat is <b>open</b></td>
+  <td><span class="tag ok">Yes — but old</span></td>
+  <td>JR102297 is live and accepting applications. Its posting date is <b>26 March 2026</b>, five months ago; o9's site renders this as "Posted 30+ Days Ago".</td>
+</tr>
+<tr>
+  <td>Location <b>Bengaluru</b></td>
+  <td><span class="tag ok">Confirmed</span></td>
+  <td>o9's record reads <code>Bangalore, Karnataka, India</code>, full time, with <b>no remote type set</b> — so on-site or hybrid, not a remote seat. o9's Bengaluru office is in Doddanekundi.</td>
+</tr>
+<tr>
+  <td>Title <b>"Senior Architect (Software &amp; Agentic Engineering)"</b></td>
+  <td><span class="tag warn">Not o9's title</span></td>
+  <td>o9's requisition title is <b>"Senior Software Architect"</b>. Its own role summary says <b>"Principal/ Senior Architect"</b>. Its own body then calls the person <b>"The Principal AI Architect"</b>. Four renderings, one seat.</td>
+</tr>
+<tr>
+  <td>Experience <b>10+ years (listing says 10–20)</b></td>
+  <td><span class="tag ok">Confirmed</span></td>
+  <td>"10+ years of experience in software architecture and building large-scale, production-grade systems, with 5+ years of specialization in deep learning and data engineering."</td>
+</tr>
+<tr>
+  <td><b>MLOps</b>: model registries, retraining pipelines, drift detection</td>
+  <td><span class="tag ok">Confirmed, verbatim</span></td>
+  <td>"…including model registries, automated training and retraining pipelines, CI/CD for ML, deployment strategies, and continuous monitoring to detect model drift, data drift, and performance degradation."</td>
+</tr>
+<tr>
+  <td><b>RAG and vector databases</b></td>
+  <td><span class="tag ok">Confirmed, verbatim</span></td>
+  <td>"…implementing advanced architectures such as Retrieval-Augmented Generation (RAG) and integrating vector database technologies…"</td>
+</tr>
+<tr>
+  <td><b>Scala / Kotlin / Rust desirable</b></td>
+  <td><span class="tag ok">Confirmed — and genuinely optional</span></td>
+  <td>"Mastery of Python… Additional experience with other languages such as Scala, Kotlin and Rust is <b>highly desirable</b>." Python is the mastery requirement; the other three are the qualifier.</td>
+</tr>
+<tr>
+  <td><b>Big data frameworks</b></td>
+  <td><span class="tag warn">Confirmed, and load-bearing</span></td>
+  <td>"Demonstrated experience processing large datasets and building solutions using distributed computing frameworks <b>in production environments</b>." Other o9 Bengaluru postings name PySpark, Databricks and Airflow, so the house tool is Spark. See red flag 7.</td>
+</tr>
+<tr>
+  <td>Skill tags include <b>transformers, diffusion models, state-space models, "Applied Research Architect"</b></td>
+  <td><span class="tag bad">Not from this requisition</span></td>
+  <td>Those terms appear nowhere in JR102297. They appear in <b>JR102298</b> — a different o9 requisition, same title, same city. <b>This is the sharpest finding on the page.</b></td>
+</tr>
+<tr>
+  <td>Posted by <b>Recruit Right Solutions</b></td>
+  <td><span class="tag">Unverified</span></td>
+  <td>No website, company page or review presence surfaced across repeated searches. <b>Not an accusation, and not decision-relevant</b> — the client verification succeeded independently, which is the check that mattered.</td>
+</tr>
+<tr>
+  <td>Seat is <b>individual contributor</b></td>
+  <td><span class="tag ok">Reads IC, worth confirming</span></td>
+  <td>JR102297 names mentoring, design reviews and standard-setting. <b>No direct reports, hiring or appraisals anywhere in the text.</b> That is the IC shape, but the requisition never says the words, so ask.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="tip">
+  <p><b>How these checks were run, since it affects how much to trust them.</b> Glassdoor, Naukri, o9's own marketing site and several aggregators all refuse automated fetches. o9's careers system does not: it is a standard Workday instance whose public job-search endpoint returns structured data, which is where every requisition identifier, posting date, location and description quoted above comes from. <b>That is o9's own system of record for hiring</b> — a stronger source than any job board, and the reason the verification section is unusually firm while the employee-review section below is not.</p>
+</div>
+
+<!-- ================================ RED FLAGS ================================ -->
+
+<h2 id="red">Red flags</h2>
+
+<div class="danger">
+  <p><b>1 — Two different o9 requisitions share this title in this city, and the listing appears to blend both. This is the most decision-relevant finding on the page.</b></p>
+  <p>o9's careers site carries <b>two live requisitions titled "Senior Software Architect", both Bangalore, both full time</b>. They are not duplicates. They are different jobs:</p>
+  <div class="tablewrap">
+  <table>
+  <thead><tr><th></th><th><b>JR102297</b></th><th><b>JR102298</b></th></tr></thead>
+  <tbody>
+  <tr><td><b>Posted</b></td><td>26 March 2026</td><td>8 May 2026</td></tr>
+  <tr><td><b>What it is</b></td><td>Platform architecture. "Define, own, and evolve the end-to-end architecture of o9's enterprise platform"</td><td>Applied research. "A strong foundation in Applied Mathematics, Statistical Modeling, and Deep Learning to lead the design, implementation and delivery of next-generation AI models and Algorithms"</td></tr>
+  <tr><td><b>Education</b></td><td>Not specified</td><td>"<b>Masters or PhD</b> in Computer Science, Applied Mathematics, Statistics, Physics, or a closely related quantitative discipline"</td></tr>
+  <tr><td><b>Named techniques</b></td><td>MLOps, model registries, retraining, drift detection, RAG, vector databases, distributed computing</td><td>"transformers, state-space, diffusion models"; pruning, quantization, distributed training, graphics processing unit (GPU) optimisation; linear algebra, multivariate calculus, probability theory, optimisation, <b>causal inference</b></td></tr>
+  <tr><td><b>Shape of the work</b></td><td>Architecture, standards, design reviews, platform strategy</td><td>Model design, loss functions, evaluation metrics, validation strategies, convergence behaviour</td></tr>
+  </tbody>
+  </table>
+  </div>
+  <p class="why"><b>The listing's job-description body is JR102297 word for word. Its skill tags are not.</b> "Applied Research Architect", "Transformers", "Diffusion Models" and "State Space Models" are JR102298's vocabulary and appear nowhere in JR102297's text. Either the agency is sourcing against both requisitions under one advertisement, or it built the tag list from a second document. <b>The consequence is concrete:</b> against JR102297 he is a strong platform-architecture candidate; against JR102298 the seat is gated on a Masters or PhD in a quantitative discipline plus five years of hands-on statistical modelling, and the honest read on that one is different. <span class="dim">Worth noting neutrally: his MS in Computer Science does satisfy the "Masters in Computer Science" half of JR102298's education line. The five years of applied mathematics and statistical modelling is the part that does not follow.</span></p>
+  <p><b>Sources:</b> <a href="https://o9solutions.wd5.myworkdayjobs.com/en-US/o9SolutionsExternal/job/Bangalore-Karnataka-India/Senior-Software-Architect_JR102297">JR102297 on o9's careers site</a> · <a href="https://o9solutions.wd5.myworkdayjobs.com/en-US/o9SolutionsExternal/job/Bangalore-Karnataka-India/Senior-Software-Architect_JR102298">JR102298 on o9's careers site</a> · <a href="https://o9solutions.wd5.myworkdayjobs.com/o9SolutionsExternal">o9 careers, full listing</a></p>
+</div>
+
+<div class="danger">
+  <p><b>2 — The requisition has been open for five months.</b></p>
+  <p>JR102297's posting date on o9's own system is <b>26 March 2026</b>. Today is 26 August 2026. o9's public rendering flattens this to "Posted 30+ Days Ago", which hides it — the precise date only surfaces in the underlying record.</p>
+  <p class="why">Three explanations fit and none can be separated from outside: the bar is genuinely high and o9 has not found the person; the requisition is stale and kept open as a pipeline collector; or the spec has changed and the posting has not. <b>All three are worth knowing and all three are answerable in one question on a first call.</b> A recruiter working from a live conversation with the hiring manager will know why; one who is not will deflect, and the deflection is itself the answer.</p>
+</div>
+
+<div class="danger">
+  <p><b>3 — o9 is restructuring its technology organisation right now, and the ground-up AI function is being built in the United States, not Bengaluru.</b></p>
+  <p>This is not inference. It is o9's own text, in a requisition posted <b>24 August 2026 — two days ago</b>:</p>
+  <div class="evidence">
+    <strong>o9 requisition JR102530, "Senior AI Architect", posted 24 Aug 2026</strong>
+    <p><em>"o9 is <b>restructuring its technology organization around purpose-built engineering groups</b>, upgrading to modern tech stacks and AI-first software to drive a streamlined, R&amp;D-focused powerhouse. As part of this transformation, we are <b>building a world-class core AI function from the ground up</b> to serve as the foundational intelligence layer across all product engineering domains. This is a <b>premier technical individual contributor (IC) role with the structural weight, seniority, and impact of an SVP</b>."</em></p>
+    <p><a href="https://o9solutions.wd5.myworkdayjobs.com/en-US/o9SolutionsExternal/job/Senior-AI-Architect_JR102530-1">JR102530 on o9's careers site</a> — Dallas, Texas plus 51 United States work-from-home locations. <b>No India location.</b></p>
+  </div>
+  <p class="why"><b>Read the two dates together.</b> The Bengaluru platform-architecture seat was posted in March and is still open. The senior vice president (SVP)-weight, ground-up core AI seat was posted two days ago and is United States-only. That does not make the Bengaluru seat unreal — but it does mean the seat was specified <em>before</em> the restructuring was being advertised, and the question of where it lands in the new structure is open. <b>It also means the reporting line may have changed since March.</b> There is no public description of the restructuring anywhere outside o9's own job postings; no press release, no coverage. That absence is itself worth noting: this is an internal reorganisation visible only because a requisition described it.</p>
+</div>
+
+<div class="warn">
+  <p><b>4 — o9 Bengaluru is predominantly a delivery centre, and this seat is one of very few product-platform architecture seats in it.</b></p>
+  <p>Of <b>74 open roles</b> across o9 globally, <b>30 are in Bangalore</b> — the largest single concentration anywhere. But the composition is lopsided. Enumerated from o9's own careers system on 26 August 2026, the Bangalore roles include four Associate Solution Architect variants (Customer Success, Demand Planning, Supply Planning, generic), Associate Technical Architect, Solution Architect, Solution Architect (Retail Planning), Technical Architect, Consultant, Senior Functional Consultant, Senior Technical Consultant, Supply Chain Consultant, Delivery Manager, Associate Customer Success Manager and Partner Enablement Consultant.</p>
+  <p>Against that, the product and platform engineering slice is thin: the two Senior Software Architect requisitions, a Senior/Lead Data Scientist, a Senior Product Manager, DevOps and SecOps.</p>
+  <p class="why"><b>The "Technical Architect" posted in Bangalore six days ago proves the point.</b> Requisition JR102773 is titled Technical Architect but its text asks for "a skilled 9+ years experienced <b>Senior Technical Consultant</b>" working in "SQL, Python and PySpark", integrating "Teradata, SAP ERP, SQL Server, Oracle, Sybase, ODBC connectors &amp; Flat Files", doing "Production Deployment and Hypercare" and meeting "customer service-level agreements (SLAs)". That is customer implementation with an architect title. <b>Two consequences.</b> First, it makes this seat genuinely rare and therefore genuinely interesting. Second — and this is what reframes the review data below — <b>the o9 Bengaluru population that carries "Architect" in its title is mostly the implementation track, not the platform track.</b></p>
+  <p><b>Sources:</b> <a href="https://o9solutions.wd5.myworkdayjobs.com/en-US/o9SolutionsExternal/job/Bangalore-Karnataka-India/Technical-Architect_JR102773">JR102773, Technical Architect, Bangalore</a> · <a href="https://o9solutions.wd5.myworkdayjobs.com/o9SolutionsExternal">o9 careers, full listing</a></p>
+</div>
+
+<div class="warn">
+  <p><b>5 — The architect-track review signal is real, but it points at a different job than this one.</b></p>
+  <p>This workspace's company-intelligence record, set 25 August 2026, holds: o9 Bengaluru at <b>3.2 out of 5 for work-life balance</b>; <b>76% would recommend against 86% company-wide</b>; recurring complaints of <b>seven-in-the-morning to midnight call windows</b>, slow career growth and regional politics; and, as the sharpest item, <b>Associate Solutions Architect at 42% would-recommend, down 18 points in twelve months</b>.</p>
+  <p><b>What re-verification found, stated honestly.</b> The Bengaluru work-life-balance figure of 3.2 out of 5 and the 76% recommend figure both re-surface in current search results, along with an overall 3.8 out of 5 across roughly 963 reviews and recurring phrases including <em>"no work life balance everyday you will log minimum 10+ hours"</em> and <em>"there's no work/life balance and an inner circle mentality"</em>. <b>Two caveats belong on the record.</b> One: current results present 76% as the <em>company-wide</em> recommend figure, where the workspace record has it as the Bengaluru figure against an 86% company-wide — the two scopes could not be separated this pass. Two: <b>the 42% / minus-18-points figure could not be re-fetched</b>, because Glassdoor refuses automated retrieval; it is carried forward from the 25 August record, not re-confirmed today.</p>
+  <p class="why"><b>The scoping correction is the useful part.</b> Per red flag 4, "Associate Solutions Architect" at o9 is the <em>customer-implementation</em> track — the people running blueprint workshops and hypercare against customer SLAs across United States and European time zones. That is exactly the population you would expect the call-window complaint to come from, and it is <b>not</b> this seat. <b>So the 42% is a real signal about a real problem in a real part of o9 Bengaluru, and it is a legitimate thing to ask about — but it should not be read as describing the platform-architecture track.</b> The honest formulation for a call is a question about <em>this</em> seat's hours and time-zone expectations, not a recitation of somebody else's reviews.</p>
+  <p><b>Sources:</b> <a href="https://www.glassdoor.co.in/Reviews/o9-Solutions-Reviews-E444735.htm">Glassdoor — o9 Solutions reviews</a> · <a href="https://www.glassdoor.com/Reviews/o9-Solutions-Bangalore-Reviews-EI_IE444735.0,12_IL.13,22_IM1091.htm">Glassdoor — o9 Bangalore reviews</a> · <a href="https://www.glassdoor.com/Reviews/o9-Solutions-Associate-Solutions-Architect-Reviews-EI_IE444735.0,12_KO13,42.htm">Glassdoor — Associate Solutions Architect reviews</a> · <a href="https://www.teamblind.com/company/o9-Solutions/reviews">Blind — o9 Solutions reviews</a></p>
+</div>
+
+<div class="warn">
+  <p><b>6 — Live litigation, and it touches precisely what this seat would own.</b></p>
+  <p>On <b>25 November 2025</b> o9 filed a trade-secret misappropriation complaint against SAP SE and SAP America in the United States District Court for the Northern District of Texas (case <b>3:25-cv-03245</b>). It alleges three former o9 executives — Stephan de Barse, then chief revenue officer; Stijn-Pieter van Houten, then senior vice president and knowledge innovation lead; and Sean Zonneveld, then global senior vice president — downloaded <b>more than 22,000 confidential files</b> before joining SAP in 2025. The complaint invokes the federal Defend Trade Secrets Act (DTSA) and the Texas Uniform Trade Secrets Act (TUTSA), plus breach of contract and tortious interference.</p>
+  <p><b>The material alleged to have been taken includes "technical architecture and design for o9's Enterprise Knowledge Graph"</b> — the core of the platform this seat is advertised to define, own and evolve.</p>
+  <p><b>Status, as of two weeks ago:</b> on <b>11 August 2026</b> United States Magistrate Judge David Horan recommended <b>denying</b> SAP's motions to dismiss and for a more definite statement, finding o9's pleading adequate across eight groupings of alleged trade secrets. The case proceeds. SAP's public position is that it "respects the intellectual property rights of others" and will "respond, as appropriate, within the legal process".</p>
+  <p class="why"><b>This is not a reason to avoid the seat, and it should not be scored.</b> A company defending its intellectual property is behaving normally, and o9 is the plaintiff, not the defendant. What it <em>is</em> is a set of practical day-to-day questions nobody volunteers: what confidentiality and information-barrier obligations attach to someone architecting the EKG while it is in dispute; whether document-preservation duties reach engineering artefacts; whether architecture decisions in this area route through counsel; and whether he could be drawn into discovery. <b>Ask, in a neutral register, on the call.</b></p>
+  <p><b>Sources:</b> <a href="https://o9solutions.com/news/o9-solutions-files-trade-secret-misappropriation-complaint-against-sap-and-former-o9-executives-in-u-s-district-court">o9's own announcement</a> · <a href="https://www.freightwaves.com/news/o9-solutions-accuses-sap-of-trade-secret-theft-in-high-stakes-supply-chain-software-dispute">FreightWaves</a> · <a href="https://www.dmagazine.com/business-economy/2025/11/dallas-tech-firm-o9-solutions-accuses-sap-of-a-coordinated-attack-in-trade-secrets-lawsuit/">D CEO Magazine</a> · <a href="https://www.heise.de/en/news/Theft-of-Trade-Secrets-Software-Manufacturer-o9-Sues-SAP-11093624.html">heise online</a> · <a href="https://ipwatchdog.com/2026/08/12/magistrate-judge-recommends-denying-motion-to-dismiss-trade-secret-case-against-sap/">IPWatchdog on the 11 Aug 2026 recommendation</a> · <a href="https://dockets.justia.com/docket/texas/txndce/3:2025cv03245/412244">Justia docket</a></p>
+</div>
+
+<div class="warn">
+  <p><b>7 — Distributed computing is a named production requirement, and Spark is the house tool.</b></p>
+  <p>JR102297 asks for "demonstrated experience processing large datasets and building solutions using distributed computing frameworks <b>in production environments</b>". That phrasing is generic enough to read as boilerplate — but o9's other Bengaluru postings show it is not. The Technical Architect requisition names <b>Python, PySpark and SQL</b> as the working languages plus <b>Airflow</b> and <b>SSIS</b> for workflow management; the Senior Technical Consultant (data engineer) postings name the same; third-party technology profiles for o9 list <b>Apache Spark, Databricks, Docker and Kubernetes</b>.</p>
+  <p class="why"><b>The workspace's own reading of this is already correct and should not be softened:</b> <em>"Spark is not on his list. DuckDB/Parquet is adjacent, not the same."</em> His event-sourced pipelines, Parquet snapshots and DuckDB work are genuine large-data engineering, and Kubernetes is his. <b>But of everything on this job description, distributed cluster computing is the item o9's own postings prove is load-bearing rather than aspirational</b> — which makes it the one ramp item worth being able to speak to precisely rather than generally. The rubric already scores data-pipelines at 8 out of 10 and treats this as a ramp item, not a capability cap; that classification stands.</p>
+  <p><b>Sources:</b> <a href="https://o9solutions.wd5.myworkdayjobs.com/en-US/o9SolutionsExternal/job/Bangalore-Karnataka-India/Technical-Architect_JR102773">JR102773 requirements</a> · <a href="https://www.crunchbase.com/organization/o9-solutions/technology">Crunchbase technology profile</a></p>
+</div>
+
+<div class="warn">
+  <p><b>8 — Deep-learning years is the binding constraint, and it is the one thing on this seat that wording cannot fix.</b></p>
+  <p>"5+ years of specialization in deep learning and data engineering." The rubric weights this criterion at <b>0.22 — the heaviest on the sheet</b> — and scores it <b>7 out of 10</b>, which is what holds the technical total at <b>81.4</b>. His applied artificial-intelligence programme ran roughly fourteen months; the postgraduate diploma in AI and ML from IIIT Bangalore (January 2021) adds credibility rather than years.</p>
+  <p class="why"><b>Two things make this less bad than it looks, and one makes it worse.</b> Less bad: the requirement is written as a <em>compound</em> — "deep learning <b>and</b> data engineering" — and the data-engineering half he meets deeply, from 2012 through 2026, including nine years of longitudinal history hydrated with byte-identical replay. The two halves must not be averaged into one number. Also less bad: everything adjacent — RAG, agentic orchestration, MLOps, vector retrieval — scores 8 and above. <b>Worse:</b> the seat's own centre of gravity is deep learning, o9's new CTO is a deep-learning and reinforcement-learning researcher, and JR102298 next door is explicitly a modelling seat. <b>Say this plainly rather than implying a rewrite closes it. It does not.</b> What closes it, partially and honestly, is the neurosymbolic angle in green flag 2 — an architecture argument rather than a years argument.</p>
+</div>
+
+<div class="note">
+  <p><b>9 — Leadership at the top of the technology organisation has turned over inside twelve months.</b></p>
+  <p>Dr Ashwin Rao joined o9 in <b>November 2025</b> as executive vice president of Next-Gen AI and Technology, and was promoted to <b>chief technology officer on 2 July 2026</b>. He was previously at QXO, Target, Goldman Sachs and Morgan Stanley, and is an adjunct professor at Stanford's Institute for Computational and Mathematical Engineering researching reinforcement learning. In the same window o9 appointed a new chief operating officer (July 2026) and a new chief marketing officer (June 2026).</p>
+  <p class="why"><b>This is a note rather than a flag, because it cuts both ways.</b> A new CTO with a research background nine weeks into the job explains the restructuring, explains why the technical bar on these requisitions is set the way it is, and explains the neurosymbolic direction. It also means architectural direction is being reset — which is an opportunity for an incoming architect and a source of churn at the same time. <b>Worth knowing before the call, not worth weighting.</b></p>
+  <p><b>Sources:</b> <a href="https://www.businesswire.com/news/home/20260702591922/en/o9-Solutions-Promotes-Dr.-Ashwin-Rao-to-Chief-Technology-Officer">Business Wire, 2 Jul 2026</a> · <a href="https://o9solutions.com/news/o9-solutions-promotes-dr-ashwin-rao-to-chief-technology-officer">o9's own announcement</a> · <a href="https://secure.businesswire.com/news/home/20251209885443/en/o9-Welcomes-AI-visionary-Dr.-Ashwin-Rao-as-Executive-Vice-President-Next-Gen-AI-and-Technology-to-Drive-the-Future-of-Enterprise-Planning-and-Decisioning">His November 2025 arrival</a> · <a href="https://www.dmagazine.com/business-economy/2026/07/o9-solutions-taps-former-goldman-sachs-and-target-exec-as-cto/">D CEO Magazine</a></p>
+</div>
+
+<div class="note">
+  <p><b>10 — o9 is private, publishes nothing, and third-party headcount figures contradict each other badly.</b></p>
+  <p>Four sources, four answers: Built In's company profile shows <b>920 employees</b>; Revelio Labs shows <b>3,504 globally</b> as of December 2025 with year-on-year growth of <b>1.4%</b>, while a second aggregator reads the same period as headcount <b>down 2%</b>; India corporate-filing aggregators show roughly <b>1,976</b> at the Indian entity; and o9's own January 2025 Hyderabad announcement said <b>"approximately 1,600 employees in India"</b>. One widely-repeated revenue figure of <b>$420.1 million</b> traces only to aggregators, not to o9.</p>
+  <p class="why"><b>None of these is authoritative and the spread is too wide to average.</b> o9 has been private since founding in 2009 and files no public accounts. The honest position is that <b>the trajectory cannot be independently verified</b> — which is a normal condition for a private company and not a criticism, but it does mean the commercial green flags below rest on o9's own press releases and on Gartner, not on audited numbers. <span class="dim">Built In's "stability and growth" page, which characterises o9 as shifting "from hiring-fueled hypergrowth to consolidation and rigorous delivery metrics", reads as generated commentary rather than reporting and is cited here only as an aggregator view.</span></p>
+  <p><b>Sources:</b> <a href="https://www.reveliolabs.com/companies/o9-solutions/employees/">Revelio Labs headcount</a> · <a href="https://builtin.com/company/o9-solutions/faq/stability-growth">Built In stability profile</a> · <a href="https://o9solutions.com/news/o9-opens-office-in-hyderabad/">o9's Hyderabad office announcement</a> · <a href="https://research.contrary.com/company/o9-solutions">Contrary Research company breakdown</a></p>
+</div>
+
+<!-- ================================ GREEN FLAGS ================================ -->
+
+<h2 id="green">Green flags</h2>
+
+<div class="success">
+  <p><b>1 — The seat is real and the description is o9's own words. That check is the one that matters, and it passed cleanly.</b></p>
+  <p>An agency listing that names no client is exactly the shape that usually cannot be verified. This one can. Requisition <b>JR102297</b> on o9's own careers system reproduces the pasted job description sentence for sentence — the role summary, the six responsibilities, the six requirement blocks, and o9's closing boilerplate. There is no agency embellishment and no invented seniority in the body; the only divergence is the title rendering and the skill tags.</p>
+  <p class="why"><b>Practically, this gives him something to open a call with:</b> a requisition number the recruiter may not expect him to have. It converts "tell me about the role" into "is this JR102297", which is a different and much more efficient conversation.</p>
+</div>
+
+<div class="success">
+  <p><b>2 — o9's stated architectural direction is neurosymbolic AI, and that is his own argument. This is his strongest positioning asset on this seat, and it is not on his résumé.</b></p>
+  <p>o9's chief technology officer has published the thesis directly. o9's own newest architect requisition points candidates at it by name:</p>
+  <div class="evidence">
+    <strong>Dr Ashwin Rao, CTO, o9 Solutions — "The Neurosymbolic Imperative for Enterprise AI"</strong>
+    <p><em>"Large Language Models alone cannot deliver reliable agentic AI for enterprise planning and execution."</em> Only by deliberately fusing neural AI with symbolic AI — a <b>neurosymbolic architecture</b> — can you build agents enterprises trust to run operations.</p>
+    <p><a href="https://o9solutions.com/articles/the-neurosymbolic-imperative-for-enterprise-ai">o9 — The Neurosymbolic Imperative for Enterprise AI</a> · <a href="https://o9solutions.com/articles/davos-insights-turning-vuca-into-value-with-neuro-symbolic-ai">Davos Insights: Turning VUCA into Value with Neuro-Symbolic AI</a> · <a href="https://o9solutions.com/resources/neuro-symbolic-agentic-ai-for-agile-and-adaptive-enterprises">Neuro-Symbolic Agentic AI for Agile and Adaptive Enterprises</a></p>
+  </div>
+  <p class="why"><b>His portfolio's stated through-line is "knowing when not to use a large language model."</b> The rubric currently books that as a limitation, because it means no fine-tuning and no pre-training. <b>Against this company it is the opposite of a limitation — it is the house thesis.</b> And he has artefacts, not opinions: a query that explicitly <em>declined</em> a caching layer because an in-process cache was the right answer; a retrieval design that deliberately kept a graph store off the serving path and made the search index authoritative; deterministic contracts around generated narrative rather than free generation. <b>That is neurosymbolic discipline described in engineering terms.</b> It reframes the deep-learning-years gap from "he has fourteen months" to "he has been making the exact trade-off this CTO says the industry gets wrong" — which is an architecture argument, and architecture is what the seat is for. <span class="dim">Positioning note only. No résumé wording changes here, and none of the open claims are touched.</span></p>
+</div>
+
+<div class="success">
+  <p><b>3 — A knowledge graph is the centre of the product, not a feature of it.</b></p>
+  <p>o9's Enterprise Knowledge Graph is described in every o9 requisition's own boilerplate as the thing that "enables businesses to anticipate risks, adapt to market shifts, and gain real-time visibility". It is the architectural spine, and this seat is advertised to own the architecture around it.</p>
+  <p class="why">His Context Graph work is directly adjacent in shape — graph-structured enterprise data, traversal-scoped by tenant, feeding retrieval. <span class="dim">The graph neural network in his headline is on the confirm-or-reject list and is his call alone; it is surfaced here as a talking point and deliberately not rewritten, characterised or scoped.</span> The honest framing for a call is the transferable one: he has built and served graph-structured domain data in production, in a different domain.</p>
+</div>
+
+<div class="success">
+  <p><b>4 — Independent analyst standing is genuinely strong, and it is stated with its one exception.</b></p>
+  <ul>
+    <li><b>Leader</b> in the 2026 Gartner Magic Quadrant for Supply Chain Planning Solutions — <b>Discrete Industries</b>.</li>
+    <li><b>Leader</b> in the 2026 Gartner Magic Quadrant for Supply Chain Planning Solutions — <b>Process Industries</b>.</li>
+    <li><b>Leader</b> in the 2025 Gartner Magic Quadrant for Supply Chain Planning Solutions.</li>
+    <li>The <b>only vendor</b> recognised as a Customers' Choice in the 2025 Gartner Peer Insights for Supply Chain Planning Solutions.</li>
+    <li><b>Niche Player</b> — not Leader — in the inaugural 2026 Gartner Magic Quadrant for <b>Decision Intelligence Platforms</b>. Named here rather than omitted; it is the one placement that is not a strength, and it sits in the newer, adjacent category rather than in o9's core market.</li>
+  </ul>
+  <p class="why">This is the sharpest available answer to "is the product actually good, or is it well-marketed". Gartner placement is not proof of engineering quality, but Leader across both halves of the core category two years running, plus a unique Peer Insights recognition, is a stronger signal than anything a company says about itself.</p>
+  <p><b>Sources:</b> <a href="https://o9solutions.com/news/o9-solutions-recognized-in-three-new-2026-gartner-magic-quadrant-reports-for-supply-chain-planning-process-and-discrete-and-decision-intelligence-platforms">o9 on the three 2026 Magic Quadrants</a> · <a href="https://www.businesswire.com/news/home/20260323814804/en/o9-Solutions-Recognized-in-Three-New-2026-Gartner-Magic-Quadrant-Reports-for-Supply-Chain-Planning-Process-and-Discrete-and-Decision-Intelligence-Platforms">Business Wire, 23 Mar 2026</a> · <a href="https://o9solutions.com/news/o9-named-a-leader-in-the-2025-gartner-magic-quadrant-for-supply-chain-planning-solutions">2025 Leader placement</a></p>
+</div>
+
+<div class="success">
+  <p><b>5 — Commercial momentum is being reported, with specifics rather than adjectives.</b></p>
+  <p>o9's Q2 2026 release describes "one of the Company's best first-half performances to date", driven by new customer acquisition: <b>more than 40 customer go-lives completed in the quarter</b>, across footwear and apparel, food distribution and telecommunications, with newly named logos including TPV Technology and Merry Electronics alongside unnamed customers in pharmaceuticals, paper and packaging, and metals. o9's own customer boilerplate names <b>Google, PepsiCo, Walmart, T-Mobile, AB InBev and Starbucks</b>.</p>
+  <p class="why"><b>Go-live counts are the useful number in this market</b> because they are delivery facts rather than bookings — software that is actually running a customer's planning cycle. <span class="dim">Caveat per red flag 10: these are o9's own figures, and o9 publishes no audited accounts.</span></p>
+  <p><b>Sources:</b> <a href="https://o9solutions.com/news/o9-solutions-q2-2026-commercial-momentum">o9 Q2 2026 commercial momentum</a> · <a href="https://www.businesswire.com/news/home/20260716680932/en/o9-Solutions-Reports-Strong-Commercial-Momentum-in-Q2-2026-and-One-of-Its-Best-First-Half-Performances-to-Date">Business Wire, 16 Jul 2026</a></p>
+</div>
+
+<div class="success">
+  <p><b>6 — The capital position is unusually solid, and the funding history says something about how the company is run.</b></p>
+  <p>o9 was founded in 2009 and <b>bootstrapped for over a decade</b> before taking outside money. KKR invested <b>$100 million at a $1 billion valuation in 2020</b>. General Atlantic led a <b>$295 million round at $2.7 billion in January 2022</b>, with KKR and Generation Investment Management participating. In <b>July 2023</b> existing investors added <b>$116 million at $3.7 billion</b> — an up-round from insiders. Total raised is roughly <b>$536 million</b>, and $3.7 billion remains the valuation o9 states in its own job postings today.</p>
+  <p class="why"><b>The shape matters more than the totals.</b> Twelve bootstrapped years followed by insider-led up-rounds is not a company that has been running on other people's money. <b>On the IPO question: there is no company guidance.</b> Secondary-market and analyst commentary describes a credible listing path; o9 has announced nothing. Treat "IPO on the horizon" as an outside expectation, not a fact, and do not let it carry weight in a decision.</p>
+  <p><b>Sources:</b> <a href="https://o9solutions.com/news/existing-investors-double-down-on-o9-solutions-growth-with-incremental-investment-at-3-7-billion-valuation">o9 on the $3.7bn round</a> · <a href="https://www.business-standard.com/companies/news/o9-solutions-raises-116-mn-from-existing-investors-valuation-at-3-7-bn-123071900925_1.html">Business Standard</a> · <a href="https://www.generalatlantic.com/media-article/o9-solutions-raises-295-million-from-strategic-investors-to-continue-its-growth-across-industry-verticals-markets/">General Atlantic on the $295m round</a> · <a href="https://forgeglobal.com/o9-solutions_ipo/">Forge — pre-IPO commentary (secondary market, not company guidance)</a></p>
+</div>
+
+<div class="success">
+  <p><b>7 — This is a product company, and the job is a product job.</b></p>
+  <p>No billability target, no bench, no account that owns the architecture decision, no responses to requests for proposal. The requisition's measures of success are architectural: standards, design reviews, patterns, platform evolution, production deployment. <b>The stack is o9's own</b>, which means his retrieval, orchestration and pipeline experience transfers directly into the thing being built rather than into whatever a client happened to buy.</p>
+  <p class="why">Worth stating explicitly because it is the cleanest contrast with the services-side seat also in flight this week. Different job shape, different day, different measures — and this one matches how he has actually worked.</p>
+</div>
+
+<div class="success">
+  <p><b>8 — The seat reads individual contributor, which is the whole point of this workspace.</b></p>
+  <p>JR102297's leadership duty is: "Serve as a principal-level technical leader, <b>mentoring</b> senior and staff engineers, leading architecture and design reviews, and setting engineering standards and patterns." <b>Direct reports, hiring, appraisals and performance management appear nowhere in the text.</b> "Technical authority across the organization" is influence language, not management language.</p>
+  <p class="why">That is the IC shape, and it is consistent with o9 elsewhere — its Senior AI Architect requisition says "premier technical individual contributor (IC) role" outright. <b>But this requisition never uses the words</b>, so it is a confirmation question rather than a settled fact.</p>
+</div>
+
+<div class="success">
+  <p><b>9 — o9 has an R&amp;D office in Hyderabad, where he already lives.</b></p>
+  <p>o9 opened its Hyderabad office on <b>20 January 2025</b> — its third in India — alongside a partnership with the Telangana government and Young India Skills University on a supply-chain skills academy. o9's description of its India operations covers "research and development, product management, software implementation, and customer support", and the Hyderabad office is described as a hub for expanding those.</p>
+  <p class="why"><b>Stated precisely, because the precision is the point:</b> the requisition is Bangalore-only with no remote type set, and <b>zero Hyderabad roles are open on o9's careers site today</b> — all thirty India openings are Bangalore. So this is an option to raise, not an entitlement to assume. <b>Bengaluru is neutral either way</b>; relocation is open and is never a scoring constraint here. It is simply worth one sentence on a call, because the office exists and the answer costs nothing to obtain.</p>
+  <p><b>Sources:</b> <a href="https://o9solutions.com/news/o9-opens-office-in-hyderabad/">o9 opens office in Hyderabad</a> · <a href="https://www.businesswire.com/news/home/20230826511370/en/o9-Solutions-Announces-Hyderabad-Office-and-Strategic-Partnership-With-Telangana-Government-to-Develop-World-Class-Supply-Chain-Talent">Business Wire — Telangana partnership</a></p>
+</div>
+
+<div class="success">
+  <p><b>10 — The MLOps requirements are specific, and most of them are already evidenced.</b></p>
+  <p>Requisitions usually say "MLOps experience". This one enumerates: model registries, automated training and retraining pipelines, CI/CD for ML, deployment strategies, and continuous monitoring for model drift, data drift and performance degradation. <b>Specific requirements are easier to answer honestly than vague ones</b>, and the rubric scores this criterion at 8 out of 10 on evidence already in hand — retraining pipelines and drift detection are directly evidenced.</p>
+  <p class="why"><b>The one named item his record never evidences is a model registry.</b> That is a gap to be able to speak to plainly, and it is a tool-shaped gap rather than a capability-shaped one — the surrounding lifecycle discipline is there. It is the kind of item this workspace classifies as a ramp item rather than a capability cap, and nothing about it should be dressed up.</p>
+</div>
+
+<!-- ================================ FORCING QUESTIONS ================================ -->
+
+<h2 id="questions">Forcing questions</h2>
+
+<p class="lede">Sharp, answerable on a first call, and ordered so the three that most quickly establish whether this is worth his time come first. Each is written so that a vague answer is itself informative.</p>
+
+<div class="panel">
+<h3>The three that matter most</h3>
+<ol>
+  <li>
+    <p><b>"Is this requisition JR102297 or JR102298? You have two Senior Software Architect roles open in Bangalore and they're different jobs — one is platform architecture, the other is applied mathematics and statistical modelling with a Masters-or-PhD requirement."</b></p>
+    <p class="why"><b>This is the highest-value sentence he can say on this call.</b> It resolves the conflated skill tags, establishes which bar applies, and tests in one move whether the recruiter is working from a live requisition or from a forwarded description. If the answer is JR102297, the conversation proceeds on his strengths. If it is JR102298, the seat is a research role and the honest read changes. If the recruiter does not know there are two, that tells him how close this agency is to the hiring manager.</p>
+  </li>
+  <li>
+    <p><b>"JR102297 has been open since 26 March. What's made it hard to fill, and has the specification changed since it was written?"</b></p>
+    <p class="why">Five months is the fact the posting hides — o9's public page renders it as "30+ days". A recruiter in real contact with the hiring manager will name the bar, the failed loops, or the revised spec. Deflection means the requisition is a pipeline collector, and that is worth knowing in minute four rather than after three rounds. <b>The follow-up if the answer is thin:</b> "how many candidates have reached the hiring manager?"</p>
+  </li>
+  <li>
+    <p><b>"Your Senior AI Architect posting says o9 is restructuring the technology organisation around purpose-built engineering groups and building the core AI function from the ground up. Where does this Bengaluru seat sit in that structure, and who does it report to?"</b></p>
+    <p class="why">This is o9's own published language, so it is a fair and well-informed question rather than a challenging one. It tests three things at once: whether the seat survived a reorganisation that post-dates its posting, whether the reporting line still holds, and whether the artificial-intelligence centre of gravity has moved to Dallas — the ground-up core AI function is advertised United States-only. <b>It also signals he has done the homework, which changes the tone of everything after it.</b></p>
+  </li>
+</ol>
+</div>
+
+<h3>The rest, in order of value</h3>
+<ol start="4">
+  <li><b>"Is this a product-engineering seat or a customer-implementation seat?"</b> <span class="why">Not rhetorical. Most o9 Bengaluru roles carrying "Architect" are implementation — the Technical Architect posted six days ago asks for hypercare and customer service-level agreements. The requisition text reads product, but the surrounding population does not, so make him say it.</span></li>
+  <li><b>"Does the seat carry direct reports and appraisals, or is it pure individual contributor?"</b> <span class="why">The requisition names mentoring and design reviews and never names people management. o9 uses the phrase "individual contributor" explicitly elsewhere. Confirm rather than infer — this workspace builds IC seats only.</span></li>
+  <li><b>"What's the distributed-computing stack, and how much of the platform actually runs on it — Spark, Databricks, Ray, something in-house?"</b> <span class="why">The one requirement o9's other postings prove is load-bearing rather than boilerplate. The answer tells him exactly how large the ramp is, and asking it precisely is itself evidence he knows the difference between a cluster engine and a fast local query engine.</span></li>
+  <li><b>"The five years in deep learning — is that a hard filter, or directional? It's written as a compound with data engineering."</b> <span class="why">Asked neutrally, this is a scoping question, not a negotiation. The requirement genuinely reads as a compound and the halves should not be averaged. <b>It also surfaces the constraint early rather than after four rounds</b>, which is the cheaper place to discover it.</span></li>
+  <li><b>"Which deep-learning and agentic work is in production today, versus on the roadmap?"</b> <span class="why">Separates the published neurosymbolic thesis from shipped code. A company can have an excellent architectural argument and very little of it running. The answer also tells him what he would actually be architecting in month one.</span></li>
+  <li><b>"How does the SAP litigation touch this role day to day — any confidentiality or document-preservation obligations, and do architecture decisions in the knowledge-graph area go through counsel?"</b> <span class="why">Neutral register, practical framing. o9 is the plaintiff and the complaint specifically names Enterprise Knowledge Graph architecture, which is what this seat owns. Nobody volunteers this and it is entirely reasonable to ask.</span></li>
+  <li><b>"What are the working-hours expectations for this seat — is there a standing United States or European overlap, and does it carry 24/7 on-call?"</b> <span class="why">Asks about <em>this</em> seat rather than quoting anyone's reviews. Schedule density is never a negative here; the useful information is whether the platform track shares the delivery track's call windows or does not. <b>Ask travel cadence to customer sites as a separate question</b> — it is a different axis and the answers are often different.</span></li>
+  <li><b>"Could this seat sit in your Hyderabad office?"</b> <span class="why">One sentence, no downside. o9's Hyderabad office does research and development, he lives there, and the requisition is Bangalore-only with no remote type set. If the answer is no, Bengaluru is neutral and nothing is lost.</span></li>
+  <li><b>"What does the interview process look like, and does the CTO organisation run the technical round?"</b> <span class="why">Given a nine-week-old CTO with a research background, who runs the technical round says a great deal about what the seat is really being hired for — platform architecture or modelling.</span></li>
+</ol>
+
+<div class="tip">
+  <p><b>Where these go, and where they do not.</b> Per this workspace's recruiter-reply rule, a written reply answers exactly what was asked, in the order asked, then puts a call on the table — <b>with no added questions</b>, however useful they look. Every extra written question is one more thing standing between him and a phone call. <b>All twelve above belong on the call cheat-sheet and get asked out loud.</b> The one arguable exception is question 1: naming a requisition number in writing is short, specific and saves an entire call if the answer is the wrong requisition. <b>That is his call, not this page's.</b></p>
+</div>
+
+<!-- ================================ LIMITS ================================ -->
+
+<h2 id="limits">Limits of this research</h2>
+
+<div class="panel">
+<ul>
+  <li><b>Compensation was excluded by instruction and does not appear anywhere on this page</b> — no band, no comparison, no reservation. It is handled when a conversation reaches that stage.</li>
+  <li><b>No interview preparation was built and none should be inferred from this page.</b> The forcing questions are for establishing whether the seat is real on a first call; they are not a question bank. Gap preparation waits until a company responds.</li>
+  <li><b>Glassdoor, Naukri, o9's marketing site, foundit and several aggregators all refuse automated retrieval.</b> Every review figure quoted above therefore comes from search-result snippets rather than from the page itself. <b>The specific "Associate Solutions Architect at 42% would-recommend, down 18 points" figure could not be re-fetched today</b> and is carried forward from this workspace's 25 August record. Treat it as recorded, not re-verified.</li>
+  <li><b>The recommend-rate scope is genuinely ambiguous.</b> The workspace record has 76% for Bengaluru against 86% company-wide; current search results present 76% as company-wide. The two could not be separated without direct page access. <b>Do not quote a precise gap.</b></li>
+  <li><b>Everything in the verification table comes from o9's own Workday careers system</b>, queried directly on 26 August 2026: requisition identifiers, posting dates, locations, remote type and full description text. That is the strongest source available and it is why that section is firm while the review section is not. <b>Requisitions close. JR102297, JR102298, JR102530 and JR102773 were all live on 26 August 2026 and may not be when he reads this.</b></li>
+  <li><b>The restructuring is documented only inside o9's own job posting.</b> No press release, no coverage, no analyst note describes it. The quotation is verbatim and the source is o9 — but a single requisition is a thin evidentiary base for an organisational change, and it should be asked about rather than asserted.</li>
+  <li><b>Employee reviews are individual anecdotes</b>, and they are used above to generate one question about working hours — never to establish a pattern, and never as a reason to score anything.</li>
+  <li><b>Headcount and revenue could not be established.</b> Four sources give four answers and o9 files no public accounts. See red flag 10.</li>
+  <li><b>Could not be verified:</b> Recruit Right Solutions' existence, size or relationship to o9; whether either Senior Software Architect requisition has an internal candidate; whether the seat's reporting line changed with the restructuring; o9's current India hybrid policy in days per week — one aggregator states three days in office for corporate employees, which could not be confirmed against an o9 source; and whether the two Bangalore requisitions are two seats or one seat posted twice.</li>
+  <li><b>Social-signal research returned nothing usable on this employer</b> and was not repeated. Per the 26 August workspace record, every recent-social source came back either inactive or entity-mismatched. <b>Anything claiming recent social buzz about o9 is invented.</b></li>
+  <li><b>No open claim was touched.</b> The graph neural network, the Rocket metrics, the consolidation figure, the latency pairing and the concurrency wording are all his to settle; where they are adjacent to a finding above they are surfaced and explicitly left alone.</li>
+</ul>
+</div>
+
+<p class="signoff">Research compiled 26 Aug 2026 · verified against o9's own careers system rather than against job boards · no compensation content, no interview preparation, by instruction · <b>technical score 81.4, binding constraint is deep-learning years — see the <a href="index.html">weighted rubric</a></b></p>
+
+</main>
+</body>
+</html>
