@@ -870,68 +870,88 @@ Overwrite it wholesale; git carries the history. Keep it readable in a minute.
 `PENDING.md` sits alongside it for run IDs and analysis that outlives one session. This Status
 section stays the durable record; `RESUME_SESSION.md` is the "where were we".
 
-## Status — 2026-08-25, ~21:50
+## Company intelligence — gates, not scores
 
-**THE MASTER PDF IS EXPORTED AND VERIFIED.** `master/Abhisheik_Deo_Resume.pdf` — 3 pages,
-ATS 85, all 58 fragments present, bold font embedded, VoltusWave ends **Apr '26**, no
-`[fill in metric]`. The chain is proven end to end.
+**These are real-world gates, named separately from both scores** and never allowed to drag the
+technical number. Each belongs in that seat's `research.html`; this is the durable summary.
 
-**The IC card exists.** `august_ic_master_resume` is live in Hiration and is the export default.
-Its ten parsed sections are overwritten from `master/upgrad_resume.html` on every run, so they
-never need hand-pasting.
+- **⚠ Yes Madam staged a fake mass-firing as a marketing stunt (December 2024).** A leaked HR
+  email posted to LinkedIn claimed ~100 employees were fired over a workplace-stress survey; it
+  went global within hours (Fortune, Business Standard, Gulf News). The company then said nobody
+  was fired and it was "an awareness initiative", and announced six annual de-stress leaves.
+  Mental-health advocates called it exploitation of a sensitive issue.
+  **This is his highest-scoring seat (88.375). The flag is reputational, two years old, and worth
+  asking about on a call — it is not disqualifying and must not touch the technical score.**
+- **Yes Madam's business is genuinely working:** ₹50 Cr from Info Edge's B8 Fund in May 2026 (first
+  institutional round), revenue ₹94 Cr → **₹195 Cr** FY26, monthly bookings ~70,000 → **~300,000**,
+  55+ cities. Founded 2016, Gurugram. The new capital is earmarked for technology.
+- **o9 Solutions is suing SAP for trade-secret misappropriation** (filed Nov 2025, N.D. Texas):
+  former o9 executives allegedly downloaded tens of thousands of files before joining SAP. By
+  January 2026 SAP had separated from all three. Valuation $2.7B (2022), marked to $3.7B (2023),
+  IPO on the horizon.
+- **⚠ o9's architect track specifically is where its reviews turn.** Bengaluru: 3.2/5 work-life
+  balance, 76% would recommend against 86% company-wide; complaints of 7am-to-midnight call
+  windows, slow career growth, regional politics. **Associate Solutions Architect: 42% would
+  recommend, down 18 points in twelve months** — the closest role family to the seat.
+- **Wipro is managing cost, not growing headcount:** layoffs May 2026, attrition 13.8%, fresher
+  hiring guidance cut roughly in half, contract cancellations as US clients in-source or replace
+  work with AI tooling. Corroborates the workspace research independently.
 
-**The master résumé** — one file, `master/upgrad_resume.html`, ten parsed sections plus the
-card-only material. **39 bullets, 39 unique leading verbs.** His headline, kept verbatim with
-Java added. Key Skills rewritten in **his** format (short capability labels), 6 / 17 / 6 lines.
-Four new Amura bullets. The Neptune→Elasticsearch correction applied.
+**⚠ `/last30days` returned NOTHING on any of these companies.** Verified 2026-08-26: every Reddit
+cluster came back tagged *entity-miss demotion* — generic r/developersIndia and r/india noise, zero
+items actually about the companies. Only **1 of 8 sources was active** (no X auth, no `yt-dlp`, no
+ScrapeCreators key). **There is no live social signal on these employers; anything claiming recent
+buzz is invented.** All findings above come from web supplements and are older than 30 days. If the
+social layer matters later, X auth and `yt-dlp` are the two cheapest unlocks.
 
-**⚠ One thing outstanding, his hand:** El Paso's three bullets on the card still read .NET. The
-title is corrected to *Senior Java Developer*; the bullets revert on save (see *Editing the card
-itself*). Correct text is in `master/upgrad_resume.html` §14.
+---
 
-**Built this session:**
+## Status — 2026-08-26, ~10:30
 
-- **The daily log** — `daily/index.html` from `daily/days.json`, state in PostgreSQL (`v2_daily`),
-  `automation/serve.py` replacing `http.server`, `./todo` on the command line. 36 + 50 assertions.
-- **`automation/resume.py`** — `new` scaffolds a whole job workspace, `sheet` generates the
-  section-by-section paste sheet.
-- **`automation/fix_master_card.py`** — edits card-only material the exporter never touches.
-- **The case studies** — `killer-query-case-studies/` (v1, all shipped), `summary.html` with the
-  concept glossary, ten per-query interview-prep pages under `prep/`.
-- **One master file** — the three-file split folded in; the parser reads `<p>` as well as `<li>`.
+**THREE TAILORED PDFs EXIST AND ARE VERIFIED.** Yes Madam, AI-Native and o9 — each 3 pages, ATS 85,
+no `[fill in metric]`, VoltusWave ending **Apr '26**, LinkedIn slug `abhisheikdeo`, bold font
+(`CalibriW05-Bold`) embedded, and **every bullet in the source HTML present in the PDF** (25/25,
+25/25, 28/28). They are genuinely different documents: ~60% shared vocabulary, 100–126 terms unique
+to each. **⚠ The LinkedIn slug lives in a PDF link annotation, not extractable text — a text-only
+grep reads it as missing. That is a false alarm; check the annotations.**
 
-**The plan for tonight, running into the morning:** ~20 job workspaces. He pastes the JDs;
-`resume.py new --slug <slug>` scaffolds each; re-vector per Rule 7; export. **He runs the
-workspaces from his own terminal.**
+**Scores moved on evidence already in hand, not on new claims:**
 
-**Decided this session:**
+| Seat | Start | Now | Ceiling |
+|---|---|---|---|
+| Yes Madam | 83.0 | **88.375** | ~92 |
+| AI-Native | 83.3 | **84.9** | ~90.5 |
+| o9 | 80.4 | **81.4** | ~87.8 |
+| Wipro | — | **unscored, no JD** | — |
 
-- Workflows and subagents do the work, with a mandatory adversarial verify pass. Technical score
-  is the one that matters, target 95+, never fabricate.
-- He pastes JDs; **we do not source seats**, and we do not re-rank unasked.
-- A copy block is **one whole section**. **Key Skills is one section, not three.** Skills are
-  short capability labels, never sentences.
-- **Never retroactively scrub a submitted claim.** Unverified ≠ false — see *Honesty*.
-- **Redis is claimable.** Everything in v1 case studies **shipped**. **No Amura outcome metrics
-  exist.** 25–30% infra cost and hours→under-10-minutes are **user-confirmed**. **GNN and ISO
-  27001 are settled** and in the résumé.
-- **The ATS score is not the target** — it moves on hygiene, not fit. 85 is fine.
-- **The exporter, not hand-pasting.** No markup gives both bold and bullets through a real
-  clipboard; see *Pasting into Hiration*.
+What moved them, all user-confirmed 2026-08-25/26: **Kubernetes and Terraform are real and were
+adopted as a company-wide standard** · **high-availability design is real** (multi-AZ, failover,
+disaster recovery — chat platform only, never Amura) · **the certification is HIPAA** · **he owned
+load balancing** · **all 17 VoltusWave bullets are accurate** ("everything is accurate").
 
-**Open — his call alone:**
+**Yes Madam's binding constraint did not change identity — it got more dominant.** Java recency is
+now over a third of the total loss because everything around it was recovered. Grafana and
+Prometheus were refused three times over, against Kubernetes, k6's Grafana Labs provenance, and a
+certification-driven multi-AZ estate. Still zero hits, still not claimed.
 
-- **The +65% hotel conversions**, live on the résumé and unsupported by his own documents. The
-  evidenced alternative — innRoad's **60–70% screen-load** improvement, in his handwriting — is
-  still unused. Per the no-scrub rule it **stays** until he decides.
-- **VoltusWave carries 10 bullets** — six chat-platform, four Amura. Trimming is per-job.
-- **His live card's 17 VoltusWave bullets are NOT merged into the master** — Kubernetes,
-  Terraform, ECS Fargate at 70% Spot, k6-validated, React Native across 2 app stores, the 4
-  reusable archetypes, `TraversalSource` wrapper, Rosenbaum γ + E-value. **This is the biggest
-  unfinished piece of résumé work.**
-- **Confirm-or-reject:** ~300 customers vs instances; 70–80% consolidation; two Rocket metrics
-  (bugs −50%, sales +20%); 8% month-over-month; the 100,000-concurrent wording.
-- **The large language model narrative guardrails** — split: KQ1's claim grammar is live, KQ9's
-  shared contract is unsigned and its narrator ships **off by default**.
-- **The journey document lags the master** on the whole Amura programme, and it is meant to lead.
-  `journey-doc` is P1 on `./todo` and he has said it matters most.
+**Infrastructure fixed this session:**
+
+- **PostgreSQL migrated 16 → 18.** A 16 server had been running since 19 August with its Homebrew
+  keg deleted; every `UPDATE` on `applications` was already failing because the trigger could not
+  load `plpgsql`, and 18 could never start because 16 held 5432. Dumped, cut over, restored,
+  verified. Backups in `~/pg-backup-2026-08-25/` and `~/pg-backup-2026-08-26/`.
+- **⚠ `serve.py` binds BOTH loopback families now.** macOS resolves `localhost` to `::1` before
+  `127.0.0.1`. Binding only IPv4 let a stray `python3 -m http.server` take `::1` and silently shadow
+  the API — the page read "the server answered 404" while `curl 127.0.0.1` looked perfectly healthy.
+  **That cost two rounds of "why can't I see my workspace?" Check `lsof -nP -iTCP:8006 -sTCP:LISTEN`:
+  one PID holding both addresses is healthy; two PIDs means a stray is shadowing.**
+- **The launcher renders from `jobs_tracker_v2`**, tabs in v1's shape, counts derived by a
+  `MutationObserver` so they cannot read 0 above a full list.
+
+**⛔ Interview prep still waits.** Reaffirmed by him 2026-08-26: *"interview related q & a can wait
+until we hear back from the company/organisation."* The trigger is a company responding — not a
+score, not a PDF, not a complete workspace. Then build prep for **that seat only**.
+
+**NOTHING HAS BEEN SENT.** Three verified PDFs, a staged Wipro reply, and `applied: 0` in the
+database. That is the v1 failure in miniature, and it is the only thing left that matters.
+
