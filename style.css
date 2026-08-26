@@ -3376,13 +3376,6 @@ section.pasted .paste-area { border-color: var(--good); }
 .app-search:focus { outline: none; border-color: var(--accent); }
 .app-search::placeholder { color: var(--muted); }
 
-.app-legend {
-  margin: 0 0 4px;
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--muted);
-  max-width: 68ch;
-}
 
 .app-status { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
 .app-status.bad {
@@ -3483,4 +3476,34 @@ section.pasted .paste-area { border-color: var(--good); }
   .jc-tech, .jc-nt { grid-column: auto; font-size: 0.8em; text-align: left; }
   .jrow-detail { padding-left: 22px; }
   .jrow-detail .jd-two { grid-template-columns: 1fr; gap: 0; }
+}
+
+/* Launcher header: the daily log is reachable from every visit, so it sits in
+   the header rather than spending a whole section on one card. */
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header-link {
+  flex: none;
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+
+.header-link:hover,
+.header-link:focus-visible {
+  background: var(--accent);
+  color: var(--paper, #fff);
 }

@@ -10,17 +10,13 @@
 <body>
 <main class="page" id="main">
 
-<header>
-  <p class="eyebrow">IC roles · Principal / Staff / Architect</p>
-  <h1>Full-time JD workspace</h1>
-</header>
-
-<section>
-  <h2>Today</h2>
-  <div class="grid">
-    <a class="card" href="daily/index.html"><strong>Daily to-do</strong><span class="path">daily/</span></a>
+<header class="page-header">
+  <div>
+    <p class="eyebrow">IC roles · Principal / Staff / Architect</p>
+    <h1>Full-time JD workspace</h1>
   </div>
-</section>
+  <a class="header-link" href="daily/index.html">Today &rarr;</a>
+</header>
 
 <section>
   <h2>Applications</h2>
@@ -43,14 +39,6 @@
            placeholder="Search company or role…" aria-label="Search company or role"
            autocomplete="off" />
   </div>
-  <p class="app-legend">
-    <strong>Technical</strong> is the score that matters — target 95+.
-    <strong>Non-technical</strong> is informational and never a gate.
-    Seats carried over from v1 were scored on a different rubric entirely, so
-    their columns read &ldquo;v1&rdquo; rather than a number that would invite a
-    comparison; the rescaled figures are in the expanded row. An unscored seat
-    reads &ldquo;—&rdquo;.
-  </p>
   <!-- Rows are rendered from the jobs_tracker database by static/apps.js.
        Never hand-write a row here: the database is the search layer, and a row
        added by hand is a row no query can see. Register it with
