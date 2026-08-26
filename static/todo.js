@@ -16,9 +16,11 @@
 //   1. A DROP IS A REQUEST, NEVER A COMMIT. Dropping a card on Parked, Pushed
 //      or Dropped opens the reason dialog and writes NOTHING. The card does not
 //      move in the meantime — an optimistic move would put a reasonless park on
-//      screen, which is the one thing that must never ship. The database
-//      refuses it too (db.validate, plus two CHECKs), so this is the outermost
-//      of three independent refusals, not the only one.
+//      screen, which is the one thing that must never ship. opError() below
+//      refuses it a second time on the way to EITHER store, and the database
+//      refuses it a third and fourth (db.validate, plus two CHECKs). Only the
+//      first two exist against a plain http.server, which is why opError() is
+//      not redundant with the server.
 //   2. WAITING IS A SORT, NEVER A LOCK. A task whose prerequisites are unticked
 //      sorts below the ready ones inside Open and is badged, but it is never
 //      greyed out, never disabled, and never moved to a lane of its own —
@@ -115,8 +117,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const say = msg => {
     if (!sayEl) return;
-    sayEl.textContent = msg;
+    // Unhide BEFORE writing. A live region that is `hidden` at the moment its
+    // text changes is not in the accessibility tree, so the mutation is never
+    // announced — which silently ate the first message of every session.
     sayEl.hidden = !msg;
+    sayEl.textContent = msg;
   };
 
   // ---- backend ------------------------------------------------------------
@@ -166,7 +171,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
+  // A JS mirror of db.validate(). The header above claims a reasonless park is
+  // refused three times over; against a plain http.server there is no database
+  // to be the second and third refusal, so without this there was exactly ONE —
+  // the dialog — and any future caller of act() bypassed it entirely. This
+  // guards BOTH modes, so the two really do behave identically.
+  const opError = op => {
+    if (!OUT_LANES.has(op.action)) return op.action === "restored" || op.action === "done"
+      || op.action === "undone" ? null : `unknown action ${op.action}`;
+    const rs = op.reasons;
+    if (!Array.isArray(rs) || !rs.length) return `a '${op.action}' move needs at least one reason`;
+    if (rs.some(r => typeof r !== "string" || !r.trim())) return `a '${op.action}' move has a blank reason`;
+    if (new Set(rs).size !== rs.length) return `a '${op.action}' move repeats a reason`;
+    if (op.action === "pushed" && !op.until) return "a 'pushed' move needs a return date";
+    return null;
+  };
+
   const sendOp = async op => {
+    const bad = opError(op);
+    if (bad) { setBanner(`Not saved — ${bad}`, "bad"); return false; }
     if (store === "postgresql") {
       try {
         const r = await fetch("/api/ops", {
@@ -200,6 +223,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dayId = li.dataset.day || (li.closest(".dl-day") || {}).dataset.day;
     const e = {
       li, box, dayId,
+      // Where the card lives when it is NOT on today's board. relocate() puts
+      // it back here, so a card can leave the board as well as join it.
+      home: li.parentNode,
       id: li.dataset.id,
       // The key keeps its ORIGIN day. Re-keying a rolled task to today would
       // fork its history in two and break task_state_key_shape.
@@ -232,15 +258,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       // tasks — impossible to select and copy.
       grab.addEventListener("pointerdown", () => { li.draggable = true; });
       grab.addEventListener("keydown", ev => {
-        const i = LANES.indexOf(laneOf(st(e.key)));
-        const to = ev.key === "ArrowRight" ? LANES[i + 1]
-                 : ev.key === "ArrowLeft" ? LANES[i - 1] : null;
-        if (!to) return;
+        if (ev.key !== "ArrowLeft" && ev.key !== "ArrowRight") return;
         ev.preventDefault();
+        const i = LANES.indexOf(laneOf(st(e.key)));
+        const to = ev.key === "ArrowRight" ? LANES[i + 1] : LANES[i - 1];
+        // Announce the dead end. Silence at the end of the row is
+        // indistinguishable from a broken key.
+        if (!to) return say(`No lane ${ev.key === "ArrowRight" ? "after" : "before"} ${LANE_NAME[LANES[i]]}.`);
         dropOn(e, to);
       });
-      grab.addEventListener("focus", () =>
-        say("Left and right arrows move this card between lanes."));
+      // No focus handler here: the handle already carries aria-describedby to
+      // #kb-help and aria-keyshortcuts, so announcing the same sentence through
+      // the live region said everything twice.
     }
     li.addEventListener("dragstart", ev => {
       dragging = e;
@@ -313,7 +342,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     untilField.hidden = action !== "pushed";
     const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
     until.value = iso(tomorrow);
-    until.min = iso(new Date());
+    // TOMORROW, not today. `laneOf` returns a push whose date has arrived to
+    // Open, so a push dated today writes a move that is already expired — a row
+    // in the database that the board never shows as pushed. `./todo push`
+    // defaults to today+1 for the same reason.
+    until.min = iso(tomorrow);
     document.getElementById("move-note").value = "";
     document.getElementById("move-hint").hidden = true;
     dlg.querySelectorAll("#move-reasons input").forEach(c => { c.checked = false; });
@@ -327,32 +360,52 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (dlg.close) dlg.close(); else dlg.removeAttribute("open");
   };
 
+  const finishMove = async () => {
+    const reasons = [...dlg.querySelectorAll("#move-reasons input:checked")].map(c => c.value);
+    if (!reasons.length) {
+      // Do NOT close: moving a task out without saying why is the one thing
+      // this dialog exists to prevent, and opError() and the database refuse it
+      // too. #move-hint carries role="alert", so this is spoken, not just shown.
+      document.getElementById("move-hint").hidden = false;
+      return;
+    }
+    const p = pending; pending = null;
+    closeDialog();
+    if (!p) return;
+    const op = {
+      key: p.entry.key,
+      action: p.action,
+      reasons,
+      note: document.getElementById("move-note").value.trim() || null,
+    };
+    if (p.action === "pushed") op.until = document.getElementById("move-until").value;
+    await act(op);
+    say(`Moved to ${LANE_NAME[p.action]}.`);
+  };
+
   if (dlg) {
     document.getElementById("move-cancel").addEventListener("click", () => {
       pending = null;
       closeDialog();
       say("Nothing moved — no reason given.");
     });
-    document.getElementById("move-confirm").addEventListener("click", async () => {
-      const reasons = [...dlg.querySelectorAll("#move-reasons input:checked")].map(c => c.value);
-      if (!reasons.length) {
-        // Do NOT close: moving a task out without saying why is the one thing
-        // this dialog exists to prevent, and the database refuses it anyway.
-        document.getElementById("move-hint").hidden = false;
-        return;
-      }
-      const p = pending; pending = null;
-      closeDialog();
-      if (!p) return;
-      const op = {
-        key: p.entry.key,
-        action: p.action,
-        reasons,
-        note: document.getElementById("move-note").value.trim() || null,
-      };
-      if (p.action === "pushed") op.until = document.getElementById("move-until").value;
-      await act(op);
-      say(`Moved to ${LANE_NAME[p.action]}.`);
+    document.getElementById("move-confirm").addEventListener("click", finishMove);
+    // The dialog's <form> holds exactly one implicit-submission-blocking field
+    // (the date), and no submit button — so pressing Enter in "Comes back on"
+    // submitted it: a GET to the current URL, i.e. a full page reload with the
+    // move thrown away. Enter now means Confirm, which is what it looked like it
+    // meant. Still not <form method="dialog">, for the reason in closeDialog().
+    dlg.querySelector("form").addEventListener("submit", ev => {
+      ev.preventDefault();
+      finishMove();
+    });
+    // Escape closes a modal <dialog> natively, behind this code's back. Without
+    // this the pending move stayed armed and the live region said nothing, so a
+    // keyboard user could not tell a cancel from a save.
+    dlg.addEventListener("close", () => {
+      if (!pending) return;
+      pending = null;
+      say("Nothing moved — no reason given.");
     });
   }
 
@@ -375,9 +428,72 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Cards that did not make it onto the board stay in their day's list. They
     // are still live — tick one, or use its buttons — they simply do not
     // pretend to be today's work.
-    if (!e.onBoard) return;
-    const zone = zones.get(laneOf(st(e.key)));
-    if (zone && e.li.parentNode !== zone) zone.appendChild(e.li);
+    //
+    // This used to `return` for an off-board card, which made the day lists a
+    // one-way trapdoor: parking a card from its day list wrote `moved` to
+    // PostgreSQL and left the card sitting in the day list, with the Parked zone
+    // still reading 0. The board was then showing a state the database did not
+    // hold. Membership is recomputed on every render, and a card that falls off
+    // the board goes home rather than staying wherever it happened to be.
+    const to = e.onBoard ? zones.get(laneOf(st(e.key))) : e.home;
+    if (!to || e.li.parentNode === to) return;
+    if (e.onBoard) return void to.appendChild(e.li);
+    // Home is not sorted, so re-insert where it was authored.
+    const after = [...to.children].find(n => byLi.has(n) && byLi.get(n).ord > e.ord);
+    to.insertBefore(e.li, after || null);
+  }
+
+  // Board membership. Three ways on, and no fourth:
+  //
+  //   * authored for today;
+  //   * ROLLED OVER — from an earlier day and not finished, where "not
+  //     finished" means `!isOut`, NOT `!moved`. A push whose return date has
+  //     arrived is no longer out, and `!moved` kept it off the board forever:
+  //     laneOf() sent it back to Open and membership never let it onto the
+  //     board to be placed there. "Returns on its own date" was true only for a
+  //     push made today, which is the case that never matters;
+  //   * ACTED ON TODAY — ticked or moved out at some point today. Without this
+  //     the Done lane empties itself on every refresh: rollover quite correctly
+  //     refuses to carry a finished task forward, so the card you just ticked
+  //     would drop off the board the moment you reloaded.
+  //     done_at / moved_at are already stored; nothing new is persisted.
+  //
+  // Recomputed on EVERY render, not once at boot: it is a pure function of one
+  // task_state row plus the clock, exactly like laneOf, and an op changes both.
+  function membership() {
+    entries.forEach(e => {
+      const s = st(e.key);
+      e.onBoard = e.dayId === TODAY
+        || (e.dayId < TODAY && s.done !== true && !isOut(s))
+        || actedToday(s.done_at) || actedToday(s.moved_at);
+      e.rolled = e.onBoard && e.dayId !== TODAY;
+      const meta = e.li.querySelector(".dl-meta");
+      const from = meta && meta.querySelector(".dl-from");
+      if (e.rolled && meta && !from) {
+        meta.insertAdjacentHTML("beforeend", `<span class="dl-from">from ${e.dayId}</span>`);
+      } else if (!e.rolled && from) {
+        from.remove();
+      }
+    });
+
+    // Authored context keeps a home: a chip is not a substitute for the
+    // paragraph saying why a group of tasks exists. Only strips with cards on
+    // the board show.
+    document.querySelectorAll(".kb-ctx").forEach(ctx => {
+      ctx.hidden = !entries.some(e =>
+        e.onBoard && e.dayId === ctx.dataset.day && e.gidx === ctx.dataset.group);
+    });
+
+    const note = document.getElementById("board-rolled");
+    if (!note) return;
+    const rolled = entries.filter(e => e.rolled).length;
+    const authored = dayEls.some(d => d.dataset.day === TODAY);
+    note.textContent = !authored && rolled
+      ? `Nothing was authored for today — all ${rolled} card${rolled === 1 ? "" : "s"} rolled over.`
+      : rolled
+        ? `${rolled} card${rolled === 1 ? "" : "s"} rolled over from an earlier day.`
+        : "";
+    note.hidden = !note.textContent;
   }
 
   // Ready before waiting, then priority — byte-for-byte the order "Do next"
@@ -433,6 +549,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function render() {
+    // Re-parenting a node blurs whatever was focused inside it, so every
+    // keyboard lane move dropped focus to <body> and the next arrow key went
+    // nowhere at all. Captured here, restored after the last node move.
+    const held = document.activeElement;
+    membership();
     entries.forEach(e => {
       const s = st(e.key);
       const done = s.done === true;
@@ -452,7 +573,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       const d = dueBadge(e);
       badge(e, d ? d.cls : "", d ? d.text : null, ".dl-due");
 
-      e.li.classList.toggle("moved", !!s.moved);
+      // `out`, not `moved`: a push whose return date has arrived is back in the
+      // Open lane, so styling it as moved-out and taking away its Park / Push /
+      // Drop buttons put the card and its own controls in different states.
+      const out = isOut(s);
+      e.li.classList.toggle("moved", out);
       const why = [(s.reasons || []).map(labelOf).join(" + "), s.note]
         .filter(Boolean).join(" — ");
       badge(e, "muted", s.moved
@@ -461,15 +586,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       const revive = s.moved ? canComeBack(s.reasons) : null;
       badge(e, revive ? "good" : "muted",
         s.moved ? (revive ? "can come back" : "closed for good") : null, ".dl-revivable");
-      e.li.classList.toggle("closed-for-good", s.moved && revive === false);
+      e.li.classList.toggle("closed-for-good", out && revive === false);
+      // Restore stays available while a move is on record, so a returned push
+      // can still be cleared; the three move-out buttons follow the lane.
       e.li.querySelectorAll(".dl-act").forEach(b => {
-        b.hidden = (b.dataset.act === "restored") !== !!s.moved;
+        b.hidden = b.dataset.act === "restored" ? !s.moved : out;
       });
 
       relocate(e);
     });
 
     sortLanes();
+    if (held && held !== document.body && held.isConnected
+        && document.activeElement !== held) held.focus();
     counts();
 
     dayEls.forEach(day => {
@@ -547,50 +676,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (h) h.textContent = pretty(TODAY);
   }
 
-  // Board membership, decided ONCE, here. Three ways on, and no fourth:
-  //
-  //   * authored for today;
-  //   * ROLLED OVER — from an earlier day, neither done nor moved out;
-  //   * ACTED ON TODAY — ticked or moved out at some point today. Without this
-  //     clause the Done lane empties itself on every refresh: rollover quite
-  //     correctly refuses to carry a finished task forward, so the card you
-  //     just ticked would drop off the board the moment you reloaded.
-  //     done_at / moved_at are already stored; nothing new is persisted.
-  //
-  // It is a MOVE, not a clone, so one task is one node and the whole class of
-  // bug where two nodes disagree about one database row cannot happen.
-  entries.forEach(e => {
-    const s = st(e.key);
-    e.onBoard = e.dayId === TODAY
-      || (e.dayId < TODAY && s.done !== true && !s.moved)
-      || actedToday(s.done_at) || actedToday(s.moved_at);
-    e.rolled = e.onBoard && e.dayId !== TODAY;
-    if (e.rolled) {
-      const meta = e.li.querySelector(".dl-meta");
-      if (meta && !meta.querySelector(".dl-from")) {
-        meta.insertAdjacentHTML("beforeend", `<span class="dl-from">from ${e.dayId}</span>`);
-      }
-    }
-  });
-
-  // Authored context keeps a home: a chip is not a substitute for the paragraph
-  // saying why a group of tasks exists. Only strips with cards on the board show.
-  document.querySelectorAll(".kb-ctx").forEach(ctx => {
-    ctx.hidden = !entries.some(e =>
-      e.onBoard && e.dayId === ctx.dataset.day && e.gidx === ctx.dataset.group);
-  });
-
-  const note = document.getElementById("board-rolled");
-  if (note) {
-    const rolled = entries.filter(e => e.rolled).length;
-    const authored = dayEls.some(d => d.dataset.day === TODAY);
-    note.textContent = !authored && rolled
-      ? `Nothing was authored for today — all ${rolled} card${rolled === 1 ? "" : "s"} rolled over.`
-      : rolled
-        ? `${rolled} card${rolled === 1 ? "" : "s"} rolled over from an earlier day.`
-        : "";
-    note.hidden = !note.textContent;
-  }
-
+  // Membership, placement and every badge are decided in render() — see
+  // membership() above. It is a MOVE, not a clone, so one task is one node and
+  // the whole class of bug where two nodes disagree about one database row
+  // cannot happen.
   render();
 });

@@ -19,13 +19,11 @@
   <h1>Daily to-do</h1>
 </header>
 
-<div class="tldr">
+<div class="tldr" id="standing">
   <strong>Where things stand</strong>
-  <strong>0</strong> job workspaces built · <strong>0</strong> sent ·
-  ready-and-unsent backlog <strong>0</strong>, under the roughly-five gate.
+  <strong>4</strong> job workspaces built · <strong>1</strong> sent · ready-and-unsent backlog <strong>3</strong>, under the roughly-five gate.
   Sending is the north star, not building. Anything left unticked rolls over to the next day
-  automatically. <span class="dim">Generated from <code>daily/days.json</code>; counts read from
-  the root launcher on each render.</span>
+  automatically. <span class="dim">Generated from <code>daily/days.json</code>; counts read from <code>jobs_tracker_v2</code> on each render.</span>
 </div>
 
 <div class="callout good">
@@ -310,7 +308,7 @@ copied — one task is one row in the database and one node in the page.</p>
       <label class="dl-reason"><input type="checkbox" value="superseded" data-revivable="false" /><span>Superseded by a better seat at the same firm</span><span class="dl-revive no">closed for good</span></label>
       <label class="dl-reason"><input type="checkbox" value="other" data-revivable="true" /><span>Other — say why in the note</span><span class="dl-revive yes">can come back</span></label>
     </fieldset>
-    <p class="dl-reason-hint" id="move-hint" hidden>Pick at least one reason.</p>
+    <p class="dl-reason-hint" id="move-hint" role="alert" hidden>Pick at least one reason.</p>
     <label class="dl-field" id="move-until-field" hidden>Comes back on
       <input type="date" id="move-until" />
     </label>

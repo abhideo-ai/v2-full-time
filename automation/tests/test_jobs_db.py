@@ -132,18 +132,29 @@ else:
     ok("archived" not in v1, "and not one of them is still archived")
     ok(n_dupes == 0, "none of v2's seats is still sitting in v1's database — one home each")
 
-print("\n6. The live seats are registered, and each lands on a real tab")
+print("\n6. The live seats are registered, and each is in the pipeline")
 # NOT `tab == "ready"`. That asserted a snapshot of where the seats happened to
 # be sitting, so the suite failed the moment one was actually SENT — which is
-# the north star, not a regression. The durable invariant is that every live
-# seat is registered, lands on a tab the launcher renders, and resolves to a
-# workspace on disk. yes-madam-lead-architect moved to `applied` on 2026-08-26.
+# the north star, not a regression. yes-madam-lead-architect moved to `applied`
+# on 2026-08-26.
+#
+# NOR `tab in jobs_db.TABS`, which replaced it: `tab_for` RAISES on an unknown
+# status, and section 1 already proves every enum value lands in TABS, so that
+# assertion could not fail on any input and asserted nothing at all.
+#
+# The durable invariant that survives a send and still bites: `other` is the
+# new/recommended_skip catch-all, deliberately excluded from the ready-and-unsent
+# backlog gate. A seat we built a whole workspace for must never be sitting in
+# it — not at any stage, not ever — and it must resolve to that workspace.
 by_slug = {r["slug"]: r for r in rows}
 for slug in LIVE_SLUGS:
     r = by_slug.get(slug)
     ok(r is not None, f"{slug} is in the database")
     if r:
-        ok(r["tab"] in jobs_db.TABS, f"{slug} shows under a real tab — {r['tab']}")
+        ok(r["tab"] != "other",
+           f"{slug} is in the pipeline, not the skip bucket — {r['status']} -> {r['tab']}")
+        ok(r["tab"] == jobs_db.TAB_FOR_STATUS[r["status"]],
+           f"{slug}'s tab is its status's documented tab, not a stored guess")
         ok(r["workspace"] and r["href"], f"{slug} resolves to its workspace on disk")
 w = by_slug.get("wipro-principal-software-architect")
 ok(w and w["technical"] is None, "Wipro carries NO technical score — there is no JD to score")

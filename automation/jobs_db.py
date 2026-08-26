@@ -235,7 +235,7 @@ _SELECT = """
 
 # Once a seat has been sent, when it was sent is the fact that matters; before
 # that it is when the row last moved.
-_SENT_STATUSES = {"applied", "heard_back", "interviewing", "offer", "rejected"}
+SENT_STATUSES = {"applied", "heard_back", "interviewing", "offer", "rejected"}
 
 
 def _iso(value):
@@ -245,7 +245,7 @@ def _iso(value):
 def _row(r: dict, paths: dict[str, str]) -> dict:
     tab = tab_for(r["status"])
     path = paths.get(r["slug"])
-    at, at_kind = (r["applied_at"], "applied") if r["status"] in _SENT_STATUSES and r["applied_at"] \
+    at, at_kind = (r["applied_at"], "applied") if r["status"] in SENT_STATUSES and r["applied_at"] \
         else (r["updated_at"] or r["scraped_at"], "updated")
     return {
         "id": r["id"],

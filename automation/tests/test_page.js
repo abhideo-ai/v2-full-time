@@ -35,11 +35,27 @@ const PRETTY_TODAY = `${WD[now.getDay()]} ${now.getDate()} ${MO[now.getMonth()]}
 const regenerate = () => execSync(`${REPO}/automation/.venv/bin/python automation/daily.py`,
                                  { cwd: REPO, stdio: "ignore" });
 
-async function boot(base) {
+// Section 10 writes a synthetic day into daily/days.json — his source of truth,
+// not a fixture. run.sh puts it back, but the header of this file says it can be
+// run on its own, and on its own it left the synthetic day behind permanently.
+const DAYS_PATH = REPO + "/daily/days.json";
+const DAYS_BACKUP = fs.readFileSync(DAYS_PATH, "utf8");
+process.on("exit", () => {
+  if (fs.readFileSync(DAYS_PATH, "utf8") === DAYS_BACKUP) return;
+  fs.writeFileSync(DAYS_PATH, DAYS_BACKUP);
+  try { regenerate(); } catch { /* the page is stale, the source of truth is not */ }
+});
+
+async function boot(base, seed) {
   const html = fs.readFileSync(REPO + "/daily/index.html", "utf8");
   const js = fs.readFileSync(REPO + "/static/todo.js", "utf8");
   const dom = new JSDOM(html, { url: base + "/daily/", runScripts: "outside-only" });
   const w = dom.window;
+  // Seeding localStorage BEFORE the script boots is the only way to hand the
+  // page a state row whose done_at / moved_at is not today — which is exactly
+  // the case the board's membership rules turn on, and the case a live run can
+  // never manufacture through the API.
+  if (seed) w.localStorage.setItem("v2-daily-todo", JSON.stringify(seed));
   // jsdom has no fetch; hand it Node's, resolving relative paths at `base`.
   w.fetch = (u, o) => fetch(u.startsWith("http") ? u : base + u, o);
   w.eval(js);
@@ -122,6 +138,20 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   } else {
     console.log("  SKIP  (days.json happens to hold today — the no-entry path is not exercised)");
   }
+  // "Where things stand" carries the ready-and-unsent backlog gate — the one
+  // number on this page that decides anything. It was scraped out of the root
+  // launcher's #app-list, which has been empty markup since the launcher started
+  // rendering from /api/jobs, so it read a confident `0 built · 0 sent ·
+  // backlog 0` over a database holding four live seats.
+  const jobs = await (await fetch(API + "/api/jobs")).json();
+  const standing = d.getElementById("standing").textContent;
+  ok(new RegExp(`\\b${jobs.counts.total}\\b job workspaces built`).test(standing),
+     `the built count comes from the database — ${jobs.counts.total} row(s), page says "${standing.match(/\d+ job workspaces built/)}"`);
+  ok(new RegExp(`backlog\\s+${jobs.counts.ready}\\b`).test(standing),
+     `and so does the backlog gate — /api/jobs says ready ${jobs.counts.ready}`);
+  ok(!/backlog\s+0,/.test(standing) || jobs.counts.ready === 0,
+     "a zero backlog is only ever reported when the database really holds none");
+
   const due = li(d, "clone-card").querySelector(".dl-due");
   ok(due && /overdue$/.test(due.textContent),
      `a card from an earlier day reads overdue on today's board — got "${due && due.textContent}"`);
@@ -149,6 +179,25 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   let T = titleParts(d);
   ok(T.done === 0 && T.total > 0, `live title leads with progress — got "${d.title}"`);
   ok(T.stem && T.stem.startsWith("Daily to-do"), "live title keeps the page name as its stem");
+
+  console.log("\n1c. A lane you cannot drop onto is not a lane");
+  // Comments stripped first — the comment explaining why the `:empty` rule was
+  // removed quotes the rule, and matched the assertion that it is gone.
+  const css = fs.readFileSync(REPO + "/style.css", "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+  ok(/\.kb-drop\s*\{[^}]*min-height:\s*3\d/.test(css), "a drop zone reserves a body");
+  ok(!/\.kb-drop:empty\s*\{[^}]*min-height:\s*0/.test(css),
+     "and does NOT give that up when empty — `.dl-list` has no padding, so an " +
+     "empty lane rendered 0px tall and could not be dropped onto at all");
+  ok([...d.querySelectorAll(".kb-drop")].every(z => z.getAttribute("aria-label")),
+     "every zone names itself for a screen reader");
+  ok(d.getElementById("move-hint").getAttribute("role") === "alert",
+     "the reason-gate refusal is an alert — the one rule this page enforces must be SPOKEN, not just shown");
+  // The default `align-items: stretch` on a wrapping row is what shipped
+  // stretched oval pills on the workspace index pages an hour before this board.
+  for (const sel of ["\\.dl-actions", "\\.dl-dialog-actions", "\\.dl-meta", "\\.dl-reason"]) {
+    const rule = new RegExp(`^${sel}\\s*\\{([^}]*)\\}`, "m").exec(css);
+    ok(rule && /align-items:/.test(rule[1]), `${sel.replace(/\\/g, "")} pins its cross-axis`);
+  }
 
   console.log("\n2. A tick reaches the database and the card changes lane");
   await tick(w, "clone-card");
@@ -259,6 +308,51 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   ok(li(d, "journey-doc").querySelector(".kb-grab").getAttribute("aria-keyshortcuts")
      === "ArrowLeft ArrowRight", "the handle advertises those keys to a screen reader");
 
+  console.log("\n5e. The keyboard path does not dead-end");
+  // A lane move re-parents the <li>, and re-parenting blurs what was focused
+  // inside it — so the handle you just pressed a key on lost focus, and the
+  // next arrow key went to <body>. One move was all a keyboard user got.
+  let grab = li(d, "journey-doc").querySelector(".kb-grab");
+  grab.focus();
+  ok(d.activeElement === grab, "the handle takes focus");
+  await arrow(w, "journey-doc", "ArrowRight");
+  ok(inLane(d, "journey-doc") === "done", "one arrow moves the card");
+  ok(d.activeElement === li(d, "journey-doc").querySelector(".kb-grab"),
+     "and focus is STILL on the handle, so the next key works too");
+  await arrow(w, "journey-doc", "ArrowLeft");
+  ok(inLane(d, "journey-doc") === "open", "the second key really does work");
+  await arrow(w, "journey-doc", "ArrowLeft");
+  ok(inLane(d, "journey-doc") === "open", "there is nothing left of Open");
+  ok(/No lane before open/.test(d.getElementById("kb-say").textContent),
+     `and the dead end is announced rather than silent — "${d.getElementById("kb-say").textContent}"`);
+  ok(!d.getElementById("kb-say").hidden, "the live region is visible when it speaks");
+
+  console.log("\n5f. Enter inside the dialog confirms; it does not reload the page");
+  // The form holds exactly one implicit-submission-blocking field (the date) and
+  // no submit button, so Enter submitted it: a GET to the current URL, i.e. a
+  // reload with the move discarded.
+  await openMove(w, "verify-pdf", "pushed");
+  const form = d.querySelector("#move-dialog form");
+  let submit = new w.Event("submit", { bubbles: true, cancelable: true });
+  form.dispatchEvent(submit);
+  await settle();
+  ok(submit.defaultPrevented, "the submit is cancelled — no navigation");
+  ok(!d.getElementById("move-hint").hidden, "and Enter with no reason hits the SAME gate");
+  ok(inLane(d, "verify-pdf") === "open", "the card did not move");
+  ok(!(await dbState())["2026-08-25::verify-pdf"], "and nothing was written");
+  const until = d.getElementById("move-until");
+  const tomorrow = iso(new Date(now.getTime() + 86400000));
+  ok(until.min === tomorrow,
+     `a push cannot be dated today — laneOf() returns an arrived push to Open, so that writes an already-expired move (min ${until.min})`);
+  d.querySelector('#move-reasons input[value="blocked"]').checked = true;
+  submit = new w.Event("submit", { bubbles: true, cancelable: true });
+  form.dispatchEvent(submit);
+  await settle();
+  ok(inLane(d, "verify-pdf") === "pushed", "Enter with a reason completes the move");
+  li(d, "verify-pdf").querySelector('.dl-act[data-act="restored"]')
+    .dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  await settle();
+
   console.log("\n6. State survives a reload — the whole point of the database");
   w = await boot(API); d = w.document;
   ok(li(d, "clone-card").querySelector("input").checked, "tick came back from postgres");
@@ -298,6 +392,16 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
      "so revivability is computed from every reason, not from undefined");
   ok(JSON.stringify(JSON.parse(w.localStorage.getItem("v2-daily-todo"))["2026-08-25::paste-jds"].reasons)
      === '["posting-closed","jd-changed"]', "and localStorage stores the same shape the server does");
+  // Offline there is no db.validate and no CHECK constraint, so the reason rule
+  // has to hold here on its own. It does not get a pass for being the easy mode.
+  await openMove(w, "fix-el-paso", "dropped");
+  await confirmMove(w);
+  ok(!d.getElementById("move-hint").hidden, "a reasonless drop is refused offline too");
+  ok(inLane(d, "fix-el-paso") === "open", "the card stays put");
+  ok(!JSON.parse(w.localStorage.getItem("v2-daily-todo"))["2026-08-25::fix-el-paso"],
+     "and NOTHING reaches localStorage — the store with no database behind it");
+  d.getElementById("move-cancel").dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  await settle();
 
   console.log("\n9. Rollover MOVES a card; it never clones one");
   if (fs.readFileSync(REPO + "/daily/index.html", "utf8").includes('data-day="2026-08-24"')) {
@@ -342,13 +446,12 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   }
 
   console.log("\n10. A day authored FOR today — the other half of the dating fix");
-  const daysPath = REPO + "/daily/days.json";
-  const doc = JSON.parse(fs.readFileSync(daysPath, "utf8"));
+  const doc = JSON.parse(fs.readFileSync(DAYS_PATH, "utf8"));
   doc.days.push({ date: TODAY, groups: [{ title: "Authored for today", kind: "parallel",
     why: "synthetic test day", items: [
       { id: "today-open", p: 1, needs: [], task: "Due today", detail: "" },
       { id: "today-blocked", p: 2, needs: ["today-open"], task: "Blocked today", detail: "" }] }] });
-  fs.writeFileSync(daysPath, JSON.stringify(doc, null, 2) + "\n");
+  fs.writeFileSync(DAYS_PATH, JSON.stringify(doc, null, 2) + "\n");
   regenerate();
   w = await boot(API); d = w.document;
   ok(d.getElementById("board-date").textContent.trim() === PRETTY_TODAY,
@@ -367,6 +470,51 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
      `each contributing group keeps its authored prose above the lanes — ${d.querySelectorAll(".kb-ctx:not([hidden])").length} shown`);
   ok([...d.querySelectorAll(".kb-ctx:not([hidden])")].every(c => c.querySelector(".dl-why")),
      "and the prose is the paragraph, not a chip");
+
+  console.log("\n11. Membership is recomputed, not decided once at boot");
+  if (fs.readFileSync(REPO + "/daily/index.html", "utf8").includes('data-day="2026-08-24"')) {
+    const YESTERDAY = iso(new Date(now.getTime() - 86400000));
+    // Two rows a live run cannot produce: both were acted on BEFORE today.
+    w = await boot(PLAIN, {
+      // Pushed days ago, and its return date is today.
+      "2026-08-24::old-open": { done: false, moved: "pushed", until: TODAY,
+                                reasons: ["blocked"], moved_at: `${YESTERDAY}T20:00:00` },
+      // Finished before today, so it is off the board and back in its day list.
+      "2026-08-24::old-done": { done: true, done_at: `${YESTERDAY}T10:00:00` },
+    });
+    d = w.document;
+    ok(inLane(d, "old-open") === "open",
+       `a push whose return date has ARRIVED is back on the board — got ${inLane(d, "old-open")}. ` +
+       "Membership tested `!moved`, so laneOf sent it to Open and it was never put on the board to be placed there");
+    ok(li(d, "old-open").querySelector(".dl-due").textContent === "due today",
+       "due against its return date");
+    ok(!li(d, "old-open").classList.contains("moved"),
+       "and it is not styled as moved out — it is back in play");
+    ok([...li(d, "old-open").querySelectorAll(".dl-act:not([hidden])")]
+       .map(b => b.dataset.act).includes("pushed"),
+       "its Park/Push/Drop buttons agree with the lane it is sitting in");
+
+    ok(!d.querySelector('.kb-drop > li[data-id="old-done"]'),
+       "a task finished on an EARLIER day is not on today's board");
+    ok(d.querySelector('.dl-day[data-day="2026-08-24"] li[data-id="old-done"]'),
+       "it is back in its own day's list");
+    // The trapdoor: parking from the day list wrote `moved` to the store and
+    // left the card exactly where it was, with the Parked zone still reading 0.
+    await move(w, "old-done", "parked", ["blocked"], "");
+    ok(inLane(d, "old-done") === "parked",
+       `acting on an off-board card puts it ON the board — got ${inLane(d, "old-done")}`);
+    ok(d.getElementById("moved-parked").querySelector(".n").textContent === "1",
+       "and the Parked count sees it, instead of showing 0 over a real park");
+    ok(!d.querySelector('.dl-day[data-day="2026-08-24"] li[data-id="old-done"]'),
+       "one node, one place — it left the day list rather than being cloned");
+    li(d, "old-done").querySelector('.dl-act[data-act="restored"]')
+      .dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+    await settle();
+    ok(d.querySelector('.dl-day[data-day="2026-08-24"] li[data-id="old-done"]'),
+       "and restoring a done card sends it home again — the board is not a one-way trapdoor");
+  } else {
+    console.log("  SKIP  (single-day log — caller did not add the synthetic day)");
+  }
 
   console.log(`\n${P} passed, ${F} failed`);
   process.exit(F ? 1 : 0);

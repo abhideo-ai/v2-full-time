@@ -107,14 +107,30 @@ def validate(days: list[dict]) -> None:
 
 
 def pipeline_stats() -> dict:
-    """Counts from the root launcher, which is the pipeline's own record."""
-    html = (ROOT / "index.html").read_text()
-    # Strip HTML comments FIRST: the launcher keeps a commented-out example card
-    # carrying data-status="ready", and counting it reported a phantom workspace.
-    html = re.sub(r"<!--.*?-->", "", html, flags=re.S)
-    app_list = re.search(r'id="app-list"(.*?)</div>', html, re.S)
-    rows = re.findall(r'data-status="([a-z-]+)"', app_list.group(1) if app_list else "")
-    return {"total": len(rows), "ready": rows.count("ready"), "sent": rows.count("sent")}
+    """Counts from `jobs_tracker_v2`, which IS the pipeline's record.
+
+    This used to scrape `data-status` attributes out of the root launcher's
+    `#app-list`. That div has been empty markup ever since the launcher started
+    rendering from `GET /api/jobs` — CLAUDE.md's "never hand-write a row into
+    #app-list" is the same rule seen from the other side — so the scrape matched
+    ZERO rows and this page reported `0 built · 0 sent · backlog 0` above a
+    database holding four live seats.
+
+    The backlog gate is the one number on this page that decides anything.
+    Reporting it as a confident 0 is worse than not reporting it, so an
+    unreachable database says so instead of counting to zero.
+    """
+    try:
+        import jobs_db
+        rows = jobs_db.applications()
+    except Exception as exc:                                    # noqa: BLE001
+        return {"ok": False, "why": f"{type(exc).__name__}: {exc}".split("\n")[0]}
+    return {
+        "ok": True,
+        "total": len(rows),
+        "ready": sum(1 for r in rows if r["tab"] == "ready"),
+        "sent": sum(1 for r in rows if r["status"] in jobs_db.SENT_STATUSES),
+    }
 
 
 def preflight() -> dict:
@@ -326,7 +342,21 @@ def main() -> None:
     pf = preflight()
     stats = pipeline_stats()
     today = date.today().isoformat()
-    gate = "under" if stats["ready"] < 5 else "AT OR OVER"
+    if stats["ok"]:
+        gate = "under" if stats["ready"] < 5 else "AT OR OVER"
+        standing = (
+            f"<strong>{stats['total']}</strong> job workspaces built · "
+            f"<strong>{stats['sent']}</strong> sent · ready-and-unsent backlog "
+            f"<strong>{stats['ready']}</strong>, {gate} the roughly-five gate."
+        )
+        source = "counts read from <code>jobs_tracker_v2</code> on each render"
+    else:
+        standing = (
+            "Pipeline counts unavailable — <code>jobs_tracker_v2</code> could not be read on "
+            f"this render ({stats['why']}). The backlog gate is left unsaid rather than "
+            "reported as zero."
+        )
+        source = "pipeline counts come from <code>jobs_tracker_v2</code>"
     rendered = "\n\n".join(render_day(d, d["date"] == today) for d in days)
     archive = (
         ""
@@ -364,13 +394,11 @@ def main() -> None:
   <h1>Daily to-do</h1>
 </header>
 
-<div class="tldr">
+<div class="tldr" id="standing">
   <strong>Where things stand</strong>
-  <strong>{stats['total']}</strong> job workspaces built · <strong>{stats['sent']}</strong> sent ·
-  ready-and-unsent backlog <strong>{stats['ready']}</strong>, {gate} the roughly-five gate.
+  {standing}
   Sending is the north star, not building. Anything left unticked rolls over to the next day
-  automatically. <span class="dim">Generated from <code>daily/days.json</code>; counts read from
-  the root launcher on each render.</span>
+  automatically. <span class="dim">Generated from <code>daily/days.json</code>; {source}.</span>
 </div>
 
 {preflight_callout(pf)}
@@ -392,7 +420,7 @@ copied — one task is one row in the database and one node in the page.</p>{arc
       <legend>Reasons — pick at least one</legend>
       {reason_options}
     </fieldset>
-    <p class="dl-reason-hint" id="move-hint" hidden>Pick at least one reason.</p>
+    <p class="dl-reason-hint" id="move-hint" role="alert" hidden>Pick at least one reason.</p>
     <label class="dl-field" id="move-until-field" hidden>Comes back on
       <input type="date" id="move-until" />
     </label>
@@ -418,6 +446,9 @@ copied — one task is one row in the database and one node in the page.</p>{arc
     print(f"[daily] board dated {today}"
           f"{'' if authored_today else ' (nothing authored for today — rolled cards only)'}")
     print(f"[daily] pipeline: {stats}  pre-flight ok={pf.get('ok')}")
+    if not stats["ok"]:
+        print("[daily] WARNING: pipeline counts unavailable — the page says so "
+              "rather than reporting a backlog of zero")
 
 
 if __name__ == "__main__":

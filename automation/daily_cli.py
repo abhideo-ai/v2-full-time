@@ -70,6 +70,26 @@ def is_out(s: dict, today: str) -> bool:
     return moved == "pushed" and (s.get("until") or "") > today
 
 
+def acted_today(ts, today: str) -> bool:
+    return isinstance(ts, str) and ts[:10] == today
+
+
+def on_board(t: dict, today: str) -> bool:
+    """Mirror of membership() in static/todo.js. Three ways onto today's list.
+
+    The third clause is why this exists at all: a task ticked TODAY but authored
+    on an earlier day is not `active` (wrong day) and does not `roll` (rollover
+    refuses to carry a finished task forward), so it vanished from `./todo`
+    entirely while the page kept it in Done. On a day with nothing authored,
+    that was every task he ticked — the count read 0/9 after nine ticks.
+    """
+    s = t["state"]
+    return (t["day"] == today
+            or (t["day"] < today and s.get("done") is not True and not is_out(s, today))
+            or acted_today(s.get("done_at"), today)
+            or acted_today(s.get("moved_at"), today))
+
+
 def build_view(doc: dict, state: dict, today: str) -> dict:
     """Mirror of render() in static/todo.js. Keep the two in step."""
     days = doc["days"]
@@ -99,12 +119,11 @@ def build_view(doc: dict, state: dict, today: str) -> dict:
     # was authored for today, and this tool answers "what is due today". The
     # page does the same thing from the browser clock; the two must agree.
     today_day = today
-    active = [t for t in tasks if t["day"] == today_day and not t["out"]]
-    rolled = [t for t in tasks
-              if t["day"] < today_day and not t["done"] and not t["state"].get("moved")]
-    for t in rolled:
-        t["rolled"] = True
-    current = active + rolled
+    board = [t for t in tasks if on_board(t, today_day)]
+    for t in board:
+        t["rolled"] = t["day"] != today_day
+    rolled = [t for t in board if t["rolled"]]
+    current = [t for t in board if not t["out"]]
     ready = sorted((t for t in current if not t["done"] and not t["waiting"]),
                    key=lambda t: (t["p"], not t.get("rolled", False)))
     return {
@@ -121,7 +140,10 @@ def due_label(t: dict, today: str) -> str:
         return f"{C['dim']}done {at[11:16]}{C['off']}" if at else f"{C['dim']}done{C['off']}"
     if t["waiting"]:
         return f"{C['yel']}waiting on {len(t['blockers'])}{C['off']}"
-    due = t["due"]
+    # A returned push is due on the day it came back to, not on the day it was
+    # authored for — same rule as dueBadge() in static/todo.js.
+    s = t["state"]
+    due = s["until"] if s.get("moved") == "pushed" and s.get("until") else t["due"]
     if due < today:
         n = (date.fromisoformat(today) - date.fromisoformat(due)).days
         return f"{C['red']}{n} day{'s' if n > 1 else ''} overdue{C['off']}"
@@ -132,7 +154,9 @@ def due_label(t: dict, today: str) -> str:
 
 def show(doc: dict, state: dict, today: str, store: str) -> None:
     v = build_view(doc, state, today)
-    pretty = date.fromisoformat(v["today"]).strftime("%a %d %b %Y")
+    # Same trim daily.py applies, so the terminal and the board header cannot
+    # read differently for the same date ("Sat 05 Sep" vs "Sat 5 Sep").
+    pretty = date.fromisoformat(v["today"]).strftime("%a %d %b %Y").replace(" 0", " ")
     print(f"\n{C['bold']}{pretty}{C['off']} · {v['done_n']}/{v['total_n']} done · {C['dim']}{store}{C['off']}")
     if v["next"]:
         print(f"\n{C['bold']}DO NEXT{C['off']}  {C['red']}P{v['next']['p']}{C['off']}  {v['next']['text']}")

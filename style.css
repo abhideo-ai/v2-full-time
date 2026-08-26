@@ -3152,7 +3152,10 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .dl-due[data-tone="yellow"] { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
 .dl-movednote { text-transform: none; letter-spacing: 0; }
 
-.dl-actions { flex: 0 0 auto; display: flex; flex-wrap: wrap; gap: 5px; align-self: flex-start; justify-content: flex-end; }
+/* align-items: a wrapping flex row defaults to `stretch`, which grows every
+   button to the tallest one in its line — the same default that shipped
+   stretched oval pills on the workspace index pages. */
+.dl-actions { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 5px; align-self: flex-start; justify-content: flex-end; }
 .dl-act { font-family: var(--mono); font-size: 10.5px; letter-spacing: .05em; padding: 3px 9px; border-radius: 5px; border: 1px solid var(--rule); background: var(--paper-3); color: var(--muted); cursor: pointer; }
 .dl-act:hover { border-color: var(--accent); color: var(--accent); }
 .dl-act:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
@@ -3170,7 +3173,7 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .dl-dialog-task { font-size: 14px; color: var(--ink-soft); margin: 0 0 16px; padding-left: 11px; border-left: 3px solid var(--accent); }
 .dl-field { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin: 0 0 14px; }
 .dl-field select, .dl-field input, .dl-field textarea { display: block; width: 100%; margin-top: 5px; font-family: var(--sans); font-size: 14px; text-transform: none; letter-spacing: 0; color: var(--ink); background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 7px 9px; }
-.dl-dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin: 0; }
+.dl-dialog-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 0; }
 .dl-dialog-actions .dl-act { font-size: 12px; padding: 7px 15px; }
 .dl-group.blocking > h3 { color: var(--accent); }   /* explicit, not inherited-by-default */
 .dl-act.restore:hover { border-color: var(--good); color: var(--good); }
@@ -3225,11 +3228,20 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .kb-empty { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px dashed var(--rule); border-radius: 7px; padding: 12px; text-align: center; }
 .kb-empty[hidden] { display: none; }
 
-/* A drop zone keeps a body even when empty — that is what makes it a target. */
+/* A drop zone keeps a body even when empty — that is what makes it a target.
+   There was a `.kb-drop:empty { min-height: 0 }` here, which flatly contradicted
+   that: `.dl-list` has no padding, so every empty lane rendered 0px tall and the
+   first card could not be dropped into it by mouse at all. Every lane starts
+   empty, so that was every lane. */
 .kb-drop { min-height: 34px; border-radius: 7px; transition: background 100ms ease, box-shadow 100ms ease; }
-.kb-drop:empty { min-height: 0; }
 .kb-drop.kb-over { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
 .dl-list > li.kb-dragging { opacity: .45; }
+
+/* On the board a card wraps and its action row takes a line of its own. The
+   four buttons are `flex: 0 0 auto` and cannot shrink, so in the narrow lanes
+   they crushed the task text into a column of single letters. */
+.kb-drop > li { flex-wrap: wrap; }
+.kb-drop > li > .dl-actions { flex: 1 1 100%; justify-content: flex-start; }
 
 .kb-grab { flex: 0 0 auto; align-self: flex-start; margin-top: 1px; width: 22px; height: 22px; padding: 0; line-height: 1; font-size: 13px; border: 1px solid transparent; border-radius: 5px; background: none; color: var(--muted); cursor: grab; }
 .kb-grab:hover { border-color: var(--rule); background: var(--paper-3); color: var(--ink-soft); }
@@ -3635,3 +3647,47 @@ section.pasted .paste-area { border-color: var(--good); }
   .qn-group { grid-template-columns: 1fr; gap: 2px; }
   .quick-nav a:first-child { padding-left: 0; }
 }
+
+/* .note is a BLOCK callout - accent background, left border, 14px padding, 18px
+   margins. Used as an inline <span> it renders as the bug that shipped on the
+   workspace rubric tables: the background spills out of the cell, the vertical
+   padding does not push lines apart so the caption overlaps the criterion name,
+   and the left border becomes a stray red bar. A span is never that callout. */
+span.note {
+  display: block;
+  margin: 3px 0 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* An empty caption should occupy nothing at all, not a bare border stub. */
+span.note:empty { display: none; }
+
+/* The criterion cell reads name-then-requirement, and must be allowed to wrap. */
+.wl-rubric td:first-child { min-width: 15rem; }
+.wl-rubric td, .wl-rubric th { vertical-align: top; }
+
+/* .warn is the same shape as .note - a block callout with border, padding and
+   margins. Inline in a sentence it needs to be emphasis, not a box: a tint and
+   nothing else, so it can sit mid-paragraph without breaking the line box. */
+span.warn,
+span.callout {
+  display: inline;
+  background: var(--warn-soft);
+  border: 0;
+  border-radius: 3px;
+  padding: 0 4px;
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+span.warn:empty,
+span.callout:empty { display: none; }

@@ -111,6 +111,51 @@ with db.connect() as c, c.cursor() as cur:
         except psycopg.errors.CheckViolation:
             c.rollback(); ok(True, label)
 
+print("\n8. `./todo` and the board agree on what is on today's list")
+# daily_cli.build_view is documented as a mirror of render() in static/todo.js.
+# It was not: the board grew a third membership clause (acted on today) and a
+# timed Pushed lane, and the CLI kept the old two, so the same database row
+# produced two different answers depending on which one you asked.
+import daily_cli                                              # noqa: E402
+DOC = daily_cli.load_doc()
+TODAY = "2026-08-26"                    # a day nothing is authored for
+IDS = lambda v: [t["id"] for t in v["current"]]                # noqa: E731
+
+v = daily_cli.build_view(DOC, {"2026-08-25::clone-card":
+                               {"done": True, "done_at": f"{TODAY}T09:12:00"}}, TODAY)
+ok("clone-card" in IDS(v),
+   "a task ticked TODAY stays on the list — rollover refuses to carry it, the third clause keeps it")
+ok(v["done_n"] == 1 and v["total_n"] > 1,
+   f"and it is counted as done rather than vanishing — got {v['done_n']}/{v['total_n']}")
+
+v = daily_cli.build_view(DOC, {"2026-08-25::source-ic":
+                               {"done": False, "moved": "pushed", "until": TODAY,
+                                "reasons": ["blocked"], "moved_at": "2026-08-25T20:00:00"}}, TODAY)
+ok("source-ic" in IDS(v),
+   "a push whose return date has ARRIVED comes back — `push` promises exactly this")
+ok(not any(t["id"] == "source-ic" for t in v["moved"] if t["out"]),
+   "and it is no longer counted as moved out")
+t = next(t for t in v["current"] if t["id"] == "source-ic")
+ok("due today" in daily_cli.due_label(t, TODAY),
+   f"due against its RETURN date, not its origin day — got {daily_cli.due_label(t, TODAY)!r}")
+
+v = daily_cli.build_view(DOC, {"2026-08-25::source-ic":
+                               {"done": False, "moved": "pushed", "until": "2026-09-01",
+                                "reasons": ["blocked"], "moved_at": "2026-08-25T20:00:00"}}, TODAY)
+ok("source-ic" not in IDS(v), "a push still in the future stays off the list")
+
+for moved in ("parked", "dropped"):
+    v = daily_cli.build_view(DOC, {"2026-08-25::paste-jds":
+                                   {"done": False, "moved": moved, "reasons": ["blocked"],
+                                    "moved_at": "2026-08-25T20:00:00"}}, TODAY)
+    ok("paste-jds" not in IDS(v), f"a task {moved} on an earlier day stays off the list")
+    ok(any(t["id"] == "paste-jds" for t in v["moved"]), f"and shows in the backlog instead")
+
+ok(daily_cli.on_board({"day": TODAY, "state": {}}, TODAY), "authored for today -> on the list")
+ok(not daily_cli.on_board({"day": "2026-08-25", "state": {"done": True,
+                           "done_at": "2026-08-25T10:00:00"}}, TODAY),
+   "finished on an EARLIER day -> off it, which is what rollover means")
+
 reset()
 print(f"\n{P} passed, {F} failed")
 sys.exit(1 if F else 0)
