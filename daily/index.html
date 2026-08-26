@@ -28,26 +28,93 @@
   the root launcher on each render.</span>
 </div>
 
-<details class="dl-day today" data-day="2026-08-25" open>
-  <summary>Tue 25 Aug 2026 <span class="pill note">today</span><span class="dl-count"></span></summary>
+<div class="callout good">
+  <b>Pre-flight green — no action needed.</b> Checked on this render, not quoted from memory: all <strong>10</strong> <code>quick-*</code> ids present in <code>master/upgrad_resume.html</code>, all parse with no silent skip, skills 6 · 17 · 6 and experience 10 · 6 · 4 · 3 · 4 = <strong>27</strong> bullets, zero <code>[fill in metric]</code>. Nothing in the HTML is blocking an export — only the card is.
+</div>
+
+<section class="kb" id="board" data-day="2026-08-26" aria-labelledby="board-date">
+  <div class="kb-head">
+    <h2 id="board-date">Wed 26 Aug 2026</h2>
+    <p class="kb-rolled" id="board-rolled" hidden></p>
+  </div>
+  <p class="kb-help" id="kb-help">Drag a card by its <span aria-hidden="true">&#x283F;</span> handle,
+    or focus the handle and press <kbd>&larr;</kbd> / <kbd>&rarr;</kbd> — the same move, same code
+    path. Every card also carries Park / Push / Drop buttons that do exactly the same thing.
+    <strong>Nothing leaves the board until you have given at least one reason</strong>: a drop is a
+    request, never a save.</p>
+  <p class="kb-say" id="kb-say" role="status" aria-live="polite" hidden></p>
+
+  <div class="wl-donow" id="next-up" hidden>
+    <p class="lbl">Do next</p>
+    <p></p>
+  </div>
+
+  <div class="kb-context" id="board-context">
+      <div class="kb-ctx blocking" data-day="2026-08-25" data-group="0" hidden>
+        <h3>Blocking — the journey doc feeds the master, the master feeds the card</h3>
+        <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
+      </div>
+      <div class="kb-ctx parallel" data-day="2026-08-25" data-group="1" hidden>
+        <h3>Parallel — does not wait on the card</h3>
+        <p class="dl-why">The card work above is all manual UI work. Sourcing is not blocked by any of it, and with nothing in the pipeline there is no backlog reason to hold off.</p>
+      </div>
+  </div>
+
+  <div class="kb-lanes">
+    <section class="kb-lane" id="lane-open" aria-labelledby="lane-open-h">
+      <h3 id="lane-open-h">Open <span class="kb-n">0</span></h3>
+      <p class="kb-lane-why">Ready first, then anything still waiting on a prerequisite —
+        <strong>waiting is a sort, never a lock</strong>. Doing things out of order is legitimate.</p>
+      <ul class="dl-list kb-drop" data-drop="open" aria-label="Open — drop a card here to bring it back"></ul>
+      <p class="kb-empty">Nothing open.</p>
+    </section>
+
+    <section class="kb-lane" id="lane-done" aria-labelledby="lane-done-h">
+      <h3 id="lane-done-h">Done <span class="kb-n">0</span></h3>
+      <p class="kb-lane-why">Ticked. Drop one back on Open to untick it.</p>
+      <ul class="dl-list kb-drop" data-drop="done" aria-label="Done — drop a card here to tick it"></ul>
+      <p class="kb-empty">Nothing ticked yet.</p>
+    </section>
+
+    <section class="kb-lane kb-lane-out" id="lane-out" aria-labelledby="lane-out-h">
+      <h3 id="lane-out-h">Moved out <span class="kb-n">0</span></h3>
+      <p class="kb-lane-why">Three zones, three reasons-required moves. Each one asks before it
+        writes.</p>
+        <details class="kb-zone" id="moved-parked" data-zone="parked" open>
+          <summary>Parked <span class="n">0</span></summary>
+          <p class="kb-zone-why">Set aside. It comes back only if every reason it carries can.</p>
+          <ul class="dl-list kb-drop" data-drop="parked" aria-label="Parked — drop a card here to park it, with a reason"></ul>
+        </details>
+        <details class="kb-zone" id="moved-pushed" data-zone="pushed" open>
+          <summary>Pushed to a later day <span class="n">0</span></summary>
+          <p class="kb-zone-why">Returns on its own date — nothing to remember.</p>
+          <ul class="dl-list kb-drop" data-drop="pushed" aria-label="Pushed to a later day — drop a card here to push it, with a reason"></ul>
+        </details>
+        <details class="kb-zone" id="moved-dropped" data-zone="dropped" open>
+          <summary>Dropped <span class="n">0</span></summary>
+          <p class="kb-zone-why">Closed out. Still here, still restorable if its reasons allow.</p>
+          <ul class="dl-list kb-drop" data-drop="dropped" aria-label="Dropped — drop a card here to drop it, with a reason"></ul>
+        </details>
+    </section>
+  </div>
+</section>
+
+<h2>Where each card came from</h2>
+<p class="dl-archive-note">Every task exactly as authored in <code>daily/days.json</code>, by the
+day it was written for. Cards on the board above were <em>moved</em> out of these lists, never
+copied — one task is one row in the database and one node in the page.</p>
+<p class="dl-archive-empty">One day on file so far — every card on the board above came from it.</p>
+
+<details class="dl-day" data-day="2026-08-25">
+  <summary>Tue 25 Aug 2026<span class="dl-count"></span><span class="dl-onboard"></span></summary>
   <div class="dl-body">
 
-    <div class="wl-donow" id="next-up" hidden>
-      <p class="lbl">Do next</p>
-      <p></p>
-    </div>
-
-    <div class="dl-group rolled" id="rolled-over" hidden>
-      <h3>Rolled over — unfinished from an earlier day</h3>
-      <p class="dl-why">Carried forward automatically from every earlier day still unticked. Tick one here and it ticks on its original day too.</p>
-      <ul class="dl-list"></ul>
-    </div>
-
-    <div class="dl-group blocking">
+    <div class="dl-group blocking" data-group="0">
       <h3>Blocking — the journey doc feeds the master, the master feeds the card</h3>
       <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
       <ul class="dl-list">
-        <li data-id="journey-doc" data-needs="" data-p="1" data-due="2026-08-25">
+        <li data-id="journey-doc" data-day="2026-08-25" data-group="0" data-ord="0" data-needs="" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Spend time on professional-journey-original.md — his own words, his own hand&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-journey-doc" data-id="journey-doc" />
           <label for="t20260825-journey-doc">
             <span class="dl-task">Spend time on <code>professional-journey-original.md</code> — his own words, his own hand</span>
@@ -61,7 +128,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="clone-card" data-needs="" data-p="1" data-due="2026-08-25">
+        <li data-id="clone-card" data-day="2026-08-25" data-group="0" data-ord="1" data-needs="" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Clone august_master_resume, rename the copy august_ic_master_resume&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-clone-card" data-id="clone-card" />
           <label for="t20260825-clone-card">
             <span class="dl-task">Clone <code>august_master_resume</code>, rename the copy <code>august_ic_master_resume</code></span>
@@ -75,7 +143,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="verify-dates" data-needs="clone-card" data-p="1" data-due="2026-08-25">
+        <li data-id="verify-dates" data-day="2026-08-25" data-group="0" data-ord="2" data-needs="clone-card" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Verify the clone kept the dates — VoltusWave Mar 2025 → Apr 2026, Deque Dec 2019 → Feb 2025&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-verify-dates" data-id="verify-dates" />
           <label for="t20260825-verify-dates">
             <span class="dl-task">Verify the clone kept the dates — VoltusWave Mar 2025 → <strong>Apr 2026</strong>, Deque Dec 2019 → Feb 2025</span>
@@ -89,7 +158,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="fix-el-paso" data-needs="clone-card" data-p="1" data-due="2026-08-25">
+        <li data-id="fix-el-paso" data-day="2026-08-25" data-group="0" data-ord="3" data-needs="clone-card" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Fix El Paso (paste sheet §14) — the v1 card calls it .NET; it is a Senior Java Developer role&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-fix-el-paso" data-id="fix-el-paso" />
           <label for="t20260825-fix-el-paso">
             <span class="dl-task">Fix El Paso (paste sheet §14) — the v1 card calls it .NET; it is a <strong>Senior Java Developer</strong> role</span>
@@ -103,7 +173,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="paste-1-10" data-needs="clone-card" data-p="1" data-due="2026-08-25">
+        <li data-id="paste-1-10" data-day="2026-08-25" data-group="0" data-ord="4" data-needs="clone-card" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Paste §§1–10 from the master résumé — headline, summary, three skills blocks, five experience roles&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-paste-1-10" data-id="paste-1-10" />
           <label for="t20260825-paste-1-10">
             <span class="dl-task">Paste §§1–10 from the <a href="../master/upgrad_resume.html">master résumé</a> — headline, summary, three skills blocks, five experience roles</span>
@@ -117,7 +188,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="first-export" data-needs="paste-1-10" data-p="1" data-due="2026-08-25">
+        <li data-id="first-export" data-day="2026-08-25" data-group="0" data-ord="5" data-needs="paste-1-10" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;First export — smoke-test the whole chain&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-first-export" data-id="first-export" />
           <label for="t20260825-first-export">
             <span class="dl-task">First export — smoke-test the whole chain</span>
@@ -131,7 +203,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="verify-pdf" data-needs="first-export,verify-dates,fix-el-paso,personal-info" data-p="1" data-due="2026-08-25">
+        <li data-id="verify-pdf" data-day="2026-08-25" data-group="0" data-ord="6" data-needs="first-export,verify-dates,fix-el-paso,personal-info" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Verify the exported PDF against all six checks&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-verify-pdf" data-id="verify-pdf" />
           <label for="t20260825-verify-pdf">
             <span class="dl-task">Verify the exported PDF against all six checks</span>
@@ -145,7 +218,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="personal-info" data-needs="clone-card" data-p="2" data-due="2026-08-25">
+        <li data-id="personal-info" data-day="2026-08-25" data-group="0" data-ord="7" data-needs="clone-card" data-p="2" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Check the Personal Information modal — Hyderabad · phone · email · LinkedIn abhisheikdeo&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-personal-info" data-id="personal-info" />
           <label for="t20260825-personal-info">
             <span class="dl-task">Check the Personal Information modal — Hyderabad · phone · email · LinkedIn <strong>abhisheikdeo</strong></span>
@@ -159,7 +233,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="paste-11-15" data-needs="clone-card" data-p="3" data-due="2026-08-25">
+        <li data-id="paste-11-15" data-day="2026-08-25" data-group="0" data-ord="8" data-needs="clone-card" data-p="3" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Correct the other four pre-2016 roles by hand — §11 CURA, §12 innRoad, §13 McDonald&#x27;s, §15 LyntonWeb&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-paste-11-15" data-id="paste-11-15" />
           <label for="t20260825-paste-11-15">
             <span class="dl-task">Correct the other four pre-2016 roles by hand — §11 CURA, §12 innRoad, §13 McDonald's, §15 LyntonWeb</span>
@@ -176,11 +251,12 @@
       </ul>
     </div>
 
-    <div class="dl-group parallel">
+    <div class="dl-group parallel" data-group="1">
       <h3>Parallel — does not wait on the card</h3>
       <p class="dl-why">The card work above is all manual UI work. Sourcing is not blocked by any of it, and with nothing in the pipeline there is no backlog reason to hold off.</p>
       <ul class="dl-list">
-        <li data-id="source-ic" data-needs="" data-p="2" data-due="2026-08-25">
+        <li data-id="source-ic" data-day="2026-08-25" data-group="1" data-ord="0" data-needs="" data-p="2" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Source 2–3 IC seats — Principal / Staff / Architect / Solution Architect / Senior Engineer&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-source-ic" data-id="source-ic" />
           <label for="t20260825-source-ic">
             <span class="dl-task">Source 2–3 IC seats — Principal / Staff / Architect / Solution Architect / Senior Engineer</span>
@@ -194,7 +270,8 @@
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="paste-jds" data-needs="" data-p="2" data-due="2026-08-25">
+        <li data-id="paste-jds" data-day="2026-08-25" data-group="1" data-ord="1" data-needs="" data-p="2" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Paste each job description (JD) here — every one gets the full build&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-paste-jds" data-id="paste-jds" />
           <label for="t20260825-paste-jds">
             <span class="dl-task">Paste each job description (JD) here — every one gets the full build</span>
@@ -211,34 +288,12 @@
       </ul>
     </div>
 
-    <div class="callout good">
-      <b>Pre-flight green — no action needed.</b> Checked on this render, not quoted from memory: all <strong>10</strong> <code>quick-*</code> ids present in <code>master/upgrad_resume.html</code>, all parse with no silent skip, skills 6 · 17 · 6 and experience 10 · 6 · 4 · 3 · 4 = <strong>27</strong> bullets, zero <code>[fill in metric]</code>. Nothing in the HTML is blocking an export — only the card is.
-    </div>
-
     <div class="callout">
       <b>Deliberately not on this list.</b> The confirm-or-reject items — roughly 300 customers versus instances, the 70–80% consolidation, two Rocket metrics, where the +65% conversion lift attaches, the 100,000-concurrent wording, the graph neural network, the narrative guardrails, the 27 ms / P95 16 ms pairing, and the nine bullets carrying scale markers instead of digits — are standing decisions only you can settle, not day-work. They live in <a href="../CLAUDE.md">CLAUDE.md</a> and none of them block today's export.
     </div>
 
-    <details class="dl-moved" id="moved-parked" hidden>
-      <summary>Parked <span class="n">0</span></summary>
-      <ul class="dl-list"></ul>
-    </details>
-
-    <details class="dl-moved" id="moved-pushed" hidden>
-      <summary>Pushed to a later day <span class="n">0</span></summary>
-      <ul class="dl-list"></ul>
-    </details>
-
-    <details class="dl-moved" id="moved-dropped" hidden>
-      <summary>Dropped <span class="n">0</span></summary>
-      <ul class="dl-list"></ul>
-    </details>
-
   </div>
 </details>
-
-<h2>Earlier days</h2>
-<p class="dl-archive-empty">No earlier days yet — this is day one of the log.</p>
 
 <dialog id="move-dialog" class="dl-dialog">
   <form>

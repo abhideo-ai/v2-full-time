@@ -264,7 +264,7 @@ def render_board(days: list[dict]) -> str:
     path. Every card also carries Park / Push / Drop buttons that do exactly the same thing.
     <strong>Nothing leaves the board until you have given at least one reason</strong>: a drop is a
     request, never a save.</p>
-  <p class="kb-say" id="kb-say" role="status" aria-live="polite"></p>
+  <p class="kb-say" id="kb-say" role="status" aria-live="polite" hidden></p>
 
   <div class="wl-donow" id="next-up" hidden>
     <p class="lbl">Do next</p>

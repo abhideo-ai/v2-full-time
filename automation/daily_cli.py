@@ -95,10 +95,13 @@ def build_view(doc: dict, state: dict, today: str) -> dict:
         t["done"] = t["state"].get("done") is True
         t["waiting"] = not t["done"] and not t["out"] and bool(blockers)
 
-    today_day = days[0]["date"] if days else today
+    # TODAY, never "the newest day in days.json" — those differ whenever nothing
+    # was authored for today, and this tool answers "what is due today". The
+    # page does the same thing from the browser clock; the two must agree.
+    today_day = today
     active = [t for t in tasks if t["day"] == today_day and not t["out"]]
     rolled = [t for t in tasks
-              if t["day"] != today_day and not t["done"] and not t["state"].get("moved")]
+              if t["day"] < today_day and not t["done"] and not t["state"].get("moved")]
     for t in rolled:
         t["rolled"] = True
     current = active + rolled

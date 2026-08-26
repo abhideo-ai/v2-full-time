@@ -300,9 +300,12 @@
 
   <h2>Findings from the verification pass</h2>
 
-  <p>Three things surfaced when the changed lines were checked back against
-  <code>professional-journey.md</code> and the two live card dumps. None is a fabrication, and
-  none is proposed for removal — they are recorded because he is the one who settles them.</p>
+  <p>Seven things surfaced when the changed lines were checked back against
+  <code>professional-journey.md</code>, the ten case studies and the two live card dumps. None is a
+  fabrication, and none is proposed for removal — they are recorded because he is the one who
+  settles them. <b>Findings 4 to 7 were added by the adversarial verification pass on 26 August
+  2026</b>, which also re-queried o9's careers system directly; that check is recorded in
+  <a href="research.html#verification">research.html</a> and moved one company figure.</p>
 
   <p class="callout warn"><b>1. The Deque section now carries two client counts that are 15×
   apart.</b> Bullet 1 says <em>"approximately 300 enterprise instances"</em> and the new bullet 6
@@ -335,6 +338,51 @@
   decide on, not as an error: the argument for the swap is real, and so is the cost, which is
   itemised above.</p>
 
+  <p class="callout warn"><b>4. "Tokenizer and reliability drift" is not the wording the source
+  uses, and it is the one line on this résumé most likely to be misread in a room.</b> KQ4 names
+  two drift triggers precisely: <em>tokenizer drift</em> on vocabulary and frequency, which
+  <em>"triggers a retrain"</em>, and <em>calibration drift</em> — measured on reliability curves
+  and per-tenant reliability slices — which <em>"triggers recalibration"</em>. "Reliability drift"
+  sits between the two and belongs to neither; a platform architect will hear it as
+  service-reliability, not model calibration. It also contradicts this page's own ramp-item list
+  below, which says <em>"tokenizer and calibration drift are real"</em>. Two corrections are
+  available and both are already true: <b>calibration drift</b> is the source's term, and
+  calibration drift triggers <em>recalibration</em> rather than the weekly retrain the bullet
+  attaches it to. <b>His call. The bullet is unedited.</b></p>
+
+  <p class="callout warn"><b>5. "Kubernetes and Terraform … on ECS Fargate" states an
+  architecture that does not exist.</b> The claim is user-confirmed and safe; only the
+  preposition is wrong. Both live card dumps and <code>master/merge_proposal.html</code> put the
+  three in parallel — <em>"Amazon Web Services on Kubernetes, Terraform, Elastic Container Service
+  Fargate at 70% Spot"</em> — never Kubernetes running on ECS Fargate, which are alternative
+  container orchestrators. On a seat whose first core requirement is architecture, this is the
+  kind of line an interviewer stops on. <b>His call; nothing was rewritten.</b></p>
+
+  <p class="callout warn"><b>6. The summary welds a Teletext throughput figure onto a different
+  Teletext problem, and drops its qualifier.</b> The line reads <em>"entity resolution over 25
+  supplier catalogues on a platform serving 2–3 million requests daily in 2016"</em>.
+  <code>professional-journey.md</code> records the 2–3 million under the Artirix and
+  Elasticsearch-cache work, as <em>"at peak, we served 2-3 million requests per day"</em> — a
+  peak, not a daily rate. The GIATA entity-resolution work is a separate problem in the same
+  document and carries no volume figure at all. <a href="bullets_for_upgrad.html">The Teletext
+  block</a> already warns that this number must not migrate onto the pipelines in conversation;
+  the summary migrated it in writing. Separately, <b>"field-level lineage"</b> in the same
+  sentence rests on an open marker — the journey document describes the 2012 work and then asks
+  <em>"Did it ship? Was it used by leadership?"</em> That makes it unverified, not false, so it
+  stays; it is new to a résumé here and should be answerable.</p>
+
+  <p class="callout warn"><b>7. The Teletext re-vector moved away from the framing the journey
+  document prescribes, and one hygiene root echo was reintroduced.</b> The phrase <em>"entity
+  resolution across 25 heterogeneous supplier catalogues"</em> is the journey document's, but the
+  warning immediately after it is too: <em>"the honest framing is build-and-buy, not build. You
+  did not write the matching algorithm — GIATA did."</em> The master's <em>"automating the
+  pipeline … with human approval retained"</em> carried that; the new wording reads closer to
+  having built the matching. The bullet still names GIATA, which is what keeps it honest.
+  <b>Separately:</b> the Deque Aurora bullet now says <em>"cutting backups 3–4 hours daily"</em>
+  while <b>Cut</b> leads a Teletext bullet on the same page — the same root collision the summary
+  was reworded to avoid when "Cut infrastructure cost" became "Brought infrastructure cost down".
+  <em>Trimmed</em> is verified free and closes it.</p>
+
   <h2>Open claims — untouched, and his call alone</h2>
 
   <p class="note">These are surfaced, never rewritten, and never removed on anyone else's
@@ -357,6 +405,14 @@
       screen-load improvement, is still unused.</li>
     <li><b>"500 to 100,000 concurrent users"</b> — not on this version, because the whole bullet
       was dropped. The wording is unchanged on the master.</li>
+    <li><b>"Growing revenue 8% month over month"</b> — on this version, unchanged from the master,
+      and open in the journey document: <em>"was that sustained month-over-month growth, or a
+      one-time 8% lift? Sustained 8% MoM compounds to ~150% a year, which is a very large claim."</em>
+      Added to this list by the verification pass because it sits in the same Teletext bullet that
+      was re-vectored for this seat, which puts fresh attention on it.</li>
+    <li><b>The "2–3 million requests daily" figure</b> — his own note says <em>at peak</em>, and the
+      résumé says daily. See finding 6. It is the only throughput number anywhere in the record,
+      which is exactly why the qualifier matters.</li>
   </ul>
 
   <p class="callout danger"><b>The one thing that runs through every AI bullet on this
@@ -369,6 +425,13 @@
   <h2>Before this seat is sent</h2>
 
   <ul class="checks">
+    <li><b>Decide findings 4 to 7 above.</b> Two are wording — <em>reliability drift</em> and
+      <em>Kubernetes on ECS Fargate</em> — and both are cheap to correct in
+      <code>upgrad_resume.html</code> before the next export, because the underlying claims are
+      already true and confirmed. Two are attribution — the merged Aurora and Amazon Relational
+      Database Service numbers, and <em>20+ enterprise clients</em> sitting beside
+      <em>approximately 300 instances</em>. Nothing here was rewritten on anyone else's
+      initiative.</li>
     <li><b>El Paso still reads .NET on the card.</b> It is a Java, JavaServer Pages and Java
       Enterprise Edition role. On a posting whose first core requirement is 10+ years in software
       architecture, that entry hides four years of enterprise Java platform work. It is

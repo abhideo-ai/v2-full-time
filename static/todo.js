@@ -41,6 +41,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const TODAY = iso(new Date());
   const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+  // LOCAL time, not toISOString(): a UTC stamp read back east of Greenwich puts
+  // an evening tick on yesterday, and "was this done today" is exactly the
+  // question the board asks of it.
+  const stamp = () => {
+    const d = new Date(), p = n => String(n).padStart(2, "0");
+    return `${iso(d)}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  };
+  const actedToday = ts => typeof ts === "string" && ts.slice(0, 10) === TODAY;
   const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const MO = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   // Same shape as daily.py's strftime, so the board header and a day heading
@@ -146,7 +154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const clearMove = () => {
       delete t.moved; delete t.reasons; delete t.note; delete t.until; delete t.moved_at;
     };
-    if (op.action === "done") { t.done = true; t.done_at = new Date().toISOString(); clearMove(); }
+    if (op.action === "done") { t.done = true; t.done_at = stamp(); clearMove(); }
     else if (op.action === "undone") { t.done = false; delete t.done_at; }
     else if (op.action === "restored") { clearMove(); }
     else {
@@ -154,7 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       t.reasons = op.reasons;
       t.note = op.note;
       t.until = op.until;
-      t.moved_at = new Date().toISOString();
+      t.moved_at = stamp();
     }
   };
 
@@ -539,13 +547,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (h) h.textContent = pretty(TODAY);
   }
 
-  // Board membership, decided ONCE, here: today's tasks, plus everything from
-  // an earlier day that is neither done nor moved out. That is rollover — and
-  // it is a MOVE, not a clone, so one task is one node and the whole class of
+  // Board membership, decided ONCE, here. Three ways on, and no fourth:
+  //
+  //   * authored for today;
+  //   * ROLLED OVER — from an earlier day, neither done nor moved out;
+  //   * ACTED ON TODAY — ticked or moved out at some point today. Without this
+  //     clause the Done lane empties itself on every refresh: rollover quite
+  //     correctly refuses to carry a finished task forward, so the card you
+  //     just ticked would drop off the board the moment you reloaded.
+  //     done_at / moved_at are already stored; nothing new is persisted.
+  //
+  // It is a MOVE, not a clone, so one task is one node and the whole class of
   // bug where two nodes disagree about one database row cannot happen.
   entries.forEach(e => {
     const s = st(e.key);
-    e.onBoard = e.dayId === TODAY || (e.dayId < TODAY && s.done !== true && !s.moved);
+    e.onBoard = e.dayId === TODAY
+      || (e.dayId < TODAY && s.done !== true && !s.moved)
+      || actedToday(s.done_at) || actedToday(s.moved_at);
     e.rolled = e.onBoard && e.dayId !== TODAY;
     if (e.rolled) {
       const meta = e.li.querySelector(".dl-meta");

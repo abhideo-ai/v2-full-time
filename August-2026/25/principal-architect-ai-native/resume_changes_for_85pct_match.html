@@ -67,7 +67,7 @@
         a decade apart from the first.</td>
     </tr>
     <tr>
-      <td><code>llm-agentic</code><br><span class="dim">LLM-driven and agentic service interfaces</span></td>
+      <td><code>llm-agentic</code><br><span class="dim">Large language model (LLM)-driven and agentic service interfaces</span></td>
       <td class="num">0.20</td><td class="num">9.0</td>
       <td>Its highest-weighted evidence, the LangGraph and FastAPI orchestration layer, moves from
         a skills chip into an experience bullet for the first time. Model Context Protocol (MCP)
@@ -101,12 +101,11 @@
     </tr>
   </table>
 
-  <p class="note"><b>A data note on <code>score.json</code>, worth knowing before anyone recomputes
-  this.</b> Its <code>score_out_of_10</code> field is an integer and reads 8, 8, 9, 8, 8, 8. Those
-  integers weight out to 82.0, not 84.9. The half-points that actually produce 84.9 live only in
-  the adjudication prose, which states the arithmetic explicitly. The scores above are the prose
-  ones, because those are the ones that reconcile. Anyone re-scoring should write the halves into
-  the field rather than round them away.</p>
+  <p class="note"><b>These six figures are read straight out of <code>score.json</code>, not
+  recomputed.</b> Its <code>scores</code> array carries the weights and the
+  <code>score_out_of_10</code> values verbatim &mdash; 8, 8.5, 9, 8.5, 8.5, 8.5 against weights
+  summing to exactly 1.00 &mdash; and they weight out to the <code>weighted_total</code> the same
+  file records, 84.9. Nothing in this table is derived.</p>
 
   <h2>What changed, and which criterion each change serves</h2>
 
@@ -114,14 +113,19 @@
   <div class="diff-row"><div class="diff-label">Master</div>
     <div class="diff-old">Hands-on Principal Architect · 19+ yrs · Java + Spring Boot ·
       Multi-tenant SaaS + AI-powered systems · Neptune + GNN · LLM · HIPAA, ISO 27001 ·
-      AI-Leveraged Delivery</div></div>
+      AI-Leveraged Delivery (Claude Code + OpenAI Codex)</div></div>
   <div class="diff-row"><div class="diff-label">This seat</div>
     <div class="diff-new">Hands-on Principal Architect · 19+ yrs · AI-Native + Agentic Systems ·
       Vector Retrieval + Semantic Search · Python (FastAPI, LangChain, LangGraph) · Neptune + GNN ·
-      Java + Spring Boot · HIPAA, ISO 27001 · AI-Leveraged Delivery</div></div>
-  <p>Java moves from word position four to position eleven. It does not leave. The four chips
-  ahead of it are the posting&rsquo;s four architecture bullets in the posting&rsquo;s own order.
-  The graph neural network (GNN) chip stays where it was &mdash; it is settled, it is real, and
+      Java + Spring Boot · HIPAA, ISO 27001 · AI-Leveraged Delivery (Claude Code + OpenAI
+      Codex)</div></div>
+  <p>Counting the chips the headline separates with a middle dot, Java moves from the
+  <b>third of eight</b> to the <b>seventh of nine</b>. It does not leave. Two of the four chips
+  that move ahead of it are the posting&rsquo;s own vocabulary &mdash; <em>AI-Native + Agentic
+  Systems</em> and <em>Vector Retrieval + Semantic Search</em>; the other two, the Python
+  orchestration chip and <em>Neptune + GNN</em>, were already in the master and simply sit earlier
+  now. The order is not the posting&rsquo;s bullet order, which starts at vector databases. The
+  graph neural network (GNN) chip stays where it was &mdash; it is settled, it is real, and
   every reader who reaches it asks about it, which is the point of a headline.</p>
 
   <h3>Summary &mdash; rewritten around the retrieval path</h3>
@@ -189,7 +193,8 @@
   because that is what it was: the vendor was a search-technology company whose engine sat in the
   critical path of the pricing flow, and his own spoken script at
   <code>professional-journey.md</code> line 168 already says &ldquo;replacing a paid third-party
-  <b>search</b> provider with our own Elasticsearch tier&rdquo;. And <em>ELK cache</em> narrows to
+  <b>search</b> provider with our own Elasticsearch tier&rdquo;. And <em>ELK cache</em> &mdash; ELK
+  being Elasticsearch, Logstash and Kibana &mdash; narrows to
   an <em>Elasticsearch retrieval tier</em> &mdash; one component named instead of three, which is a
   smaller claim, and one that happens to use the posting&rsquo;s vocabulary for a vector data
   access layer: cache-aside reads, filtering, sorting.</p>
@@ -202,7 +207,11 @@
   platform strategy, a horizontal architecture roadmap, and build-versus-buy advisory &mdash; all
   three lifted from the posting&rsquo;s own responsibilities. Business &amp; Delivery trades Agile
   and Scrum delivery management for design-packet and pre-registered acceptance-criteria
-  discipline. Three labels also expand an acronym the master left bare.</p>
+  discipline. Five labels are reworded rather than replaced, and each of the five expands an
+  acronym the master left bare &mdash; application programming interfaces, graph neural network
+  and virtual private cloud in Engineering Excellence, the Health Insurance Portability and
+  Accountability Act (HIPAA) and the Web Content Accessibility Guidelines (WCAG) in Business
+  &amp; Delivery.</p>
 
   <h2>What was dropped, and what it cost</h2>
 
@@ -268,8 +277,9 @@
   <table class="summary">
     <tr><th>Criterion</th><th>Verdict</th><th>The gap, and what kind it is</th></tr>
     <tr><td><code>vector-db</code></td><td><span class="pill yellow">All ramp</span></td>
-      <td>No Pinecone, Weaviate, Milvus, pgvector, Qdrant or FAISS in production; no approximate
-        nearest-neighbour engine internals (HNSW parameters, quantisation, dimensionality); no
+      <td>No Pinecone, Weaviate, Milvus, pgvector, Qdrant or FAISS (Facebook AI Similarity Search)
+        in production; no approximate nearest-neighbour engine internals &mdash; the parameters of a
+        Hierarchical Navigable Small World (HNSW) graph index, quantisation, dimensionality; no
         corpus-scale figure &mdash; how many vectors, at what queries per second. The posting names
         the <em>category</em>, not a product, and he architected a vector serving path end to end.
         <b>Six of the seven gaps close with reading and a weekend of hands-on. The seventh, corpus
@@ -352,6 +362,15 @@
       <td class="num"><b>~92.5</b></td></tr>
   </table>
 
+  <p class="note"><b>Why the column does not add up to the total, and why that is correct.</b>
+  Adding the per-row points to 84.9 gives 90.7, not 90.5. Both the rows and the two destinations
+  are quoted from <code>score.json</code>, which explains the gap itself: the per-criterion points
+  were computed against an earlier <b>83.3</b> baseline, and its own note says that recomputed from
+  84.9 with <code>standards-adoption</code> already banked at 8.5 they land at
+  <i>&ldquo;<b>~90.5</b> and <b>~92.5</b> &mdash; the same destinations, reached with 1.6 fewer
+  points of pending work&rdquo;</i>. The destinations are the figures to trust; the row points are
+  the older arithmetic that reached them.</p>
+
   <p><strong>The remaining ~2.5 points to 95 require three things he does not have:</strong> a
   dedicated vector-database product run in production, a semantic query router he shipped, and a
   measured outcome for the coding-agent rollout. The first two are absent experience. The third is
@@ -374,8 +393,10 @@
   while the résumé says only Principal Software Architect &mdash; one title, true across the
   card, LinkedIn and Naukri.</p>
 
-  <p class="callout warn"><strong>2. &ldquo;20+ enterprise clients&rdquo; sits one line above
-  &ldquo;approximately 300 enterprise instances&rdquo;.</strong> Both are now in the Deque section.
+  <p class="callout warn"><strong>2. &ldquo;20+ enterprise clients&rdquo; sits one line below
+  &ldquo;approximately 300 enterprise instances&rdquo;.</strong> Both are now in the Deque section
+  &mdash; the 300 figure opens it in the <b>Implemented</b> bullet, and the 20+ figure is the
+  <b>Exposed</b> bullet directly under it.
   <code>professional-journey.md</code> line 532 flags that exact phrase: the résumé
   &ldquo;understates this by an order of magnitude and needs correcting throughout&rdquo;. The two
   figures may well be reconcilable &mdash; clients who built against the shared interfaces need not
