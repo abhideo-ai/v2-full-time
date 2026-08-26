@@ -8,6 +8,7 @@ are code, not migrations.
 ```
 db/
   README.md          ← you are here
+  DESIGN-bullets.md  the forward model: database as source, HTML as view
   schema.sql         the daily log's schema, from scratch
   verify.sql         "is the database in the state I think it is?" — read-only
   migrations/        numbered, applied in order, each one idempotent
@@ -17,11 +18,27 @@ db/
     004_jobs_tracker_v2.sql
     005_move_v2_seats.sql
     006_restore_v1_rows.sql
+    007_source_url_nullable.sql
+    008_source_note_column.sql
+    009_application_events.sql
+    010_resume_bullets.sql
+    011_resume_versions.sql
+  operations/        re-runnable, once per event, for the rest of the search
+    mark_applied.sql
+    withdraw.sql
+    set_source_url.sql
+    log_event.sql
+    backfill_status_events.sql   repair — see "when a bare UPDATE gets used"
 ```
 
 Migrations keep their own subdirectory so the numeric ordering is the first thing
 you see. `schema.sql` is deliberately not numbered: it builds `v2_daily` from
 nothing, and a fresh run of it already includes everything 001 and 002 added.
+
+**Migrations vs operations.** A migration runs *once* and changes the shape of the
+database. An operation runs *every time the thing it describes happens* — a seat is
+sent, a seat is withdrawn, a recruiter writes — and changes one row plus its
+history. Both are idempotent; only operations are meant to be run again tomorrow.
 
 ---
 
@@ -55,6 +72,73 @@ connection string rather than of every query remembering to exclude a status.
 | 004 | *creates* `jobs_tracker_v2` | `psql -d postgres -f db/migrations/004_jobs_tracker_v2.sql` |
 | 005 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/005_move_v2_seats.sql` |
 | 006 | `jobs_tracker` | `psql -d jobs_tracker -f db/migrations/006_restore_v1_rows.sql` |
+| 007 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/007_source_url_nullable.sql` |
+| 008 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/008_source_note_column.sql` |
+| 009 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/009_application_events.sql` |
+| 010 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/010_resume_bullets.sql` |
+| 011 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/011_resume_versions.sql` |
+
+**007–011 all target `jobs_tracker_v2`.** 007 made `source_url` nullable so a seat
+with no public listing stores NULL rather than prose; 008 added `source_note` to
+hold the reason instead. 009 created `application_events`, the correspondence
+timeline. 010 created `resume_bullets`, derived and read-only. 011 added résumé
+versioning, whose trigger makes a sent résumé uneditable.
+
+---
+
+## Operations — the ones you run again tomorrow
+
+All five take `jobs_tracker_v2`. Every one writes **both** the row and its history;
+that pairing is the whole point of the directory.
+
+| operation | when | writes |
+|---|---|---|
+| `mark_applied.sql` | a seat is sent | `applications.status` + `applied_at` + a `status_events` row |
+| `withdraw.sql` | he steps away, with a reason | status + `status_events` + a timeline event |
+| `set_source_url.sql` | a posting URL arrives or is cleared | `applications.source_url` |
+| `log_event.sql` | anything happens — InMail, reply, document, call | one `application_events` row |
+| `backfill_status_events.sql` | repair only | missing `status_events` rows |
+
+```bash
+# send
+psql -d jobs_tracker_v2 -v ON_ERROR_STOP=1 \
+     -v slug="'<slug>'" -f db/operations/mark_applied.sql
+
+# record what happened — actor is REQUIRED, detail holds the message VERBATIM
+psql -d jobs_tracker_v2 -v ON_ERROR_STOP=1 -c "select
+     set_config('ev.slug','<slug>',false), set_config('ev.kind','inbound',false),
+     set_config('ev.actor','<who>',false), set_config('ev.summary','<one line>',false),
+     set_config('ev.detail','<verbatim>',false)" \
+  -f db/operations/log_event.sql
+```
+
+⚠ **Quoting.** `log_event.sql` details often contain apostrophes and quotes. Passing
+them through `-c` breaks in ways psql reports as a bewildering role-does-not-exist
+error. For anything longer than a line, write the `set_config` block to a `.sql`
+file with `$ev$…$ev$` dollar-quoting and pass two `-f` flags.
+
+### ⛔ When a bare UPDATE gets used
+
+`backfill_status_events.sql` exists because on 2026-08-26 two seats — Keyloop and
+Condé Nast — were moved with
+
+```sql
+update applications set status='applied', applied_at=now() where slug in (...);
+```
+
+instead of `mark_applied.sql`. The status landed and the history did not, exactly as
+`mark_applied.sql`'s own header warns: it writes the `status_events` row "which a
+bare UPDATE would forget — and that history is how *when did this go out* survives".
+Six seats had the row and two did not, and **nothing in `verify.sql` would ever have
+said so.**
+
+The backfill dates each event to the seat's own `applied_at`, never `now()` — a
+repair that stamps itself with the moment of repair destroys the one fact it was
+written to preserve. Same reasoning as "`updated_at` is never collateral damage".
+
+**The real fix is not that file. It is using the operations.** A status change made
+by hand is a status change with no story behind it, which is the v1 failure shape
+this directory was built to prevent.
 
 Always add `-v ON_ERROR_STOP=1`, and run from the repo root:
 
