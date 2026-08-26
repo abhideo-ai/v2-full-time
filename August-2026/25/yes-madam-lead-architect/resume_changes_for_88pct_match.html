@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Résumé changes for 88% match — Yes Madam</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page narrow" id="main">
+
+  <nav class="breadcrumb">
+    <a href="../../../index.html">Full-time JD workspace</a> ·
+    <a href="jd.html">Yes Madam — Lead Architect</a> ·
+    <span>Résumé changes</span>
+  </nav>
+
+  <p class="eyebrow">Technical score 88.375 · 32 lines changed</p>
+  <h1>Résumé changes for this seat</h1>
+  <p class="sub">Yes Madam — Lead Architect · what moved, which rubric criterion it serves, and
+  what it cost</p>
+
+  <p class="lede">This seat's <code>upgrad_resume.html</code> differs from the master in six of
+  its fifteen sections. This page says what each change is for, tied to the weighted rubric in
+  <code>score.json</code>; what was dropped to make room and what that costs; and — plainly —
+  whether 95 is reachable. Every figure here is either read out of <code>score.json</code> or
+  derived from its own arithmetic. Nothing is estimated.</p>
+
+  <div class="meta">
+    <span><b>Technical score</b> 88.375 / 100</span>
+    <span><b>Points lost</b> 11.625</span>
+    <span><b>Criteria</b> 7</span>
+    <span><b>Lines changed</b> 32</span>
+    <span><b>Sections touched</b> 6 of 15</span>
+    <span><b>Applicant Tracking System (ATS) hygiene score</b> 85</span>
+  </div>
+
+  <h2>The short version</h2>
+
+  <p class="callout good"><strong>Nothing on this rubric is capped by absent capability.</strong>
+  All seven criteria record the same verdict in their own words — <em>no capability cap</em>. The
+  11.625 missing points are recency, evidence and named-tool gaps, not things he cannot do. That
+  is the good half.</p>
+
+  <p class="callout warn"><strong>95 is not honestly reachable on this posting, and no rewrite
+  gets there.</strong> The rubric puts the realistic post-lift ceiling at about 92. Three of the
+  losses cannot be closed by any edit to any file: his last hands-on Java seat ended February
+  2025; he has never used Grafana or Prometheus, which this posting names with no hedge; and he
+  has no sustained-production throughput number because he left before capturing one. An honest
+  88 that survives the room beats a fabricated 95 that does not.</p>
+
+  <p class="callout"><strong>What this seat's edit actually bought.</strong> It did not invent
+  anything. It <em>wrote down</em> confirmed work that was sitting in his live Hiration cards and
+  in direct confirmations, and had never reached the file the exporter writes from — containers,
+  Kubernetes, Terraform, Elastic Container Service (ECS) Fargate, Jenkins, GitHub Actions, and
+  the high-availability design. The rubric had recorded that invisibility as a loss worth
+  <b>0.75</b> weighted points and marked it <em>fully recoverable</em>. Seven of the eight items
+  it named are now on this seat's résumé.</p>
+
+  <h2>The rubric, and what each change is doing about it</h2>
+
+  <p class="note">Weights sum to 1.00 and none was changed. A criterion's contribution is
+  <code>weight × score × 10</code>; its loss is <code>weight × (10 − score) × 10</code>. Both
+  columns are that arithmetic, not a judgement.</p>
+
+  <div class="tablewrap">
+  <table class="summary">
+    <tr>
+      <th>Criterion</th><th>Weight</th><th>/10</th><th>Contributes</th><th>Loses</th>
+      <th>What this seat's résumé does</th>
+    </tr>
+    <tr>
+      <td><b>Java and Spring Boot depth</b></td>
+      <td class="num">0.20</td><td class="num">8.0</td>
+      <td class="num">16.000</td><td class="num">4.000</td>
+      <td>Summary now leads Java and Spring Boot straight into monolith decomposition. Deque
+        reordered so decomposition leads and <b>Spring Boot 2.x on Java 8/17</b> lands in
+        bullet 2. <b>Java + Spring Boot Microservices</b> promoted to line 1 of Engineering
+        Excellence.</td>
+    </tr>
+    <tr>
+      <td><b>Microservices, system design, distributed systems, high availability</b></td>
+      <td class="num">0.20</td><td class="num">9.5</td>
+      <td class="num">19.000</td><td class="num">1.000</td>
+      <td>New <b>Fortified</b> bullet — multi-availability-zone deployment, failover and disaster
+        recovery on the Go chat service and the two Amazon Kinesis streams. New skills lines for
+        <b>Microservices Decomposition</b> and <b>High Availability &amp; Disaster
+        Recovery</b>.</td>
+    </tr>
+    <tr>
+      <td><b>Scale, concurrency, resiliency, caching, messaging</b></td>
+      <td class="num">0.15</td><td class="num">8.75</td>
+      <td class="num">13.125</td><td class="num">1.875</td>
+      <td>Kinesis and Go bullets kept at the top of VoltusWave; <b>Caching Strategy</b> and
+        <b>Event-Driven &amp; Asynchronous Architecture</b> added as skills lines.
+        <b>No new performance claim was written</b> — the deduction here is a missing production
+        number, and no wording supplies one.</td>
+    </tr>
+    <tr>
+      <td><b>Amazon Web Services (AWS), Docker, Kubernetes, continuous integration and continuous
+        delivery (CI/CD)</b></td>
+      <td class="num">0.15</td><td class="num">9.5</td>
+      <td class="num">14.250</td><td class="num">0.750</td>
+      <td>New <b>Provisioned</b> bullet — ECS Fargate at 70% Spot, Kubernetes and Terraform as
+        the company-wide standard. New <b>Modernised</b> bullet at Deque — Jenkins to GitHub
+        Actions. New <b>Containers &amp; Infrastructure as Code</b> skills line. This is the
+        criterion the edit moves most.</td>
+    </tr>
+    <tr>
+      <td><b>Databases — Structured Query Language (SQL), non-relational (NoSQL), indexing,
+        optimisation</b></td>
+      <td class="num">0.10</td><td class="num">9.0</td>
+      <td class="num">9.000</td><td class="num">1.000</td>
+      <td>New <b>Reimagined</b> bullet — partition-key and indexing design across DynamoDB,
+        PostgreSQL and OpenSearch. New <b>Relational &amp; NoSQL Data Stores</b> and <b>Database
+        Performance</b> skills lines. <b>MySQL deliberately kept out of every skills line.</b></td>
+    </tr>
+    <tr>
+      <td><b>Observability and reliability</b></td>
+      <td class="num">0.10</td><td class="num">8.0</td>
+      <td class="num">8.000</td><td class="num">2.000</td>
+      <td>Observability line names <b>Datadog, Amplitude, Elasticsearch / Logstash / Kibana
+        (ELK)</b> — the honest answer, and 1 of the posting's 3 named tools. The Datadog bullet
+        is unchanged from the master. <b>Nothing was added here</b>, because the gap is two
+        products he has not used.</td>
+    </tr>
+    <tr>
+      <td><b>Technical leadership, mentoring, standards</b></td>
+      <td class="num">0.10</td><td class="num">9.0</td>
+      <td class="num">9.000</td><td class="num">1.000</td>
+      <td>New <b>Brokered</b> bullet — Go and DynamoDB adopted across 5 sub-teams, backed by
+        design-doc discipline. Two new leadership skills lines: <b>Technical Standards, Design
+        Reviews &amp; Architecture Governance</b> and <b>Mentorship of Senior Engineers &amp;
+        Tech Leads</b>, the group the posting names by name.</td>
+    </tr>
+    <tr class="total-row">
+      <td><b>Total</b></td><td class="num">1.00</td><td class="num">—</td>
+      <td class="num"><b>88.375</b></td><td class="num"><b>11.625</b></td>
+      <td></td>
+    </tr>
+  </table>
+  </div>
+
+  <h2>What changed, section by section</h2>
+
+  <h3>Summary — one paragraph, rebuilt around the posting's loudest requirement</h3>
+
+  <p><b>Serves:</b> Java and Spring Boot depth · microservices and system design.</p>
+
+  <p>The Java-and-Spring-Boot opening sentence is the master's, unchanged. What follows it is
+  not: <em>Decomposed a monolith into 10–15 microservices</em> now sits immediately after it,
+  because microservices decomposition is the posting's single loudest requirement and the master
+  buried it. The Amura detail sentence — causal inference, leakage-safe machine learning, 9–10
+  years of patient history, self-hosted models — came out and was replaced with the chat-platform
+  stack the posting actually asks for: high-concurrency Go, two-stream Kinesis, multi-availability-zone
+  failover and disaster recovery, Kubernetes and Terraform adopted company-wide.</p>
+
+  <p><b>What it cost:</b> Amura survives as one compressed clause. The <em>ten analytics and
+  artificial intelligence (AI) services</em> phrase is still there, so the headline's graph
+  neural network (GNN) and large language model (LLM) claims still have something behind them and the
+  posting's <em>Exposure to AI/GenAI-enabled applications</em> good-to-have is still answered.
+  What is gone from the summary is the methodological depth — the statistics, the leakage
+  safety, the self-hosting. On a consumer marketplace architect seat that reads as unrelated
+  rather than impressive, so the cost is low. On an AI-first seat it would be the wrong
+  trade.</p>
+
+  <h3>Key Skills — Technology Leadership &amp; Strategy · 2 lines swapped, 6 in and 6 out</h3>
+
+  <p><b>Serves:</b> technical leadership, mentoring, standards.</p>
+
+  <p>Out: <em>Decision-Intelligence Platforms (Event-Sourced + Graph + AI)</em> and <em>Data
+  Platform &amp; Analytics Leadership</em>. Both are Amura-flavoured and near-invisible to this
+  seat. In: <em>Technical Standards, Design Reviews &amp; Architecture Governance</em>, against
+  the posting's <em>define and drive system architecture, technical standards, design
+  principles</em> and <em>lead architectural reviews</em>; and <em>Mentorship of Senior Engineers
+  &amp; Tech Leads</em>, a group the posting names verbatim.</p>
+
+  <p><b>What it cost:</b> nothing structural — six lines in, six out, no page-length change. Both
+  new lines are backed by bullets that already exist: the Brokered adoption bullet at VoltusWave
+  and the Coached bullet at Rocket Software. This is the rubric's own diagnosis on this
+  criterion, which is that the standards work is in his bullets and the <em>label</em> is what is
+  missing.</p>
+
+  <h3>Key Skills — Engineering Excellence · 15 of 17 lines changed, reordered top to bottom</h3>
+
+  <p><b>Serves:</b> every criterion; most of all Java/Spring Boot, cloud and containers, and
+  databases.</p>
+
+  <p>This block was rebuilt in the posting's own order. <b>Java + Spring Boot Microservices</b>
+  moves to line 1. Seven lines are genuinely new and each answers a named requirement:
+  <b>Microservices Decomposition</b>; <b>Representational State Transfer (REST) Application
+  Programming Interface (API) Design</b>; <b>High Availability &amp; Disaster Recovery</b>;
+  <b>Caching Strategy</b> (naming Redis, the posting's stated NoSQL preference); <b>Relational
+  &amp; NoSQL Data Stores</b>; <b>Database Performance</b>; and <b>Containers &amp; Infrastructure
+  as Code</b> (Docker, Kubernetes, Terraform, ECS Fargate). Eight more lines changed only by
+  expanding an acronym or renaming a label — Amazon Web Services, single sign-on, role-based
+  access control, ELK, graph neural network and large language model are all spelled out on
+  first use now, which closes a hygiene gap the master carried.</p>
+
+  <p><b>What it cost:</b> seven lines came out to make room — <em>Hands-on Player-Coach
+  Delivery</em>, four Amura statistics and machine-learning lines (<em>Statistical Rigor in
+  Production AI</em>, <em>Leakage-Safe Machine Learning</em>, <em>LLM Productionisation</em>,
+  <em>Self-Hosted Models In-VPC</em> — in the virtual private cloud), <em>Vector &amp; Columnar Data Stores</em>, and <em>Shared
+  Platform APIs</em>. Only six of those seven are genuine removals: <em>Shared Platform APIs</em>
+  was folded into the new REST API Design line, which carries versioning, backward compatibility
+  and shared platform contracts together, so the capability moved rather than vanished. The
+  four AI-methodology lines are the real cost, and they are the reason this résumé version should
+  never be sent to an AI-platform seat without being re-vectored back.</p>
+
+  <h3>Key Skills — Business &amp; Delivery · 1 swap, 1 expansion</h3>
+
+  <p><b>Serves:</b> technical leadership · the posting's <em>identify and address technical debt
+  and architectural bottlenecks</em> responsibility.</p>
+
+  <p><em>Accessibility Compliance (Web Content Accessibility Guidelines 2.2 Level AA)</em> came out and <em>Technical Debt &amp;
+  Bottleneck Remediation</em> went in. Accessibility is Deque's whole domain and it is genuinely
+  strong material — it is simply invisible to a consumer beauty-and-wellness platform. Separately,
+  <b>HIPAA</b> is now spelled out as <em>Health Insurance Portability and Accountability Act</em>,
+  closing a pre-existing master gap where the acronym was never expanded outside the headline's
+  tagline exception.</p>
+
+  <h3>VoltusWave, Principal Software Architect · 10 bullets down to 7</h3>
+
+  <p><b>Serves:</b> high availability · databases · cloud and containers · technical
+  leadership.</p>
+
+  <p>Three master bullets are kept exactly as written — the Kinesis two-stream design, the Go
+  concurrency bullet, and Datadog observability. Four are new, and each maps to a named
+  requirement:</p>
+
+  <ul>
+    <li><b>Fortified</b> — multi-availability-zone deployment, load balancing, failover and
+      disaster recovery on the Go service and the two Kinesis streams, for HIPAA. Answers
+      <em>Experience designing high-availability and high-performance systems</em>, which
+      previously had no bullet behind it at all.</li>
+    <li><b>Reimagined</b> — partition-key and indexing design across DynamoDB, PostgreSQL and
+      OpenSearch. Answers <em>database performance, indexing, caching, optimization</em>.</li>
+    <li><b>Provisioned</b> — ECS Fargate at 70% Spot, with Kubernetes and Terraform as the
+      company-wide standard. Answers <em>Docker and Kubernetes</em> plus cloud-native
+      modernization and cost efficiency in one line. Note the framing: adoption as a standard,
+      not a list of tools he touched — which is the shape the posting's standards language asks
+      for.</li>
+    <li><b>Brokered</b> — Go and DynamoDB across 5 sub-teams. Answers <em>define and drive
+      technical standards</em> and <em>influence technical decisions</em>.</li>
+  </ul>
+
+  <p><b>What it cost — this is the largest trade on the page.</b> Seven bullets came off: patient
+  onboarding, the retrieval-augmented generation pipeline, the Claude Code and OpenAI Codex
+  rollout, the adversarial self-review of ten analytics services, confounder-gated cohort
+  comparisons, the relapse early-warning model, and protected health information self-hosted
+  in the virtual private cloud. That is the entire Amura artificial-intelligence programme,
+  removed from the experience section for this seat.</p>
+
+  <p class="callout warn"><b>Be clear about what that costs.</b> The posting's only AI line is a
+  good-to-have — <em>Exposure to AI/GenAI-enabled applications</em> — and the summary still
+  carries the ten-services clause, so the good-to-have is still answered. But the headline is
+  <b>unchanged</b> and still reads <code>Neptune + GNN · LLM</code>, so a reader arrives at an
+  experience section that no longer backs word four of the headline. The rubric raised exactly
+  this and floated swapping the headline phrase for a microservices one on this seat. <b>That was
+  not done.</b> It is a live inconsistency, it is his call, and it is the one thing on this page
+  most worth a decision before sending.</p>
+
+  <h3>Deque Software · 6 bullets up to 10</h3>
+
+  <p><b>Serves:</b> Java and Spring Boot depth · microservices · REST APIs · continuous
+  integration and delivery · databases.</p>
+
+  <p>Deque is where this posting's core actually lives, so this block grew rather than shrank —
+  and it grew from the verified card-merge superset, not from anything new. Nothing was dropped.
+  Two bullets are carried untouched, four were reworded in place keeping their leading verbs, and
+  four are new to this file:</p>
+
+  <ul>
+    <li><b>Exposed</b> — shared platform APIs to 20+ enterprise clients, Jira integration, API
+      versioning, backward compatibility, customer-specific frontends on one Spring Boot backend.
+      Answers <em>Strong understanding of REST APIs and API design principles</em> and <em>define
+      and maintain standards for API design</em>.</li>
+    <li><b>Modernised</b> — Jenkins to GitHub Actions, ISO 27001 — the International Organization for
+      Standardization information-security standard — and 50% faster releases. Answers
+      <em>CI/CD pipelines and DevOps practices</em> and the security-and-compliance good-to-have,
+      and it supplies the named continuous-integration runner the rubric had recorded as
+      missing.</li>
+    <li><b>Slashed</b> — a Puppeteer regression framework, over 50% off regression testing
+      time.</li>
+    <li><b>Accelerated</b> — time-to-market 2+ weeks per sprint across engineering, quality
+      assurance (QA) and support.</li>
+  </ul>
+
+  <p>The reorder matters as much as the additions: decomposition into 10–15 services now leads,
+  and <em>Spring Boot 2.x and Java 8/17</em> lands in bullet 2 rather than being absent from the
+  first half of the block. The posting asks for Java, Spring Boot and microservices in that
+  order and never asks for multi-tenancy at all.</p>
+
+  <p><b>What it cost:</b> length. Deque is now the longest block on the résumé at ten bullets. The
+  exported Portable Document Format (PDF) résumé must still come in at three pages or fewer — the export for this workspace verified
+  clean, but any further addition here is the thing most likely to break that.</p>
+
+  <h2>Ramp item, capability cap, or neither</h2>
+
+  <p class="callout danger"><b>The distinction that matters most on this page.</b> A ramp item is
+  a named tool he has not used where he plainly has the underlying capability — the rulebook says
+  score that generously. A capability cap is a genuinely core required technology that is absent,
+  and it caps the score honestly. <b>This rubric records no capability cap on any of its seven
+  criteria.</b> But "no capability cap" is not "a rewrite closes it", and the two must not be
+  confused. Three of the four groups below cannot be moved by editing any file.</p>
+
+  <h3>1 · Closed by this seat's re-vector — the work existed, the document did not say so</h3>
+
+  <p>These are the only gaps a rewrite could ever have closed, and they are what the 32 changed
+  lines actually did. Every one is confirmed work being written down for the first time.</p>
+
+  <ul>
+    <li>Containers, Kubernetes, Terraform, ECS Fargate — absent from the master, present here</li>
+    <li>Jenkins to GitHub Actions — the named continuous-integration runner</li>
+    <li>The high-availability design — multi-availability-zone, failover, disaster recovery</li>
+    <li>Recent index and partition-key design across three engines</li>
+    <li>API versioning, backward compatibility and shared platform contracts as a standard</li>
+    <li>Standards ownership and the senior-engineer / tech-lead mentoring layer, as labels</li>
+  </ul>
+
+  <h3>2 · Ramp items that no rewrite touches — his to learn, never ours to write</h3>
+
+  <ul>
+    <li><b>Spring Boot 3.x.</b> He has 2.x for five years — Deque, December 2019 to February
+      2025, which is what the journey document's own role table records — and Java 17, which is
+      the 3.x baseline;
+      the move is a <code>javax</code> to <code>jakarta</code> namespace migration plus a
+      configuration and observability refresh. Weeks. But <em>which Spring Boot version</em> is a
+      first-ten-minutes question and the honest answer is 2.x.</li>
+    <li><b>Java 21 and virtual threads.</b> He did 8 to 17 in place at Deque; 17 to 21 is
+      smaller.</li>
+    <li><b>Grafana and Prometheus.</b> Named by the posting with no hedge, and he has used
+      neither. PromQL is a real query language and he has not written it. This is the single
+      largest gap that a document cannot fix — worth 2.000 of the 11.625.</li>
+    <li><b>Spring Cloud, Spring WebFlux, Spring Batch.</b> The posting requires Spring Boot and
+      names none of these. They are on the never-claim list and appear nowhere.</li>
+  </ul>
+
+  <h3>3 · Evidence gaps that nothing closes — not a rewrite, not a ramp</h3>
+
+  <ul>
+    <li><b>No sustained-production throughput number.</b> The 100,000-connection figure is a burst
+      test — one request per user, no sustained load. He left before capturing production
+      telemetry, and the number does not exist. Worth 1.875 of the loss, and the rubric fixes this
+      criterion's own ceiling at 9 because of it. <b>Never let this arrive as sustained
+      load.</b></li>
+    <li><b>No availability figure.</b> He confirmed a high-availability <em>design</em>, not a
+      measured target he operated to. No nines, no uptime percentage, no recovery-time or
+      recovery-point objective appears anywhere on this résumé, and none may be added.</li>
+    <li><b>No Amura outcome metrics.</b> Every figure in the case-study corpus is a pre-registered
+      acceptance target, not a measurement. Amura material on this résumé carries design and
+      scale markers only.</li>
+  </ul>
+
+  <h3>4 · Neither — a fact about dates</h3>
+
+  <p><b>His last hands-on Java seat ended February 2025.</b> That is not a capability cap and it
+  is not a ramp item; it is a date, and it is the largest single loss on the rubric at 4.000 of
+  11.625 — more than a third of everything missing. Reordering Deque and promoting Java to line 1
+  of the skills block changes how quickly a reader finds the Java, which is worth roughly a point
+  by the rubric's own estimate. It does not change the date, and this page does not pretend
+  otherwise.</p>
+
+  <h2>The binding constraint</h2>
+
+  <p class="callout warn"><b>The résumé does not read as a Java architect's résumé, and
+  underneath that, his last hands-on Java seat ended February 2025.</b> The rubric has named this
+  the binding constraint through three consecutive re-scores. It splits cleanly. The unfixable
+  half is time — fourteen months of Python, FastAPI, LangChain and Go against a posting whose
+  first two required lines are <em>Strong hands-on experience with Java</em> and <em>Strong
+  expertise in Spring Boot</em>. The fixable half is placement, and this seat's edit took most of
+  it: Java leads the skills block, decomposition leads Deque, and the Spring Boot version lands in
+  bullet 2.</p>
+
+  <p><b>One piece of the fixable half is still open, and it is not in any file this workspace
+  owns.</b> El Paso Corporation prints as .NET on the live Hiration card. It is a Java role —
+  Senior Java Developer, JavaServer Pages, Java Enterprise Edition, Tennessee Gas Pipeline — and
+  the card being wrong hides four of his eleven Java years on the posting where it matters most.
+  The title has been corrected; the three bullets revert on save, so they are his to paste by
+  hand. Correct text is in section 14 of <code>master/upgrad_resume.html</code>. On a
+  Java-first seat this is the highest-leverage single action available and it converts a reader's
+  "about six years of Java" into the true "about eleven" at zero honesty cost.</p>
+
+  <h2>Is 95 reachable? No.</h2>
+
+  <p>The rubric's own answer, stated across three re-scores, is that the realistic post-lift
+  ceiling is about <b>92</b>, and that assumes every re-vector lands. What would be needed to
+  reach 95, and cannot be written:</p>
+
+  <ul>
+    <li>Grafana and PromQL</li>
+    <li>Current MySQL, rather than a 2015 port</li>
+    <li>A sustained-production throughput figure</li>
+    <li>Spring Boot 3.x with Java 21 in a Java seat more recent than February 2025</li>
+  </ul>
+
+  <p class="callout danger"><b>Writing any of those is the cardinal sin.</b> A 95 built on an
+  invented claim is worse than an honest 88, because the invented one gets found in the room and
+  the honest one does not. This page names what is missing and stops there.</p>
+
+  <h2>Findings — his call, or a re-score, not ours</h2>
+
+  <p class="note">These came out of comparing the two résumé files against <code>score.json</code>,
+  <code>paste_notes.json</code>, the two live card dumps and the journey document. They are
+  reported, not acted on.</p>
+
+  <div class="tablewrap">
+  <table class="summary">
+    <tr><th>#</th><th>Finding</th><th>Why it matters</th></tr>
+    <tr>
+      <td class="num">1</td>
+      <td><b>Load balancing is now confirmed, and the score has not been re-run.</b> The rubric's
+        residual on the microservices criterion is load balancing, which it refuses to infer from
+        multi-availability-zone plus failover — correctly, on the files it read. He confirmed it
+        as his on 25 August 2026, and the Fortified bullet names it.</td>
+      <td>The rubric prices that residual at <b>0.75</b> weighted points and calls it
+        unrecoverable from the files. It is no longer unrecoverable. <b>A re-score is owed</b>;
+        computing a new total is not this page's job.</td>
+    </tr>
+    <tr>
+      <td class="num">2</td>
+      <td><b>The Stewarded bullet merges two migrations the journey document keeps apart.</b> Both
+        live cards say <em>Migrated PostgreSQL to Amazon Web Services Relational Database Service
+        (RDS), cutting backups 3–4 hrs/day and deploy errors 40%</em>. The journey document says <em>PostgreSQL 9.6 to Aurora 13.x with zero
+        downtime</em>. This seat's bullet attaches the first one's two metrics to the second one's
+        migration.</td>
+      <td>The journey document raises this itself and leaves it open: <em>"Were these two separate
+        migrations, or one described two ways?"</em> — item 8 on its own open-question list. The
+        merge answers it silently, in one direction. <b>He settles this, not us.</b></td>
+    </tr>
+    <tr>
+      <td class="num">3</td>
+      <td><b><code>paste_notes.json</code> is stale on the certification.</b> Two of its notes say
+        the certification behind the high-availability work is deliberately left unnamed. The
+        résumé names HIPAA, which was settled on 25 August 2026.</td>
+      <td>The file is right and the note is behind it. Left as-is rather than edited, and flagged
+        on <a href="bullets_for_upgrad.html">the bullets page</a> so a reader is not misled by the
+        note.</td>
+    </tr>
+    <tr>
+      <td class="num">4</td>
+      <td><b>Two certifications sit close together and a reader will merge them.</b> HIPAA is in
+        the VoltusWave Fortified bullet; ISO 27001 is in the Deque Modernised bullet and in the
+        Business &amp; Delivery skills line.</td>
+      <td>Different employer, different certification, both true. Worth being able to say so out
+        loud without hesitating.</td>
+    </tr>
+    <tr>
+      <td class="num">5</td>
+      <td><b>k6 is still absent from this résumé.</b> The rubric credits k6-validated load testing
+        as a named reliability tool and part of why observability moved to 8.0. It appears
+        <b>0</b> times in this seat's file.</td>
+      <td>Seven of the eight items the rubric listed as invisible are now visible; this is the
+        eighth. It is confirmed work, so naming it is writing down a fact — but no virtual-user
+        count may go beside it unless he supplies one.</td>
+    </tr>
+    <tr>
+      <td class="num">6</td>
+      <td><b>The headline was not re-vectored.</b> It still reads
+        <code>Neptune + GNN · LLM</code> while the experience section that backed those words was
+        removed for this seat.</td>
+      <td>See the VoltusWave section above. Live inconsistency, his call.</td>
+    </tr>
+    <tr>
+      <td class="num">7</td>
+      <td><b>Four new Deque bullets are new to the file, not necessarily new to the world.</b>
+        Exposed, Modernised, Slashed and Accelerated are absent from
+        <code>master/upgrad_resume.html</code> and all four trace verbatim to both live card
+        dumps — his own cards — so they are sourced, not invented. <b>Whether any of them has
+        previously gone out in a submitted application is not established by anything in this
+        repository</b>, and both cards predate v2.</td>
+      <td>Puppeteer and the Jenkins-to-GitHub-Actions migration in particular will attract detail
+        questions. Do not tell him these have never been sent; the record does not support
+        that either way.</td>
+    </tr>
+  </table>
+  </div>
+
+  <h2>Open claims carried through untouched</h2>
+
+  <p>These sit on the résumé, several have already gone out in submitted applications, and they
+  are his to confirm or reject. <b>None was rewritten in either direction for this seat</b>, and
+  none should be. Removing a claim that has already been submitted does not unsend it — it only
+  creates a gap between the version a recruiter holds and the version they would see next.</p>
+
+  <ul>
+    <li>The <b>graph neural network</b> wording — still word four of an unchanged headline</li>
+    <li>The <b>100,000 concurrent connections in burst testing</b> wording, carried at the
+      master's exact text. The Reimagined bullet's <em>P95 under 30 ms at 100,000-user load</em>
+      is a separate, user-confirmed line and is not the flagged one</li>
+    <li>The <b>27 ms / P95 16 ms</b> pairing</li>
+    <li><b>70–80% consolidation</b>, and whether <b>approximately 300</b> counts customers or
+      instances</li>
+    <li>The <b>four Rocket Software metrics</b> — Rocket is untouched on this seat</li>
+  </ul>
+
+  <h2>What was refused, and why</h2>
+
+  <ul>
+    <li><b>Grafana and Prometheus.</b> Named by the posting with no hedge; he has neither. Adding
+      them would close 2.000 of the loss on paper and fail in the first observability question.
+      Datadog, Amplitude and ELK are what the résumé says.</li>
+    <li><b>Kafka.</b> A good-to-have on this posting. The honest answer is Amazon Kinesis, at
+      1,200 shards with Enhanced Fan-Out, and that is what the résumé says.</li>
+    <li><b>MySQL as a skills line.</b> The posting says <em>SQL databases, preferably MySQL</em>.
+      His MySQL is historical — the 2015 CURA port — so it stays in the two CURA bullets, where it
+      is true, and never in a capability label. PostgreSQL to MySQL is a fair thing to frame as
+      transferable in conversation.</li>
+    <li><b>Any availability or uptime figure.</b> He confirmed a design, not a target.</li>
+    <li><b>Any Amura outcome metric.</b> None exists.</li>
+    <li><b>A specific load-balancer product.</b> He confirmed load balancing; the shape —
+      Application versus Network Load Balancer, target groups, health checks — is still open and
+      the bullet correctly names none.</li>
+  </ul>
+
+  <p class="note"><b>Compensation is deferred</b> by standing directive and is deliberately absent
+  from this page, in either direction. The real-world gates that are worth naming separately from
+  both scores are location — Sector 63, Noida, Work From Office, against Hyderabad, with
+  relocation open and not a scoring constraint — and levelling, where <em>Lead Architect</em> is
+  genuinely the individual-contributor seat shape this workspace exists to pursue.</p>
+
+  <h2>Where to go next</h2>
+
+  <ul>
+    <li><a href="jd.html">The posting</a> — every requirement, laid out to read beside the rubric</li>
+    <li><a href="index.html">The weighted rubric</a> — the seven criteria in full, with evidence</li>
+    <li><a href="bullets_for_upgrad.html">Bullets for upGrad</a> — all 32 changed lines, ready to
+      paste</li>
+    <li><a href="research.html">Company research</a></li>
+  </ul>
+
+</main>
+<script src="../../../static/copy.js" defer></script>
+</body>
+</html>
