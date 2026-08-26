@@ -3507,3 +3507,30 @@ section.pasted .paste-area { border-color: var(--good); }
   background: var(--accent);
   color: var(--paper, #fff);
 }
+
+/* Workspace shortcuts. Everything below Applications used to be card grids that
+   needed scrolling past; one user, who already knows what these are, needs the
+   link and not the card. */
+.quick-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin: 0 0 34px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--rule, rgba(0,0,0,.12));
+  font-size: 13px;
+}
+
+.qn-group { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+
+.qn-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.quick-nav a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+.quick-nav a:hover,
+.quick-nav a:focus-visible { color: var(--accent); border-bottom-color: var(--accent); }
