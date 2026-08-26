@@ -893,6 +893,37 @@ is next, and records status changes with reasons. Do not grow it into a task run
 may finish a task and report it; marking it `done` / `parked` / `pushed` / `dropped` goes
 through `./todo`, and moving a task out always needs at least one reason.
 
+## Measurement traps — every one of these cost real time on 2026-08-26
+
+**The tool was wrong, not the data.** Each of these produced a confident, false finding that was
+acted on before being caught. Check the measurement before trusting a measurement.
+
+- **A word counter must ignore punctuation tokens.** A naive `split()` counts ` — ` as a word, so
+  25-word bullets report as 26. Four bullets were trimmed that did not need trimming. Across every
+  résumé in the repo there are **zero** genuine over-25-word bullets. Count only tokens containing
+  `[A-Za-z0-9]`.
+- **`grep -c` counts LINES, not occurrences — and these files are minified.** It reported 4 inline
+  `span.note` uses when there were **63**. A per-page fix would have missed 59 of them. Use
+  `grep -o … | wc -l`, or parse.
+- **The LinkedIn slug lives in a PDF LINK ANNOTATION, not extractable text.** A text-only grep reads
+  `abhisheikdeo` as missing on a perfectly good PDF. Read `/Annots` → `/A` → `/URI`.
+- **Silent failure survives.** `src="../static/copy.js"` resolved nowhere from a workspace three
+  levels down, so **every copy button on every tailored résumé was dead** — through six workspaces,
+  because a missing script throws nothing. When a feature "should" work, prove it does.
+- **A regex context window can be a false positive.** `p-e**lpa**so` matched an "LPA" compensation
+  sweep; "hot-**spot**" matched a Fargate-Spot sweep; 36 "Amazon S3" hits were Mermaid node ids
+  (`S2 --> S3`); "w**eeks**" matched EKS. Case-sensitive, word-boundaried, tag-stripped, or it is
+  not a finding.
+- **Dumping one source and generalising.** Dumping only `august_ic_master_resume` produced a
+  confident, wrong conclusion that the 17 VoltusWave bullets did not exist. They were on the other
+  card. **Enumerate the sources before concluding about "the" source.**
+
+**On the adversarial verify pass:** it is what makes delegation safe, and it is not infallible. On
+2026-08-26 it correctly cut a fabricated founder name, a figure welded from two incompatible
+sources, and a wholly invented claim about a `score.json` — and it **missed two files** still
+carrying "six continuous Spring Boot years". **Adjudicate the verifier too.** A claim that survives
+because nobody checked the checker is still a defect.
+
 ## Working rules
 
 - **Ask, don't assume.** At a fork, an ambiguity, or a missing input, invoke
@@ -987,52 +1018,54 @@ social layer matters later, X auth and `yt-dlp` are the two cheapest unlocks.
 
 ---
 
-## Status — 2026-08-26, ~10:30
+## Status — 2026-08-26, ~18:15
 
-**THREE TAILORED PDFs EXIST AND ARE VERIFIED.** Yes Madam, AI-Native and o9 — each 3 pages, ATS 85,
-no `[fill in metric]`, VoltusWave ending **Apr '26**, LinkedIn slug `abhisheikdeo`, bold font
-(`CalibriW05-Bold`) embedded, and **every bullet in the source HTML present in the PDF** (25/25,
-25/25, 28/28). They are genuinely different documents: ~60% shared vocabulary, 100–126 terms unique
-to each. **⚠ The LinkedIn slug lives in a PDF link annotation, not extractable text — a text-only
-grep reads it as missing. That is a false alarm; check the annotations.**
+**FOUR APPLICATIONS SENT TODAY. That column was empty this morning.** v1 died with 23 built and
+unsent; the pattern is broken.
 
-**Scores moved on evidence already in hand, not on new claims:**
-
-| Seat | Start | Now | Ceiling |
+| seat | status | tech | contact |
 |---|---|---|---|
-| Yes Madam | 83.0 | **88.375** | ~92 |
-| AI-Native | 83.3 | **84.9** | ~90.5 |
-| o9 | 80.4 | **81.4** | ~87.8 |
-| Wipro | — | **unscored, no JD** | — |
+| keyloop-principal-architect | **ready** | **89.6** | — |
+| modmed-senior-software-architect | applied | 88.9 | Prabhakar Teguri, in-house |
+| yes-madam-lead-architect | applied | 88.375 | — |
+| conde-nast-principal-engineer | **ready** | 87.4 | **Lokesh Reddy Guntaka, in-house** |
+| principal-architect-ai-native | applied | 84.9 | — |
+| o9-senior-architect-agentic | applied | 81.4 | — |
+| wolters-kluwer-…-ai-platform-engineer | **withdrawn** | 69.9 | Paul Abbott, Andela |
+| wipro-principal-software-architect | awaiting JD | — | Harisri Parthasarathi |
 
-What moved them, all user-confirmed 2026-08-25/26: **Kubernetes and Terraform are real and were
-adopted as a company-wide standard** · **high-availability design is real** (multi-AZ, failover,
-disaster recovery — chat platform only, never Amura) · **the certification is HIPAA** · **he owned
-load balancing** · **all 17 VoltusWave bullets are accurate** ("everything is accurate").
+**Every seat has a verified PDF except Wipro**, which has no job description and so no score.
 
-**Yes Madam's binding constraint did not change identity — it got more dominant.** Java recency is
-now over a third of the total loss because everything around it was recovered. Grafana and
-Prometheus were refused three times over, against Kubernetes, k6's Grafana Labs provenance, and a
-certification-driven multi-AZ estate. Still zero hits, still not claimed.
+**Wolters Kluwer was withdrawn on his call** — *"hands-on Python 5+ years in production which will
+not work out for me."* The 5+ figure is the **Lead** bar, the fallback offered, so neither role
+cleared it. Production Python is ~14 months: a duration fact, not a wording problem.
 
-**Infrastructure fixed this session:**
+**⚠ Condé Nast is the third encounter with one seat.** v1 built it 21 Jul (96, never applied) and
+again 6 Aug after an inbound InMail from an in-house recruiter (96, **reply never sent**). Twenty
+days passed; the seat was reposted. All v1 work is preserved under
+`August-2026/26/conde-nast-principal-engineer/v1/`. **Scored fresh at 87.4 rather than inheriting
+96** — the gap is the agentic-scope open claim, which v1 credited more generously.
 
-- **PostgreSQL migrated 16 → 18.** A 16 server had been running since 19 August with its Homebrew
-  keg deleted; every `UPDATE` on `applications` was already failing because the trigger could not
-  load `plpgsql`, and 18 could never start because 16 held 5432. Dumped, cut over, restored,
-  verified. Backups in `~/pg-backup-2026-08-25/` and `~/pg-backup-2026-08-26/`.
-- **⚠ `serve.py` binds BOTH loopback families now.** macOS resolves `localhost` to `::1` before
-  `127.0.0.1`. Binding only IPv4 let a stray `python3 -m http.server` take `::1` and silently shadow
-  the API — the page read "the server answered 404" while `curl 127.0.0.1` looked perfectly healthy.
-  **That cost two rounds of "why can't I see my workspace?" Check `lsof -nP -iTCP:8006 -sTCP:LISTEN`:
-  one PID holding both addresses is healthy; two PIDs means a stray is shadowing.**
-- **The launcher renders from `jobs_tracker_v2`**, tabs in v1's shape, counts derived by a
-  `MutationObserver` so they cannot read 0 above a full list.
+**Built this session:** the v1/v2 database split with all SQL in `db/` · `application_events` as the
+correspondence timeline with verbatim messages · the launcher rendering from `jobs_tracker_v2` in
+v1's tab shape · the daily log as a Kanban board that refuses a reason-less move · PostgreSQL
+migrated 16 → 18 · `serve.py` binding both loopback families · `resume.py new` refusing without a
+posting URL · six full workspaces with research, rubrics, tailored résumés, verified PDFs and staged
+outreach.
 
-**⛔ Interview prep still waits.** Reaffirmed by him 2026-08-26: *"interview related q & a can wait
-until we hear back from the company/organisation."* The trigger is a company responding — not a
-score, not a PDF, not a complete workspace. Then build prep for **that seat only**.
+**Decided this session:**
 
-**NOTHING HAS BEEN SENT.** Three verified PDFs, a staged Wipro reply, and `applied: 0` in the
-database. That is the v1 failure in miniature, and it is the only thing left that matters.
+- **The database is authoritative for what HAPPENED; the files for what is CLAIMED.** Query status,
+  dates, scores, contacts and the timeline; read the files for bullet text, hygiene and the honesty
+  checks. `db/README.md` carries the cheatsheet.
+- **The database becomes the source, HTML a view, the PDF his review surface** — approved for
+  **later**, design in `db/DESIGN-bullets.md`, schema prepared, **round-trip proof passed**
+  (458 bullets byte-identical, 0 tag differences, `<strong>` preserved).
+- **Always capture the posting URL at intake.** The tool refuses without one.
+- **Compensation is deferred entirely** until a company reaches that stage.
+- **A sent résumé is history.** Migration 011's trigger makes editing one impossible, not merely
+  discouraged.
 
+**Still his hand:** landing `master/merge_proposal.html` into the master (which still has zero hits
+for Kubernetes, Terraform, Jenkins, GitHub Actions) · El Paso's three card bullets still reading
+.NET · the ModMed résumé lacking the words "domain-driven" though the JD names it.
