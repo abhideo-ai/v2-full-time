@@ -1,0 +1,46 @@
+{
+  "quick-headline": {
+    "why": "The seat is an <strong>AI-native principal engineer</strong>, not a Java architect. The JD names <strong>Python and NodeJS</strong> by name, plus agentic AI in production, governed AI-assisted development, and cloud-native AWS — all six now sit in the first line a screener reads. Java stays visible in position three; it is honest and recent, just not the lead here.",
+    "heads_up": "Replace the whole headline field. <strong>Neptune + GNN came off this line for this seat only</strong> — the JD never asks for graphs, and the claim survives verbatim in Key Skills (AI/ML in Product). \"Agentic AI in Production\" is supported by the case studies' own status lines (KQ1 and KQ10 read \"Live in production\"); the narrator caveat is surfaced in the VoltusWave bullet itself.",
+    "hygiene": "~240 characters · tagline exception — MCP, AWS, SaaS, HIPAA, ISO 27001 stay unexpanded here; every one is expanded on first use in the summary or Key Skills below"
+  },
+  "quick-summary": {
+    "why": "Rebuilt on the JD's spine in its order of rarity: the two named languages first, then agentic AI with its real artefacts (3 model-backed finder agents on a LangGraph state graph — KQ10's own words; claim-grammar guardrails; MCP servers), then the governed Claude Code + OpenAI Codex practice, then Kubernetes/Terraform as company standard with the two user-confirmed metrics, then the Deque consolidation with United States–India teams, closing on the commerce number.",
+    "heads_up": "Replace the whole paragraph; use the Copy button so bold survives. \"Governed\" is the JD's word backed by \"all under hands-on review\" — say the word and it reverts to the master's \"measured\". No adoption or productivity metric for the rollout exists, and none is invented.",
+    "hygiene": "~140 words · AI, AWS, MCP, LLM, SaaS expanded on first use in reading order · Java's 11 years attach to Java, not Spring Boot (Spring Boot is two employers with a gap, never \"continuous\") · \"raised\" not \"lifted\" — Lifted leads a Teletext bullet"
+  },
+  "quick-skills-tls": {
+    "why": "Re-vectored to the JD's own asks: cross-domain solution architecture (\"connective tissue… coherent ecosystem\"), governing AI-assisted development, mentoring across levels with AI fluency, and cross-functional collaboration across geographies and time zones. Decision-Intelligence Platforms kept — it is his most distinctive line.",
+    "heads_up": "Out for this seat: \"Engineering Team Building & Organisational Scaling\" and \"Data Platform & Analytics Leadership\" — org-leadership signals on an IC seat. \"Design Reviews\" not \"Architectural Thinking\" in the mentoring line: architect- shares a root with Architected, which leads a bullet.",
+    "hygiene": "6 lines · short capability labels, his format · QA expanded on first use"
+  },
+  "quick-skills-ee": {
+    "why": "Four additions carry the JD's named requirements, previously invisible on this résumé (Python 0 hits, FastAPI 0, LangGraph 0, Kubernetes 0, Terraform 0 in the master): Expert Fluency in Python + Node.js; Agentic AI in Production; LLM Evaluation & Guardrail Design; AI Code Generation in the Delivery Workflow; Go Production Services; Infrastructure as Code & Resilience. Cross-Team line now names the Kubernetes/Terraform/Go/DynamoDB adoption (user-confirmed as a company-wide standard). Statistical Rigor and Leakage-Safe ML merged into one line to hold length.",
+    "heads_up": "Replaces the whole sub-group (Key Skills is one section — paste all three groups together). \"Hands-on Player-Coach Delivery\" is superseded by the AI Code Generation line. Identity & Access moved into Business & Delivery's security line. No \"orchestration\" anywhere in this file — Orchestrated now leads a VoltusWave bullet, so the skills line says \"LangGraph State Graphs, Multi-Agent Finder Pipelines\" instead.",
+    "hygiene": "19 lines (was 17) · MCP/LLM expanded in the summary above; ECS, ELK, CI/CD, VPC, CQRS, GNN, RBAC expanded at first use here · GNN claim wording untouched, only the acronym expanded (the headline no longer pre-expands it) · evaluation harnesses named without numbers — NDCG/P99 figures are pre-registered targets, never results"
+  },
+  "quick-skills-bd": {
+    "why": "The JD's PLUS line (Advertising / Subscriptions / Commerce) answered in the only two forms he can honestly claim: real travel commerce (hotel booking funnel, 25 suppliers) and subscription-gated SaaS entitlements (the Deque billing service). Advertising is absent from the record and is not claimed. Cost line now carries its two numbers. Accessibility (WCAG 2.2 AA) kept deliberately — a global publisher's sites carry accessibility obligations.",
+    "heads_up": "Out for this seat: \"Enterprise Onboarding & Consolidation at Multi-Hundred-Instance Scale\" — the ~300-instance story is already in the summary and the first two Deque bullets.",
+    "hygiene": "6 lines · HIPAA and RBAC expanded here on first use (reading order: before the experience bullets that use them)"
+  },
+  "quick-vp": {
+    "why": "10 bullets down to 7, ordered by the JD's weights. In: Drove (governed Claude Code/Codex practice — the rarest ask), Orchestrated (NEW — KQ10's multi-agent state graph, which v1 missed entirely; worded shipped-where-live), Engineered (RAG now names Python and FastAPI), Provisioned (NEW — card bullet 10 merged per-claim: Kubernetes, Terraform, ECS Fargate 70% Spot, both user-confirmed metrics), Architected (Kinesis now carries the user-confirmed multi-availability-zone failover and the HIPAA driver), Scaled (now names the Node.js-to-Go port and k6 validation), Deployed (Datadog, unchanged).",
+    "heads_up": "THE OPEN CLAIM IS SURFACED, NOT RESOLVED: the Orchestrated bullet says \"narrator off by default\" in so many words — the finders and orchestrator are live (KQ10's Q&A: \"the finders and the orchestrator are live\"), the synthesis narrator ships off by default behind an unsigned contract. His call whether that clause stays on the page; removing it upgrades the claim. Out for this seat: Delivered (10,000+ patient onboarding — product outcome, not a JD ask), Hardened (adversarial review — production-readiness evidence, first bullet back in if he wants 8), Extracted and Sequenced (causal-ML depth the JD does not ask for), Secured (in-VPC self-hosting — carried by the Self-Hosted Models skills line). No Amura outcome metric appears anywhere, because none exists.",
+    "hygiene": "7 bullets · all ≤25 words, one unique leading verb, ≥1 number, ≥1 bold, no trailing period · Orchestrated and Provisioned verified free across all ten roles and every mid-bullet stem (orchestrat-/provision- had zero hits in the master) · \"ported\" not \"rewritten\" — Rewrote leads a CURA bullet · 100,000 stays framed as burst testing; the \"500 →\" wording stays off"
+  },
+  "quick-deque": {
+    "why": "6 bullets to 8. Productized re-vectored to lead with Node.js/TypeScript (the JD names NodeJS; the master buried it as a porting source) and to carry subscription-gated feature access — the honest subscriptions evidence. Two added from the user-confirmed card pool: Modernised (Jenkins to GitHub Actions, ISO 27001, 50% faster releases — the CI/CD half of the governance story, kept at Deque where it is true and NOT joined to the agentic tooling) and Slashed (Puppeteer regression framework in Node.js — test automation plus more Node.js).",
+    "heads_up": "The CI/CD bullet deliberately does not claim agentic tooling gated CI — the record never joins them, and v1 crediting that join is the largest reason v1 read 96. Considered and not applied: the pool's Steered variant naming Spring Boot 2.x/Java 8/17 (Java is not this seat's lead), Orchestrated-the-spider-jobs (verb now used at VoltusWave), Exposed (20+ enterprise clients — journey line 532 says ~300 is confirmed and 20+ understates; left out rather than reworded unasked), Accelerated (2+ weeks per sprint).",
+    "hygiene": "8 bullets · Modernised and Slashed verified free (modern-/slash- had zero hits) · CI/CD expanded in Key Skills before first bullet use · ~300 instances and 70–80% remain confirm-or-reject items, carried unchanged from the master"
+  },
+  "quick-rocket": {
+    "hygiene": "4 bullets · unchanged — Coached already carries code review and hands-on IC framing, Partnered carries cross-functional; bugs −50% and sales +20% remain confirm-or-reject, carried unchanged"
+  },
+  "quick-voltuswave-cofounder": {
+    "hygiene": "3 bullets · unchanged"
+  },
+  "quick-teletext": {
+    "hygiene": "4 bullets · unchanged — this is the commerce evidence for the JD's PLUS line (25 suppliers, −46%, +65%, 2–3M daily requests) · +65% remains user-supplied and open, carried per the no-scrub rule"
+  }
+}

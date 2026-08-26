@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Condé Nast — Principal Engineer</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> &rsaquo; August-2026 &rsaquo; 26 &rsaquo; conde-nast-principal-engineer</p>
+<header class="wl-head"><h1>Condé Nast</h1><span class="wl-role">Principal Engineer</span></header>
+<p class="wl-sub">Bengaluru, Karnataka &middot; <strong>Condé Nast Technology Labs</strong> (India engineering, Bengaluru and Chennai) &middot; global media publisher (Vogue, Wired, The New Yorker, GQ&hellip;), headquarters New York &middot; <strong>reposted 4 days ago</strong>, over 100 clicked apply &middot; Source: LinkedIn Jobs &middot; Asks 15+ years, <strong>3+ as Tech Lead, Staff Engineer or Architect</strong> &middot; Intake <strong>2026-08-26</strong> &middot; <strong>THE THIRD ENCOUNTER with this seat</strong> &mdash; see <a href="jd.html">the history</a></p>
+<div class="wl-status"><span class="pill fact">tracker: resume_drafted</span><span class="pill good">technical 87.4</span><span class="pill">non-technical &mdash;</span><span class="pill note">IC seat</span><span class="pill warn">third encounter &mdash; v1 scored 96 twice, sent nothing</span><span class="pill good">inbound: Lokesh Reddy Guntaka, in-house, verified</span><span class="pill warn">his InMail is 20 days unanswered</span></div>
+
+<div class="wl-donow"><p class="lbl">Next action</p><p><strong>Reply to Lokesh.</strong> Not the portal &mdash; the LinkedIn InMail thread from <strong>6 August</strong>, where a named, verified, in-house Talent Acquisition Lead asked for a résumé and got twenty days of silence while the seat was reposted. The rewritten reply is staged in <a href="reply.html"><code>reply.html</code></a> &mdash; it owns the delay in one line, corrects the location to Hyderabad, answers every field the deferral rules allow, and puts a Friday call on the table. One prerequisite sits in front of the send: <strong>export this workspace&rsquo;s PDF</strong> (Portable Document Format) and verify its contact line reads Hyderabad &mdash; the only existing export is v1&rsquo;s 18 August PDF, whose contact line reads <em>Bengaluru</em> and would contradict the message it is attached to. Housekeeping after: <code>automation/jobs_sync.py</code> has not been re-run, so the tracker still reads <code>resume_drafted</code> with an empty score. Per CLAUDE.md a build is done when it is <strong>sent</strong> &mdash; and this seat has been built three times without one.</p></div>
+
+<section class="wl-job" id="scores"><h2>The two scores</h2>
+<div class="callout"><p><strong>Technical &mdash; the score that matters.</strong> Weighted total <span class="score">87.4</span> out of 100, scored fresh against the 2026-08-26 posting. <strong>v1&rsquo;s 96 was not inherited</strong> &mdash; the 8.6-point difference is scoring discipline, itemised in the adjudication below and in <a href="resume_changes_for_87pct_match.html">the changes page</a>. The target set in CLAUDE.md is <strong>95+</strong>; the honest ceiling for this seat is stated below, in the adjudication&rsquo;s own words, and it is not 95.</p></div>
+<div class="callout"><p><strong>Non-technical / functional &mdash; none recorded, and none computed.</strong> This workspace&rsquo;s <code>score.json</code> carries a technical rubric only. Per CLAUDE.md the non-technical score is <strong>informational and never a gate</strong>: it must not block applying and must not drag the technical number. Media and publishing domain familiarity is absent from his record and is deliberately not scored anywhere &mdash; criterion&nbsp;8 below scores the JD&rsquo;s own Advertising / Subscriptions / Commerce <em>PLUS</em> line at 0.05 weight, where the posting itself put it.</p></div>
+
+<h3>The honest ceiling &mdash; is 95 reachable?</h3>
+<p>Quoted from the adjudication in <code>score.json</code>, unedited in substance. A rewrite cannot close a gap that is absent experience or unsettled scope; what follows names which is which.</p>
+<div class="callout warn"><p><strong>No. The honest ceiling is ~91.9, and 95 is not reachable on this rubric by any honest route.</strong> Every point of movement comes from <b>his confirmation, never from a rewrite</b>: the narrative-guardrail contract signed or the narrator on in production before Apr 2026 (+1.0), a nameable Model Context Protocol (MCP) server artefact (+1.0), agentic tooling actually gating continuous integration / continuous delivery (CI/CD) at VoltusWave (+1.8), a pre-2025 Django engagement he can name (+0.7). <code>87.4 + 4.5 = 91.9</code>. The remaining distance is advertising &mdash; absent, 1.5 points, on the line the JD itself marks a PLUS &mdash; and Python tenure, a calendar fact.</p>
+<p><strong>Every deduction but one is a RAMP ITEM. The single CAPABILITY CAP &mdash; advertising &mdash; sits on the PLUS line, weighted 0.05, and cannot cap the verdict.</strong> That distinction is the headline, not the number: 87.4 is not the score of a candidate missing a core required technology. Both named languages, agentic artificial intelligence (AI) with a live multi-agent pipeline, a governed AI-assisted development practice, and the whole cloud-native list are met on the record. An honest 87 that survives the room beats a 96 built on crediting the wrong era&rsquo;s evidence.</p></div>
+</section>
+
+<section class="wl-job" id="rubric"><h2>Weighted rubric &mdash; technical</h2>
+<p>Weights sum to <strong>1.00</strong>. The contribution column is <code>weight &times; score &times; 10</code>, and the eight rows add to <strong>87.4</strong> &mdash; the same number <code>score.json</code> records as <code>weighted_total</code>. The points-lost column is <code>weight &times; (10 &minus; score) &times; 10</code> and adds to <strong>12.6</strong>; <code>100 &minus; 12.6 = 87.4</code>, so both routes agree. Nothing here is rounded into the total; the arithmetic was asserted mechanically before this page was written.</p>
+<div class="tablewrap"><table class="wl-rubric"><thead><tr><th>Criterion</th><th class="num">Weight</th><th class="num">Score /10</th><th class="num">Contribution</th><th class="num">Points lost</th><th>Evidence</th></tr></thead><tbody>
+<tr><td><a href="#c1"><strong>agentic-ai-in-production</strong></a><span class="note">JD line 4: agent orchestration, large language model (LLM) tool use, evaluation frameworks, guardrail design, multi-agent pipeline architecture &mdash; &ldquo;in production&rdquo;. The posting&rsquo;s heaviest line</span></td><td class="num">0.20</td><td class="num">8</td><td class="num">16.0</td><td class="num"><b>4.0</b></td><td><a href="#c1">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c2"><strong>governing-ai-assisted-development</strong></a><span class="note">JD line 5: defining and governing AI-assisted development practices within an engineering organisation &mdash; agentic tooling in CI/CD, code review, test automation, production readiness. The rarest ask on the page</span></td><td class="num">0.18</td><td class="num">8</td><td class="num">14.4</td><td class="num"><b>3.6</b></td><td><a href="#c2">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c3"><strong>languages-and-ai-codegen-tools</strong></a><span class="note">JD line 3: expert fluency in at least 2 languages including Python and NodeJS; working knowledge of AI code-generation tools (an or-set of five)</span></td><td class="num">0.14</td><td class="num">9</td><td class="num">12.6</td><td class="num">1.4</td><td><a href="#c3">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c4"><strong>cloud-native-aws</strong></a><span class="note">JD line 6: cloud native (AWS/Azure) &mdash; deployment infrastructure, observability, security, resilience. An OR that Amazon Web Services satisfies outright; Azure is never-claim</span></td><td class="num">0.14</td><td class="num">9.5</td><td class="num">13.3</td><td class="num">0.7</td><td><a href="#c4">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c5"><strong>scale-and-cross-geography-collaboration</strong></a><span class="note">JD line 1 (first half) and line 7: 15+ years at scale; cross-functional collaboration across geographies and time zones</span></td><td class="num">0.10</td><td class="num">9.5</td><td class="num">9.5</td><td class="num">0.5</td><td><a href="#c5">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c6"><strong>architect-scope-3plus-years</strong></a><span class="note">JD line 1 (second half) and the role text: 3+ years as Tech Lead, Staff Engineer or Architect; owning the end-to-end design of a domain of sub-domains</span></td><td class="num">0.10</td><td class="num">10</td><td class="num">10.0</td><td class="num">0.0</td><td><a href="#c6">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c7"><strong>coaching-and-ai-fluency-across-the-org</strong></a><span class="note">Role text: coach and mentor engineers across levels; build architectural thinking and AI fluency across the organisation</span></td><td class="num">0.09</td><td class="num">9</td><td class="num">8.1</td><td class="num">0.9</td><td><a href="#c7">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr><td><a href="#c8"><strong>domain-advertising-subscriptions-commerce</strong></a><span class="note">JD line 2: working experience in Advertising, Subscriptions or Commerce &mdash; the JD&rsquo;s own capitalised word: a PLUS. Weighted low so it cannot cap the technical score</span></td><td class="num">0.05</td><td class="num">7</td><td class="num">3.5</td><td class="num">1.5</td><td><a href="#c8">Evidence &amp; verdict &rarr;</a></td></tr>
+<tr class="total"><td>Weighted total</td><td class="num">1.00</td><td class="num">&mdash;</td><td class="num">87.4</td><td class="num">12.6</td><td>&mdash;</td></tr>
+</tbody></table></div>
+<p class="note"><b>Reading the table.</b> Each criterion expands to its full evidence, its gaps, its RAMP&nbsp;ITEM / CAPABILITY&nbsp;CAP label and its verdict, rendered from <code>score.json</code> rather than rewritten. Quotations keep their source&rsquo;s wording, including line references into <code>professional-journey.md</code>, the killer-query (KQ) case studies and the read-only card dumps.</p>
+
+<details id="c1"><summary>1 &middot; agentic-ai-in-production <span class="pill fact">weight 0.20</span> <span class="pill">8 / 10</span> <span class="pill fact">contributes 16.0</span></summary><div><p class="wl-lead">JD line 4: <em>&ldquo;Good understanding of Agentic AI concepts and hands-on experience working on on Agentic AI projects in production &mdash; including agent orchestration, LLM tool use, evaluation frameworks, guardrail design, and multi-agent pipeline architecture&rdquo;</em> (the duplicated &ldquo;on on&rdquo; is the posting&rsquo;s own typo, and the fingerprint that ties this listing to the Solution Architect requisition). Five named sub-asks and the words &ldquo;in production&rdquo;.</p>
+<h3>Evidence</h3>
+<p>SHIPPED &mdash; agent orchestration:</p>
+<ul>
+<li><code>kq10-cross-domain.html</code> header: <em>&ldquo;Status Live in production&rdquo;</em>, <em>&ldquo;Deliverables Production cross-domain analytics service, live in-VPC&rdquo;</em> (virtual private cloud); body: <em>&ldquo;the orchestrator is a declared, deterministic LangGraph state graph. Its edges are fixed code; the only place a language model may appear is inside a single node body&rdquo;</em> and <em>&ldquo;This is the only query in the programme whose orchestrator is runnable code &mdash; a compiled state graph the in-VPC runtime serves directly&rdquo;</em>.</li>
+<li><code>kq1-precedent-search.html</code>: <em>&ldquo;LangGraph (the pipeline skeleton and deployment runtime)&rdquo;</em>, <em>&ldquo;LangGraph runtime Postgres checkpoints&rdquo;</em>, header <em>&ldquo;Status Live in production&rdquo;</em>.</li>
+<li><code>professional-journey.md</code> line 678: <em>&ldquo;10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes&rdquo;</em>.</li>
+</ul>
+<p>SHIPPED &mdash; multi-agent pipeline architecture, in the source&rsquo;s own words (v1 declined to credit this and never cited KQ10):</p>
+<ul>
+<li><code>kq10-cross-domain.html</code> title: <em>&ldquo;Multi-Agent Orchestration for Cross-Domain Patient Analytics&rdquo;</em>; <em>&ldquo;answered by a deterministic multi-agent orchestrator &mdash; the code owns the joins, the intersection, and the statistics&rdquo;</em>; <em>&ldquo;Parallel blind finders &mdash; three finder agents (finance, adherence, ops) fan out from the start and run concurrently. Each is a narrow persona that never sees the others&rsquo; results. Barrier &mdash; a fan-in node runs once, after all three finders return&rdquo;</em>.</li>
+<li>The finders are model-backed: the cheap tier is Llama 3.1 8B with a 70B escalation tier, self-hosted in-VPC, and the barrier <em>&ldquo;re-verifies every proposed patient id against the frozen snapshot&rdquo;</em> &mdash; a finder that hallucinates an id cannot smuggle it in.</li>
+<li><code>kq10-cross-domain-qa.html</code>: <em>&ldquo;The finders and the orchestrator are live; the synthesis narrator is gated on the shared narrative-guardrail contract and ships off by default until that contract is signed.&rdquo;</em></li>
+</ul>
+<p>SHIPPED &mdash; guardrail design, live on one query:</p>
+<ul>
+<li><code>kq1-precedent-search.html</code> Fig 9: <em>&ldquo;Generate &middot; pinned model + prompt temperature 0 &middot; self-hosted in-VPC &rarr; Validate leakage guard &middot; claim grammar &middot; no post-decision values &rarr; reject &rarr; Serve the precedent cards &middot; no summary sentence&rdquo;</em>.</li>
+<li><code>kq9-causal-path-qa.html</code> defines it: <em>&ldquo;The claim grammar is a field-level validator that every factual sentence in a narrative must satisfy: the sentence has to decompose into allowed templates backed by cited node fields and cited edges that actually exist&rdquo;</em>.</li>
+<li><code>professional-journey.md</code> line 680: <em>&ldquo;Large language model narrative guardrails &mdash; pinned model, temperature 0, chain hash, field-level claim grammar&rdquo;</em>.</li>
+</ul>
+<p>SHIPPED &mdash; evaluation frameworks:</p>
+<ul>
+<li><code>kq1-precedent-search.html</code> Fig 1: <em>&ldquo;Offline eval harness NDCG@10 &middot; Recall@10 &middot; P99&rdquo;</em> (Normalized Discounted Cumulative Gain; 99th-percentile latency); its Q&amp;A: <em>&ldquo;builds a new versioned index behind an alias, shadow-evaluates it against the golden set, and only then performs an atomic alias swap&rdquo;</em>.</li>
+<li>Golden-regression suites on every query &mdash; &ldquo;golden&rdquo; returns 211 hits across the corpus; e.g. KQ2&rsquo;s <em>&ldquo;golden regression with late-arrival &middot; correction &middot; supersede fixtures&rdquo;</em>.</li>
+<li><code>master/upgrad_resume.html</code> §6: <em>&ldquo;Hardened ten production analytics services through structured adversarial self-review, absorbing twenty findings into one design and holding another dark until its upstream contract shipped&rdquo;</em>.</li>
+</ul>
+<p>USER-CONFIRMED ONLY &mdash; LLM tool use: CLAUDE.md lists <em>&ldquo;real Model Context Protocol (MCP) servers&rdquo;</em> as safe to claim. Verified 2026-08-26: &ldquo;MCP&rdquo; and &ldquo;Model Context Protocol&rdquo; return <b>0 hits</b> across the journey document, the master, both card dumps and the entire case-study corpus; &ldquo;tool use&rdquo;, &ldquo;tool call&rdquo; and &ldquo;function call&rdquo; also 0. The case studies deliberately keep the model away from tools &mdash; <code>prep/kq1</code>: <em>&ldquo;Rejected LLM re-ranking of candidates; LLM-computed outcome deltas; an agent that runs the search.&rdquo;</em></p>
+<h3>Gaps</h3>
+<ol>
+<li><b>THE OPEN CLAIM &mdash; production scope of the LLM-facing guardrail.</b> KQ1&rsquo;s claim grammar is live; on KQ9 and KQ10 the synthesis narrator <em>&ldquo;ships off by default&rdquo;</em> behind an unsigned narrative-guardrail contract. <code>professional-journey.md</code> line 684 records it as OPEN: <em>&ldquo;did they ship to production, or were they designed/prototyped?&rdquo;</em> Scored as shipped-where-live; <b>NOT resolved here in either direction &mdash; his call.</b></li>
+<li>LLM tool use has no written artefact anywhere in the record; the MCP claim rests on his confirmation alone, which the rules accept &mdash; but a Principal-grade interviewer will ask what the servers exposed and to which client.</li>
+<li>The evaluation numbers are targets, not measurements: card bullet 16&rsquo;s <em>&ldquo;warm-path P99 &lt; 200 ms, NDCG@10 &ge; 0.75&rdquo;</em> are pre-registered acceptance targets, and he does not have the outcome numbers. The harness is real; the measured result is <code>[fill in metric]</code> &mdash; which is why no such figure appears in this seat&rsquo;s résumé.</li>
+<li>&ldquo;4 reusable archetypes&rdquo; remain query patterns, not agents &mdash; only KQ10 is multi-agent, and it is the one that is named.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p>RAMP ITEM on all four. Nothing here is a missing capability: orchestration, multi-agent and guardrails are built and two of three are live; evaluation harnesses exist. The deductions are scope-of-production (an OPEN claim he settles), the absence of a tool-use artefact, and target-versus-measured precision. Score moves only on HIS confirmation &mdash; never on a rewrite.</p>
+<h3>Verdict</h3>
+<p>8/10. The heaviest criterion loses 4.0 points &mdash; 32% of everything lost on this rubric &mdash; and every one of those points is precision, not capability. This is the binding constraint; see below.</p></div></details>
+
+<details id="c2"><summary>2 &middot; governing-ai-assisted-development <span class="pill fact">weight 0.18</span> <span class="pill">8 / 10</span> <span class="pill fact">contributes 14.4</span></summary><div><p class="wl-lead">JD line 5: <em>&ldquo;Demonstrable experience defining and governing AI-assisted development practices within an engineering organisation &mdash; including how agentic tooling integrates into CI/CD pipelines, code review, test automation, and production readiness standards&rdquo;</em>. The rarest ask on the page &mdash; most fifteen-year architects cannot answer it at all.</p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; defined and governed across an organisation: <code>professional-journey.md</code> line 669: <em>&ldquo;Embedded Claude Code + OpenAI Codex across the ~20-engineer team &mdash; daily architectural exploration, first-cut implementations, test scaffolding, all under hands-on review.&rdquo;</em> Line 220, his narration: <em>&ldquo;I ran the engineering team on Claude Code and OpenAI Codex &mdash; daily architectural exploration and first-cut implementations, all under hands-on review.&rdquo;</em> The organisation is real: line 104, <em>&ldquo;Voltuswave 2nd stint (0 &rarr; 20+ across 6 sub-teams: backend, React Native, web, AI, QA, DevOps)&rdquo;</em>.</li>
+<li>PRESENT &mdash; code review as the governance mechanism: <em>&ldquo;under hands-on review&rdquo;</em> (journey 669); card Deque bullet 6, <em>&ldquo;coaching engineers on documentation, code review, and scalable contracts&rdquo;</em>; card VoltusWave bullet 8, <em>&ldquo;company-wide adoption of Go and DynamoDB across 5 sub-teams with design-doc discipline&rdquo;</em>.</li>
+<li>PRESENT &mdash; test automation: <em>&ldquo;test scaffolding&rdquo;</em> is one of the three named activities of the rollout; card Deque bullet 5, the Puppeteer framework cutting regression time over 50%.</li>
+<li>PRESENT &mdash; production-readiness standards: master §6&rsquo;s adversarial self-review with twenty findings absorbed and one design held dark until its upstream contract shipped; KQ10 <em>&ldquo;20/20 local findings resolved, verdict: ship-with-changes&rdquo;</em>; KQ9 <em>&ldquo;21/21 findings dispositioned&rdquo;</em>; golden regression running in continuous integration (<code>prep/kq5</code>: <em>&ldquo;the golden regression fails CI&rdquo;</em>).</li>
+<li>PRESENT &mdash; CI/CD ownership, pre-AI era: card Deque bullet 4, <em>&ldquo;Modernised Continuous Integration / Continuous Deployment (CI/CD) from Jenkins to GitHub Actions, achieving ISO 27001 and 50% faster releases&rdquo;</em> (Dec 2019 &ndash; Feb 2025).</li>
+</ul>
+<h3>Gaps</h3>
+<ol>
+<li><b>Agentic tooling integrated INTO CI/CD pipelines is not evidenced.</b> The Deque CI/CD work predates the Claude Code / Codex rollout by years and proves CI/CD ownership, not agentic tooling in the pipeline; the KQ programme&rsquo;s CI runs the AI product&rsquo;s regression suite, which is a different thing. <b>v1 credited the Deque CI/CD line as satisfying this clause &mdash; that is the largest single reason v1 read 96.</b></li>
+<li>No measured outcome for the rollout. <code>professional-journey.md</code> line 672 holds it OPEN, and the standing rule is never to ask him again for a number he has said he does not have. The JD says &ldquo;demonstrable&rdquo;; the demonstration is the practice and the review discipline, not a delta.</li>
+<li>Scale: one ~20-engineer client-embedded organisation against a global publisher&rsquo;s engineering function.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p>RAMP ITEM. He has both halves &mdash; CI/CD ownership and a governed agentic-tooling practice &mdash; recorded in different years and not joined. Wiring AI-generated tests or review agents into a pipeline is a practice to stand up, not a capability he lacks. Score moves only on HIS confirmation that agentic tooling actually gated CI at VoltusWave (+1.8); no rewrite moves it.</p>
+<h3>Verdict</h3>
+<p>8/10. The second-largest loss at 3.60 points. The record shows agentic tooling governed through code review and test scaffolding across ~20 engineers, and CI/CD ownership at Deque years earlier &mdash; but not agentic tooling <em>in</em> a CI/CD pipeline, and no measured outcome.</p></div></details>
+
+<details id="c3"><summary>3 &middot; languages-and-ai-codegen-tools <span class="pill fact">weight 0.14</span> <span class="pill good">9 / 10</span> <span class="pill fact">contributes 12.6</span></summary><div><p class="wl-lead">JD line 3: <em>&ldquo;Expert fluency in at least 2 programming languages including Python and NodeJS; working knowledge of AI code generation tools (Codex/Claude Code/Cursor/GitHub Copilot/Augment Code)&rdquo;</em> and how they change development workflows and code quality standards. Both languages are named, not offered as examples; the five tools are an or-set.</p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; Python, production-deep inside its window: <code>professional-journey.md</code> line 678, the 10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph); the case-study corpus carries the ten FastAPI services in detail (KQ1 <em>&ldquo;Retrieval API FastAPI&rdquo;</em>; KQ7 <em>&ldquo;Serve &middot; FastAPI canonical metric-cache key&rdquo;</em>). CLAUDE.md safe-to-claim: Django, FastAPI, LangChain, LangGraph.</li>
+<li>PRESENT &mdash; Node.js across three employers, 2015&ndash;2025: CURA&rsquo;s Ubuntu + Node.js + MySQL deployment (master §11, 2015); Deque&rsquo;s axe Auditor compose stack with <em>&ldquo;3 node js processes&rdquo;</em> (journey line 539); the billing/subscription service <em>&ldquo;started as Node.js / TypeScript&rdquo;</em> used by all Deque products (line 568); the Puppeteer framework (a Node.js library); and the VoltusWave chat service he owned well enough to judge its ceiling and port to Go. CLAUDE.md: Node.js/Express claimable.</li>
+<li>PRESENT &mdash; beyond the two named: Java ~11 years across three eras; Go (the port target).</li>
+<li>PRESENT &mdash; AI code-generation tools at organisational scale: Claude Code + OpenAI Codex across ~20 engineers, all under hands-on review &mdash; two of the JD&rsquo;s five-tool or-set, run on a team, which answers the &ldquo;how they change development workflows and code quality standards&rdquo; clause directly.</li>
+</ul>
+<h3>Gaps</h3>
+<ol>
+<li>Python&rsquo;s evidenced production window is the VoltusWave second stint only &mdash; Mar 2025 to Apr 2026, roughly fourteen months; no Python appears in the record before March 2025 (verified by full-repo grep). &ldquo;Expert fluency&rdquo; is asserted on tenure the record does not carry; the depth within the window is real.</li>
+<li>Cursor, GitHub Copilot and Augment Code have not been run &mdash; an or-set, so a trivial ramp.</li>
+<li>Visibility, not score: the master contained &ldquo;Python&rdquo; 0 times, &ldquo;FastAPI&rdquo; 0, &ldquo;LangGraph&rdquo; 0, &ldquo;LangChain&rdquo; 0, and &ldquo;Node.js&rdquo; only as a runtime ported away from or a 2015 deployment. <b>That was the smallest lift on this workspace, and it is applied</b> &mdash; see <a href="resume_changes_for_87pct_match.html">the changes page</a>.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p>RAMP ITEM. Both named languages are production-real; the one-point deduction is Python tenure, which no rewrite supplies. Moves only if HE names a Django engagement with a pre-2025 duration (+0.7).</p>
+<h3>Verdict</h3>
+<p>9/10.</p></div></details>
+
+<details id="c4"><summary>4 &middot; cloud-native-aws <span class="pill fact">weight 0.14</span> <span class="pill good">9.5 / 10</span> <span class="pill fact">contributes 13.3</span></summary><div><p class="wl-lead">JD line 6: <em>&ldquo;Experience with cloud native ecosystems (AWS/Azure) with exposure on deployment infrastructure, observability, security and resilience paradigms&rdquo;</em>. AWS/Azure is an OR; Azure is never-claim; Amazon Web Services satisfies it outright.</p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; deployment infrastructure: card VoltusWave bullet 10, <em>&ldquo;Operationalised Amazon Web Services on Kubernetes, Terraform, Elastic Container Service Fargate at 70% Spot &mdash; deploy time under 10 minutes, infrastructure cost down 25&ndash;30%&rdquo;</em> &mdash; all user-confirmed 2026-08-25, with Terraform and Kubernetes <b>adopted as a company-wide standard</b>. Docker claimable. Plus ECS operations at the first stint (master §9), AWS Lambda automation (§10), PostgreSQL &rarr; Amazon RDS (Relational Database Service) and the zero-downtime Aurora 13.x upgrade at Deque; Kinesis, DynamoDB, OpenSearch, Neptune, SageMaker on the master.</li>
+<li>PRESENT &mdash; observability: Datadog introduced deliberately &mdash; <em>&ldquo;reduced the error to &lt; 3% in production&rdquo;</em> (journey line 658); Datadog and Amplitude on both Deque products (line 589); the in-house ELK (Elasticsearch/Logstash/Kibana) tier at Teletext; KQ1&rsquo;s self-hosted LangSmith with a tracer designed not to write protected health information.</li>
+<li>PRESENT &mdash; security: the HIPAA (Health Insurance Portability and Accountability Act) framework across 10 production pipelines (card VoltusWave bullet 11); ISO 27001 at Deque; Keycloak &rarr; Red Hat single sign-on with OpenID Connect and OAuth 2.0; protected health information kept in-VPC by self-hosting embeddings and Llama 3.1; role-based access control (RBAC) and least-privilege safe to claim.</li>
+<li>PRESENT &mdash; resilience: user-confirmed 2026-08-25 &mdash; the Go chat service and the two Kinesis streams carry high-availability design, multi-availability-zone deployment, failover and disaster recovery, driven by the HIPAA certification; load balancing owned (shape open); two-stream Enhanced Fan-Out expanding 4 to 1,200 shards; 70% Spot; KQ1&rsquo;s stale-serve fallback that keeps serving yesterday&rsquo;s index and pages the on-call.</li>
+</ul>
+<h3>Gaps</h3>
+<ol>
+<li>Single-cloud estate &mdash; no Azure, and Azure is never claimed. The JD writes an OR, so this is a ramp, not a cap.</li>
+<li>Observability is Datadog / ELK / self-hosted LangSmith; no OpenTelemetry-style tracing standard on the record (Prometheus and Grafana are never-claim).</li>
+<li>The load-balancer product is open (Application versus Network Load Balancer) &mdash; &ldquo;load balancing&rdquo; alone is what he confirmed, and nothing more specific is written anywhere.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p>RAMP ITEM. Every named paradigm is evidenced on AWS. Note this criterion is <b>better evidenced than when v1 scored it</b>: HA, failover, DR, load balancing and Kubernetes/Terraform as a company standard were all user-confirmed on 2026-08-25, after v1&rsquo;s 6 August build.</p>
+<h3>Verdict</h3>
+<p>9.5/10.</p></div></details>
+
+<details id="c5"><summary>5 &middot; scale-and-cross-geography-collaboration <span class="pill fact">weight 0.10</span> <span class="pill good">9.5 / 10</span> <span class="pill fact">contributes 9.5</span></summary><div><p class="wl-lead">JD line 1 (first half): <em>&ldquo;15+ years of experience in software engineering building software products, at scale&rdquo;</em>; line 7: <em>&ldquo;Strong ability to collaborate effectively across cross-functional teams in Product Management, UX and Analytics teams across different geographies and time zones&rdquo;</em>.</p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; 15+ years: the ten-role table, LyntonWeb Apr 2007 &rarr; VoltusWave Apr 2026; master headline &ldquo;19+ yrs&rdquo;.</li>
+<li>PRESENT &mdash; at scale, numerically: ~300 enterprise customers on axe Monitor; 2&ndash;3 million daily requests at Teletext; 100,000 concurrent connections in burst testing at P95 under 16 ms; 4 &rarr; 1,200 shards; 10,000+ patients onboarded; 9&ndash;10 years of patient history.</li>
+<li>PRESENT &mdash; geographies and time zones: Deque&rsquo;s United States&ndash;India teams (safe to claim, and a master skills line); Rocket&rsquo;s United States headquarters with a Bangalore team; six years employed inside United States corporations (El Paso, Houston; McDonald&rsquo;s, Oak Brook); the VoltusWave second stint embedded with a Chennai client, run from Hyderabad.</li>
+<li>PRESENT &mdash; product and analytics partnership: killer queries defined with the client&rsquo;s chief executive; card bullet 17&rsquo;s propensity matching, bootstrap resamples and sensitivity battery &mdash; analytics partnership at depth; Rocket&rsquo;s &ldquo;Partnered with product&rdquo; bullet.</li>
+</ul>
+<h3>Gaps</h3>
+<ol>
+<li>No named UX (user experience) research or design partnership anywhere in the record &mdash; the React Native and web sub-teams are engineering, not design. Half a point.</li>
+<li>The headline scale figure carries the open &ldquo;500 &rarr; 100,000 concurrent users&rdquo; wording on the confirm-or-reject list; the master already uses the defensible &ldquo;in burst testing&rdquo; form and this seat keeps it.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p>RAMP ITEM. Half a point for the absent UX partnership by name; everything else clears with room.</p>
+<h3>Verdict</h3>
+<p>9.5/10.</p></div></details>
+
+<details id="c6"><summary>6 &middot; architect-scope-3plus-years <span class="pill fact">weight 0.10</span> <span class="pill good">10 / 10</span> <span class="pill fact">contributes 10.0</span></summary><div><p class="wl-lead">JD line 1 (second half): <em>&ldquo;at least 3 years as a Tech Lead, Staff Engineer, or Architect responsible for defining and delivering technology solutions across complex domains&rdquo;</em>, and the role text: <em>&ldquo;Owning the end-to-end technical design of a domain, ensuring multiple sub-domains and systems form a coherent ecosystem.&rdquo;</em></p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; titles, far past three years: Principal Software Architect (Mar 2025 &ndash; Apr 2026); Lead SDE / Sr. Staff Engineer / Staff Software Engineer at Deque (Dec 2019 &ndash; Feb 2025) &mdash; the public posting accepts Tech Lead and Staff Engineer, so the Deque five years count on their own; Technical Architect (CURA, 2015); Technical Lead (innRoad); Software Architect (McDonald&rsquo;s); Co-Founder &amp; VP of Technology (2017&ndash;18).</li>
+<li>PRESENT &mdash; a domain of sub-domains forming one ecosystem: Deque&rsquo;s shared platform services &mdash; auth, billing, global config, <em>&ldquo;roughly 10&ndash;15 services by the time you left, starting from a monolith&rdquo;</em>; the split on independent scaling and database ownership; company-wide adoption of Go and DynamoDB across 5 sub-teams; Terraform and Kubernetes as a company-wide standard.</li>
+<li>PRESENT &mdash; complex domains, plural: healthcare under HIPAA; accessibility SaaS for regulated banks; mainframe/distributed database tooling (Rocket); FERC-governed interstate gas scheduling (El Paso &mdash; Nominations, Flowing Gas, Contracts); travel commerce (Teletext); master data management (McDonald&rsquo;s).</li>
+<li>PRESENT &mdash; architecture from planning, not review-at-the-end: <em>&ldquo;gave the architectural roadmap for the subsequent products to work from&rdquo;</em>; killer queries defined with the client&rsquo;s chief executive before a line was built.</li>
+</ul>
+<h3>Gaps</h3>
+<p>None on the bar the JD sets. The shape change &mdash; an individual-contributor seat with influence-based leadership, against a VP seat with 20+ engineers &mdash; is a real-world gate, not a scoring gap, and the IC seat is the one he wants.</p>
+<h3>Ramp item, or capability cap?</h3>
+<p>Neither. No deduction.</p>
+<h3>Verdict</h3>
+<p>10/10.</p></div></details>
+
+<details id="c7"><summary>7 &middot; coaching-and-ai-fluency-across-the-org <span class="pill fact">weight 0.09</span> <span class="pill good">9 / 10</span> <span class="pill fact">contributes 8.1</span></summary><div><p class="wl-lead">Role text: <em>&ldquo;Coach, mentor engineers across levels with the ability to build architectural thinking and AI fluency across the organisation &mdash; elevating technical capability beyond your immediate team&rdquo;</em>.</p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; mentoring across levels, repeatedly: master §9, an engineering organisation from 0 to 35 in 13 months, mentoring freshers and senior engineers; master §8, a 5-engineer team coached through delivery planning, code review and appraisals while remaining hands-on as an individual contributor; card Deque bullet 6, coaching on documentation, code review and scalable contracts; card innRoad bullet 3, engineering standards codified and the team mentored through a modernisation.</li>
+<li>PRESENT &mdash; architectural thinking beyond the immediate team: company-wide adoption of Go and DynamoDB across 5 sub-teams with design-doc discipline; Terraform and Kubernetes as a company-wide standard (user-confirmed); the KQ programme&rsquo;s adversarial-review discipline becoming shared platform components.</li>
+<li>PRESENT &mdash; AI fluency across an organisation: Claude Code + OpenAI Codex across the ~20-engineer team.</li>
+</ul>
+<h3>Gaps</h3>
+<ol>
+<li>The AI-fluency evidence is one ~20-engineer, client-embedded organisation; the JD&rsquo;s &ldquo;across the organisation&rdquo; at Condé Nast is a global engineering function.</li>
+<li>No measured outcome of the rollout (OPEN &mdash; never re-ask).</li>
+<li>Rocket is Software Engineer III, an individual contributor who ran appraisals for five &mdash; coaching, never a Director title.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p>RAMP ITEM. Scale of the organisation reached, not the ability to reach it.</p>
+<h3>Verdict</h3>
+<p>9/10.</p></div></details>
+
+<details id="c8"><summary>8 &middot; domain-advertising-subscriptions-commerce <span class="pill fact">weight 0.05</span> <span class="pill yellow">7 / 10</span> <span class="pill fact">contributes 3.5</span></summary><div><p class="wl-lead">JD line 2: <em>&ldquo;Working experience in one or more of Advertising, Subscriptions and Commerce domains would be a PLUS.&rdquo;</em> The JD&rsquo;s own capitalised word; weighted low so it cannot cap the technical score.</p>
+<h3>Evidence</h3>
+<ul>
+<li>PRESENT &mdash; Commerce, transactional and real: Teletext (2016&ndash;17) &mdash; the scatter-gather integration across 25 hotel suppliers on a MuleSoft enterprise service bus (ESB); hotel booking conversions lifted 65% across 2&ndash;3 million daily requests; supplier identifiers reconciled onto GIATA MultiCodes with revenue growing 8% month over month; LyntonWeb&rsquo;s supplier&ndash;buyer portal with PayPal settlement (2007).</li>
+<li>PRESENT &mdash; Subscriptions, in business-to-business form: the Deque billing/subscription service used by all products, with subscription tier gating feature access; per-customer PostgreSQL databases on Aurora controlling feature access by subscription status; Amura&rsquo;s purchase-a-subscription flow in the journey record.</li>
+<li>ABSENT &mdash; Advertising: no ad-serving, programmatic, demand- or supply-side platform, yield or audience work anywhere in the record, and none is claimed.</li>
+</ul>
+<h3>Gaps</h3>
+<ol>
+<li>Advertising is absent outright.</li>
+<li>Subscriptions is entitlement and billing for enterprise tenants, not consumer subscriber lifecycle (paywall, churn, renewal) as a publisher runs it.</li>
+<li>The +65% conversions figure is unverified (OPEN) &mdash; it stays on the résumé per the no-scrub rule and is flagged for prep, never scrubbed.</li>
+<li>Media, publishing and editorial domain experience is absent and never claimed &mdash; and deliberately not scored here: it is non-technical, and the non-technical axis never drags this number.</li>
+</ol>
+<h3>Ramp item, or capability cap?</h3>
+<p><b>CAPABILITY CAP on advertising</b> &mdash; the rubric&rsquo;s only one &mdash; on a line the JD itself marks a PLUS, so it costs 1.5 points and cannot cap the technical verdict. Commerce and business-to-business subscriptions are RAMP ITEMS toward a publisher&rsquo;s shape of the same domains.</p>
+<h3>Verdict</h3>
+<p>7/10.</p></div></details>
+</section>
+
+<section class="wl-job" id="constraint"><h2>The binding constraint, and the smallest honest lift</h2>
+
+<div class="callout warn"><p><strong>The binding constraint is the production SCOPE of the agentic work &mdash; an OPEN claim, not resolved anywhere in this workspace.</strong> Criterion&nbsp;1 loses <strong>4.00 points, 32% of everything lost</strong>, and every one of those points is scope or precision, not capability. What shipped, in the record&rsquo;s own words: KQ10&rsquo;s deterministic multi-agent orchestrator with three live model-backed finder personas; KQ1&rsquo;s claim-grammar guardrail in the serving path; real evaluation harnesses with golden-set shadow evaluation. What is split: on KQ9 and KQ10 the synthesis narrator <em>&ldquo;ships off by default&rdquo;</em> behind a narrative-guardrail contract that remains outstanding. <b>The rubric scores it shipped-where-live and the résumé words it shipped-where-live &mdash; &ldquo;narrator off by default&rdquo; is in the bullet itself. He settles the claim; no agent does.</b> Criterion&nbsp;2 is the second loss at 3.60: agentic practice and CI/CD ownership, real at two employers in two eras, never joined &mdash; and not joined in writing here either.</p></div>
+
+<h3>The smallest honest lift &mdash; visibility, not a new claim &mdash; applied</h3>
+<p>The rubric credits evidence wherever it sits, so no résumé edit moves 87.4; what the edit moves is whether a screener sees what the rubric saw. Verified against the master 2026-08-26: <b>&ldquo;Python&rdquo; 0 occurrences, &ldquo;FastAPI&rdquo; 0, &ldquo;LangGraph&rdquo; 0, &ldquo;LangChain&rdquo; 0, &ldquo;Kubernetes&rdquo; 0, &ldquo;Terraform&rdquo; 0, &ldquo;multi-agent&rdquo; 0.</b> All four moves are Rule&nbsp;7 re-vectoring of real work, and all four are applied in this workspace&rsquo;s <a href="upgrad_resume.html"><code>upgrad_resume.html</code></a>:</p>
+<ol>
+<li><strong>Python (FastAPI, LangChain, LangGraph) and Node.js on the page. <span class="pill good">applied</span></strong> A Key Skills fluency line, Python and FastAPI in the retrieval bullet, the Node.js-to-Go port named, the billing service re-led with Node.js/TypeScript.</li>
+<li><strong>KQ10 named as what its source calls it, worded shipped-where-live. <span class="pill good">applied</span></strong> The Orchestrated bullet: three model-backed finder agents on a deterministic LangGraph state graph, live in production &mdash; <b>narrator off by default</b>. Honest in both directions, and the direct answer to &ldquo;multi-agent pipeline architecture &hellip; in production&rdquo;.</li>
+<li><strong>Card bullet 10 merged per-claim. <span class="pill good">applied</span></strong> Kubernetes, Terraform (adopted as company-wide standard), ECS Fargate at 70% Spot, deploy time under 10 minutes, cost down 25&ndash;30% &mdash; all user-confirmed; the deployment-infrastructure clause of JD line 6, which the master did not carry.</li>
+<li><strong>The governance bullet kept exactly as the record has it. <span class="pill good">applied</span></strong> First-cut implementation and test scaffolding under hands-on review, across 20 engineers. No CI/CD claim, no adoption number.</li>
+</ol>
+
+<h3>The honest ceiling &mdash; movement only on HIS confirmation</h3>
+<div class="tablewrap"><table class="summary">
+<tr><th>Lift</th><th>Requires</th><th class="num">Gain</th></tr>
+<tr><td>Agentic 8 &rarr; 8.5</td><td>The narrative-guardrail contract was signed / the narrator ran on in production before Apr 2026</td><td class="num">+1.0</td></tr>
+<tr><td>Agentic 8.5 &rarr; 9</td><td>A nameable MCP server artefact &mdash; what it exposed, which client called it</td><td class="num">+1.0</td></tr>
+<tr><td>Governance 8 &rarr; 9</td><td>Agentic tooling actually gated CI at VoltusWave (AI-generated tests in the pipeline, a review agent on pull requests)</td><td class="num">+1.8</td></tr>
+<tr><td>Languages 9 &rarr; 9.5</td><td>A Django engagement with a pre-2025 duration he can name</td><td class="num">+0.7</td></tr>
+</table></div>
+<p class="note"><code>87.4 + 4.5 = 91.9</code> is the realistic ceiling. <b>The score has not been re-run</b>; <code>87.4</code> is what <code>score.json</code> holds, and a re-score followed by <code>automation/jobs_sync.py</code> is what would move it. Nothing on this page assumes it has moved.</p>
+
+<h3>Real-world gates &mdash; named separately, none of them touched the score</h3>
+<ul>
+<li><strong>Reposted since July.</strong> Posted 2026-07-31, reposted ~2026-08-22. The seat is open and was not filled by the first pass &mdash; a signal of a hiring manager still looking, not a red flag.</li>
+<li><strong>100+ applicants on the cold route.</strong> The LinkedIn portal is the crowded door; the inbound from a verified in-house recruiter is the uncrowded one. <b>Route through Lokesh.</b></li>
+<li><strong>Twenty days on the inbound.</strong> Lokesh Reddy Guntaka wrote on 6 August; no reply went out. The repost says he is still filling the seat, so the cost is credibility, not the seat &mdash; the staged reply acknowledges the gap plainly rather than explaining it away.</li>
+<li><strong>Levelling &mdash; forcing question one.</strong> &ldquo;Principal Engineer&rdquo; is the internal grade for the posted &ldquo;Solution Architect&rdquo; requisition &mdash; a strong inference from a verbatim text match (the duplicated-word typo included), not an org-chart fact.</li>
+<li><strong>Which domain the seat owns &mdash; forcing question two.</strong> Advertising, Subscriptions or Commerce is unstated and changes the character of the job.</li>
+<li><strong>Location and mode.</strong> Bengaluru on the posting; he is in Hyderabad; relocation is open and never a scoring constraint. The India work-mode day count is genuinely unverified.</li>
+<li><strong>⛔ Compensation &mdash; deferred</strong> by standing directive and deliberately not assessed anywhere in this workspace. v1&rsquo;s research recorded a gate here; it is not carried forward. The trigger is a company responding and the conversation actually reaching that stage.</li>
+</ul>
+
+<h3>Open claims &mdash; surfaced for prep, wording left alone</h3>
+<p>His call alone. None has been resolved, softened or rewritten &mdash; on this page, in <code>score.json</code>, or in the tailored résumé.</p>
+<ul>
+<li><strong>The narrator scope</strong> &mdash; KQ1&rsquo;s claim grammar is live; KQ9/KQ10&rsquo;s synthesis narrator ships off by default behind an unsigned contract. The Orchestrated bullet says &ldquo;narrator off by default&rdquo; in so many words; <b>whether that clause stays is his decision, and removing it upgrades the claim</b>.</li>
+<li><strong>The graph neural network wording</strong> &mdash; settled as real and normally in the headline. <b>For this seat only it moved from the headline into the Key Skills AI/ML line, verbatim</b> &mdash; the JD never asks for graphs &mdash; and that placement is his to veto.</li>
+<li><strong>&ldquo;500 &rarr; 100,000 concurrent users&rdquo;</strong> &mdash; the wording overstates a burst test. It never entered this seat&rsquo;s résumé; the master&rsquo;s &ldquo;in burst testing&rdquo; framing is what rides.</li>
+<li><strong>The 27&nbsp;ms average / P95 16&nbsp;ms pairing</strong> &mdash; a strength <em>if he names the tail</em>. The pairing is not on this seat&rsquo;s résumé; the P95 figure alone is.</li>
+<li><strong>~300 customers versus instances, and the 70&ndash;80% consolidation</strong> &mdash; both already on the master and already submitted; per the no-scrub rule they ride into this seat&rsquo;s summary and Deque block unedited.</li>
+<li><strong>The four Rocket metrics</strong> &mdash; 5-engineer team, bugs &minus;50%, adoption +20%, sales +20%. The decomposition itself is confirmed in his own words; only the numbers are open. Carried unchanged.</li>
+<li><strong>The +65% hotel conversions</strong> &mdash; user-supplied, unverified by his own documents, kept per the no-scrub rule.</li>
+</ul>
+<p class="note">⛔ <b>No interview prep is built in this workspace.</b> Prep waits until a company responds. Flagging these for later prep is the whole of what happens here.</p>
+</section>
+
+<section class="wl-files" id="files"><h2>Files in this workspace</h2>
+<ul>
+<li class="primary"><a href="reply.html">reply.html</a><span class="note"><b>The next action.</b> The rewritten reply to Lokesh Reddy Guntaka &mdash; owns the twenty-day delay in one line, corrects current location to Hyderabad, answers every field the deferral rules allow, offers a Friday 28 August call with the phone number. Staged as a copy block; send in the same InMail thread.</span></li>
+<li class="primary"><a href="upgrad_resume.html">upgrad_resume.html</a><span class="note">The per-job résumé, Rule&nbsp;7 re-vectored. <b>38 bullets, 38 unique leading verbs</b>, every bullet at most 25 words, none with a trailing period; 26 parsed bullets all carry a bolded fact. The exporter overwrites the ten parsed sections of the Hiration card from this file on every run.</span></li>
+<li><a href="jd.html">jd.html</a> &middot; <a href="jd.md">jd.md</a><span class="note">The posting <b>and the third-encounter history</b> &mdash; the two v1 builds, the 6 August inbound, the repost, and the v1 findings that stand. Source of every header fact on this page.</span></li>
+<li><a href="score.json">score.json</a><span class="note">The eight-criterion weighted rubric and the full adjudication this page renders. Do not hand-edit: <code>automation/jobs_sync.py</code> re-reads it to refresh the tracker &mdash; and has not yet been run for this seat.</span></li>
+<li><a href="research.html">research.html</a><span class="note">Third-look research: every load-bearing claim from the 21 July and 6 August v1 files re-fetched on 26 August, with a re-verification ledger, the Technology Lab&rsquo;s shape, red and green flags, and forcing questions.</span></li>
+<li><a href="bullets_for_upgrad.html">bullets_for_upgrad.html</a><span class="note">Every changed line relative to the master &mdash; 9 bullets plus the rewritten headline and summary &mdash; each a standalone <code>&lt;p&gt;</code> with raw <code>&lt;strong&gt;</code>, derived by diffing the two files rather than retyped.</span></li>
+<li><a href="resume_changes_for_87pct_match.html">resume_changes_for_87pct_match.html</a><span class="note">What changed and why per criterion, what was dropped and its cost, RAMP versus CAP, whether 95 is reachable (no &mdash; and it says so plainly), and <b>the comparison to v1&rsquo;s 96</b>.</span></li>
+<li><a href="paste_notes.json">paste_notes.json</a><span class="note">Why each changed section changed &mdash; the one thing <code>resume.py sheet</code> cannot derive. Ten sections carry notes.</span></li>
+</ul>
+<h2>v1 history &mdash; preserved in <code>v1/</code>, superseded where marked</h2>
+<ul>
+<li><a href="v1/jd.md">v1/jd.md</a><span class="note">v1&rsquo;s intake record of the same seven-bullet requisition.</span></li>
+<li><a href="v1/research_july.html">v1/research_july.html</a><span class="note">The 21 July diligence, built for the cold Solution Architect listing &mdash; legitimacy, the AI-native signal, stability. First encounter.</span></li>
+<li><a href="v1/research.html">v1/research.html</a><span class="note">The 6 August diligence &mdash; recruiter verification (four independent corroborations), the levelling read, the unstated-domain question. ⚠ Its compensation section is v1&rsquo;s and is <b>not carried forward</b>; compensation is deferred. Superseded by <a href="research.html">research.html</a>, which re-verified every load-bearing claim on 26 August.</span></li>
+<li><a href="v1/resume_changes_for_96pct_match.html">v1/resume_changes_for_96pct_match.html</a><span class="note">v1&rsquo;s 96-point change analysis &mdash; the file the v2 comparison reads against. Its 96 credited Deque&rsquo;s CI/CD to the agentic-tooling clause and missed KQ10; see <a href="resume_changes_for_87pct_match.html">the comparison</a>.</span></li>
+<li><a href="v1/reply_lokesh.html">v1/reply_lokesh.html</a><span class="note">The unsent 6 August reply. <b>Do not send</b> &mdash; it says current location Bengaluru (wrong then, wrong now) and is twenty days stale. Superseded by <a href="reply.html">reply.html</a>.</span></li>
+<li><a href="v1/Abhisheik_Deo_Resume_v1_aug18.pdf">v1/Abhisheik_Deo_Resume_v1_aug18.pdf</a><span class="note">The 18 August export. <b>Do not attach</b> &mdash; its contact line reads Bengaluru, which would contradict the reply it accompanies.</span></li>
+</ul>
+<h2>Not built yet</h2>
+<ul>
+<li><span class="dim">Abhisheik_Deo_Resume.pdf</span><span class="note">No export has been run for this workspace &mdash; and it is the one prerequisite in front of the send. When it runs: verify dates (VoltusWave ends <b>Apr 2026</b>), bold renders heavier, the LinkedIn slug <code>abhisheikdeo</code>, contact line reads <b>Hyderabad</b>, no <code>[fill in metric]</code>, at most three pages.</span></li>
+<li><span class="dim">paste_sheet.html</span><span class="note">Generated by <code>resume.py sheet</code> from the résumé. Not generated for this seat.</span></li>
+<li><span class="dim">Card screenshots</span><span class="note">None captured in this workspace.</span></li>
+<li><span class="dim">Interview prep</span><span class="note">Deliberately absent. Prep waits until a company responds, and then it is built in <code>~/Documents/interview-prep/</code>.</span></li>
+</ul>
+</section>
+
+<details class="wl-analysis"><summary>Full adjudication &mdash; arithmetic, the v1 comparison, the binding constraint, gates</summary>
+<p class="wl-lead">Everything below renders the <code>verdict</code> string in <code>score.json</code>.</p>
+<h3>Adjudication &mdash; Condé Nast Technology Labs, Principal Engineer (the posted Solution Architect requisition), Bengaluru</h3>
+<h3>TECHNICAL SCORE: 87.4 / 100</h3>
+<p>Scored fresh against the 2026-08-26 posting (LinkedIn 4446980024, reposted four days ago). v1&rsquo;s 96 was not inherited.</p>
+<p><strong>Weights sum to exactly 1.00. Arithmetic, verified by both routes:</strong></p>
+<div class="tablewrap"><table class="summary"><tr><th>#</th><th>Criterion</th><th class="num">Weight</th><th class="num">/10</th><th class="num">weight &times; score</th><th class="num">points lost</th></tr>
+<tr><td>1</td><td>Agentic AI in production (orchestration, tool use, evaluation, guardrails, multi-agent)</td><td class="num">0.20</td><td class="num">8</td><td class="num">1.60</td><td class="num"><b>4.00</b></td></tr>
+<tr><td>2</td><td>Defining and governing AI-assisted development practices</td><td class="num">0.18</td><td class="num">8</td><td class="num">1.44</td><td class="num"><b>3.60</b></td></tr>
+<tr><td>3</td><td>Two languages incl. Python and Node.js + AI code-generation tools</td><td class="num">0.14</td><td class="num">9</td><td class="num">1.26</td><td class="num">1.40</td></tr>
+<tr><td>4</td><td>Cloud-native AWS &mdash; deployment, observability, security, resilience</td><td class="num">0.14</td><td class="num">9.5</td><td class="num">1.33</td><td class="num">0.70</td></tr>
+<tr><td>5</td><td>At scale, 15+ years; cross-functional across geographies and time zones</td><td class="num">0.10</td><td class="num">9.5</td><td class="num">0.95</td><td class="num">0.50</td></tr>
+<tr><td>6</td><td>3+ years Tech Lead / Staff / Architect across complex domains</td><td class="num">0.10</td><td class="num">10</td><td class="num">1.00</td><td class="num">0.00</td></tr>
+<tr><td>7</td><td>Coaching and building AI fluency across the organisation</td><td class="num">0.09</td><td class="num">9</td><td class="num">0.81</td><td class="num">0.90</td></tr>
+<tr><td>8</td><td>Advertising / Subscriptions / Commerce &mdash; a PLUS</td><td class="num">0.05</td><td class="num">7</td><td class="num">0.35</td><td class="num">1.50</td></tr>
+<tr class="total"><td></td><td><b>TOTAL</b></td><td class="num"><b>1.00</b></td><td class="num"></td><td class="num"><b>8.74</b></td><td class="num"><b>12.60</b></td></tr></table></div>
+<p><code>sum(weight &times; score) = 8.74</code> &rarr; <code>87.4</code>. Losses sum to <code>12.60</code>, and <code>100 &minus; 12.60 = 87.4</code>. Both routes agree; asserted in the generator before this file was written.</p>
+<p><strong>Every deduction but one is a RAMP ITEM.</strong> The single CAPABILITY CAP &mdash; advertising &mdash; sits on the line the JD itself marks a PLUS and costs 1.5 points. Nothing the JD requires is a technology he lacks.</p>
+<hr />
+<h3>HOW THIS COMPARES TO v1&rsquo;s 96 &mdash; and why</h3>
+<p>v1 scored 96 on 21 July and again on 6 August. Applying today&rsquo;s scores to v1&rsquo;s own weights (22/20/16/15/13/9/5) gives <b>87.3</b>, so the 8.6-point gap is scoring, not weighting. Where it went:</p>
+<ul>
+<li><b>Governance, v1 10 &rarr; 8 (&minus;3.6).</b> v1 credited Deque&rsquo;s Jenkins &rarr; GitHub Actions (ISO 27001, 50% faster releases) and the Puppeteer framework as satisfying <em>&ldquo;how agentic tooling integrates into CI/CD pipelines&rdquo;</em>. Those are 2019&ndash;2025 CI/CD ownership; the agentic tooling arrived in 2025 and the record never joins them. Real evidence, wrong clause.</li>
+<li><b>Languages, v1 10 &rarr; 9 (&minus;1.4).</b> v1 called Python <em>&ldquo;production-deep&rdquo;</em> without noting the whole Python era is Mar 2025 &ndash; Apr 2026, roughly fourteen months. The JD says <em>&ldquo;expert fluency&rdquo;</em>.</li>
+<li><b>Agentic, v1 9 &rarr; 8 (&minus;2.0), with a different composition.</b> v1 missed KQ10 entirely &mdash; it wrote <em>&ldquo;no block below translates archetypes into multi-agent&rdquo;</em> and never cited the one query the source itself titles <em>&ldquo;Multi-Agent Orchestration&rdquo;</em> with live, model-backed finders. That finding raises the sub-ask v1 scored lowest. Against it, v1 booked nothing for the absent tool-use artefact or for targets-versus-measurements. Net one point down.</li>
+<li><b>Domain, v1 8 &rarr; 7 (&minus;0.5).</b> Subscriptions on the record is business-to-business entitlement, not a publisher&rsquo;s subscriber lifecycle.</li>
+<li><b>Cloud stays 9.5, and is better evidenced than v1 had it</b>: HA / multi-AZ / failover / DR on the chat platform, load balancing, and Kubernetes + Terraform as a company standard were all user-confirmed on 2026-08-25 &mdash; after v1&rsquo;s build.</li>
+<li>Collaboration 9.5 and architect scope 10 are unchanged; coaching / AI fluency is broken out as its own criterion at 9 because the posting names it as a responsibility.</li>
+</ul>
+<p>Three honesty calls v1 got right are kept: never claim Azure; the four archetypes are query patterns, not agents; no invented rollout metric.</p>
+<hr />
+<h3>THE HONEST CEILING</h3>
+<p>Movement comes only from HIS confirmation, never from a rewrite: narrator contract signed / narrator on before Apr 2026 (+1.0); a nameable MCP server artefact (+1.0); agentic tooling actually gated CI at VoltusWave (+1.8); a pre-2025 Django engagement (+0.7). <code>87.4 + 4.5 = 91.9</code> is the realistic ceiling. <b>95 is not reachable on this rubric by any honest route</b>: the remaining distance is advertising (absent, 1.5 points on a PLUS line) and Python tenure (a calendar fact). An honest 87 that survives the room beats a 96 built on crediting the wrong era&rsquo;s evidence.</p>
+<hr />
+<h3>REAL-WORLD GATES &mdash; NAMED SEPARATELY FROM THE SCORE</h3>
+<ul>
+<li><b>Reposted since July</b> &mdash; open, and a hiring manager still looking.</li>
+<li><b>100+ applicants on the cold route</b> &mdash; route through Lokesh, the uncrowded door.</li>
+<li><b>Twenty days on the inbound</b> &mdash; the cost is credibility, not the seat; acknowledge the gap plainly. v1&rsquo;s unsent reply also gave Bengaluru as current location; he is in Hyderabad.</li>
+<li><b>Levelling</b> &mdash; Principal Engineer as the internal grade for the posted Solution Architect requisition is a strong inference from a verbatim text match, not an org-chart fact. Forcing question one.</li>
+<li><b>Which domain the seat owns</b> &mdash; unstated, and it changes the job. Forcing question two.</li>
+<li><b>Location and mode</b> &mdash; Bengaluru posting; relocation open and never a scoring constraint; the work-mode day count genuinely unverified.</li>
+<li><b>Compensation is deferred</b> by standing directive and deliberately not assessed here. v1&rsquo;s gate is not carried forward.</li>
+</ul>
+<p>Non-technical score: none, by instruction. Interview prep: none, by instruction.</p>
+</details>
+
+<details class="collapsed-block"><summary>Glossary &mdash; every acronym and domain term on this page, expanded</summary>
+<ul>
+<li><strong>JD</strong> &mdash; job description</li>
+<li><strong>IC</strong> &mdash; individual contributor: an engineering track with no people-management mandate</li>
+<li><strong>InMail</strong> &mdash; LinkedIn&rsquo;s paid direct-message product, the channel the recruiter used on 6 August</li>
+<li><strong>PDF</strong> &mdash; Portable Document Format</li>
+<li><strong>JSON</strong> &mdash; JavaScript Object Notation, the format <code>score.json</code> is written in</li>
+<li><strong>AI</strong> &mdash; artificial intelligence</li>
+<li><strong>Agentic AI</strong> &mdash; systems where a language model participates in multi-step work &mdash; planning, calling tools, coordinating with other agents &mdash; rather than answering a single prompt</li>
+<li><strong>LLM</strong> &mdash; large language model</li>
+<li><strong>MCP</strong> &mdash; Model Context Protocol: an open standard through which a language-model client calls external tools and data sources; an &ldquo;MCP server&rdquo; exposes such tools</li>
+<li><strong>Multi-agent pipeline</strong> &mdash; several model-backed agents composed into one flow; here, KQ10&rsquo;s three &ldquo;finder&rdquo; personas fanning out in parallel behind a re-verifying barrier</li>
+<li><strong>Orchestration / state graph</strong> &mdash; the fixed control flow that sequences agent and code steps; LangGraph expresses it as a compiled graph whose edges are code, not model choices</li>
+<li><strong>Guardrail / claim grammar</strong> &mdash; a validator on model output; the field-level claim grammar requires every factual sentence to decompose into allowed templates backed by cited fields and edges that actually exist</li>
+<li><strong>Narrator</strong> &mdash; the language-model component that would write prose summaries over computed results; on KQ9/KQ10 it ships off by default pending a signed guardrail contract</li>
+<li><strong>Evaluation harness / golden set</strong> &mdash; a fixed, versioned test corpus a retrieval or analytics system is scored against before it may serve</li>
+<li><strong>NDCG@10</strong> &mdash; Normalized Discounted Cumulative Gain over the top ten results: a ranking-quality metric</li>
+<li><strong>RAG</strong> &mdash; retrieval-augmented generation: retrieving evidence first, then letting a model work only over what was retrieved</li>
+<li><strong>GNN</strong> &mdash; graph neural network</li>
+<li><strong>KQ</strong> &mdash; killer query: one of the ten flagship analytics questions in the case-study corpus (KQ1&hellip;KQ10)</li>
+<li><strong>In-VPC / VPC</strong> &mdash; virtual private cloud: a network isolated to one tenant; self-hosting models in-VPC keeps patient data inside the client boundary</li>
+<li><strong>AWS</strong> &mdash; Amazon Web Services</li>
+<li><strong>ECS / Fargate / Spot</strong> &mdash; Elastic Container Service, Amazon&rsquo;s container orchestrator; Fargate is its serverless mode; Spot is discounted spare capacity, reclaimable at short notice</li>
+<li><strong>RDS / Aurora</strong> &mdash; Relational Database Service, Amazon&rsquo;s managed databases; Aurora is its PostgreSQL- and MySQL-compatible engine</li>
+<li><strong>AZ / HA / DR</strong> &mdash; availability zone (one isolated data centre in a region); high availability; disaster recovery</li>
+<li><strong>Shard / Enhanced Fan-Out</strong> &mdash; one ordered slice of a Kinesis stream; Enhanced Fan-Out gives each consumer dedicated read throughput</li>
+<li><strong>ELK</strong> &mdash; Elasticsearch, Logstash and Kibana: a log and search stack</li>
+<li><strong>P95 / P99</strong> &mdash; the 95th and 99th percentile of a latency distribution: the slow tail, not the average</li>
+<li><strong>SaaS</strong> &mdash; software as a service</li>
+<li><strong>HIPAA</strong> &mdash; Health Insurance Portability and Accountability Act, the United States health-data privacy law &mdash; the VoltusWave chat platform&rsquo;s certification driver. <b>A different employer and different certification from ISO 27001</b>, which is Deque&rsquo;s</li>
+<li><strong>ISO 27001</strong> &mdash; the International Organization for Standardization&rsquo;s information-security management standard</li>
+<li><strong>CI/CD</strong> &mdash; continuous integration / continuous delivery: automated build, test and release</li>
+<li><strong>API</strong> &mdash; application programming interface; <strong>REST</strong> &mdash; representational state transfer</li>
+<li><strong>QA</strong> &mdash; quality assurance; <strong>UX</strong> &mdash; user experience</li>
+<li><strong>SSO / OIDC / OAuth 2.0</strong> &mdash; single sign-on; OpenID Connect; and the authorisation framework it sits on</li>
+<li><strong>RBAC</strong> &mdash; role-based access control; <strong>JWT</strong> &mdash; JSON Web Token, a signed token carrying claims</li>
+<li><strong>ESB</strong> &mdash; enterprise service bus, the MuleSoft integration backbone at Teletext</li>
+<li><strong>k6</strong> &mdash; an open-source load-testing tool (a proper noun, not an acronym)</li>
+<li><strong>ATS</strong> &mdash; applicant tracking system</li>
+</ul>
+</details>
+
+</main>
+</body>
+</html>

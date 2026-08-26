@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Condé Nast — Principal Engineer · research, third look</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<a class="skip-link" href="#verdict">Skip to the verdict</a>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> · August 2026 · 26 · conde-nast-principal-engineer · research</p>
+
+<header>
+  <p class="eyebrow">Company research · third look · every load-bearing claim from the 6 Aug and 21 Jul files re-fetched on 26 Aug 2026</p>
+  <h1>Condé Nast Technology Lab — <span class="nowrap">Principal Engineer</span>, Bengaluru</h1>
+  <p class="subtitle">The seat v1 scored twice and never sent. Re-verified against Condé Nast's own careers system rather than rediscovered — and the employer has changed one thing that turns v1's central inference into a fact.</p>
+</header>
+
+<div class="meta">
+  <span><b>Route</b> reply to Lokesh Reddy Guntaka's 6 Aug LinkedIn InMail (<a href="reply.html">reply</a>) — not the portal</span>
+  <span><b>Requisition</b> <b>R-24158</b> on Condé Nast's Workday, path <code>Solution-Architect_R-24158</code>, title <b>Principal Engineer</b></span>
+  <span><b>LinkedIn</b> job 4446980024 · reposted ~22 Aug · 144 applicants</span>
+  <span><b>Location</b> MARKSQUARE, Bengaluru · full time · no work mode stated</span>
+  <span><b>Open since</b> at least 21 Jul 2026 — five weeks, three postings</span>
+  <span><b>Sent</b> no</span>
+</div>
+
+<div class="banner">
+  <p><b>The one thing the employer changed since 6 August is the title.</b> The same LinkedIn job ID v1 fetched on 6 August under the heading <em>Solution Architect</em> now renders as <em>Principal Engineer</em>, and Condé Nast's own Workday system carries requisition <b>R-24158</b> with the posting path <code>Solution-Architect_R-24158</code>, the displayed title <b>Principal Engineer</b>, and a republish date of <b>19 Aug 2026</b>. v1's central finding — that "Principal Engineer" was the internal grade name for the posted Solution Architect requisition — was a labelled inference. <b>It is now an employer fact, visible in their own URL.</b> The same retitle was applied to a New York requisition the same week, and that one names the reason: <em>"a major transformation of teams and systems… smaller teams, fewer hand-offs, and AI native in how we work."</em></p>
+</div>
+
+<div class="toc">
+  <h4>On this page</h4>
+  <ol>
+    <li><a href="#glossary">First, the vocabulary</a></li>
+    <li><a href="#verdict">Verdict</a></li>
+    <li><a href="#changed">What changed since 6 August</a></li>
+    <li><a href="#ledger">The re-verification ledger — every v1 claim, marked</a></li>
+    <li><a href="#lab">The Technology Lab in Bengaluru — size, remit, who decides</a></li>
+    <li><a href="#red">Red flags</a></li>
+    <li><a href="#green">Green flags</a></li>
+    <li><a href="#questions">Forcing questions</a></li>
+    <li><a href="#limits">Limits of this research</a></li>
+  </ol>
+</div>
+
+<!-- ================================ GLOSSARY ================================ -->
+
+<h2 id="glossary">First, the vocabulary</h2>
+
+<p class="lede">These define what the words mean in practice, not just what the letters stand for. Media is a domain he has not worked in; the three business lines are defined the way Condé Nast actually runs them.</p>
+
+<dl class="context-grid">
+  <dt>Principal Engineer (as a level)</dt>
+  <dd>In most engineering ladders, <b>Principal</b> is the individual-contributor (IC) rung above Staff Engineer, roughly peer to an Engineering Director on the management side. The currency is technical authority across many teams rather than headcount: you own the design of a whole domain, set the standards others build to, and usually carry few or no direct reports. At Condé Nast the rung demonstrably exists — <a href="https://theorg.com/org/conde-nast/org-chart/rameshwor-kunwor" target="_blank" rel="noopener">a "Principal Security and Cloud Architect" since 2021 ↗</a> and <a href="https://theorg.com/org/conde-nast/org-chart/nate-laws" target="_blank" rel="noopener">an "Associate Principal Software Engineer" ↗</a> — and as of this month it is the displayed title on two live requisitions, Bengaluru and New York.</dd>
+
+  <dt>Requisition path versus displayed title</dt>
+  <dd>Workday, the applicant-tracking system (ATS) Condé Nast uses, builds a posting's web address from the title the requisition was <em>created</em> with and never rewrites it. So <code>Solution-Architect_R-24158</code> displayed as "Principal Engineer" means one requisition, created as Solution Architect, later retitled. That is the whole basis of the banner above, and it is the employer's own record rather than an aggregator's.</dd>
+
+  <dt>"Reposted"</dt>
+  <dd>LinkedIn's word for a listing the hirer has republished so it sorts as new. It says the seat is still open and still being pushed; it does not by itself say why. Here the Workday republish date (19 Aug) and the LinkedIn repost (about 22 Aug) line up with the retitle, which is the likeliest reason.</dd>
+
+  <dt>InMail</dt>
+  <dd>A LinkedIn message sent from a member's profile to someone outside their connections — the channel recruiters using LinkedIn Recruiter work through. Because it is sent from a profile, the sender's identity is the profile itself; there is no email header to spoof, which closes the one legitimacy check v1 left open.</dd>
+
+  <dt>Agentic Artificial Intelligence (AI), in production</dt>
+  <dd>Software in which a large language model (LLM) decides what to do next and calls tools to do it, rather than code deciding and the model only writing text. The requisition names the five real parts: <em>agent orchestration</em> (the control loop that plans, calls and retries), <em>LLM tool use</em> (typed functions the model may choose), <em>evaluation frameworks</em> (measuring output quality with numbers), <em>guardrail design</em> (mechanical limits on what the model may assert or do), and <em>multi-agent pipeline architecture</em> (several specialised agents coordinating). "In production" is doing serious work in that sentence, and a Principal-grade interviewer will ask which parts were.</dd>
+
+  <dt>AI-assisted development governance</dt>
+  <dd>Not "the team uses Copilot". Treating AI code generation as a governed engineering practice with rules and gates: who may generate what, how AI-written code enters code review, what test automation must prove before merge, what the production-readiness bar is, and how all of it plugs into the continuous integration / continuous delivery (CI/CD) pipeline. The rarest ask in the requisition, and the strongest reason this seat is worth pursuing.</dd>
+
+  <dt>Global Capability Centre (GCC) / captive engineering lab</dt>
+  <dd>An engineering site in India owned by the parent company rather than outsourced to a vendor. It builds the parent's own platform, not client work. Condé Nast Technology Lab is one: the code behind Vogue, GQ, WIRED and the rest is written here. The consequence that matters for this seat is that architecture authority may sit with the parent's engineering leadership in New York rather than in Bengaluru — which is a forcing question, not a fact.</dd>
+
+  <dt>Advertising — as Condé Nast runs it</dt>
+  <dd>The legacy revenue engine, defended with first-party data. The load-bearing asset is <b>Spire</b>, Condé Nast's own behavioural data platform, feeding <a href="https://admanager.google.com/home/success-stories/programmatic-guaranteed-conde-nast/" target="_blank" rel="noopener">Google Programmatic Guaranteed ↗</a> with Permutive as the data-management platform. Engineering shape: identity resolution, audience segmentation, real-time bidding, consent, high-volume event pipelines. <b>The one of the three domains he has no history in. None may be claimed.</b></dd>
+
+  <dt>Subscriptions — as Condé Nast runs it</dt>
+  <dd>Metered paywalls across the portfolio; The New Yorker, WIRED and Vanity Fair are the mature examples. Subscription revenue grew 10% in 2025, digital subscriptions 29% (<a href="https://www.mediapost.com/publications/article/413157/conde-nast-digs-in-ceo-roger-lynch-describes-grow.html" target="_blank" rel="noopener">MediaPost, 1 Mar 2026 ↗</a>). Engineering shape: metering and entitlement logic, identity, billing, churn, personalisation. His five years of multi-tenant software-as-a-service (SaaS) at Deque — tenant scoping, entitlements, 20+ enterprise clients — is the honest analogue.</dd>
+
+  <dt>Commerce — as Condé Nast runs it</dt>
+  <dd>The newest line and the most obviously AI-native. Commerce revenue grew 13% in 2025 (same memo). The affiliate model is being supplemented by <a href="https://fashionunited.com/news/retail/conde-nast-bets-on-creator-commerce-with-vette/2025091768263" target="_blank" rel="noopener">Vette ↗</a>, a creator-led storefront platform announced September 2025 for an early-2026 launch, in which Condé Nast processes checkout and brands drop-ship, with AI-driven merchandising and audience tooling. <em>The launch itself was not re-verified today; every indexed source is still the announcement.</em> Engineering shape: marketplace, checkout, catalogue integration, payments, creator analytics. His Teletext travel-commerce work — hotel booking conversions up 65%, 25 suppliers over a MuleSoft enterprise service bus (ESB) — is the genuine transactional-commerce credential.</dd>
+</dl>
+
+<!-- ================================ VERDICT ================================ -->
+
+<h2 id="verdict">Verdict</h2>
+
+<div class="tldr">
+  <strong>Reply to Lokesh today. The seat is real, open, still being pushed, and now carries the title he already uses.</strong>
+  <p>The requisition is live on Condé Nast's own careers system as of 26 Aug 2026, republished on 19 Aug under the title Principal Engineer, with the identical ten-bullet skills section v1 matched twice — the duplicated-word typo <em>"working on on Agentic AI"</em> is still in it on both LinkedIn and Workday. The recruiter's identity still corroborates across every index that names him, now including a fifth source, and the approach was a LinkedIn InMail, which closes the one check v1 left open. Nothing about the company moved against him in the twenty days: the parent's stability and AI signals re-verify as recorded, no India layoff event has surfaced, and Condé Nast opened four more senior engineering requisitions in New York and London in the same fortnight, so the Bengaluru seat is part of a wave rather than an orphan.</p>
+</div>
+
+<div class="callout">
+  <p><b>What this page is for.</b> v1 researched this seat thoroughly on 21 July and 6 August and both files sit in <code>v1/</code>. This page does not repeat them; it re-fetches every claim they rest on and marks each <b>CONFIRMED</b>, <b>CHANGED</b> or <b>NO LONGER VERIFIABLE</b> as of today, then records what is genuinely new. The value of a third look is the delta, and the delta is in the <a href="#changed">next section</a>.</p>
+</div>
+
+<div class="note">
+  <p><b>The single most expensive item on this page is not about Condé Nast.</b> A named, verified, in-house recruiter wrote on 6 August. It is 26 August. v1's own launcher row read <em>"reply drafted, still unsent"</em> on 24 August. The seat being reposted means he is still trying to fill it; it does not mean the delay was free. The reply owns the gap in one line and moves on — see <a href="reply.html">reply.html</a>.</p>
+</div>
+
+<!-- ================================ CHANGED ================================ -->
+
+<h2 id="changed">What changed since 6 August</h2>
+
+<p class="lede">Eight items moved. Two are material to how the seat is read, one closes an open legitimacy check, one is a correction v1's own address said he lived in the wrong city, and one is a date trap that a search engine will hand him fresh.</p>
+
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th style="width:4%">#</th><th style="width:28%">What moved</th><th>What was found on 26 Aug 2026</th><th style="width:22%">Source</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><b>The requisition was retitled and republished.</b> <span class="tag warn">CHANGED</span></td>
+      <td>Condé Nast's Workday carries <b>R-24158</b> at path <code>/job/MARKSQUARE-Bengaluru-IN/Solution-Architect_R-24158</code>, displayed title <b>Principal Engineer</b>, <code>startDate 2026-08-19</code>, "Posted 7 days ago", full time, location code MARKSQUARE Bengaluru. LinkedIn job 4446980024 — the URL v1 fetched under the slug <code>solution-architect-at-condé-nast-4446980024</code> — now renders the heading <b>Principal Engineer</b>, "reposted 4 days ago", 144 applicants. Same job ID, new title. <b>v1's inference that Principal Engineer was the internal name for the Solution Architect seat is now the employer's own record.</b></td>
+      <td><a href="https://condenast.wd115.myworkdayjobs.com/en-US/CondeCareers/job/Solution-Architect_R-24158" target="_blank" rel="noopener">Workday R-24158 ↗</a> · <a href="https://www.linkedin.com/jobs/view/4446980024" target="_blank" rel="noopener">LinkedIn 4446980024 ↗</a></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><b>The retitle is a pattern, not a one-off, and the reason is written down.</b> <span class="tag note">NEW</span></td>
+      <td>A New York requisition, <b>R-24387</b>, sits at path <code>Solution-Architect_R-24387-1</code> with the displayed title <b>Principal Engineer</b>, republished 17 Aug. Its body is different text — <em>"a principal-level technical authority to own how that stack is architected, how it reaches the reader, and what 'good' looks like at every layer"</em> — and it states the driver: <em>"We are undertaking the major transformation of teams and systems: organizing for speed, ownership and customer focus with smaller teams, fewer hand-offs, and AI native in how we work."</em> Two Solution Architect requisitions, one in each engineering hub, retitled Principal Engineer in the same week. <em>Inference, labelled:</em> the retitle is a levelling decision made centrally, which is why it happened mid-posting rather than at creation.</td>
+      <td><a href="https://condenast.wd115.myworkdayjobs.com/en-US/CondeCareers" target="_blank" rel="noopener">Workday careers, queried directly ↗</a></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><b>The posting history now spans five weeks and three postings.</b> <span class="tag warn">CHANGED</span></td>
+      <td>21 Jul: LinkedIn job 4429912901, Solution Architect (v1 July file). 31 Jul: LinkedIn job 4446980024, Solution Architect, the ID still live (v1 August file). 19 Aug: Workday republish as Principal Engineer; ~22 Aug: LinkedIn repost. The requisition number itself says it is the July seat, not a new one: R-24158 sits between R-24144 and R-24152, both "posted 30+ days ago", while the Software Engineer III posted nine days ago is R-24606. <em>Inference from the sequence, labelled.</em> A seat open since July with a rising applicant count and a mid-stream retitle either has a bar few clear — good for him — or a definition that was still being settled. Both readings go on the call.</td>
+      <td>v1 files in <code>v1/</code> · Workday sequence above</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><b>India requisitions on Workday fell from roughly eleven to four.</b> <span class="tag warn">CHANGED</span></td>
+      <td>v1 on 6 Aug listed Solution Architect, Engineering Manager, Design System Lead Engineer, Software Engineer III and Engineer II – Business Application (all Bengaluru, all 31 Jul), plus Machine Learning Engineer I and II, Software Engineer II and Technology Support Engineer in Bengaluru and Salesforce Engineer I and quality assurance (QA) Engineer II in Chennai. Today the whole system holds 147 live requisitions, 10 in India, of which four are engineering: <b>Principal Engineer</b> (R-24158), <b>Software Engineer III</b> (R-24606, 9 days), <b>Design System Lead Engineer</b> (R-15096, 30+ days), and <b>Engineer I, Security Operations</b> in Chennai (R-24576, 13 days). The Engineering Manager, both Machine Learning Engineer seats, Engineer II, Software Engineer II, Technology Support, Salesforce and QA requisitions are gone. <b>Filled or withdrawn is not knowable from outside</b>; it is a question.</td>
+      <td>Workday careers, all 147 postings paginated 26 Aug</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><b>The Lab now has a headcount figure, and it is smaller than v1's read.</b> <span class="tag note">NEW</span></td>
+      <td>Revelio Labs: <b>456 employees as of March 2026</b>, of which Engineering is 47.1% (215), Finance and Operations 29.0%, Sales and Marketing 23.9%; 99.5% in South Asia; <b>down 8.7% from 500 in 2023 and down 1.3% year on year</b>; 18 active postings in 2026, up 76.9% on 2025, at about seven new roles a month. The Lab's own LinkedIn page says "501–1,000 employees". v1 carried "several hundred engineers in India" — the confident read is now <b>about two hundred engineers</b>, in a unit that is slowly shrinking while hiring.</td>
+      <td><a href="https://www.reveliolabs.com/companies/conde-nast-technology-lab/employees" target="_blank" rel="noopener">Revelio Labs ↗</a> · <a href="https://in.linkedin.com/company/conde-nast-technology-lab" target="_blank" rel="noopener">Lab LinkedIn page ↗</a></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><b>The one open legitimacy check is closed.</b> <span class="tag good">CONFIRMED</span></td>
+      <td>v1's highest-value unclosed item was the sender's mail header. The intake now records the approach as a <b>LinkedIn InMail</b>, sent from a profile bearing his name and title. There is no email domain to spoof on an InMail; the profile is the identity, and he can see it in the thread. Separately, a fifth aggregator surfaced that v1 did not have: Naukri's recruiter directory lists <em>"Lokesh Reddy, Lead Talent Acquisition, Conde Nast India Pvt Ltd"</em>.</td>
+      <td><a href="https://www.naukri.com/conde-nast-india-pvt-ltd-recruiters" target="_blank" rel="noopener">Naukri recruiter directory ↗</a> (index snippet; page refuses automated fetch)</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><b>He does not live in Bengaluru.</b> <span class="tag bad">CORRECTED</span></td>
+      <td>v1's August page carried "He is already Bengaluru-based, so this is a non-issue" as a green flag, and v1's unsent reply stated "Current location: Bengaluru". <b>He lives in Hyderabad.</b> The seat is Bengaluru, MARKSQUARE, and relocation is not a constraint — but the reply must say Hyderabad, and the work-mode question below now has a second half.</td>
+      <td>Workspace rulebook, set 25 Aug 2026</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><b>A date trap, new this pass.</b> <span class="tag warn">TRAP</span></td>
+      <td>A search for "Condé Nast layoffs August 2026" returns a summary dating the Teen Vogue fold into Vogue.com, six union layoffs and the viral confrontation with the Chief People Officer to <em>August 2026</em>. <b>It was November 2025.</b> HR Executive's piece is dated 11 Nov 2025 and says "this month"; Deadline's is November 2025. Same class as the December 2024 Adweek C-suite piece v1 flagged. Do not present either as recent.</td>
+      <td><a href="https://hrexecutive.com/when-layoffs-go-viral-what-hr-can-learn-from-conde-nasts-teen-vogue-fallout/" target="_blank" rel="noopener">HR Executive, 11 Nov 2025 ↗</a> · <a href="https://deadline.com/2025/11/conde-nast-fires-staffers-teen-vogue-1236609695/" target="_blank" rel="noopener">Deadline, Nov 2025 ↗</a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="evidence">
+  <strong>What did not change, and is worth saying so.</strong>
+  <p>No India layoff event has been reported in any indexed news source between 6 and 26 August. No Condé Nast recruitment-fraud report exists. The parent-level news in the window is one item — Condé Nast and Pitchfork's co-founder settled their lawsuit over the ended Chicago festival, reported 4 Aug 2026 by <a href="https://blockclubchicago.org/2026/08/04/pitchfork-co-founder-conde-nast-appear-to-settle-lawsuit-after-public-legal-battle/" target="_blank" rel="noopener">Block Club Chicago ↗</a> — which touches neither engineering nor India. The Chief Executive's April statements, the March growth memo and the May search-traffic directive all re-fetch exactly as v1 recorded them.</p>
+</div>
+
+<!-- ================================ LEDGER ================================ -->
+
+<h2 id="ledger">The re-verification ledger — every v1 claim, marked</h2>
+
+<p class="lede">Each row is a claim v1's research rested on. Status is as of 26 Aug 2026. "No longer verifiable" means the page refused automated retrieval today, not that the claim is doubted; what the search index still shows is recorded beside it.</p>
+
+<div class="tablewrap">
+<table>
+  <thead>
+    <tr><th style="width:30%">v1 claim</th><th style="width:12%">Status</th><th>Found today</th><th style="width:20%">Source</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><b>The requisition is real and open</b>, LinkedIn job 4446980024, Bengaluru KA, posted 31 Jul</td><td><span class="tag warn">CHANGED</span></td><td>Real, open, republished 19 Aug on Workday and ~22 Aug on LinkedIn, retitled Principal Engineer. Same ID. Location text "Location: Bengaluru, KA" still in the body.</td><td>Workday R-24158 · LinkedIn 4446980024</td></tr>
+    <tr><td><b>The recruiter is a verified in-house Talent Acquisition Lead</b> — ContactOut, ZoomInfo, RocketReach, LeadIQ</td><td><span class="tag good">CONFIRMED</span> <span class="tag fact">index</span></td><td>ContactOut, ZoomInfo and RocketReach now return HTTP 403 to automated fetch; the search index still lists ZoomInfo as "Talent Acquisition Lead at Condé Nast" and ContactOut as "Condé Nast Technology Lab". Naukri adds a fifth. The New York city stamp on ZoomInfo persists and remains a headquarters artefact — Naukri stamps him Chennai, which is the other Lab site. His signature says Technology Labs. Not worth raising.</td><td><a href="https://www.zoominfo.com/p/Lokesh-Guntaka/13293302305" target="_blank" rel="noopener">ZoomInfo ↗</a> · <a href="https://contactout.com/lokesh-reddy-guntaka-88774" target="_blank" rel="noopener">ContactOut ↗</a> · Naukri</td></tr>
+    <tr><td><b>The email convention</b> first_last@condenast.com</td><td><span class="tag fact">NOT RE-FETCHED</span></td><td>RocketReach refuses automated fetch today. Moot: the approach was an InMail, not an email.</td><td>v1 record</td></tr>
+    <tr><td><b>The JD is verbatim the Solution Architect requisition</b>, same bullets, same "working on on" typo</td><td><span class="tag good">CONFIRMED</span></td><td>Both LinkedIn and Workday carry the identical ten-bullet "Desired Skills and Experience" section today, with <em>"hands-on experience working on on Agentic AI projects in production"</em> intact, and the "connective tissue" and "co-designer from the start" sentences. The pasted <a href="jd.html">jd</a> matches it line for line.</td><td>Workday R-24158 · LinkedIn 4446980024</td></tr>
+    <tr><td><b>"3+ years as a Tech Lead, Staff Engineer, or Architect"</b> is the public wording (recruiter compressed it)</td><td><span class="tag good">CONFIRMED</span></td><td>Verbatim on both live listings.</td><td>as above</td></tr>
+    <tr><td><b>No posted title "Principal Engineer" exists anywhere at Condé Nast</b></td><td><span class="tag warn">CHANGED</span></td><td>Two now exist, Bengaluru R-24158 and New York R-24387, both on Solution-Architect requisition paths. The absence v1 recorded was true on 6 Aug and is the reason the retitle is detectable.</td><td>Workday search, "Principal", 35 results</td></tr>
+    <tr><td><b>Peer set is Solution Architects and Engineering Directors; Staff Engineers are influenced</b></td><td><span class="tag good">CONFIRMED</span></td><td>"You'll partner with… Peer Solution Architects and Engineering Directors… Staff Engineers, Engineering VPs and Directors" — verbatim today. Note the body still says "Peer Solution Architects" under a Principal Engineer heading, which is consistent with a retitle of the grade and not of the peer set.</td><td>Workday R-24158</td></tr>
+    <tr><td><b>Technology Lab exists, Bengaluru and Chennai, builds sites serving 500 million-plus users</b></td><td><span class="tag good">CONFIRMED</span></td><td>Lab LinkedIn page: "scaling, building, deploying websites that serve over 500 million users globally"; "total monthly visitors reaching more than 550 million"; 501–1,000 employees; Bengaluru 560025.</td><td><a href="https://in.linkedin.com/company/conde-nast-technology-lab" target="_blank" rel="noopener">Lab LinkedIn ↗</a></td></tr>
+    <tr><td><b>Bengaluru office is MARKSQUARE, St Marks Road; Chennai is DLF Downtown1</b></td><td><span class="tag good">CONFIRMED</span></td><td>Both are the live Workday location codes today: R-24158 "MARKSQUARE, Bengaluru, IN"; R-24576 "DLF Downtown1, Chennai, IN". Quoting Lavelle Road remains quoting an old address.</td><td>Workday</td></tr>
+    <tr><td><b>India headcount not established</b></td><td><span class="tag note">NEW DATA</span></td><td>456 (March 2026), ~215 engineering, down 8.7% since 2023. See change 5.</td><td>Revelio Labs</td></tr>
+    <tr><td><b>Work mode unknown for India</b>; four-day return-to-office reported for UK and US only</td><td><span class="tag good">CONFIRMED</span> unchanged</td><td>Workday gives <code>timeType: Full time</code> and no remote type. No India day count exists in any source. Still a question, now with a Hyderabad half.</td><td>Workday R-24158</td></tr>
+    <tr><td><b>Vasanth Williams is Chief Product and Technology Officer with an AI mandate</b>, from December 2025</td><td><span class="tag good">CONFIRMED</span></td><td>Editor &amp; Publisher: assumed the role on 8 December; previously chief product officer and executive vice president of engineering at Major League Baseball; earlier Amazon, Microsoft, Yodle. v1's "one field reads 2026-12-08" was a typo for 2025-12-08.</td><td><a href="https://www.editorandpublisher.com/stories/vasanth-williams-named-chief-product-and-technology-officer-at-cond-nast,259061" target="_blank" rel="noopener">Editor &amp; Publisher ↗</a> · <a href="https://www.adweek.com/media/conde-nast-vasanth-williams-chief-product-technology-officer-microsoft-ai-licensing-pilot/" target="_blank" rel="noopener">Adweek ↗</a></td></tr>
+    <tr><td><b>Three AI content-licensing deals</b> — OpenAI, Amazon, Microsoft</td><td><span class="tag warn">CHANGED</span> (count)</td><td>Four. Condé Nast is a launch partner of Perplexity's Comet Plus revenue-share scheme — "Conde Nast, Fortune, The Los Angeles Times and The Washington Post have all signed up as Comet Plus launch partners" — announced 2 Oct 2025, formalised January 2026. Four of the largest AI platforms pay Condé Nast for content.</td><td><a href="https://pressgazette.co.uk/news/perplexity-launches-ai-subscription-revenue-share-scheme-for-publishers/" target="_blank" rel="noopener">Press Gazette ↗</a></td></tr>
+    <tr><td><b>~70 AI pilots; 2025 subscriptions +10%, digital +29%, commerce +13%, branded content +9%, events +40%; fourth year of profit growth</b></td><td><span class="tag good">CONFIRMED</span></td><td>Re-fetched: MediaPost, 1 Mar 2026, all figures as recorded; seven largest brands drive 85% of revenue.</td><td><a href="https://www.mediapost.com/publications/article/413157/conde-nast-digs-in-ceo-roger-lynch-describes-grow.html" target="_blank" rel="noopener">MediaPost ↗</a></td></tr>
+    <tr><td><b>Lynch, 16 Apr 2026: no plans to shut more brands; 2025 revenue growth; Q1 2026 beat budget; AI "more of a tailwind now than a headwind"</b></td><td><span class="tag good">CONFIRMED</span></td><td>Re-fetched; quotations match.</td><td><a href="https://www.semafor.com/article/04/16/2026/cond-nast-ceo-roger-lynch-says-no-plans-to-shut-down-more-magazine-brands" target="_blank" rel="noopener">Semafor ↗</a></td></tr>
+    <tr><td><b>Lynch, 13 May 2026: plan as if search traffic is zero</b>, citing a 43%-by-2029 projection</td><td><span class="tag good">CONFIRMED</span> (directive) · <span class="tag fact">not re-fetched</span> (43%)</td><td>Search Engine Journal, 13 May 2026: "Assume there's no search… plan as if search is zero", expecting search to settle at a single-digit share of traffic. The 43% figure came from AdTechRadar in v1 and was not re-fetched today; say "single digits" rather than quote it.</td><td><a href="https://www.searchenginejournal.com/conde-nast-ceo-plan-as-if-search-traffic-will-be-zero/574786/" target="_blank" rel="noopener">Search Engine Journal ↗</a></td></tr>
+    <tr><td><b>Databricks + Amazon Web Services (AWS) + Amazon Bedrock data platform</b></td><td><span class="tag fact">CARRIED FORWARD</span></td><td>Undated AWS case study, not re-verified in v1 or here. The Machine Learning Engineer requisitions v1 cited as corroboration ("Databricks or AWS environments") are no longer live, so the corroboration weakened. Treat as likely, ask rather than assert.</td><td><a href="https://aws.amazon.com/solutions/case-studies/conde-nast-data-case-study/" target="_blank" rel="noopener">AWS case study ↗</a></td></tr>
+    <tr><td><b>Glassdoor India 3.2/5 across 215 reviews; Software Engineer cohort 2.8/5 across 51</b></td><td><span class="tag bad">NO LONGER VERIFIABLE</span> directly</td><td>Both Glassdoor domains return HTTP 403 to automated fetch. The search index snapshot reads <b>3.3/5 across 215 reviews</b> — the same 215 v1 counted, so no new India review has been indexed in twenty days; the rounding differs by a tenth between sources. Software Engineer cohort 2.8/5 across 51, unchanged; that cohort rates Condé Nast 25% below the media-industry average. Review themes unchanged: senior leadership at senior vice president (SVP) and above in the US and UK without a clear roadmap, "frequent firing whenever they can't meet revenue/financial goals", Bangalore and Chennai named directly. Self-reported, small sample, directional.</td><td><a href="https://www.glassdoor.com/Reviews/Cond%C3%A9-Nast-India-Reviews-EI_IE8360.0,10_IL.11,16_IN115.htm" target="_blank" rel="noopener">Glassdoor India ↗</a> (index snippet)</td></tr>
+    <tr><td><b>Restructuring lands on US and European editorial, not the India Lab</b> — SELF, Glamour DE/ES/MX, WIRED Italy, Teen Vogue; 16 and 33 union figures</td><td><span class="tag good">CONFIRMED</span></td><td>No India action reported in any indexed source through 26 Aug. The only India-side signal remains undated review prose ("recent layoffs created uncertainty"), as v1 recorded. Set against it: the Lab is hiring at seven roles a month while its India requisition count just dropped — see change 4.</td><td><a href="https://www.nyguild.org/post/statement-from-conde-union-on-latest-round-of-layoffs" target="_blank" rel="noopener">NewsGuild ↗</a> · v1</td></tr>
+    <tr><td><b>Adweek "Culls Its C-Suite" is December 2024, not 2026</b></td><td><span class="tag good">CONFIRMED</span></td><td>Still ranks in "2026" searches; still December 2024. Now joined by the Teen Vogue trap — change 8.</td><td>v1 record</td></tr>
+    <tr><td><b>Zoho Recruit portal is stale; Workday is the real ATS</b></td><td><span class="tag good">CONFIRMED</span> (Workday) · <span class="tag fact">not re-fetched</span> (Zoho)</td><td>Workday is live and queryable, on tenant <code>wd115</code> — v1's links used <code>wd5</code>, which now returns HTTP 500. Any link to the careers site should use <code>condenast.wd115.myworkdayjobs.com</code>. Moot for the route: the route is Lokesh.</td><td>Workday</td></tr>
+    <tr><td><b>He is Bengaluru-based</b></td><td><span class="tag bad">WRONG</span></td><td>Hyderabad. Corrected — change 7.</td><td>Rulebook</td></tr>
+    <tr><td><b>Compensation gate</b> — v1's August page carried a full section and two red flags on it</td><td><span class="tag deferred">STRIPPED</span></td><td>Deferred by his standing directive. Not carried forward in any form. Handled when a conversation reaches that stage.</td><td>Rulebook</td></tr>
+    <tr><td><b>/last30days social footprint null</b>, both sweeps</td><td><span class="tag fact">NOT RE-RUN</span></td><td>Not repeated this pass. Two prior sweeps were null; nothing in today's news search suggests a third would differ.</td><td>v1 record</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ================================ LAB ================================ -->
+
+<h2 id="lab">The Technology Lab in Bengaluru — size, remit, who decides</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <strong>Size</strong>
+    <p>About <b>456 people</b> across Bengaluru and Chennai as of March 2026, roughly <b>215 of them engineers</b>, in a unit that has shrunk 8.7% since 2023 while posting about seven roles a month (Revelio Labs). The LinkedIn page's "501–1,000" band and the 2020 plan of "300+ by 2021" both sit above the measured figure. <em>This is the first hard number any Condé Nast file in this workspace has had.</em></p>
+  </div>
+  <div class="card">
+    <strong>What it owns</strong>
+    <p>Product Engineering, Platform Engineering and Core Engineering for the sites serving the brand portfolio — 500 million-plus users, 550 million monthly visitors — per the Lab's own page. The Bengaluru requisitions live today are the Principal Engineer, a Software Engineer III and a Design System Lead Engineer; Chennai's is security operations. No machine-learning seat is currently open in India.</p>
+  </div>
+  <div class="card">
+    <strong>Are architecture decisions made there?</strong>
+    <p><b>Not established, and the evidence leans both ways.</b> For: the Bengaluru requisition is written as domain-owning — "owning the end-to-end technical design of a domain" — and names Engineering Directors and Vice Presidents as partners, not approvers. Against: the parallel New York Principal Engineer is written as owning "how that stack is architected… at every layer", two Director of Engineering seats (Front End, Publishing Platform) opened in New York this month, and India review prose repeatedly places leadership at SVP and above in the US and UK. <em>Inference:</em> the Lab owns domains within a platform whose top-level architecture is set in New York. That is exactly what forcing question 3 is for.</p>
+  </div>
+  <div class="card">
+    <strong>Who else is being hired, and where</strong>
+    <p>In the same fortnight as the Bengaluru republish: Principal Engineer, New York (17 Aug); Director, Engineering, Front End, New York (~11 Aug); Director, Engineering, Publishing Platform, New York (~17 Aug); Lead, Privacy Engineering &amp; Data Governance, London (25 Aug). A new Chief Product and Technology Officer eight months in, a stated transformation to "smaller teams, fewer hand-offs, and AI native", and a wave of senior engineering seats across all three hubs. The Bengaluru seat is downstream of that programme.</p>
+  </div>
+</div>
+
+<div class="warn">
+  <p><b>Time-zone load is structural, not incidental.</b> The requisition asks for collaboration "across different geographies and time zones" with partners who sit in New York and London. From Bengaluru that means regular late-evening India Standard Time calls. Schedule density is never scored here; his five years running distributed United States–India delivery at Deque is the direct answer when it comes up. Name it on the call rather than discover it.</p>
+</div>
+
+<!-- ================================ RED ================================ -->
+
+<h2 id="red">Red flags</h2>
+
+<p class="lede">Internal page: gaps are named plainly. None of these is a reason not to send; two of them are reasons to send today.</p>
+
+<div class="warn">
+  <p><b>1. Twenty days of silence to a named in-house recruiter.</b> The risk on this seat is not Condé Nast's; it is his. An internal Talent Acquisition Lead who sourced him on 6 August has had no reply while the requisition was retitled, republished and passed 144 applicants. The reply owns it in one line — no excuse, no elaboration — and puts a call on the table. Any further day makes the line harder to write.</p>
+</div>
+
+<div class="warn">
+  <p><b>2. Open since July, retitled mid-stream, applicant count still rising.</b> Five weeks and three postings for a fifteen-plus-year architect seat is not unusual; a title change three weeks in is. Either the bar is high enough that the queue is not clearing — which favours the one candidate who can answer the two heaviest bullets — or the grade was unsettled when Lokesh wrote. The parallel New York retitle says it is the second, and that it has now been settled. Ask which; do not assume.</p>
+</div>
+
+<div class="warn">
+  <p><b>3. The Lab is slowly shrinking and just lost seven of its eleven open engineering requisitions.</b> Down 8.7% in headcount since 2023 (Revelio), and the Engineering Manager, both Machine Learning Engineer seats and four others posted on 31 July are no longer listed on 26 August. Filled in three weeks is possible; withdrawn is possible. It is a one-line question — "how is the Bengaluru hiring plan shaping up this half" — and the answer says a great deal about whether this seat is a build or a backfill.</p>
+</div>
+
+<div class="warn">
+  <p><b>4. India employee sentiment is mediocre and unchanged.</b> 3.2–3.3/5 across the same 215 reviews v1 saw; the Software Engineer cohort at 2.8/5 sits a quarter below the media-industry average. The recurring themes — leadership at SVP and above in the US and UK with an unclear roadmap, "frequent firing whenever they can't meet revenue/financial goals", no clear promotion path for in-house staff — are individual anecdotes, small sample, undated. They generate two forcing questions and are not used to score anything.</p>
+</div>
+
+<div class="warn">
+  <p><b>5. The parent's restructuring is real and continuing, and the engineering organisation is now explicitly in a "transformation".</b> Editorial cuts through April 2026 landed on US and European titles. The New York Principal Engineer requisition's own words — "smaller teams, fewer hand-offs" — describe an engineering reorganisation in progress. That is the environment an architect seat is being created into. It is also, read the other way, why the seat exists.</p>
+</div>
+
+<div class="note">
+  <p><b>6. His side — the production scope of the agentic work is an open claim, and it is the binding technical constraint.</b> The requisition's fourth bullet is <em>hands-on Agentic AI in production</em>. The workspace record splits it by killer query (KQ): KQ1's claim grammar is live; KQ9's shared narrative contract is unsigned and its narrator ships off by default. <b>This page surfaces it and does nothing else.</b> No agent resolves it, no artefact rewrites it, and the résumé wording stays where it is until he settles it. Same for the "four reusable archetypes": orchestration over a shared platform is not multi-agent coordination unless the archetypes coordinate, and that translation does not happen anywhere until he confirms it. No Amura outcome metric exists and none is implied.</p>
+</div>
+
+<div class="note">
+  <p><b>7. Azure, and three of five named tools, are not his.</b> The requisition writes "AWS/Azure" as an or, which AWS satisfies outright; Azure is a ramp item and is never claimed. Claude Code and OpenAI Codex are his at organisational scale; Cursor, GitHub Copilot and Augment Code are not, and the list is an or-set. Naming the real two is honest and sufficient. There is no metric for the Claude Code / Codex rollout and none may be invented.</p>
+</div>
+
+<!-- ================================ GREEN ================================ -->
+
+<h2 id="green">Green flags</h2>
+
+<div class="evidence">
+  <strong>1. The title on the employer's own careers site now matches the one he already carries.</strong>
+  <p>His LinkedIn headline reads Principal Software Architect. The requisition now reads Principal Engineer on Condé Nast's Workday and on LinkedIn, under a Solution Architect path that proves the grade was raised to that name rather than reached down to. v1 had to argue the mapping; the reply no longer does.</p>
+</div>
+
+<div class="evidence">
+  <strong>2. A genuine inbound from a verified in-house recruiter at a marquee publisher, on a seat still being pushed.</strong>
+  <p>Five independent listings corroborate name, title and entity; the approach was an InMail from the profile itself; there is no fraud report naming Condé Nast anywhere. The republish and repost after his silence mean the seat is unfilled and Lokesh is still working it. A warm named route beats a 144-applicant queue, and the queue is where the July build would have gone.</p>
+</div>
+
+<div class="evidence">
+  <strong>3. The two heaviest asks are the two most architects cannot answer — and are his most recent year.</strong>
+  <p><em>Defining and governing AI-assisted development practices within an engineering organisation</em>: a measured Claude Code and OpenAI Codex rollout across a 20-engineer organisation, on top of a documented history of Jenkins → GitHub Actions with ISO 27001, Puppeteer regression automation, and production-readiness ownership across six sub-teams. <em>Agentic AI in production</em>: LangChain, LangGraph, real Model Context Protocol (MCP) servers, and the killer-query programme — scoped honestly per red flag 6. Both required languages are in production: Python (Django, FastAPI) and Node.js (Deque's billing service; the pre-Go chat service he sized and replaced). Cloud native on AWS with Kubernetes and Terraform adopted as a company-wide standard, Datadog and ELK for observability, HIPAA-driven high-availability design on the chat platform.</p>
+</div>
+
+<div class="evidence">
+  <strong>4. The seat is part of a funded, named programme, not an orphan requisition.</strong>
+  <p>A Chief Product and Technology Officer in post since December with an AI brief; four AI content-licensing counterparties — OpenAI, Amazon, Microsoft, Perplexity — paying for content; seventy AI pilots; a Chief Executive who told every brand in May to plan for zero search traffic; and this month, senior engineering seats opened in Bengaluru, New York and London with "AI native in how we work" written into the New York body. The bullet about governing AI-assisted development is not aspirational copy; it is the programme's hiring criterion.</p>
+</div>
+
+<div class="evidence">
+  <strong>5. The stability signal still points the right way at parent level.</strong>
+  <p>Fourth consecutive year of profit growth, first quarter of 2026 ahead of budget, no further brand closures planned, and AI reframed by the Chief Executive as a tailwind — all re-verified today, none contradicted since. The India Lab is hiring at seven roles a month even as its headcount drifts down.</p>
+</div>
+
+<div class="evidence">
+  <strong>6. The public wording is the generous one.</strong>
+  <p>"Tech Lead, Staff Engineer, <em>or</em> Architect" on both live listings, against the recruiter's compressed "Architect". Advertising, Subscriptions and Commerce are a plus, not a requirement, and two of the three — subscriptions in its business-to-business form at Deque, commerce at Teletext — are real. Cross-geography collaboration is answered by five years of US–India delivery.</p>
+</div>
+
+<!-- ================================ QUESTIONS ================================ -->
+
+<h2 id="questions">Forcing questions</h2>
+
+<p class="lede">For the call, not the reply. The reply answers what Lokesh asked, in his order, and proposes a slot about two days out. Everything below is asked out loud.</p>
+
+<h3>The three that matter most</h3>
+<ol>
+  <li><b>"The Workday listing now reads Principal Engineer on requisition R-24158, whose path still says Solution Architect — is that a retitle of the same seat, and what does Principal map to internally: peer to Engineering Director, or a rung below?"</b> <span class="why">Naming the requisition number and the path shows he has read the employer's own system, not a job board, and it forces the levelling answer in one sentence. The New York retitle the same week suggests it was decided centrally; his answer confirms or corrects that.</span></li>
+  <li><b>"Which domain does this seat own — Advertising, Subscriptions, Commerce, or platform — and is it greenfield or an existing estate to bring into shape?"</b> <span class="why">The requisition never says, and the answer changes the character of the job completely. If it is commerce or Vette, the Teletext booking-funnel and 25-supplier ESB work is the bridge to lead with; if subscriptions, the Deque multi-tenant entitlements work is; if advertising, that is the one domain he has never touched and the conversation should say so plainly.</span></li>
+  <li><b>"How much of the agentic AI in the description is running in production at the Lab today versus being built — and who sets the AI-assisted development standards, Bengaluru or New York?"</b> <span class="why">Separates the corporate programme from the Lab's shipped footprint, and tells him whether the seat governs standards or inherits them. It also earns him the right to be equally precise about his own production boundary, which he must be.</span></li>
+</ol>
+
+<h3>The rest, in order of value</h3>
+<ol start="4">
+  <li><b>"Does the seat carry direct reports, or is it pure technical influence and mentorship?"</b> <span class="why">The body reads influence-based — "coach, mentor engineers across levels" — and never says. This workspace builds IC seats; confirm rather than infer.</span></li>
+  <li><b>"What does the working week look like — days in the Bengaluru office, and what is the standing overlap with New York and London?"</b> <span class="why">The four-day return-to-office policy is reported for UK and US staff only; the India day count exists nowhere. He lives in Hyderabad, relocation is open, and the honest question is what "Bengaluru" means in practice from day one.</span></li>
+  <li><b>"Seven Bengaluru and Chennai requisitions posted on 31 July are no longer listed — how is the Lab's hiring plan shaping up this half?"</b> <span class="why">Asked neutrally, it is a scoping question about the team he would join. Filled fast and withdrawn are very different answers.</span></li>
+  <li><b>"The New York Principal Engineer posting talks about smaller teams and fewer hand-offs — what does that transformation look like from the Lab's side?"</b> <span class="why">Demonstrates he read the parallel requisition, and surfaces whether the Bengaluru seat is being created into a reorganisation or after one.</span></li>
+  <li><b>"How does this seat sit against Vasanth Williams' agenda as Chief Product and Technology Officer?"</b> <span class="why">Shows he has done the reading and tests whether the requisition has executive sponsorship or is a middle-layer wish. Say "since late last year" rather than quote a date.</span></li>
+  <li><b>"What does the interview process look like, and who runs the technical round — the Lab, or New York?"</b> <span class="why">Given a new Chief Product and Technology Officer (CPTO) and a parallel New York seat, who runs the technical round says what the seat is really being hired for.</span></li>
+</ol>
+
+<div class="tip">
+  <p><b>Where these go, and where they do not.</b> Per the recruiter-reply rule, a written reply answers exactly what was asked, in the order asked, then puts a call on the table — with no added questions, however useful they look. Every extra written question is one more thing between him and a phone call. <b>All nine belong on the call.</b> The one arguable exception is question 1: naming the requisition number in writing is short, specific and reads as diligence rather than negotiation. That is his call, not this page's.</p>
+</div>
+
+<!-- ================================ LIMITS ================================ -->
+
+<h2 id="limits">Limits of this research</h2>
+
+<div class="panel">
+<ul>
+  <li><b>Compensation was excluded by his standing directive and does not appear anywhere on this page</b> — no band, no comparison, no reservation, and v1's section on it was not carried forward in any form. The recruiter's six-field template included compensation fields; the standing handling applies and is not this page's business.</li>
+  <li><b>No interview preparation was built and none should be inferred.</b> The forcing questions establish what the seat is on a first call; they are not a question bank.</li>
+  <li><b>Everything about the requisition comes from Condé Nast's own Workday system, queried directly on 26 Aug 2026</b> — requisition identifiers, posting paths, republish dates, location codes, full description text, and the count of 147 live postings. That is the strongest source available and it is why the banner and change items 1–4 are firm. <b>Requisitions close.</b> R-24158, R-24387, R-24606, R-24576 and R-15096 were all live on 26 Aug and may not be when he reads this.</li>
+  <li><b>The "same requisition since July" reading rests on the R-number sequence and the URL path.</b> Both are Workday's own artefacts and both point the same way, but neither is a statement by Condé Nast. It is labelled as inference wherever it appears.</li>
+  <li><b>Glassdoor, ContactOut, ZoomInfo, RocketReach, Naukri and the Wayback Machine all refused automated retrieval today</b> (HTTP 403, or 429 for Wayback). Every review figure and every recruiter corroboration above therefore comes from search-index snippets rather than the page itself, and is marked so. The 215-review count matching v1's exactly is the reason to believe nothing new landed; it is not proof.</li>
+  <li><b>Headcount is one vendor's model.</b> Revelio Labs' 456 / 215 figures are derived from public profile data, not from Condé Nast. They are the best number available and they are still a model. Do not quote them to two significant figures in a room; "a few hundred, about two hundred engineers" is the honest form.</li>
+  <li><b>Whether architecture decisions are made in Bengaluru is not established</b> and is presented as an inference with evidence on both sides. It is forcing question 3.</li>
+  <li><b>Vette's launch, the 43% search-traffic projection and the Databricks / AWS / Bedrock platform are carried forward from v1, not re-verified today</b>, and each is marked as such in the ledger.</li>
+  <li><b>Two date traps are live in search engines</b>: the December 2024 Adweek C-suite piece and the November 2025 Teen Vogue fold both surface as "2026" news. Neither is recent. A Condé Nast interviewer would spot either instantly.</li>
+  <li><b>No social-signal sweep was re-run.</b> Two prior sweeps were null; today's news search found one parent-level item in the window and nothing about the Lab.</li>
+  <li><b>No open claim was touched.</b> The production scope of the agentic work and the four archetypes, the graph neural network wording, the four Rocket metrics, the 70–80% consolidation, the 27 ms / P95 16 ms pairing, and the "500 to 100,000 concurrent users" wording are all his to settle. Where one is adjacent to a finding above it is surfaced and explicitly left alone; the agentic-scope item is red flag 6 and is flagged there rather than assumed.</li>
+</ul>
+</div>
+
+<p class="signoff">Research re-verified 26 Aug 2026 · against Condé Nast's own careers system rather than job boards · builds on the 6 Aug and 21 Jul files in <code>v1/</code> · no compensation content, no interview preparation, by instruction · <b>the route is the reply to Lokesh, today</b></p>
+
+</main>
+</body>
+</html>

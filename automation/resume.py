@@ -105,7 +105,14 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None,
     up = "../" * len(rel.parts)
     dest = dest_dir / "upgrad_resume.html"
     dest.write_text(
-        master.read_text(encoding="utf-8").replace('href="../style.css"', f'href="{up}style.css"'),
+        # Both the stylesheet AND copy.js need repointing. Only style.css was
+        # rewritten until 2026-08-26, so every workspace inherited a dead
+        # src="../static/copy.js" -- which meant every copy button on every
+        # tailored résumé silently did nothing. It fails quietly, which is why it
+        # survived six workspaces before an adversarial pass caught it.
+        master.read_text(encoding="utf-8")
+              .replace('href="../style.css"', f'href="{up}style.css"')
+              .replace('src="../static/copy.js"', f'src="{up}static/copy.js"'),
         encoding="utf-8")
     (dest_dir / "paste_notes.json").write_text("{}\n")
     title = f"{company} — {role}" if company and role else slug
