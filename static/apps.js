@@ -197,7 +197,10 @@
       return;
     }
     const by = new Map();
-    data.applications.forEach(a => {
+    // Archived rows have no tab, so they are not rendered at all rather than
+    // rendered-and-hidden: 92 hidden nodes are 92 chances for a filter bug to
+    // surface a seat he archived on purpose.
+    data.applications.filter(a => a.tab !== "archived").forEach(a => {
       const k = a.intake || "";
       if (!by.has(k)) by.set(k, []);
       by.get(k).push(a);

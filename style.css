@@ -3510,27 +3510,50 @@ section.pasted .paste-area { border-color: var(--good); }
 
 /* Workspace shortcuts. Everything below Applications used to be card grids that
    needed scrolling past; one user, who already knows what these are, needs the
-   link and not the card. */
+   link and not the card. One group per line, label in a fixed column, so the
+   eye lands on a group before it lands on a link. */
 .quick-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 26px;
-  margin: 0 0 34px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--rule, rgba(0,0,0,.12));
-  font-size: 13px;
+  margin: 0 0 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
 }
 
-.qn-group { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+.qn-group {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  align-items: baseline;
+  gap: 4px 16px;
+  padding: 5px 0;
+}
 
 .qn-label {
   font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+  font-size: 10px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 
-.quick-nav a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+.qn-links { display: flex; flex-wrap: wrap; gap: 4px 0; }
+
+.quick-nav a {
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding: 0 10px;
+  border-right: 1px solid var(--rule);
+  line-height: 1.35;
+}
+
+.quick-nav a:first-child { padding-left: 0; }
+.quick-nav a:last-child { border-right: 0; }
+
 .quick-nav a:hover,
 .quick-nav a:focus-visible { color: var(--accent); border-bottom-color: var(--accent); }
+
+@media (max-width: 640px) {
+  .qn-group { grid-template-columns: 1fr; gap: 2px; }
+  .quick-nav a:first-child { padding-left: 0; }
+}

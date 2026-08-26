@@ -21,24 +21,30 @@
 <nav class="quick-nav" aria-label="Workspace shortcuts">
   <span class="qn-group">
     <span class="qn-label">Master</span>
+    <span class="qn-links">
     <a href="master/paste_sheet.html" title="master/paste_sheet.html">Paste sheet</a>
     <a href="master/CHANGES.html" title="master/CHANGES.html">Changes</a>
     <a href="master/upgrad_resume.html" title="master/upgrad_resume.html">Résumé</a>
     <a href="master/merge_proposal.html" title="master/merge_proposal.html">Merge proposal</a>
     <a href="master/README.md" title="master/README.md">Parser contract</a>
+    </span>
   </span>
   <span class="qn-group">
     <span class="qn-label">Case studies</span>
+    <span class="qn-links">
     <a href="killer-query-case-studies/summary.html" title="killer-query-case-studies/summary.html">Summary</a>
     <a href="killer-query-case-studies/index.html" title="killer-query-case-studies/">All ten</a>
     <a href="killer-query-case-studies/prep/kq1-precedent-search.html" title="killer-query-case-studies/prep/">Prep</a>
+    </span>
   </span>
   <span class="qn-group">
     <span class="qn-label">Reference</span>
+    <span class="qn-links">
     <a href="professional-journey.md" title="professional-journey.md">Journey</a>
     <a href="professional-journey-original.md" title="professional-journey-original.md">His original</a>
     <a href="resume-issues-to-avoid/index.html" title="resume-issues-to-avoid/">Hygiene</a>
     <a href="CLAUDE.md" title="CLAUDE.md">Working rules</a>
+    </span>
   </span>
 </nav>
 
@@ -46,8 +52,8 @@
   <h2>Applications</h2>
   <!-- Seven tabs over twelve statuses. The mapping and the reasoning behind it
        live in automation/jobs_db.py (TAB_FOR_STATUS) and automation/README.md.
-       There is deliberately no "all": `archived` holds v1's 92 rows and its own
-       tab is the only way to reach them. Counts are filled from the rows by
+       There is deliberately no "all", and no "archived" tab either: v1's 92 rows
+       are archived in the database and simply never render here. Counts are filled from the rows by
        static/tabs.js — never written here. -->
   <div class="app-controls">
     <div class="status-tabs" role="tablist" aria-label="Filter applications by status">
@@ -57,7 +63,6 @@
       <button class="status-tab" type="button" data-tab="heard-back" role="tab" aria-selected="false">Heard back <span class="tab-count">0</span></button>
       <button class="status-tab" type="button" data-tab="not-selected" role="tab" aria-selected="false">Not selected <span class="tab-count">0</span></button>
       <button class="status-tab" type="button" data-tab="other" role="tab" aria-selected="false">Other <span class="tab-count">0</span></button>
-      <button class="status-tab" type="button" data-tab="archived" role="tab" aria-selected="false">Archived <span class="tab-count">0</span></button>
     </div>
     <input id="app-search" class="app-search" type="search"
            placeholder="Search company or role…" aria-label="Search company or role"

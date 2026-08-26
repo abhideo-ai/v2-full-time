@@ -50,7 +50,7 @@ const type    = async (w, q) => {
 (async () => {
   const api = JSON.parse(await (await fetch(API + "/api/jobs")).text());
   const total = api.applications.length;
-  const TABS = ["ready", "applied", "closed", "heard-back", "not-selected", "other", "archived"];
+  const TABS = ["ready", "applied", "closed", "heard-back", "not-selected", "other"];
 
   console.log("\n1. Rendered from the database, as rows and not cards");
   let w = await boot(API), d = w.document;
@@ -99,23 +99,23 @@ const type    = async (w, q) => {
      "and re-rendered rows restore every count with no initTabs() call at all");
   ok(rows(d).length === total, "with every row back on the page");
 
-  console.log("\n4. Archived rows are reachable ONLY through the archived tab");
+  console.log("\n4. Archived rows never reach the page at all");
   for (const t of TABS) {
     await click(w, t);
     ok(visible(d).every(r => r.dataset.status === t), `the ${t} tab shows only ${t} rows`);
   }
+  ok(!d.querySelector('[data-tab="archived"]'), "there is no archived tab to click");
+  ok(rows(d).every(r => r.dataset.status !== "archived"),
+     "and no archived row is in the DOM, hidden or otherwise");
+  ok(api.counts.archived > 0,
+     `the API still reports ${api.counts.archived} archived — they are filtered at render, not deleted`);
   await click(w, "ready");
-  ok(visible(d).every(r => r.dataset.status !== "archived"),
-     "no archived row is visible in the tab that opens by default");
   ok(visible(d).length === api.counts.ready, `ready shows ${visible(d).length} of ${api.counts.ready}`);
-  await click(w, "archived");
-  ok(visible(d).length === api.counts.archived,
-     `archived shows all ${api.counts.archived} of them`);
-  ok(tab(d, "archived").getAttribute("aria-selected") === "true", "the tab marks itself selected");
+  ok(tab(d, "ready").getAttribute("aria-selected") === "true", "the tab marks itself selected");
 
   console.log("\n5. Group headers say what is derivable and nothing else");
   const groupsShown = [...d.querySelectorAll(".date-group")].filter(g => !g.hidden);
-  ok(groupsShown.length > 0, `${groupsShown.length} group(s) visible on the archived tab`);
+  ok(groupsShown.length > 0, `${groupsShown.length} group(s) visible on the ready tab`);
   ok(groupsShown.every(g => {
     const shown = [...g.querySelectorAll("[data-status]")].filter(r => !r.hidden).length;
     return g.querySelector(".gcount").textContent === `${shown} seat${shown === 1 ? "" : "s"}`;
