@@ -1,209 +1,150 @@
 # RESUME_SESSION.md
 
-**READ THIS FIRST at the start of every session.** This is the session handoff — what was in flight
-when the last context was cleared, and what to pick up.
+**READ THIS FIRST at the start of every session.** What was in flight when the last context was
+cleared, and what to pick up.
 
 **Rewrite it whenever the context is about to be cleared, and whenever the picture changes
-materially.** It is a living file, not a log: it describes the CURRENT state and the NEXT action.
-Overwrite freely — git carries the history. Keep it readable in a minute.
+materially.** It describes the CURRENT state and the NEXT action. Overwrite freely — git carries the
+history. Keep it readable in a minute.
 
-**Last rewritten: 2026-08-25 ~23:55.**
+**Last rewritten: 2026-08-26 ~18:15.**
 
-**The other two files that matter:** `CLAUDE.md` is the rulebook and carries a Status section;
-`PENDING.md` holds run IDs and analysis that outlives a single session.
+**The other files that matter:** `CLAUDE.md` is the rulebook and carries a Status section;
+`db/README.md` documents the databases and the query cheatsheet; `db/DESIGN-bullets.md` is the
+not-yet-built forward architecture.
 
 ---
 
 ## THE JOB WAITING FOR YOU
 
-**SEND SOMETHING. Nothing has gone out.**
+**Two seats are built, verified and unsent. Both have a named human to write to.**
 
-Three tailored, verified PDFs now exist and one recruiter reply is staged and unsent. The build side
-of the loop is done for these four seats. The send side has not started.
+1. **Condé Nast (87.4)** — `reply.html` is written and waiting. **This is the third encounter with
+   this seat.** v1 built it 21 Jul (scored 96, never applied) and again 6 Aug after an inbound
+   InMail from **Lokesh Reddy Guntaka**, in-house Talent Acquisition Lead — and that reply was never
+   sent. Twenty days passed and the seat was reposted. The new reply apologises for the delay in one
+   line, corrects v1's wrong "Bengaluru" to Hyderabad, answers every field he asked for **except
+   current CTC**, and offers Friday 28 August. **This is the warmest route in the pipeline.**
+2. **Keyloop (89.6, the highest score)** — PDF verified, no outreach contact identified yet.
+   Applying is through the posting.
 
-**Cheapest single action: he pastes `August-2026/25/wipro-principal-software-architect/reply.html`
-into LinkedIn.** Verified, carries his number, offers Thursday 27 August.
-
----
-
-## Current state — BUILT AND EXPORTED
-
-```
-August-2026/25/yes-madam-lead-architect/            pdf=YES  score=88.375  tailored=YES  sent=no
-August-2026/25/principal-architect-ai-native/       pdf=YES  score=84.9    tailored=YES  sent=no
-August-2026/25/o9-senior-architect-agentic/         pdf=YES  score=81.4    tailored=YES  sent=no
-August-2026/25/wipro-principal-software-architect/  pdf=no   score=NONE (no JD)  reply=STAGED, unsent
-```
-
-All three PDFs: **3 pages, ATS 85, no `[fill in metric]`, VoltusWave ends Apr '26**, LinkedIn slug
-`abhisheikdeo` — which lives in a **PDF link annotation, not extractable text**, so a text-only grep
-reads it as missing. That is a false alarm; check the annotations.
-
-**They are genuinely different documents**, which was the whole point: Yes Madam carries Kubernetes,
-Terraform, HIPAA and load balancing; o9 carries Python, DuckDB, Parquet and SageMaker; AI-Native
-carries the retrieval stack and the shared-platform ledger.
+**Also open:** Wipro's reply to Harisri Parthasarathi, staged yesterday and still unsent. And Paul
+Abbott (Andela) was told Abhisheik was interested before the seat was withdrawn — a two-line note
+closing that loop keeps the Andela door open.
 
 ---
 
-## What changed, and why the scores moved
+## The board — query it, never read it off filenames
 
-**Yes Madam went 83.0 → 88.375 without a single new claim** — all of it work he had already done that
-was missing from the résumé.
-
-| Confirmed 2026-08-25 | Consequence |
-|---|---|
-| **Kubernetes + Terraform real**, and **adopted as a company-wide standard** | Yes Madam's 2.25-pt "unrecoverable" Kubernetes cap → zero. AI-Native standards-adoption 7.5 → 8.5 |
-| **High-availability design real** — multi-AZ, failover, disaster recovery | Another 2.0-pt floor removed |
-| **The certification is HIPAA** | Bullet names it instead of "a certification requirement" |
-| **He owned load balancing** | A JD-*required* line that had scored zero |
-| **All 17 VoltusWave bullets accurate** — *"everything is accurate"* | The whole merge pool became usable |
-
----
-
-## THE CARD TRAP — read before touching any card
-
-**TWO live Hiration cards carry DIFFERENT VoltusWave blocks.** A full session was lost to this.
-
-- `august_ic_master_resume` (**the export default**) — VoltusWave = **10 bullets**, identical to
-  `master/upgrad_resume.html`. No Kubernetes, no Terraform, no Fargate, no k6.
-- `august_master_resume` — VoltusWave = **17 bullets**. **This is the block every handoff note ever
-  meant**: Kubernetes, Terraform, ECS Fargate at 70% Spot, k6, React Native across 2 app stores, the
-  four named archetypes, `TraversalSource`, Rosenbaum gamma + E-value.
-
-**Dumping only the IC card produces a confident, wrong conclusion that the 17 bullets do not exist.**
-Both are now on disk and committed:
-
-```
-automation/.venv/bin/python automation/dump_card.py [--card NAME]   # READ-ONLY, never writes
-  -> master/live_card_dump.json / .md              (august_ic_master_resume)
-  -> master/live_card_dump_august_master.json/.md  (august_master_resume)
+```sql
+psql -d jobs_tracker_v2 -c "select slug, status, fit_score, applied_at from applications order by fit_score desc nulls last;"
 ```
 
-**The real card-versus-master gap is DEQUE**, not VoltusWave: both cards carry **14** Deque bullets,
-the master carries **6**.
+| seat | status | tech | sent | contact |
+|---|---|---|---|---|
+| keyloop-principal-architect | **ready** | **90** | — | — |
+| modmed-senior-software-architect | applied | 89 | 16:45 | Prabhakar Teguri (in-house) |
+| yes-madam-lead-architect | applied | 88 | 11:37 | — |
+| conde-nast-principal-engineer | **ready** | 87 | — | **Lokesh Reddy Guntaka (in-house)** |
+| principal-architect-ai-native | applied | 85 | 16:36 | — |
+| o9-senior-architect-agentic | applied | 81 | 12:19 | — |
+| wolters-kluwer-…-ai-platform-engineer | withdrawn | 70 | — | Paul Abbott (Andela) |
+| wipro-principal-software-architect | awaiting JD | — | — | Harisri Parthasarathi |
+
+**Four sent on 26 August.** That column was empty that morning. v1 died with 23 built and unsent.
+
+**Every seat has a verified PDF except Wipro**, which has no job description and therefore no score —
+inventing rubric criteria from a job title is the failure to avoid.
 
 ---
 
-## STILL HIS HAND
+## What changed structurally today — read before touching the tooling
 
-- **The merge into `master/upgrad_resume.html`.** `master/merge_proposal.html` stages it as
-  whole-section copy blocks: **24 merged VoltusWave bullets + 11 Deque, 35 unique leading verbs, all
-  25 words or fewer.** The per-seat résumés already draw from it, but the **master still has zero
-  hits for Kubernetes, Terraform, Jenkins, GitHub Actions, k6 and Fargate.**
-  - **It is a POOL, not a drop-in** — 35 bullets where those roles carry 16 today, and the file is
-    already 3 pages at 39.
-  - **Variants A and B** differ on exactly two bullets. All three seats used **B** (targets framed as
-    *designed to*, per the honesty rule). Switching to A is his election, never a default.
-- **El Paso's three card bullets still read .NET.** Title is fixed; bullets revert on save. Correct
-  text: `master/upgrad_resume.html` section 14.
-- **The +65% hotel conversions** — unresolved; stays per the no-scrub rule.
-
----
-
-## HONESTY — the constraints that govern every bullet
-
-- **No Amura outcome metrics exist.** Every figure in those case studies is a **pre-registered
-  acceptance target**. Scale and design markers are fine. **Never present a target as achieved.**
-- **The worst landmine: KQ2's illustrative served-cell table** — `412 / 217 / 0.58 / 0.34 / +24pp /
-  max SMD 0.08`. Formatted exactly like a measured result; the page itself says *"Illustrative
-  response shape, not a production measurement."* **None of those numbers may ever appear as an
-  outcome.**
-- **Amura names NO message broker** — `Kafka` and `Kinesis` both return **0 hits** across all 22
-  case-study files. The Kinesis work is the **chat platform**, a separate system. Never conflate.
-- **The 6-hour cache TTL is KQ4's**; KQ1 is 1h.
-- **HIPAA has zero occurrences in the case-study corpus** — unverified, not false, so it **stays**.
-  Flag it in prep.
-- **Never claim:** Kafka, MongoDB, ClickHouse, Azure, Google Cloud Platform, SOC 2, Spring
-  Cloud/WebFlux/Batch, **Grafana, Prometheus**. MySQL is historical (2015) only.
-  **Kubernetes, Terraform, Redis and the graph neural network ARE claimable.**
-- **Never retroactively scrub a submitted claim.** Unverified is not the same as false.
+- **v1 and v2 are SEPARATE DATABASES.** `jobs_tracker` is v1's frozen 92-row record; **nothing in v2
+  opens it.** `jobs_tracker_v2` holds v2's seats. All SQL lives in **`db/`** — `db/migrations/`
+  (001–011), `db/schema.sql`, `db/verify.sql`, `db/operations/`, `db/README.md`.
+  Health check: `psql -d postgres -f db/verify.sql`.
+- **`db/operations/` holds the re-runnable commands** — `mark_applied.sql`, `withdraw.sql` (refuses
+  without a reason), `log_event.sql`, `set_source_url.sql` (refuses a non-URL).
+- **`application_events` is the correspondence timeline** — six kinds, a REQUIRED actor, and `detail`
+  holding messages **verbatim**. Paul Abbott's and Harisri's InMails are stored in full. **Log an
+  event every time something happens.** This is what v1 never had.
+- **PostgreSQL was migrated 16 → 18.** The 16 server had been running since 19 Aug with its Homebrew
+  keg deleted; every `UPDATE` was already failing. Backups in `~/pg-backup-2026-08-25/` and `-26/`.
+- **`serve.py` binds BOTH loopback families.** macOS resolves `localhost` to `::1` first, so an
+  IPv4-only bind let a stray `http.server` shadow the API silently. **Check with
+  `lsof -nP -iTCP:8006 -sTCP:LISTEN`: one PID holding both addresses is healthy; two PIDs means a
+  stray is shadowing.** ⚠ **Port 8006 is HIS.** Never bind or kill it; verify on your own high port.
+- **`resume.py new` now REFUSES without `--url`**, or `--no-url "<reason>"` when a seat genuinely has
+  none. It also rewrites BOTH `style.css` and `copy.js` paths on copy.
+- **The launcher renders from `jobs_tracker_v2`**, v1-style tabs, counts derived by a
+  `MutationObserver`. The daily log is a **Kanban board**; dragging a card out demands a reason.
+- **Page shell is `--shell: min(1680px, 95vw)`** with prose capped at `--measure: 82ch`.
 
 ---
 
-## DO NOT
+## ⛔ THE RULES THAT BIND EVERY BUILD
 
-- **Do not build interview prep.** The trigger is a company responding — not a score, not a PDF.
-  Stopped run: `wf_58f6f5c4-caa`.
-- **Do not research, surface or gate on COMPENSATION.** His directive: *"forget about compensation…
-  it'll come up when we hear back and get to that stage."* All three `score.json` files and
-  `research.html` are already purged of it.
-- **Do not source seats.** He pastes; we build.
-- **Do not re-rank unasked** — but a direct "which suits me best" IS a request; answer it.
-- **Do not run `cleanup_cards.py`.** Ever, until he names a card.
-- **Do not trust CLAUDE.md's verb pool list** — it was stale and nine "free" verbs were already in
-  use. Regenerate from the file.
-
----
-
-## Quirks worth not rediscovering
-
-- **`upgrad_resume.html` is gitignored everywhere except `master/`.** So `resume.py sheet`'s git-diff
-  change detection is blind to workspace edits. **This does not block exporting** — the exporter
-  reads `upgrad_resume.html` directly and never touches the paste sheet.
-- **`resume.py new` used to copy the master's `href="../style.css"`** into workspaces three levels
-  down, leaving every workspace résumé unstyled. Fixed at the source 2026-08-25.
-- **The launcher's tabs already work** — `static/tabs.js` fills counts and filters. The zeros in the
-  markup are pre-script placeholders.
-
----
-
-## PostgreSQL: migrated 16 → 18, RESOLVED 2026-08-25
-
-**The problem, for the record:** a PostgreSQL 16 server had been running since 19 August while its
-Homebrew keg was deleted — `/opt/homebrew/opt/postgresql@16/bin/postgres` no longer existed on disk.
-It survived only because it was already in memory, every `UPDATE` on `applications` already failed
-(the `BEFORE UPDATE` trigger could not load `$libdir/plpgsql`), and `postgresql@18` could never start
-because 16 held port 5432.
-
-**He confirmed 18 is the version in use, so the fix was to migrate, not to reinstall 16.**
-
-Done, in this order: fresh `pg_dumpall` → fast-shutdown of 16 (SIGINT, since its own `pg_ctl` was
-gone) → start 18 on 5432 → restore → verify.
-
-**Verified after:** `jobs_tracker` 96 applications and 73 scoring events, `v2_daily` intact,
-`plpgsql` healthy, and the previously-failing `UPDATE applications` now succeeds. All endpoints 200,
-`./todo` reports `postgresql`, full suite passes.
-
-**Backups kept:** `~/pg-backup-2026-08-25/all-databases-final.sql` (the one restored, with the synced
-scores) and `all-databases.sql` (earlier). **The old 16 data directory is untouched at
-`/opt/homebrew/var/postgresql@16`** — it is the last fallback and is his to delete, not ours.
-
-⚠ `jobs_sync.py` still carries a workaround that retries with triggers disabled when `plpgsql` fails.
-It is now dead code that self-disables; harmless, but it can go whenever someone is in that file.
-
+- **COMPENSATION IS DEFERRED.** Not researched, surfaced, scored, or gated on. It comes up when a
+  company reaches that stage. Company financials (a firm's own revenue) are NOT compensation.
+- **INTERVIEW PREP WAITS** until a company responds — then for that seat only.
+- **NEVER CLAIM:** Kafka, NATS, MongoDB, ClickHouse, Azure, Google Cloud Platform, SOC 2, Spring
+  Cloud/WebFlux/Batch, Grafana, Prometheus, Hazelcast/Ignite/Coherence, any cloud certification.
+  MySQL is historical (2015) only.
+- **CLAIMABLE (user-confirmed):** Kubernetes and Terraform (**adopted as a company-wide standard**),
+  Redis, load balancing, **HIPAA**, the graph neural network, high-availability design (multi-AZ,
+  failover, DR — **CHAT PLATFORM only, never Amura**), Docker, Amazon Kinesis (chat platform),
+  OpenSearch, Elasticsearch `dense_vector`, FastAPI, Django, LangChain, LangGraph, real MCP servers,
+  Node.js/Express, Datadog, ELK, infra cost −25–30%, deploy time under 10 minutes.
+- **⚠ Spring Boot is SIX YEARS ACROSS TWO EMPLOYERS with a five-month gap** (Rocket Aug 2018–Jul
+  2019, Deque Dec 2019–Feb 2025). **Never "six continuous years"** — that false claim was cut from
+  the ModMed workspace today after surviving one verify pass.
+- **⚠ Production Python is ~14 MONTHS.** This killed Wolters Kluwer (8+/5+ years required). It is a
+  duration fact; no rewrite closes it.
+- **No Amura outcome metrics exist.** Every case-study figure is a pre-registered acceptance target.
+  **KQ2's illustrative table (412 / 217 / 0.58 / 0.34 / +24pp / SMD 0.08) is NEVER an outcome.**
+  **Amura names no message broker** — the Kinesis work is the chat platform.
+- **The agentic-scope split is an OPEN claim** — KQ1's claim grammar is live, KQ9's narrator ships
+  off by default. Surface it; never resolve it. It is why Condé Nast scored 87.4 and not v1's 96.
+- **He lives in HYDERABAD.** Relocation is not a constraint. 6- and 7-day weeks are fine.
 
 ---
 
-## The launcher now renders from PostgreSQL
+## Measurement traps that have already cost time
 
-`GET /api/jobs` in `serve.py`, backed by `automation/jobs_db.py` (read-only) and
-`automation/jobs_sync.py` (the write side, deliberately a separate module so the one `serve.py`
-imports cannot mutate v1's record). Search box and score columns added; `salary` is never in the
-payload, per the compensation deferral.
+- **A word counter must ignore punctuation tokens.** Counting the em-dash as a word reported 25-word
+  bullets as 26. There are **zero** genuine over-length bullets in the repo.
+- **`grep -c` counts LINES, not occurrences** — these files are minified. It reported 4 `span.note`
+  uses when there were 63.
+- **The LinkedIn slug lives in a PDF link annotation, not extractable text.** A text-only grep reads
+  it as missing. Check the annotations.
+- **Failures fail silently.** `copy.js` pointed at a nonexistent path in every workspace résumé —
+  every copy button was dead — and it survived six workspaces because nothing errors.
+- **⚠ There are TWO live Hiration cards.** `august_ic_master_resume` (export default) has 10
+  VoltusWave bullets; `august_master_resume` has **17**, and that is the block every handoff note
+  meant. Both are dumped to `master/live_card_dump*.json`. **Dump BOTH before reasoning about a card.**
 
-**Counts total exactly 96** — building 7 · ready 14 · sent 10 · responded 0 · interviewing 1 ·
-parked 15 · closed 49 · not-selected 0.
+---
 
-⚠ **`recommended_skip` (49 rows) maps to `closed`** — deliberately. In `parked` they would bury the
-few builds he actually paused; in `ready` they would corrupt the ready-and-unsent count, which is
-the backlog gate. `tab_for()` raises rather than dropping a row.
+## In flight / not done
 
-⚠ **The two score columns use different rubrics and are NOT comparable.** v2 seats carry the weighted
-technical score; v1 seats are a rescale of their own five axes. Every row carries `rubric`.
-**This rescale is an agent's interpretation of v1's axes, not his — worth his review.**
-
-⚠ **`serve.py` must be the thing on port 8006.** It was found running as plain
-`python3 -m http.server 8006`, bound to `*:8006`, which is why the daily log had been silently
-falling back to localStorage and `v2_daily` had 0 rows. Restart it with:
-`automation/.venv/bin/python automation/serve.py`
-
-**Re-sync scores after any re-score:** `automation/.venv/bin/python automation/jobs_sync.py --scores`
+- **`master/merge_proposal.html`** stages 24 merged VoltusWave + 11 Deque bullets for the master.
+  **Not landed.** The master still has zero hits for Kubernetes, Terraform, Jenkins, GitHub Actions.
+  It is a POOL, not a drop-in — 35 bullets where those roles carry 16.
+- **`db/DESIGN-bullets.md`** — the database-as-source architecture he approved for **later**:
+  *"we can implement this AFTER we're done. GOING forward, we do that."* Schema is prepared
+  (migrations 010/011, `resume_bullets` holds 488 rows as a derived index, nothing reads it).
+  **The round-trip proof PASSED** — 458 bullets byte-identical, 30 entity-spelling only, 0 text or
+  tag differences, `<strong>` counts preserved exactly. Migration is safe on the evidence.
+- **El Paso's three card bullets still read .NET.** His hand; correct text in `master/upgrad_resume.html` §14.
+- **ModMed's résumé does not contain "domain-driven"** though the JD names DDD. Substance is there
+  (the service-per-database boundary rule); the keyword is not. One-line change + re-export, his call.
 
 ---
 
 ## Rewriting this file
 
-Replace the contents with: **THE JOB WAITING** (the single next action, his words where possible) ·
-**Current state** (concrete: paths, yes/no) · **How to do it** (commands, what must be delegated) ·
-**Honesty constraints** in flight · **Still his hand** · **DO NOT**. Then commit. If the next session
-opens this file and still has to ask "where were we", it failed.
+Replace with: **THE JOB WAITING** (the single next action, his words where possible) · **the board**
+(queried, not guessed) · **what changed structurally** · **the binding rules** · **traps** · **not
+done**. Then commit and push. If the next session opens this and still has to ask "where were we",
+it failed.
