@@ -156,6 +156,51 @@ ok(not daily_cli.on_board({"day": "2026-08-25", "state": {"done": True,
                            "done_at": "2026-08-25T10:00:00"}}, TODAY),
    "finished on an EARLIER day -> off it, which is what rollover means")
 
+print("\n9. `./todo restore` honours the reasons — one terminal reason closes a task")
+# `backlog` already withheld the `./todo restore` hint from a task whose reasons
+# are all terminal, and then `restore` brought it back anyway with a cheerful
+# tick. The rule was printed and not enforced, in the tool AND on the board.
+# db.py deliberately stays out of this: it stores reason KEYS and has no
+# vocabulary to judge them by, so the rule lives where days.json is read.
+import contextlib                                             # noqa: E402
+import io                                                     # noqa: E402
+
+
+def run_cli(argv: list) -> tuple:
+    """Drive the real entry point, so this cannot pass against a private copy."""
+    old, buf = sys.argv, io.StringIO()
+    sys.argv = ["todo"] + argv
+    try:
+        with contextlib.redirect_stdout(buf):
+            daily_cli.main()
+        return 0, buf.getvalue()
+    except SystemExit as exc:
+        return exc.code, buf.getvalue() + (exc.code if isinstance(exc.code, str) else "")
+    finally:
+        sys.argv = old
+
+
+reset()
+db.apply_ops([{"key": K2, "action": "parked", "reasons": ["posting-closed"]}])
+code, out = run_cli(["restore", "paste-jds"])
+ok(code != 0, "restoring a closed-for-good task fails rather than succeeding quietly")
+ok("closed for good" in out, "and says so")
+ok("Posting no longer active" in out, "naming the reason that closed it, by label")
+ok("--reason" in out, "and the way back, so the refusal is not a dead end")
+ok(db.get_state()["tasks"][K2]["moved"] == "parked", "nothing was written — it is still parked")
+
+db.apply_ops([{"key": K, "action": "parked", "reasons": ["blocked"]}])
+code, out = run_cli(["restore", "clone-card"])
+ok(code == 0, "a park whose every reason can come back still restores")
+ok("moved" not in db.get_state()["tasks"][K], "and really is back")
+
+# Mixed reasons: one terminal is enough, which is the whole point of `every`.
+db.apply_ops([{"key": K, "action": "parked", "reasons": ["blocked", "duplicate"]}])
+code, out = run_cli(["restore", "clone-card"])
+ok(code != 0, "one terminal reason among revivable ones still closes it")
+ok("Already applied" in out and "Blocked on something else" not in out,
+   "and only the terminal reason is blamed")
+
 reset()
 print(f"\n{P} passed, {F} failed")
 sys.exit(1 if F else 0)

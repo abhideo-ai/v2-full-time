@@ -46,7 +46,13 @@ process.on("exit", () => {
   try { regenerate(); } catch { /* the page is stale, the source of truth is not */ }
 });
 
-async function boot(base, seed) {
+// A canned HTTP failure, for the sections that have to see a write REFUSED. The
+// server is real and healthy, and a real 503 cannot be produced on demand
+// without taking the database away from every other section in the file.
+const fail = (status, error) => Promise.resolve(new Response(JSON.stringify({ error }),
+  { status, headers: { "Content-Type": "application/json" } }));
+
+async function boot(base, seed, wrap) {
   const html = fs.readFileSync(REPO + "/daily/index.html", "utf8");
   const js = fs.readFileSync(REPO + "/static/todo.js", "utf8");
   const dom = new JSDOM(html, { url: base + "/daily/", runScripts: "outside-only" });
@@ -57,7 +63,8 @@ async function boot(base, seed) {
   // never manufacture through the API.
   if (seed) w.localStorage.setItem("v2-daily-todo", JSON.stringify(seed));
   // jsdom has no fetch; hand it Node's, resolving relative paths at `base`.
-  w.fetch = (u, o) => fetch(u.startsWith("http") ? u : base + u, o);
+  const net = (u, o) => fetch(u.startsWith("http") ? u : base + u, o);
+  w.fetch = wrap ? wrap(net) : net;
   w.eval(js);
   // Do NOT dispatch DOMContentLoaded by hand: jsdom fires it itself once
   // parsing finishes, and dispatching too made the boot handler run twice.
@@ -194,7 +201,11 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
      "the reason-gate refusal is an alert — the one rule this page enforces must be SPOKEN, not just shown");
   // The default `align-items: stretch` on a wrapping row is what shipped
   // stretched oval pills on the workspace index pages an hour before this board.
-  for (const sel of ["\\.dl-actions", "\\.dl-dialog-actions", "\\.dl-meta", "\\.dl-reason"]) {
+  // `.kb-context` wants stretch — they are cards on a row and should share a
+  // height — but stretch by DEFAULT and stretch by CHOICE read the same in a
+  // browser and differently to whoever edits the rule next.
+  for (const sel of ["\\.dl-actions", "\\.dl-dialog-actions", "\\.dl-meta", "\\.dl-reason",
+                     "\\.kb-context"]) {
     const rule = new RegExp(`^${sel}\\s*\\{([^}]*)\\}`, "m").exec(css);
     ok(rule && /align-items:/.test(rule[1]), `${sel.replace(/\\/g, "")} pins its cross-axis`);
   }
@@ -250,7 +261,10 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   await settle();
 
   console.log("\n5. Drop, then restore");
-  await move(w, "paste-11-15", "dropped", ["duplicate"], "");
+  // A REVIVABLE reason, deliberately: this section is the round trip, and
+  // "Already applied, or duplicates another" is terminal, so restoring it is now
+  // refused on purpose. Section 5g is where that refusal is asserted.
+  await move(w, "paste-11-15", "dropped", ["jd-changed"], "");
   ok(d.getElementById("moved-dropped").querySelector(".n").textContent === "1", "Dropped zone counts it");
   li(d, "paste-11-15").querySelector('.dl-act[data-act="restored"]')
     .dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
@@ -267,6 +281,18 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   ok(!li(d, "fix-el-paso").classList.contains("moved"), "and the task did NOT move");
   ok(inLane(d, "fix-el-paso") === "open", "it is still sitting in Open");
   ok(!(await dbState())["2026-08-25::fix-el-paso"], "nothing written to the database");
+  // role="alert" announces a CHANGE. The refusal used to only un-hide an element
+  // that was already visible, so the second reasonless confirm — the one you
+  // make when you did not hear the first — mutated nothing and said nothing.
+  let hintChanges = 0;
+  const hintObs = new w.MutationObserver(() => hintChanges++);
+  hintObs.observe(d.getElementById("move-hint"),
+                  { childList: true, characterData: true, subtree: true, attributes: true });
+  await confirmMove(w);
+  hintObs.disconnect();
+  ok(hintChanges > 0,
+     `a SECOND reasonless confirm changes the alert too, so it is spoken again — ${hintChanges} mutation(s)`);
+  ok(inLane(d, "fix-el-paso") === "open", "and it still has not moved");
   d.querySelector('#move-reasons input[value="blocked"]').checked = true;
   await confirmMove(w);
   ok(inLane(d, "fix-el-paso") === "parked", "and it moves once a reason is picked");
@@ -326,6 +352,18 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   ok(/No lane before open/.test(d.getElementById("kb-say").textContent),
      `and the dead end is announced rather than silent — "${d.getElementById("kb-say").textContent}"`);
   ok(!d.getElementById("kb-say").hidden, "the live region is visible when it speaks");
+  // The handle is also how you FOCUS a card for those arrow keys, and clicking
+  // it is how you focus it with a mouse. `draggable` is deferred to a pointer
+  // hold precisely so the detail text — the instruction on most of these tasks —
+  // stays selectable; only `dragend` cleared it, and dragend never fires when no
+  // drag started, so one click armed the card for the rest of the session.
+  const held = li(d, "journey-doc");
+  grab = held.querySelector(".kb-grab");
+  grab.dispatchEvent(new w.Event("pointerdown", { bubbles: true }));
+  ok(held.draggable === true, "holding the handle arms the drag");
+  grab.dispatchEvent(new w.Event("pointerup", { bubbles: true }));
+  ok(held.draggable === false,
+     "and letting go WITHOUT dragging disarms it — otherwise a click on the handle makes the card's text unselectable for good");
 
   console.log("\n5f. Enter inside the dialog confirms; it does not reload the page");
   // The form holds exactly one implicit-submission-blocking field (the date) and
@@ -352,6 +390,47 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   li(d, "verify-pdf").querySelector('.dl-act[data-act="restored"]')
     .dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
   await settle();
+
+  console.log("\n5g. 'Closed for good' is a rule, not a caption");
+  // paste-jds was parked in section 3 with TWO terminal reasons, and the card
+  // has said "closed for good" ever since — next to a Restore button that
+  // restored it anyway. `./todo backlog` already withheld its restore hint from
+  // exactly these tasks, so the tool believed the rule and did not enforce it.
+  const pj = li(d, "paste-jds"), pjRestore = pj.querySelector('.dl-act[data-act="restored"]');
+  ok(pj.querySelector(".dl-revivable").textContent === "closed for good", "the card says so");
+  ok(!pjRestore.hidden,
+     "Restore stays VISIBLE — a refusal you cannot reach is a refusal you cannot be told about");
+  pjRestore.dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  await settle();
+  ok(inLane(d, "paste-jds") === "parked", "and clicking it does NOT bring the task back");
+  ok((await dbState())["2026-08-25::paste-jds"].moved === "parked", "nothing was written");
+  const refusal = d.getElementById("kb-say").textContent;
+  ok(/Posting no longer active/.test(refusal), `the refusal names the reason that closed it — "${refusal}"`);
+  ok(/reason that can come back/.test(refusal),
+     "and the way back, so it is a refusal rather than a dead end");
+  // The other half: a park whose reasons can ALL come back is untouched by this.
+  await move(w, "paste-1-10", "parked", ["blocked"], "");
+  li(d, "paste-1-10").querySelector('.dl-act[data-act="restored"]')
+    .dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+  await settle();
+  ok(inLane(d, "paste-1-10") === "open", "a revivable park still restores normally");
+
+  console.log("\n5h. A card lands in the lane you aimed at, not a neighbouring one");
+  // `restored` clears the move but deliberately NOT the tick, so a card ticked
+  // and THEN parked came back to Done — while the live region said "Restored."
+  await tick(w, "paste-1-10");
+  await move(w, "paste-1-10", "parked", ["blocked"], "");
+  ok(inLane(d, "paste-1-10") === "parked", "tick then park lands in Parked — `moved` outranks `done`");
+  ok((await dbState())["2026-08-25::paste-1-10"].done === true, "and the tick is still on record");
+  await drag(w, "paste-1-10", "open");
+  ok(inLane(d, "paste-1-10") === "open",
+     `dropped on Open it lands in OPEN, not Done — got ${inLane(d, "paste-1-10")}`);
+  ok(/Restored/.test(d.getElementById("kb-say").textContent),
+     `and is announced as the restore it was — "${d.getElementById("kb-say").textContent}"`);
+  const p110 = (await dbState())["2026-08-25::paste-1-10"];
+  ok(!p110.moved && p110.done === false,
+     "both ops landed in one request, so the row and the lane agree");
+  ok(!li(d, "paste-1-10").querySelector("input").checked, "and the checkbox agrees too");
 
   console.log("\n6. State survives a reload — the whole point of the database");
   w = await boot(API); d = w.document;
@@ -515,6 +594,52 @@ const dbState = async () => (await (await fetch(API + "/api/state")).json()).tas
   } else {
     console.log("  SKIP  (single-day log — caller did not add the synthetic day)");
   }
+
+  console.log("\n12. A REFUSED write changes nothing on screen");
+  // The board's own rule, turned on the failure path. A checkbox is the trap:
+  // the browser flips it before the handler runs, and act() only re-rendered on
+  // success — so a refused tick sat ticked over a database holding nothing,
+  // while the live region cheerfully said the move had happened.
+  let refusing = true;
+  w = await boot(API, null, net => (u, o) =>
+    refusing && String(u).includes("/api/ops")
+      ? fail(503, "database unreachable: forced by the test")
+      : net(u, o));
+  d = w.document;
+  const key12 = `${TODAY}::today-open`;
+  const box12 = li(d, "today-open").querySelector("input");
+  box12.checked = true; box12.dispatchEvent(new w.Event("change"));
+  await settle(200);
+  ok(box12.checked === false, "a refused tick does not stay ticked");
+  ok(inLane(d, "today-open") === "open", "and the card does not change lane");
+  ok(!(await dbState())[key12], "the database holds nothing, which is what the board now shows");
+  ok(d.getElementById("store-banner").className.includes("bad"), "the banner turns red");
+  ok(/Not saved/.test(d.getElementById("store-banner").textContent), "and says it was not saved");
+
+  await move(w, "today-open", "parked", ["blocked"], "");
+  ok(inLane(d, "today-open") === "open", "a refused park leaves the card exactly where it was");
+  ok(!(await dbState())[key12], "still nothing in the database");
+  ok(d.getElementById("kb-say").textContent === "",
+     `and the live region claims NOTHING — it is the only channel a screen reader has (said "${d.getElementById("kb-say").textContent}")`);
+
+  refusing = false;
+  box12.checked = true; box12.dispatchEvent(new w.Event("change"));
+  await settle(200);
+  ok((await dbState())[key12]?.done === true, "the next write lands");
+  ok(inLane(d, "today-open") === "done", "and the card follows it");
+  ok(d.getElementById("store-banner").className.includes("ok"),
+     "and the banner goes back to naming the store — a red banner that outlives its failure sits over writes that are working");
+
+  // The probe answers, the read does not: the database went away between the two
+  // calls. Rendering localStorage under "Saving to PostgreSQL" is the same defect
+  // as any other board state the database does not hold.
+  w = await boot(API, { "2026-08-25::clone-card": { done: true, done_at: `${TODAY}T08:00:00` } },
+    net => (u, o) => String(u).includes("/api/state") ? fail(503, "gone") : net(u, o));
+  d = w.document;
+  ok(d.getElementById("store-banner").className.includes("warn"),
+     "a probe that succeeds over a read that fails demotes to local and SAYS so");
+  ok(d.getElementById("store-banner").textContent.includes("serve.py"),
+     "with the same instructions the plain-server path gives");
 
   console.log(`\n${P} passed, ${F} failed`);
   process.exit(F ? 1 : 0);

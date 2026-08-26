@@ -11,7 +11,7 @@
 // translation layer, and a drag produces the same task_event row as
 // `./todo park <id> --reason blocked`.
 //
-// TWO RULES THIS FILE EXISTS TO PROTECT:
+// FOUR RULES THIS FILE EXISTS TO PROTECT:
 //
 //   1. A DROP IS A REQUEST, NEVER A COMMIT. Dropping a card on Parked, Pushed
 //      or Dropped opens the reason dialog and writes NOTHING. The card does not
@@ -25,6 +25,16 @@
 //      sorts below the ready ones inside Open and is badged, but it is never
 //      greyed out, never disabled, and never moved to a lane of its own —
 //      doing things out of order is legitimate.
+//   3. A REFUSED WRITE CHANGES NOTHING — not the card, not the checkbox, not
+//      the live region. sendOp() returns false and act() re-renders from
+//      `state`, which is the only thing the store agrees with. The checkbox is
+//      the trap here: the browser flips it before the handler runs, so a
+//      refused tick used to sit on screen over a database holding nothing.
+//   4. ONE TERMINAL REASON CLOSES A TASK. "Closed for good" is enforced, not
+//      captioned: Restore refuses a task whose reasons are not all revivable
+//      and says which reason closed it. `./todo restore` refuses the same way.
+//      The way back is to say what changed — record a new move with a reason
+//      that can come back — which is why the refusal is not a dead end.
 //
 // Against a plain `python3 -m http.server` there is no API, so the page falls
 // back to localStorage and says so in the banner. applyLocal() below mirrors
@@ -80,9 +90,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   const labelOf = k => (REASONS.find(r => r.key === k) || {}).label || k;
   // A task can come back only if EVERY reason it carries is revivable — one
   // terminal reason (the posting is gone) closes it regardless of the others.
+  const blockingReasons = rs =>
+    (Array.isArray(rs) ? rs : [])
+      .filter(k => !(REASONS.find(r => r.key === k) || { revivable: true }).revivable);
   const canComeBack = rs =>
-    Array.isArray(rs) && rs.length > 0 &&
-    rs.every(k => (REASONS.find(r => r.key === k) || { revivable: true }).revivable);
+    Array.isArray(rs) && rs.length > 0 && blockingReasons(rs).length === 0;
+  // "Closed for good" was a LABEL, not a rule: the Restore button and
+  // `./todo restore` both brought back a task whose reasons were all terminal,
+  // while `./todo backlog` already withheld the restore hint for exactly those.
+  // The tool believed the rule and then did not enforce it. This is the refusal,
+  // and it carries the way back — a new move with a reason that can come back.
+  //
+  // It guards `restored` and nothing else, on purpose. `done` also leaves the
+  // Parked zone — db._SET["done"] clears the move, because ticking a parked task
+  // means you did it after all — and that is a different claim from "bring this
+  // back as work to do". Do not extend the refusal to cover it.
+  const closedFor = s =>
+    `Closed for good by ${blockingReasons(s.reasons).map(labelOf).join(" + ")}. `
+    + "Move it out again with a reason that can come back, then restore it.";
   let state = {};
 
   // ---- lanes --------------------------------------------------------------
@@ -132,6 +157,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     banner.hidden = false;
   };
 
+  // Where writes are actually going. Restated after every SUCCESSFUL op, because
+  // a "Not saved" banner that outlives its failure sits red over writes that are
+  // landing — the banner then describes a state the store does not hold either.
+  const STORE_MSG = {
+    postgresql: ["Saving to PostgreSQL (v2_daily) — state survives refreshes, browsers and cleared site data.", "ok"],
+    local: ["Not saving to disk. Start automation/serve.py to save to PostgreSQL; until then state stays in this browser only.", "warn"],
+  };
+  const storeBanner = () => setBanner(...STORE_MSG[store]);
+
   const probe = async () => {
     try {
       const r = await fetch("/__daily_api", { cache: "no-store" });
@@ -146,6 +180,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const r = await fetch("/api/state", { cache: "no-store" });
         if (r.ok) return (await r.json()).tasks || {};
       } catch { /* fall through */ }
+      // The probe said postgresql and the read did not answer — the database
+      // went away between the two calls. Falling through to localStorage while
+      // the banner still reads "Saving to PostgreSQL" renders a board out of a
+      // store the database does not agree with, and claims otherwise. Drop to
+      // the mode we are really in and let the banner say so.
+      store = "local";
     }
     try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch { return {}; }
   };
@@ -176,9 +216,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   // to be the second and third refusal, so without this there was exactly ONE —
   // the dialog — and any future caller of act() bypassed it entirely. This
   // guards BOTH modes, so the two really do behave identically.
+  const ACTIONS = new Set(["done", "undone", "restored", "parked", "pushed", "dropped"]);
   const opError = op => {
-    if (!OUT_LANES.has(op.action)) return op.action === "restored" || op.action === "done"
-      || op.action === "undone" ? null : `unknown action ${op.action}`;
+    if (!ACTIONS.has(op.action)) return `unknown action ${op.action}`;
+    if (!OUT_LANES.has(op.action)) return null;
     const rs = op.reasons;
     if (!Array.isArray(rs) || !rs.length) return `a '${op.action}' move needs at least one reason`;
     if (rs.some(r => typeof r !== "string" || !r.trim())) return `a '${op.action}' move has a blank reason`;
@@ -187,18 +228,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     return null;
   };
 
-  const sendOp = async op => {
-    const bad = opError(op);
+  // A REFUSED WRITE MUST CHANGE NOTHING ON SCREEN. That is the whole contract:
+  // every caller either gets `true` and a state the store agrees with, or
+  // `false` and a board untouched. Ops go as a batch because the server applies
+  // them in one transaction, so the local mirror must not half-apply either.
+  const sendOp = async (...ops) => {
+    const bad = ops.map(opError).find(Boolean);
     if (bad) { setBanner(`Not saved — ${bad}`, "bad"); return false; }
     if (store === "postgresql") {
       try {
         const r = await fetch("/api/ops", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ops: [op] }),
+          body: JSON.stringify({ ops }),
         });
         const payload = await r.json().catch(() => ({}));
-        if (r.ok) { state = payload.tasks || {}; return true; }
+        // `payload.tasks`, not `payload.tasks || {}`: a 200 whose body did not
+        // parse would otherwise blank `state` and redraw an empty board over a
+        // database holding everything.
+        if (r.ok && payload.tasks) { state = payload.tasks; storeBanner(); return true; }
         setBanner(`Not saved — ${payload.error || r.status}`, "bad");
         return false;
       } catch (e) {
@@ -206,16 +254,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         return false;
       }
     }
-    applyLocal(op);
-    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch { /* quota/private */ }
+    const before = JSON.stringify(state);
+    ops.forEach(applyLocal);
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    } catch (e) {
+      // Quota, or a private window that refuses to store. Swallowing this left
+      // the board showing ticks that nothing anywhere held, under a banner
+      // saying the browser had them. Put the state back and say so.
+      state = JSON.parse(before);
+      setBanner(`Not saved — this browser refused to store it (${e.name})`, "bad");
+      return false;
+    }
+    storeBanner();
     return true;
   };
 
-  const act = async op => { if (await sendOp(op)) render(); };
+  // render() ALWAYS runs, success or not. The checkbox is the one control the
+  // browser mutates before the handler sees it, so a refused tick stayed ticked
+  // on screen over a database that held nothing; render() puts it back from
+  // `state`, which is the only thing either store agrees about.
+  const act = async (...ops) => { const saved = await sendOp(...ops); render(); return saved; };
+
+  // Say it only if it happened. The live region is the ONLY channel a screen
+  // reader user has, and announcing "Moved to parked." over a refused write is
+  // the same defect as leaving the tick on screen — just harder to notice.
+  const announce = async (pending, msg) => { if (await pending) say(msg); };
 
   // ---- registry -----------------------------------------------------------
   const st = key => state[key] || {};
   let dragging = null;
+  // The card whose handle is currently held. One listener for the whole board
+  // rather than a pair per card; a release outside the handle still counts,
+  // which a listener on the handle itself would miss.
+  let armedLi = null;
+  const disarm = () => {
+    if (armedLi) { armedLi.draggable = false; armedLi = null; }
+  };
+  ["pointerup", "pointercancel"].forEach(ev => window.addEventListener(ev, disarm));
 
   const register = li => {
     const box = li.querySelector('input[type="checkbox"]');
@@ -245,8 +321,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       btn.addEventListener("click", ev => {
         ev.preventDefault();
         const action = btn.dataset.act;
-        if (action === "restored") act({ key: e.key, action });
-        else openDialog(e, action);
+        if (action !== "restored") return openDialog(e, action);
+        const s = st(e.key);
+        if (s.moved && !canComeBack(s.reasons)) return say(closedFor(s));
+        announce(act({ key: e.key, action }), "Restored.");
       }));
 
     // Drag, and its keyboard twin. Both funnel into dropOn(), so they cannot
@@ -255,8 +333,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (grab) {
       // draggable is set only while the handle is held: a permanently draggable
       // <li> makes the detail text — which IS the instruction on most of these
-      // tasks — impossible to select and copy.
-      grab.addEventListener("pointerdown", () => { li.draggable = true; });
+      // tasks — impossible to select and copy. `dragend` alone did not clear it,
+      // because dragend only fires if a drag actually started: a plain CLICK on
+      // the handle — which is how you focus it for the arrow keys — armed the
+      // flag for good and defeated the whole reason it is deferred. armedLi is
+      // cleared on any pointer release, anywhere.
+      grab.addEventListener("pointerdown", () => { armedLi = li; li.draggable = true; });
       grab.addEventListener("keydown", ev => {
         if (ev.key !== "ArrowLeft" && ev.key !== "ArrowRight") return;
         ev.preventDefault();
@@ -281,6 +363,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     li.addEventListener("dragend", () => {
       dragging = null;
+      disarm();
       li.draggable = false;
       li.classList.remove("kb-dragging");
       zones.forEach(z => z.classList.remove("kb-over"));
@@ -313,12 +396,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     const from = laneOf(s);
     if (lane === from) return say(`Already ${LANE_NAME[lane]}.`);
     if (lane === "open") {
-      say(s.moved ? "Restored." : "Unticked.");
-      return act({ key: e.key, action: s.moved ? "restored" : "undone" });
+      if (s.moved && !canComeBack(s.reasons)) return say(closedFor(s));
+      // `restored` clears the move but deliberately NOT the tick, so a card that
+      // was ticked and THEN parked came back to Done — a lane nobody aimed at,
+      // while the live region said "Restored." Both ops, one request, one
+      // transaction, and the card lands where it was dropped.
+      const ops = [];
+      if (s.moved) ops.push({ key: e.key, action: "restored" });
+      if (s.done === true) ops.push({ key: e.key, action: "undone" });
+      if (!ops.length) return;
+      // Worded BEFORE act(): `s` is the live state row, and applyLocal() mutates
+      // that same object, so reading s.moved in the argument list read it after
+      // the op had already cleared it and announced "Unticked." for a restore.
+      const said = s.moved ? "Restored." : "Unticked.";
+      return announce(act(...ops), said);
     }
     if (lane === "done") {
-      say("Ticked.");
-      return act({ key: e.key, action: "done" });
+      return announce(act({ key: e.key, action: "done" }), "Ticked.");
     }
     // parked / pushed / dropped — the reason gate. Nothing is written, and the
     // card stays where it is, until a reason is picked.
@@ -329,6 +423,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const dlg = document.getElementById("move-dialog");
   const TITLES = { parked: "Park this task", pushed: "Push to a later day", dropped: "Drop this task" };
   let pending = null;
+  // The refusal wording is authored in daily.py's markup; read it once rather
+  // than keeping a second copy here that can drift from it.
+  const hintEl = document.getElementById("move-hint");
+  const HINT = hintEl ? hintEl.textContent : "";
+  // role="alert" announces a CHANGE. Un-hiding an element that was already
+  // visible changes nothing at all, so every reasonless confirm after the first
+  // was refused in silence. Rewriting the text replaces the text node, which is
+  // the mutation the alert is listening for.
+  const showHint = () => { hintEl.hidden = false; hintEl.textContent = HINT; };
 
   function openDialog(entry, action) {
     if (!dlg) return;
@@ -348,7 +451,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // defaults to today+1 for the same reason.
     until.min = iso(tomorrow);
     document.getElementById("move-note").value = "";
-    document.getElementById("move-hint").hidden = true;
+    hintEl.hidden = true;
     dlg.querySelectorAll("#move-reasons input").forEach(c => { c.checked = false; });
     if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
   }
@@ -366,7 +469,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Do NOT close: moving a task out without saying why is the one thing
       // this dialog exists to prevent, and opError() and the database refuse it
       // too. #move-hint carries role="alert", so this is spoken, not just shown.
-      document.getElementById("move-hint").hidden = false;
+      showHint();
       return;
     }
     const p = pending; pending = null;
@@ -379,8 +482,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       note: document.getElementById("move-note").value.trim() || null,
     };
     if (p.action === "pushed") op.until = document.getElementById("move-until").value;
-    await act(op);
-    say(`Moved to ${LANE_NAME[p.action]}.`);
+    await announce(act(op), `Moved to ${LANE_NAME[p.action]}.`);
   };
 
   if (dlg) {
@@ -659,13 +761,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ---- boot ---------------------------------------------------------------
   store = await probe();
+  // loadState() may DEMOTE store to "local" — it does that when the probe said
+  // postgresql and the read then failed — so the banner is set after it, never
+  // before, or it would announce a store the board is not reading from.
   state = await loadState();
-  setBanner(
-    store === "postgresql"
-      ? "Saving to PostgreSQL (v2_daily) — state survives refreshes, browsers and cleared site data."
-      : "Not saving to disk. Start automation/serve.py to save to PostgreSQL; until then state stays in this browser only.",
-    store === "postgresql" ? "ok" : "warn",
-  );
+  storeBanner();
 
   // The board is dated from the CLOCK, never from days.json. The generator
   // writes today's date as a no-JS fallback; this is what keeps a pinned tab

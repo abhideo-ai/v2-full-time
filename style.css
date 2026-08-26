@@ -3210,7 +3210,11 @@ li.pj-open { list-style: none; margin-left: -20px; }
 .kb-say { margin: 9px 0 0; font-family: var(--mono); font-size: 11px; letter-spacing: .05em; color: var(--accent); background: var(--accent-soft); border-radius: 5px; padding: 5px 10px; }
 .kb .wl-donow { margin: 16px 0 0; }
 
-.kb-context { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 0; }
+/* align-items is `stretch` on purpose here, not by default: these are cards on
+   one row and they should share a height. Declared rather than inherited, so
+   the next edit to this rule is making a choice instead of keeping an accident
+   — the same accident that shipped stretched oval pills on the workspace pages. */
+.kb-context { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; margin: 18px 0 0; }
 .kb-ctx { flex: 1 1 320px; min-width: 0; border: 1px solid var(--rule); border-left: 3px solid var(--muted); border-radius: 8px; background: var(--paper-2); padding: 10px 14px; }
 .kb-ctx[hidden] { display: none; }
 .kb-ctx.blocking { border-left-color: var(--accent); }

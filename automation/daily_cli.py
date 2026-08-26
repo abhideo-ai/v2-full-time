@@ -7,7 +7,7 @@
     ./todo park   <task>            park it (asks for reasons)
     ./todo push   <task> --until 2026-08-27
     ./todo drop   <task>
-    ./todo restore <task>           bring it back to the active list
+    ./todo restore <task>           bring it back (refused if a reason is terminal)
     ./todo backlog                  what's moved out, and what can come back
     ./todo history [-n 20]
 
@@ -18,6 +18,9 @@ this on your behalf has to come back and ask you.
 
 Which reasons a task carries decides whether it can come back — a task is
 revivable only if EVERY one of its reasons is (daily/days.json, `revivable`).
+That is enforced, not captioned: `restore` refuses a task carrying a terminal
+reason, names the reason, and tells you the way back — record a new move with a
+reason that can come back. The board's Restore button refuses identically.
 
 Reads task definitions from daily/days.json and state from PostgreSQL, so it
 sees exactly what the page sees. The page's copy of this logic lives in
@@ -59,8 +62,13 @@ def revivable_map(doc: dict) -> dict:
     return {r["key"]: bool(r.get("revivable")) for r in doc.get("reasons", [])}
 
 
+def blocking_reasons(reasons, revive: dict) -> list:
+    """The reasons that close a task for good. Empty means it can come back."""
+    return [r for r in (reasons or []) if not revive.get(r, True)]
+
+
 def can_come_back(reasons, revive: dict) -> bool:
-    return bool(reasons) and all(revive.get(r, True) for r in reasons)
+    return bool(reasons) and not blocking_reasons(reasons, revive)
 
 
 def is_out(s: dict, today: str) -> bool:
@@ -281,6 +289,25 @@ def main() -> None:
     action = {"park": "parked", "push": "pushed", "drop": "dropped",
               "done": "done", "undone": "undone", "restore": "restored"}[args.command]
     op = {"key": key, "action": action}
+
+    if action == "restored":
+        # `backlog` already withholds the `./todo restore` hint from a task whose
+        # reasons are all terminal — so this tool believed the rule and then let
+        # `restore` ignore it, and the page's Restore button did the same. One
+        # terminal reason closes a task; the way back is to say what changed, by
+        # recording a new move with a reason that CAN come back.
+        s = state.get(key, {})
+        blocking = blocking_reasons(s.get("reasons"), revivable_map(doc))
+        if s.get("moved") and blocking:
+            labels = {r["key"]: r["label"] for r in doc.get("reasons", [])}
+            revivable = [r["key"] for r in doc.get("reasons", []) if r.get("revivable")]
+            raise SystemExit(
+                f"[daily] {key} is closed for good by "
+                + " + ".join(labels.get(r, r) for r in blocking)
+                + f".\n[daily] to bring it back, say what changed — move it out again with a "
+                  f"reason that can come back, then restore it:\n"
+                  f"[daily]   ./todo park {args.task} --reason "
+                + "|".join(revivable))
 
     if action in ("parked", "pushed", "dropped"):
         text = next((plain(i["task"]) for d in doc["days"] for g in d["groups"]
