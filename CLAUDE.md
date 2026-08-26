@@ -847,8 +847,11 @@ resolves the graph neural network, the four Rocket metrics, the 70–80% consoli
 27 ms / P95 16 ms pairing or the 100,000-concurrent wording. Surface them in every prep
 artefact and leave the résumé wording alone.
 
-**⚠ ARCHITECTURE CHANGED 2026-08-26 — THE DATABASE IS THE SOURCE, HTML IS A VIEW.** Set by him,
-in his own words:
+**⚠ ARCHITECTURE DECIDED 2026-08-26 — THE DATABASE BECOMES THE SOURCE, HTML A VIEW.**
+**⛔ NOT YET IMPLEMENTED. This is the FORWARD model** — his words: *"we can implement this AFTER
+we're done… GOING forward, we do that."* Until it is built, the files remain the source and the
+current flow stands. Do not half-migrate it; a master résumé caught mid-migration across a session
+boundary is the worst state to inherit. Set by him, in his own words:
 
 > 1. master resume has it's own bullets in a table · 2. you retrieve them, compare them to the JD ·
 > 3. score & improve · 4. new bullets are stored in the DB again · 5. using these DB bullets, you
