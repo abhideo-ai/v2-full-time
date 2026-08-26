@@ -174,3 +174,54 @@ pg_dump -d v2_daily        -f ~/pg-backup-$(date +%F)/v2_daily.sql
 - **`updated_at` is never collateral damage.** Both 003 and 006 disable the
   `BEFORE UPDATE` trigger for their one statement, because stamping every row
   with the moment of a migration destroys "when did this last actually move".
+
+---
+
+## Query it, don't grep it — set by him 2026-08-26
+
+**The database is authoritative for what HAPPENED. The files are authoritative for what is
+CLAIMED.** Confusing the two is how the launcher came to show 4 applications while the database
+held 92 — markup asserting state — and it is the same failure in reverse if résumé claims move
+into tables.
+
+**Query the database for:** status, dates, scores, contacts, the event timeline, counts,
+aggregations, invariants, and anything requiring a join. Reading these out of filenames or `ls`
+output is strictly worse and silently goes stale.
+
+**Read the files for:** résumé bullet text, the hygiene rules (≤25 words, unique leading verbs, a
+bolded fact, acronyms expanded), the honesty checks against `professional-journey.md` and the case
+studies, and code. The exporter reads `upgrad_resume.html`; putting bullet text in Postgres would
+recreate the drift that merging three files into one removed. CLAUDE.md is explicit: *"Never trust
+this list — regenerate it from the file."*
+
+### The queries worth knowing
+
+```sql
+-- The board: everything that matters, in one row per seat.
+select a.slug, a.status, a.fit_score as tech,
+       to_char(a.applied_at,'DD Mon HH24:MI') as sent,
+       (select count(*) from application_events e where e.application_id=a.id) as events,
+       coalesce(jsonb_array_length(a.hiring_contacts),0) as contacts
+  from applications a order by a.applied_at nulls last, a.fit_score desc nulls last;
+
+-- The backlog gate: ready and unsent.
+select count(*) from applications where status in ('resume_drafted','resume_finalized');
+
+-- The v1 failure shape: a seat that moved with no story behind it.
+select a.slug, a.status, count(e.id) as events
+  from applications a left join application_events e on e.application_id=a.id
+ group by a.slug, a.status having count(e.id) < 2;
+
+-- One seat's history, in order, with the verbatim text.
+select e.occurred_at, e.kind, e.actor, e.summary, e.detail
+  from application_events e join applications a on a.id=e.application_id
+ where a.slug = :'slug' order by e.occurred_at;
+
+-- Scores in the files that never reached the database (run jobs_sync.py --scores to fix).
+select slug, fit_score from applications where fit_score is null;
+
+-- Every seat's source: a URL, a note, or both. Never prose in source_url.
+select slug, source_url, source_note from applications order by slug;
+```
+
+Full read-only health check across all three databases: `psql -d postgres -f db/verify.sql`.

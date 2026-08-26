@@ -206,7 +206,7 @@ Recorded as fact, in the documents' own terms.
 6. **40 hours per week**, stated as a full-time contractor engagement.
 7. **The team is named** — Platform Engineering Team.
 8. **Azure is strongly preferred.** The InMail said only "cloud".
-9. **Hard experience minimums** — the seven quantified bars in the table above, including
+9. **Hard experience minimums** — the eight quantified bars in the table above, including
    **8+ years of production Python** on the Principal document and **5+** on the Lead.
 10. **SDK design, versioning and PyPI distribution is a multi-year hard requirement**, not a
     passing mention.
