@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Write side of `jobs_tracker_v2` — seat registration and score refresh.
 
-    automation/.venv/bin/python automation/jobs_sync.py            # seed + scores
-    automation/.venv/bin/python automation/jobs_sync.py --scores   # scores only
+    automation/.venv/bin/python automation/jobs_sync.py             # seed + scores + bullets
+    automation/.venv/bin/python automation/jobs_sync.py --scores    # scores only
+    automation/.venv/bin/python automation/jobs_sync.py --bullets   # bullets only
+    automation/.venv/bin/python automation/jobs_sync.py --scores --bullets
     automation/.venv/bin/python automation/jobs_sync.py --dry-run
 
 ⚠ It writes wherever `jobs_db.DSN` points, which is `jobs_tracker_v2` — v2's own
@@ -12,21 +14,29 @@ reachable from here at all.
 Deliberately NOT in `jobs_db.py`: the server imports that one, and the thing the
 server imports must not be able to mutate the record.
 
-Both passes are idempotent — re-run them as often as you like:
+All three passes are idempotent — re-run them as often as you like:
 
-  seed    inserts the v2 seats that exist only as directories. ON CONFLICT DO
-          NOTHING, so a re-run never overwrites a status he has changed since.
+  seed     inserts the v2 seats that exist only as directories. ON CONFLICT DO
+           NOTHING, so a re-run never overwrites a status he has changed since.
 
-  scores  re-reads every workspace's `score.json` and refreshes `fit_score` /
-          `fit_breakdown` from its `weighted_total`. Scores get re-adjudicated —
-          three of the four moved on 2026-08-25 alone — so tonight's numbers are
-          never hardcoded anywhere; this reads them back off disk.
+  scores   re-reads every workspace's `score.json` and refreshes `fit_score` /
+           `fit_breakdown` from its `weighted_total`. Scores get re-adjudicated —
+           three of the four moved on 2026-08-25 alone — so tonight's numbers are
+           never hardcoded anywhere; this reads them back off disk.
+
+  bullets  re-reads every `upgrad_resume.html`, master included, and rebuilds
+           `resume_bullets` from it. Same shape as `scores`, and the same
+           direction: THE FILE IS THE SOURCE, the table is an index over it.
+           Editing a row changes nothing about what the exporter writes and is
+           gone at the next sync. A wrong bullet is fixed in the résumé.
 
 `scores` only ever touches a row whose slug has a workspace WITH a score.json in
 this repo, and refuses any row still carrying a v1 five-axis breakdown.
 """
 import argparse
+import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -35,6 +45,7 @@ import psycopg
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import jobs_db  # noqa: E402
+import upgrad_resume_paste as urp  # noqa: E402
 
 ROOT = jobs_db.ROOT
 
@@ -208,14 +219,180 @@ def sync_scores(dry_run: bool = False) -> int:
     return updated
 
 
+# ---------------------------------------------------------------------------
+# bullets — the derived `resume_bullets` index
+# ---------------------------------------------------------------------------
+# ⛔ ONE DIRECTION ONLY:
+#
+#     upgrad_resume.html  ->  resume_bullets  ->  rendered pages / PDF / .docx
+#
+# Nothing here ever writes a résumé file, and nothing downstream may either. The
+# exporter reads `upgrad_resume.html`; a bullet authored in Postgres and copied
+# back out is exactly the drift that merging three résumé files into one removed
+# on 2026-08-25. See db/migrations/010_resume_bullets.sql.
+
+# Hygiene, per CLAUDE.md's per-bullet rules. Computed once at sync so a query can
+# ask "which bullets break the rules" without re-deriving anything.
+_VERB_RE = re.compile(r"[A-Za-z][A-Za-z'-]*")
+_BOLD_RE = re.compile(r"<(?:strong|b)\b", re.I)
+
+
+def leading_verb(text: str) -> str | None:
+    """The bullet's first word, punctuation stripped. None if it has none.
+
+    CLAUDE.md: "Leading verb unique across the résumé — same-root variants
+    collide". This is the word that rule is about; the stem check against the
+    rest of the file is a query, not a column.
+    """
+    m = _VERB_RE.search(text)
+    return m.group(0) if m else None
+
+
+def hygiene(text: str, html: str, kind: str) -> dict:
+    return {
+        # Off the experience sections there is no "leading verb" — the skills
+        # block is capability labels, not sentences — so NULL, not a wrong word.
+        "leading_verb": leading_verb(text) if kind == "experience" else None,
+        "word_count":   len(text.split()),
+        "has_bold":     bool(_BOLD_RE.search(html)),
+        # Mechanical proxy. "Scale marker or measurable outcome" is judgement.
+        "has_number":   bool(re.search(r"[0-9%]", text)),
+    }
+
+
+def resume_sources() -> dict[str, Path]:
+    """{source -> résumé path} for every résumé in the repo, master included.
+
+    `master` is a source like any other and is what a seat's bullets are compared
+    AGAINST — "which bullets are unique to this seat, and which came from the
+    master" is the question that needs it in the same table.
+    """
+    found = {}
+    master = ROOT / "master" / "upgrad_resume.html"
+    if master.exists():
+        found["master"] = master
+    for slug, rel in jobs_db.workspace_paths().items():
+        path = ROOT / rel / "upgrad_resume.html"
+        if path.exists():
+            found[slug] = path
+    return found
+
+
+def bullet_rows(source: str, path: Path) -> tuple[list[dict], list[str]]:
+    """(rows, missing section ids) for one résumé. Pure — touches no database."""
+    parsed = urp.parse_sections(path)
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    rel = path.relative_to(ROOT).as_posix()
+    rows = []
+    for sec in parsed["sections"]:
+        role = sec["role"] or {}
+        for i, block in enumerate(sec["blocks"], 1):
+            rows.append({
+                "source": source, "source_path": rel, "source_sha256": digest,
+                "section_id": sec["id"], "section_kind": sec["kind"],
+                "section_label": sec["label"], "card_only": sec["card_only"],
+                "company": role.get("company"), "role_title": role.get("role_title"),
+                "date_from": role.get("date_from"), "date_to": role.get("date_to"),
+                "location": role.get("location"),
+                "ord": i, "text": block["text"], "html": block["html"],
+                **hygiene(block["text"], block["html"], sec["kind"]),
+            })
+    return rows, parsed["missing"]
+
+
+_BULLET_INSERT = """
+    INSERT INTO resume_bullets (
+        application_id, source, source_path, source_sha256,
+        section_id, section_kind, section_label, card_only,
+        company, role_title, date_from, date_to, location,
+        ord, text, html, leading_verb, word_count, has_bold, has_number)
+    VALUES (
+        %(application_id)s, %(source)s, %(source_path)s, %(source_sha256)s,
+        %(section_id)s, %(section_kind)s, %(section_label)s, %(card_only)s,
+        %(company)s, %(role_title)s, %(date_from)s, %(date_to)s, %(location)s,
+        %(ord)s, %(text)s, %(html)s, %(leading_verb)s, %(word_count)s,
+        %(has_bold)s, %(has_number)s)
+"""
+
+
+def sync_bullets(dry_run: bool = False, only: list[str] | None = None) -> dict:
+    """Rebuild `resume_bullets` from the résumé files. Returns a summary.
+
+    Every file is parsed BEFORE anything is written, and the writes are one
+    transaction: a résumé being rewritten by another agent mid-run cannot leave
+    half a résumé in the table. A source that parses to nothing is reported and
+    SKIPPED — its existing rows are left alone, because wiping good rows over a
+    file caught mid-write is the worse failure.
+
+    `only` limits the run to named sources; the default is every résumé there is.
+    """
+    sources = resume_sources()
+    if only:
+        sources = {k: v for k, v in sources.items() if k in only}
+
+    parsed, skipped, missing = {}, [], {}
+    for source, path in sorted(sources.items()):
+        try:
+            rows, gaps = bullet_rows(source, path)
+        except Exception as exc:                                     # noqa: BLE001
+            skipped.append((source, f"unparseable: {exc}"))
+            continue
+        if not rows:
+            skipped.append((source, "parsed to zero bullets — left as it stands"))
+            continue
+        parsed[source] = rows
+        if gaps:
+            missing[source] = gaps
+
+    summary = {"sources": len(parsed), "bullets": sum(len(r) for r in parsed.values()),
+               "missing": missing, "skipped": skipped, "unregistered": []}
+    if dry_run:
+        for source, rows in sorted(parsed.items()):
+            print(f"[bullets] would refresh {source}: {len(rows)} bullet(s)")
+    else:
+        with jobs_db.connect() as conn, conn.cursor() as cur:
+            cur.execute("SELECT slug, id FROM applications")
+            ids = {r["slug"]: r["id"] for r in cur.fetchall()}
+            for source, rows in sorted(parsed.items()):
+                app_id = ids.get(source)          # None for 'master', and for a
+                if source != "master" and app_id is None:   # workspace not yet
+                    summary["unregistered"].append(source)  # registered.
+                cur.execute("DELETE FROM resume_bullets WHERE source = %s", (source,))
+                for row in rows:
+                    cur.execute(_BULLET_INSERT, {**row, "application_id": app_id})
+                print(f"[bullets] {source}: {len(rows)} bullet(s)"
+                      f" across {len({r['section_id'] for r in rows})} section(s)")
+            conn.commit()
+
+    for source, gaps in sorted(missing.items()):
+        print(f"[bullets] {source}: section(s) NOT FOUND — {', '.join(gaps)}"
+              " (a misspelt id is skipped silently by the exporter too)", file=sys.stderr)
+    for source, why in skipped:
+        print(f"[bullets] {source}: {why}", file=sys.stderr)
+    for source in summary["unregistered"]:
+        print(f"[bullets] {source}: workspace on disk but no row in applications —"
+              " bullets stored with a NULL application_id", file=sys.stderr)
+    print(f"[bullets] {summary['sources']} source(s), {summary['bullets']} bullet(s)"
+          + (f", {len(skipped)} skipped" if skipped else ""))
+    return summary
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--scores", action="store_true", help="refresh scores only, skip the seed")
+    ap.add_argument("--scores", action="store_true", help="refresh scores, skip the seed")
+    ap.add_argument("--bullets", action="store_true",
+                    help="rebuild resume_bullets from the résumé files, skip the seed")
     ap.add_argument("--dry-run", action="store_true", help="say what would change, change nothing")
     args = ap.parse_args()
-    if not args.scores:
+    # A bare run does all three. Naming any pass runs exactly the passes named,
+    # so --scores --bullets is both and neither implies the seed.
+    picked = args.scores or args.bullets
+    if not picked:
         seed(args.dry_run)
-    sync_scores(args.dry_run)
+    if args.scores or not picked:
+        sync_scores(args.dry_run)
+    if args.bullets or not picked:
+        sync_bullets(args.dry_run)
     print(json.dumps(jobs_db.launcher()["counts"], indent=2))
 
 

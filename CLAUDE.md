@@ -847,7 +847,42 @@ resolves the graph neural network, the four Rocket metrics, the 70–80% consoli
 27 ms / P95 16 ms pairing or the 100,000-concurrent wording. Surface them in every prep
 artefact and leave the résumé wording alone.
 
-**He still writes the master by hand.** Workflows draft, verify and stage paste-ready content;
+**⚠ ARCHITECTURE CHANGED 2026-08-26 — THE DATABASE IS THE SOURCE, HTML IS A VIEW.** Set by him,
+in his own words:
+
+> 1. master resume has it's own bullets in a table · 2. you retrieve them, compare them to the JD ·
+> 3. score & improve · 4. new bullets are stored in the DB again · 5. using these DB bullets, you
+> export the PDF from upgrad · 6. **I only see the final PDF. if any changes are needed, you can
+> make those changes to the DB** · 7. a HTML page that helps us with comparison, all running from
+> the DB · 8. **HTML is no longer static. it's dynamic.**
+
+**What he supplies is the MATERIAL, not the markup** — *"i give you the details of master resume,
+which I've already done."* The journey document, the 17 VoltusWave bullets, the confirmations
+(Kubernetes, Terraform, HIPAA, load balancing, high availability), and the corrections. He
+adjudicates; he does not hand-author HTML. **His review surface is the exported PDF.**
+
+**The collision, and how it resolves.** `upgrad_apply.py` parses `<workspace>/upgrad_resume.html`
+by section id and pastes via `_paste_html`, which is still the only path carrying both bold and
+bullets into the card. So the file is **generated from the database immediately before export** and
+becomes a build artefact — regenerated on demand, never authored, never edited by hand. **The
+exporter does not change.**
+
+**Why this was needed.** Six full copies of his career existed across workspaces, all diverged, and
+every one went stale silently when the master changed — the same duplication CLAUDE.md records
+removing at the master level, recreated one level down. A per-seat résumé is a **selection with
+edits**, not a copy.
+
+**⛔ The migration's safety gate: it must ROUND-TRIP.** Parse the master into the table, regenerate
+the HTML, and diff. Byte-identical, or every difference enumerated and justified. A parse that
+silently drops a `<strong>` corrupts the master and would not surface until an exported PDF lost its
+bold. **A lossy migration is the worst outcome available; stop rather than proceed.**
+
+**What this makes enforceable rather than advisory:** leading-verb uniqueness across all ten roles,
+≤25 words, at least one bolded fact, no trailing period. The verb list *"has been wrong before —
+never trust it, regenerate from the file"* becomes a constraint instead of a warning.
+
+~~**He still writes the master by hand.**~~ *(Superseded. He supplies the material and approves the
+PDF; the markup is generated.)* The rest stands: Workflows draft, verify and stage paste-ready content;
 they do not ship on his behalf, and they never touch the Hiration card.
 
 **`./todo` coordinates, it never executes.** It answers what is due, what is blocked and what
