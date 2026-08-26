@@ -85,7 +85,7 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
     Everything repeated 15-20 times a night belongs here, not in a human's
     hands: the directory, the résumé copy, the empty notes sidecar, a jd.md to
     paste into, a per-workspace favicon so open tabs stay tellable apart, and a
-    row in `jobs_tracker` so the seat is reachable, countable and queryable.
+    row in `jobs_tracker_v2` so the seat is reachable, countable and queryable.
     """
     master = ROOT / "master" / "upgrad_resume.html"
     if not master.exists():
@@ -118,7 +118,7 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
     except Exception:                                            # noqa: BLE001
         pass
 
-    # Register in jobs_tracker so the seat is reachable, countable and
+    # Register in jobs_tracker_v2 so the seat is reachable, countable and
     # QUERYABLE. This used to append a card to index.html; the launcher now
     # renders from the database, so writing markup here would produce a row
     # nothing can search. A failure is a warning, never fatal — the workspace on
@@ -134,7 +134,7 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
             source_url=f"(no URL supplied — workspace {rel.as_posix()})",
         )
     except Exception as exc:                                     # noqa: BLE001
-        print(f"[resume] WARNING: could not register {slug} in jobs_tracker ({exc})",
+        print(f"[resume] WARNING: could not register {slug} in jobs_tracker_v2 ({exc})",
               file=sys.stderr)
         print("[resume]          fix the database, then: jobs_sync.py", file=sys.stderr)
 
@@ -142,10 +142,10 @@ def cmd_new(slug: str, company: str | None = None, role: str | None = None) -> N
     for f in ("upgrad_resume.html", "jd.md", "paste_notes.json"):
         print(f"[resume]   {f}")
     if registered:
-        print('[resume] registered in jobs_tracker as "resume_drafted"'
+        print('[resume] registered in jobs_tracker_v2 as "resume_drafted"'
               ' — shows under "Ready to apply"')
     else:
-        print(f"[resume] {slug} was already in jobs_tracker — left as it stands")
+        print(f"[resume] {slug} was already in jobs_tracker_v2 — left as it stands")
     print(f"[resume] next: paste the JD into {rel}/jd.md, re-vector per Rule 7,")
     print(f"[resume]       then: resume.py sheet --slug {slug}")
 

@@ -1,6 +1,6 @@
 -- 001 — one reason becomes several.
 --
---   psql -d v2_daily -f automation/migrations/001_reason_to_reasons.sql
+--   psql -d v2_daily -f db/migrations/001_reason_to_reasons.sql
 --
 -- A move-out often has more than one cause at once: the posting closed AND the
 -- band came back below floor. Single-reason forced a choice between them and

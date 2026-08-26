@@ -2,9 +2,12 @@
 // v1's shape: one ROW per slug, grouped by the date the seat came in, with a
 // column header strip per group and an expandable detail row.
 //
-// It used to be hand-written markup, which is why the page showed four rows
-// while `jobs_tracker` held ninety-two. The database is the search layer;
+// It used to be hand-written markup, which is why the page once showed four rows
+// while the database held ninety-two. The database is the search layer;
 // directories are storage, not an index.
+//
+// The database behind /api/jobs is `jobs_tracker_v2`. v1's ninety-two rows are
+// in `jobs_tracker` and are not served here at all — see automation/jobs_db.py.
 //
 // Served by plain `python -m http.server` there is no API, so the fetch fails.
 // That case SAYS SO — an empty list would read as "no applications", which is
@@ -89,9 +92,6 @@
 
     const facts = el("ul", "jbul");
     facts.append(li(el("span", null, `status: ${human(a.status)}`)));
-    if (a.archived_from) {
-      facts.append(li(el("span", null, `archived from: ${human(a.archived_from)}`)));
-    }
     if (a.location) facts.append(li(el("span", null, `location: ${a.location}`)));
     if (a.at) facts.append(li(el("span", null, `${a.at_kind} ${a.at.slice(0, 10)}`)));
     facts.append(li(el("span", null, `slug: ${a.slug}`)));
@@ -197,10 +197,11 @@
       return;
     }
     const by = new Map();
-    // Archived rows have no tab, so they are not rendered at all rather than
-    // rendered-and-hidden: 92 hidden nodes are 92 chances for a filter bug to
-    // surface a seat he archived on purpose.
-    data.applications.filter(a => a.tab !== "archived").forEach(a => {
+    // Every row is rendered. There is nothing to filter out: `jobs_tracker_v2`
+    // holds v2's seats and only v2's seats, and v1's ninety-two live in a
+    // database this page never opens. The archived tab and the filter that once
+    // stood here both came out on 2026-08-26 with db/migrations/006.
+    data.applications.forEach(a => {
       const k = a.intake || "";
       if (!by.has(k)) by.set(k, []);
       by.get(k).push(a);

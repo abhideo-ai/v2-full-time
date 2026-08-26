@@ -1,5 +1,5 @@
 // The launcher's Applications list, end to end: index.html + static/tabs.js +
-// static/apps.js against a real serve.py and a real jobs_tracker.
+// static/apps.js against a real serve.py and a real jobs_tracker_v2.
 //
 //   argv[2]  API   — serve.py, database reachable
 //   argv[3]  PLAIN — plain http.server, so /api/jobs 404s
@@ -55,7 +55,8 @@ const type    = async (w, q) => {
   console.log("\n1. Rendered from the database, as rows and not cards");
   let w = await boot(API), d = w.document;
   ok(rows(d).length === total, `every row reached the page — ${rows(d).length} of ${total}`);
-  ok(total > 4, `and it is the whole database, not the four directories — ${total} rows`);
+  ok(total > 0 && rows(d).length === api.counts.total,
+     `and it is the whole database, not a filtered slice — ${total} rows`);
   ok(d.getElementById("app-status").hidden, "the loading message goes away");
   ok(d.getElementById("tab-empty").hidden, "and it does not claim nothing matches");
   ok(d.querySelectorAll("#app-list .card").length === 0, "nothing renders as a card any more");
@@ -73,7 +74,7 @@ const type    = async (w, q) => {
     sum += countOf(d, t);
   }
   ok(sum === total, `the tabs account for every row — ${sum} of ${total}`);
-  ok(!d.querySelector('[data-tab="all"]'), "there is no `all` tab to sweep archived rows back in");
+  ok(!d.querySelector('[data-tab="all"]'), "there is no `all` tab, exactly as in v1");
   const readyN = api.counts.ready;
   ok(readyN ? d.title.startsWith(`${readyN} ready · unsent ·`) : true,
      `the title leads with ready-and-unsent — got "${d.title}"`);
@@ -99,16 +100,21 @@ const type    = async (w, q) => {
      "and re-rendered rows restore every count with no initTabs() call at all");
   ok(rows(d).length === total, "with every row back on the page");
 
-  console.log("\n4. Archived rows never reach the page at all");
+  // v1's ninety-two rows are in `jobs_tracker`; this page reads
+  // `jobs_tracker_v2`. There is nothing to archive and nothing to filter, so the
+  // assertion is that the concept is gone from the page entirely — no tab, no
+  // status, no count — rather than that it is being hidden correctly.
+  console.log("\n4. Each tab shows its own rows, and the archive concept is gone");
   for (const t of TABS) {
     await click(w, t);
     ok(visible(d).every(r => r.dataset.status === t), `the ${t} tab shows only ${t} rows`);
   }
   ok(!d.querySelector('[data-tab="archived"]'), "there is no archived tab to click");
-  ok(rows(d).every(r => r.dataset.status !== "archived"),
-     "and no archived row is in the DOM, hidden or otherwise");
-  ok(api.counts.archived > 0,
-     `the API still reports ${api.counts.archived} archived — they are filtered at render, not deleted`);
+  ok(rows(d).every(r => r.dataset.status !== "archived"), "no row lands on an archived tab");
+  ok(!("archived" in api.counts),
+     "and /api/jobs serves no archived count — jobs_tracker_v2 has no such status");
+  ok(!/archived/i.test(d.getElementById("app-list").textContent),
+     "the word does not appear anywhere in the list");
   await click(w, "ready");
   ok(visible(d).length === api.counts.ready, `ready shows ${visible(d).length} of ${api.counts.ready}`);
   ok(tab(d, "ready").getAttribute("aria-selected") === "true", "the tab marks itself selected");
@@ -131,18 +137,24 @@ const type    = async (w, q) => {
      `no header invents a narrative — ${authored} hand-authored note(s) on file`);
 
   console.log("\n6. Search filters on company and role, and composes with the tab");
-  await click(w, "archived");
-  const probe = api.applications.find(a => a.status === "archived").company.split(" ")[0].toLowerCase();
+  // The busiest tab, so "narrows the list" is a real narrowing. That is `ready`
+  // today — the apply queue — but the suite derives it rather than naming it,
+  // because which tab is busiest is exactly the thing that changes.
+  const busiest = TABS.reduce((a, b) => (api.counts[b] > api.counts[a] ? b : a), TABS[0]);
+  await click(w, busiest);
+  const probe = api.applications.find(a => a.tab === busiest)
+                   .company.split(" ")[0].toLowerCase();
   await type(w, probe);
   const hits = visible(d);
-  ok(hits.length > 0 && hits.length < total, `"${probe}" narrows the list to ${hits.length}`);
+  ok(hits.length > 0, `"${probe}" matches ${hits.length} row(s) on the ${busiest} tab`);
+  ok(hits.length < total || total === 1, `and narrows the list from ${total}`);
   ok(hits.every(r => r.dataset.search.toLowerCase().includes(probe)), "every hit really matches");
-  ok(hits.every(r => r.dataset.status === "archived"), "a filtered tab stays filtered while searching");
+  ok(hits.every(r => r.dataset.status === busiest), "a filtered tab stays filtered while searching");
   await type(w, "zzzznotacompany");
   ok(visible(d).length === 0, "a miss shows nothing");
   ok(!d.getElementById("tab-empty").hidden, "and says so");
   await type(w, "");
-  ok(visible(d).length === api.counts.archived, "clearing the box restores the tab");
+  ok(visible(d).length === api.counts[busiest], `clearing the box restores the ${busiest} tab`);
 
   console.log("\n7. Both scores are columns, and nothing incomparable is shown as a number");
   const cell = (r, cls) => r.querySelector(cls).textContent.trim();

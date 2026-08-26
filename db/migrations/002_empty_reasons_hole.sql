@@ -1,6 +1,6 @@
 -- 002 — close the empty-array hole in "a move must have a reason".
 --
---   psql -d v2_daily -f automation/migrations/002_empty_reasons_hole.sql
+--   psql -d v2_daily -f db/migrations/002_empty_reasons_hole.sql
 --
 -- 001 wrote `array_length(reasons, 1) >= 1`. For an EMPTY array array_length
 -- returns NULL, not 0, and a CHECK constraint only rejects FALSE — NULL passes.

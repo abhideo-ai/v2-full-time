@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Write side of `jobs_tracker` for v2 — seat registration and score refresh.
+"""Write side of `jobs_tracker_v2` — seat registration and score refresh.
 
     automation/.venv/bin/python automation/jobs_sync.py            # seed + scores
     automation/.venv/bin/python automation/jobs_sync.py --scores   # scores only
     automation/.venv/bin/python automation/jobs_sync.py --dry-run
 
+⚠ It writes wherever `jobs_db.DSN` points, which is `jobs_tracker_v2` — v2's own
+database since 2026-08-26. v1's ninety-two rows are in `jobs_tracker` and are not
+reachable from here at all.
+
 Deliberately NOT in `jobs_db.py`: the server imports that one, and the thing the
-server imports must not be able to mutate v1's ninety-two rows.
+server imports must not be able to mutate the record.
 
 Both passes are idempotent — re-run them as often as you like:
 
@@ -19,8 +23,7 @@ Both passes are idempotent — re-run them as often as you like:
           never hardcoded anywhere; this reads them back off disk.
 
 `scores` only ever touches a row whose slug has a workspace WITH a score.json in
-this repo, and refuses any row still carrying v1's five-axis breakdown. v1's rows
-have no local workspace, so they are unreachable from here twice over.
+this repo, and refuses any row still carrying a v1 five-axis breakdown.
 """
 import argparse
 import json

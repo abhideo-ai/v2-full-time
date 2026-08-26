@@ -1,8 +1,13 @@
 """Read-only suite for jobs_db + /api/jobs.
 
-Unlike test_db.py this one NEVER writes: `jobs_tracker` holds v1's real record
-and the four live seats. It asserts against whatever is in the database now, so
-it stays true as rows are added.
+Unlike test_db.py this one NEVER writes: `jobs_tracker_v2` holds his live seats.
+It asserts against whatever is in the database now, so it stays true as rows are
+added.
+
+⚠ It reads `jobs_tracker_v2`, v2's own database since 2026-08-26. v1's ninety-two
+rows are in `jobs_tracker` and this suite must never see them — section 5 is now
+the assertion that it does not, where it used to be the assertion that archiving
+had preserved them.
 """
 import json
 import re
@@ -11,11 +16,19 @@ import pathlib
 import urllib.error
 import urllib.request
 
+import psycopg
+from psycopg.rows import dict_row
+
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 import jobs_db
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 API = sys.argv[1] if len(sys.argv) > 1 else None
+
+# The four seats migration 005 moved into jobs_tracker_v2. Asserted by NAME, so
+# a fifth seat he registers tonight is expected rather than a failure.
+LIVE_SLUGS = ["wipro-principal-software-architect", "o9-senior-architect-agentic",
+              "principal-architect-ai-native", "yes-madam-lead-architect"]
 
 P, F = 0, 0
 def ok(cond, label):
@@ -27,24 +40,26 @@ def ok(cond, label):
 print("\n1. Every status maps to exactly one tab")
 STATUSES = ["new", "recommended_apply", "recommended_skip", "resume_drafted",
             "resume_finalized", "applied", "heard_back", "interviewing",
-            "offer", "rejected", "withdrawn", "archived"]
+            "offer", "rejected", "withdrawn"]
 with jobs_db.connect() as c, c.cursor() as cur:
     cur.execute("SELECT unnest(enum_range(NULL::application_status))::text AS s")
     live = [r["s"] for r in cur.fetchall()]
-ok(live == STATUSES, f"the enum is the twelve this maps — got {live}")
-ok("archived" in live, "`archived` is a real enum value, added by migration 003")
+ok(live == STATUSES, f"the enum is the eleven this maps — got {live}")
+ok("archived" not in live,
+   "`archived` is NOT an enum value here — v2's database has no archive concept")
 ok(set(jobs_db.TAB_FOR_STATUS) == set(live), "TAB_FOR_STATUS covers every enum value, no extras")
 ok(all(jobs_db.tab_for(s) in jobs_db.TABS for s in live), "every status lands on a real tab")
 ok(set(jobs_db.TABS) == {jobs_db.tab_for(s) for s in live}, "no tab is invented and none is orphaned")
-ok(len(jobs_db.TABS) == 7, f"seven tabs — v1's six plus archived — got {len(jobs_db.TABS)}")
-ok("all" not in jobs_db.TABS,
-   "there is no `all` tab — it is what would sweep the archived rows back in")
+ok(len(jobs_db.TABS) == 6, f"six tabs — v1's tab set exactly — got {len(jobs_db.TABS)}")
+ok("all" not in jobs_db.TABS, "there is no `all` tab, exactly as in v1")
 
 print("\n2. The deliberate decisions are the documented ones")
-ok(jobs_db.tab_for("archived") == "archived",
-   "archived has its OWN tab and appears in no other")
-ok([s for s in live if jobs_db.tab_for(s) == "archived"] == ["archived"],
-   "and nothing else lands there")
+ok("archived" not in jobs_db.TABS and "archived" not in jobs_db.TAB_FOR_STATUS,
+   "no archived tab and no archived status — migration 006 took the concept out")
+try:
+    jobs_db.tab_for("archived"); ok(False, "an archived row would be refused")
+except jobs_db.UnknownStatus:
+    ok(True, "an archived row reaching this database would raise, not render")
 ok(jobs_db.tab_for("recommended_skip") == "other",
    "recommended_skip -> other (the catch-all; it must not touch the apply queue)")
 ok(jobs_db.tab_for("new") == "other", "new -> other (untriaged intake)")
@@ -77,47 +92,53 @@ for r in rows:
     per_status.setdefault(r["status"], set()).add(r["tab"])
 ok(all(len(v) == 1 for v in per_status.values()), "a status never splits across tabs")
 
-print("\n5. Archiving preserved what it archived")
+print("\n5. v1's record is in another database, and nothing here can reach it")
+# The point of the split. `jobs_tracker` is v1's 92 rows, frozen; this suite and
+# everything it exercises talk to `jobs_tracker_v2`. Non-interference is now a
+# property of the connection string, not of every query remembering to filter.
 with jobs_db.connect() as c, c.cursor() as cur:
-    cur.execute("SELECT count(*) AS n FROM applications WHERE status = 'archived'")
-    n_arch = cur.fetchone()["n"]
     cur.execute("SELECT count(*) AS n FROM applications"
-                " WHERE status = 'archived' AND archived_from IS NULL")
-    n_forgot = cur.fetchone()["n"]
-    cur.execute("SELECT count(*) AS n FROM applications"
-                " WHERE status <> 'archived' AND archived_from IS NOT NULL")
-    n_stale = cur.fetchone()["n"]
-    cur.execute("SELECT count(*) AS n FROM applications"
-                " WHERE scraped_at::date < DATE '2026-08-25' AND status <> 'archived'")
-    n_left = cur.fetchone()["n"]
+                " WHERE scraped_at::date < DATE '2026-08-25'")
+    n_v1_here = cur.fetchone()["n"]
+    cur.execute("SELECT count(*) AS n FROM information_schema.columns"
+                " WHERE table_name = 'applications' AND column_name = 'archived_from'")
+    n_col = cur.fetchone()["n"]
     cur.execute("SELECT count(*) AS n FROM pg_constraint"
                 " WHERE conname = 'applications_archive_remembers'")
     n_check = cur.fetchone()["n"]
-ok(n_arch > 0, f"{n_arch} row(s) are archived")
-ok(n_forgot == 0, "every archived row still carries the status it held — an archive that "
-                  "destroys what it archived is a delete")
-ok(n_stale == 0, "and no live row carries a stale archived_from")
-ok(n_left == 0, "every row taken in before 2026-08-25 is archived — v1's record, all of it")
-ok(n_check == 1, "the CHECK constraint makes archived_from mandatory in the database itself")
-arch_rows = [r for r in rows if r["status"] == "archived"]
-ok(len(arch_rows) == n_arch and all(r["tab"] == "archived" for r in arch_rows),
-   "and the payload puts every one of them on the archived tab")
-ok(all(r["archived_from"] for r in arch_rows), "the previous status reaches the page")
-ok(all(r["archived_from"] is None for r in rows if r["status"] != "archived"),
-   "live rows carry no archived_from")
-ok(counts["archived"] == n_arch, f"the archived tab counts them all — {counts['archived']}")
-ok(sum(counts[t] for t in jobs_db.TABS if t != "archived") == total - n_arch,
-   "and every other tab together holds only the rest")
+ok("jobs_tracker_v2" in jobs_db.DSN, f"jobs_db talks to jobs_tracker_v2 — DSN {jobs_db.DSN!r}")
+ok(n_v1_here == 0, "not one row here predates 2026-08-25 — v1's record is elsewhere")
+ok(n_col == 0 and n_check == 0,
+   "no archived_from column and no archive CHECK — 004 never created them")
+ok(all(r["status"] != "archived" for r in rows), "and no row carries an archived status")
 
-print("\n6. The live seats are registered, and none of them is archived")
+# v1's database, read directly and never written. If it is not on this machine
+# there is nothing to interfere with, which is the same guarantee by other means.
+V1_DISTRIBUTION = {"recommended_skip": 49, "new": 15, "resume_finalized": 14,
+                   "applied": 10, "resume_drafted": 3, "interviewing": 1}
+try:
+    with psycopg.connect("dbname=jobs_tracker", row_factory=dict_row) as c, c.cursor() as cur:
+        cur.execute("SELECT status::text AS s, count(*) AS n FROM applications GROUP BY 1")
+        v1 = {r["s"]: r["n"] for r in cur.fetchall()}
+        cur.execute("SELECT count(*) AS n FROM applications WHERE slug = ANY(%s)",
+                    (list(LIVE_SLUGS),))
+        n_dupes = cur.fetchone()["n"]
+except psycopg.Error as exc:
+    ok(True, f"jobs_tracker is not reachable from here — nothing to interfere with ({exc.__class__.__name__})")
+else:
+    ok(sum(v1.values()) == 92, f"jobs_tracker still holds v1's 92 rows — got {sum(v1.values())}")
+    ok(v1 == V1_DISTRIBUTION,
+       "with the exact statuses v1 left them in — migration 006 reversed 003 cleanly")
+    ok("archived" not in v1, "and not one of them is still archived")
+    ok(n_dupes == 0, "none of v2's seats is still sitting in v1's database — one home each")
+
+print("\n6. The live seats are registered, and each is ready to apply")
 by_slug = {r["slug"]: r for r in rows}
-for slug in ["wipro-principal-software-architect", "o9-senior-architect-agentic",
-             "principal-architect-ai-native", "yes-madam-lead-architect"]:
+for slug in LIVE_SLUGS:
     r = by_slug.get(slug)
     ok(r is not None, f"{slug} is in the database")
     if r:
         ok(r["tab"] == "ready", f"{slug} shows under ready to apply")
-        ok(r["status"] != "archived", f"{slug} was NOT archived")
         ok(r["workspace"] and r["href"], f"{slug} resolves to its workspace on disk")
 w = by_slug.get("wipro-principal-software-architect")
 ok(w and w["technical"] is None, "Wipro carries NO technical score — there is no JD to score")
@@ -147,10 +168,12 @@ ok("salary" not in jobs_db._SELECT, "and the column is never even selected")
 
 print("\n9. Rows carry what the page needs")
 sample = rows[0]
-for key in ["slug", "company", "role", "status", "archived_from", "tab", "technical",
+for key in ["slug", "company", "role", "status", "tab", "technical",
             "non_technical", "location", "source_url", "source_note", "workspace",
             "href", "at", "at_kind", "intake"]:
     ok(key in sample, f"row has `{key}`")
+ok("archived_from" not in sample,
+   "and no `archived_from` — the column does not exist in v2's database")
 ok(all(r["source_url"] is None or r["source_url"].startswith("http") for r in rows),
    "a source_url that is not a URL is nulled rather than rendered as a dead link")
 ok(all((r["source_url"] is None) != (r["source_note"] is None) for r in rows),
@@ -187,7 +210,8 @@ if API:
     ok(len(payload["applications"]) == total, f"serves all {total} rows")
     ok(payload["counts"]["total"] == total, "counts agree with the rows")
     ok(sum(payload["counts"][t] for t in jobs_db.TABS) == total, "tabs still total the row count")
-    ok(payload["counts"]["archived"] == n_arch, "the archived tab is served with its own count")
+    ok(set(payload["counts"]) == {"total", *jobs_db.TABS},
+       "and it serves a count for every tab and no others — no `archived`, no `all`")
     ok(len(payload["groups"]) == len(groups), "the intake groups are served too")
     ok("salary" not in json.dumps(payload), "and still no compensation")
 

@@ -10,9 +10,12 @@
 # ⚠ test_db.py and test_page.js TRUNCATE v2_daily's tables. Never point them at a
 # database whose contents matter — they are destructive by design.
 #
-# test_jobs_db.py and test_launcher.js read jobs_tracker and NEVER write to it:
-# it holds v1's ninety-two rows (now archived, not deleted) plus the live seats, and
-# losing those is not a test failure, it is data loss.
+# test_jobs_db.py and test_launcher.js read jobs_tracker_v2 and NEVER write to it:
+# it holds his live seats, and losing those is not a test failure, it is data loss.
+# test_jobs_db.py section 5 also reads v1's `jobs_tracker` to prove the split held.
+# Both are read-only. The SQL that built them is in db/; verify with:
+#
+#     psql -d postgres -v ON_ERROR_STOP=1 -f db/verify.sql
 set -u
 cd "$(dirname "$0")/../.." || exit 1
 PY=automation/.venv/bin/python
@@ -21,7 +24,7 @@ FAIL=0
 echo "=== database layer (v2_daily — destructive) ==="
 $PY automation/tests/test_db.py || FAIL=1
 
-echo; echo "=== jobs layer (jobs_tracker — read-only) ==="
+echo; echo "=== jobs layer (jobs_tracker_v2 — read-only) ==="
 $PY automation/tests/test_jobs_db.py || FAIL=1
 
 if [ ! -d node_modules/jsdom ]; then
@@ -49,7 +52,7 @@ $PY automation/serve.py --port 8106 >/tmp/serve106.$$.log 2>&1 &
 python3 -m http.server 8107 --bind 127.0.0.1 >/dev/null 2>&1 &
 # 8108: the same server pointed at a database that does not exist, so the
 # launcher's 503 path is exercised against a real 503 rather than a mock.
-JOBS_TRACKER_DSN="dbname=jobs_tracker_no_such_database" \
+JOBS_TRACKER_DSN="dbname=jobs_tracker_v2_no_such_database" \
   $PY automation/serve.py --port 8108 >/tmp/serve108.$$.log 2>&1 &
 sleep 2
 node automation/tests/test_page.js || FAIL=1
@@ -60,7 +63,7 @@ echo; echo "=== jobs layer, over HTTP ==="
 $PY automation/tests/test_jobs_db.py http://127.0.0.1:8106 >/tmp/jobsapi.$$.log 2>&1 || FAIL=1
 sed -n '/^12\. GET/,$p' /tmp/jobsapi.$$.log; rm -f /tmp/jobsapi.$$.log
 
-echo; echo "=== launcher (real server + real jobs_tracker) ==="
+echo; echo "=== launcher (real server + real jobs_tracker_v2) ==="
 node automation/tests/test_launcher.js \
   http://127.0.0.1:8106 http://127.0.0.1:8107 http://127.0.0.1:8108 || FAIL=1
 

@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
-"""Read-only view of the `jobs_tracker` database, for the workspace launcher.
+"""Read-only view of the `jobs_tracker_v2` database, for the workspace launcher.
 
-    JOBS_TRACKER_DSN=dbname=jobs_tracker   (default)
+    JOBS_TRACKER_DSN=dbname=jobs_tracker_v2   (default)
+
+⚠ `jobs_tracker_v2`, not `jobs_tracker`. v2 has its own database as of
+2026-08-26 (`db/migrations/004`, `005`, `006`) so that v1's ninety-two rows are
+not merely filtered out of every view but are in a database nothing here opens.
+His words: "let's use a different database? like jobs_tracker_v2? this way we DO
+NOT interfere with v1 jobs?" The env var still overrides, but pointing it at
+`jobs_tracker` would hand this module v1's record — and `tab_for` would raise on
+the first archived row rather than render it.
 
 The launcher used to carry its application cards as hand-written markup, so the
 page showed four rows while the database held ninety-two. "The database is the
@@ -10,7 +18,7 @@ here instead, and `automation/serve.py` exposes it at `GET /api/jobs`.
 
 Nothing in this module writes. Seeding a new seat and refreshing its score are
 `automation/jobs_sync.py`'s job, deliberately kept in a separate file so the
-thing the server imports cannot mutate v1's record by accident.
+thing the server imports cannot mutate the record by accident.
 
 Sibling of `db.py` (the daily log's store), same connection pattern, different
 database. The two never share a connection or a transaction.
@@ -23,21 +31,27 @@ from pathlib import Path
 import psycopg
 from psycopg.rows import dict_row
 
-DSN = os.environ.get("JOBS_TRACKER_DSN", "dbname=jobs_tracker")
+DSN = os.environ.get("JOBS_TRACKER_DSN", "dbname=jobs_tracker_v2")
 ROOT = Path(__file__).resolve().parent.parent
 
 # ---------------------------------------------------------------------------
 # Status -> launcher tab
 # ---------------------------------------------------------------------------
-# Twelve `application_status` values, seven launcher tabs — v1's six plus
-# `archived`. He asked for v1's launcher back, and its tab set with it. Every
-# row lands in exactly ONE tab and none may silently vanish: `tab_for` raises on
-# an unknown status rather than dropping the row, and `counts()` asserts the
-# tabs total the row count.
+# Eleven `application_status` values, six launcher tabs — v1's tab set exactly.
+# He asked for v1's launcher back, and its tabs with it. Every row lands in
+# exactly ONE tab and none may silently vanish: `tab_for` raises on an unknown
+# status rather than dropping the row, and `counts()` asserts the tabs total the
+# row count.
 #
-# There is deliberately NO `all` tab, exactly as in v1. That is also what keeps
-# the 92 archived rows out of every other view: `archived` is a tab, so it is
-# the only place they appear, and no default view can accidentally include them.
+# There is deliberately NO `all` tab, exactly as in v1.
+#
+# ⚠ THERE IS NO `archived` TAB, AND NO ARCHIVE CONCEPT AT ALL. There was one,
+# for a day: migration 003 archived v1's 92 rows in place and gave them a
+# seventh tab. Migration 006 reversed it, because a row that has to be filtered
+# out of every view is a row in the wrong database — v1's record lives in
+# `jobs_tracker` now and v2 never opens it. `archived` is not in this map, not
+# in `TABS`, and not even in `jobs_tracker_v2`'s enum, so a row carrying it is
+# refused by PostgreSQL before this module can be asked for its tab.
 #
 # The reasoning, tab by tab:
 #
@@ -70,11 +84,6 @@ ROOT = Path(__file__).resolve().parent.parent
 #       rows were scored and adjudicated out before any build, and they belong
 #       neither in the apply queue (they would corrupt the backlog gate) nor
 #       among seats that closed on their own.
-#
-#   archived — "Archived"
-#       archived. v1's 92 rows, moved aside on 2026-08-26 by
-#       `migrations/003_archive_v1_rows.sql`. Their previous status is preserved
-#       on the row in `archived_from` and is carried through to the page.
 TAB_FOR_STATUS = {
     "new":               "other",
     "recommended_apply": "ready",
@@ -87,13 +96,10 @@ TAB_FOR_STATUS = {
     "offer":             "heard-back",
     "rejected":          "not-selected",
     "withdrawn":         "closed",
-    "archived":          "archived",
 }
 
 # The tabs in index.html, in their rendered order. `ready` is the default.
-TABS = ["ready", "applied", "closed", "heard-back", "not-selected",
-        "other", "archived"]
-ARCHIVED_TAB = "archived"
+TABS = ["ready", "applied", "closed", "heard-back", "not-selected", "other"]
 
 
 class UnknownStatus(KeyError):
@@ -222,15 +228,13 @@ def connect() -> psycopg.Connection:
 # `salary` is deliberately absent: compensation is deferred by user directive,
 # so it is not selected, not returned, and not renderable on the launcher.
 _SELECT = """
-    SELECT id, slug, type, company, role, status, archived_from, location,
+    SELECT id, slug, type, company, role, status, location,
            source_url, fit_score, fit_breakdown, applied_at, updated_at, scraped_at
       FROM applications
 """
 
 # Once a seat has been sent, when it was sent is the fact that matters; before
-# that it is when the row last moved. Judged on the status the row actually
-# reached — an archived row keeps that in `archived_from`, so archiving a sent
-# application does not silently turn its sent date back into an edit date.
+# that it is when the row last moved.
 _SENT_STATUSES = {"applied", "heard_back", "interviewing", "offer", "rejected"}
 
 
@@ -240,9 +244,8 @@ def _iso(value):
 
 def _row(r: dict, paths: dict[str, str]) -> dict:
     tab = tab_for(r["status"])
-    reached = r["archived_from"] or r["status"]
     path = paths.get(r["slug"])
-    at, at_kind = (r["applied_at"], "applied") if reached in _SENT_STATUSES and r["applied_at"] \
+    at, at_kind = (r["applied_at"], "applied") if r["status"] in _SENT_STATUSES and r["applied_at"] \
         else (r["updated_at"] or r["scraped_at"], "updated")
     return {
         "id": r["id"],
@@ -251,10 +254,6 @@ def _row(r: dict, paths: dict[str, str]) -> dict:
         "company": r["company"],
         "role": r["role"],
         "status": r["status"],
-        # What the row was before it was archived. Never lost, never guessed:
-        # `migrations/003_archive_v1_rows.sql` records it and a CHECK constraint
-        # makes it mandatory. NULL on every live row.
-        "archived_from": r["archived_from"],
         "tab": tab,
         "location": r["location"] or None,
         "source_url": r["source_url"] if str(r["source_url"]).startswith("http") else None,
@@ -281,8 +280,8 @@ def applications() -> list[dict]:
 def counts(rows: list[dict]) -> dict:
     """Per-tab counts plus the row total. Asserts the tabs account for every row
     — a launcher that quietly renders 90 of 96 rows is worse than one that fails
-    loudly. There is no `all`: archived rows are reachable only through their own
-    tab, and a total that swept them back in would defeat archiving them."""
+    loudly. There is no `all` tab, exactly as in v1; `total` carries that number
+    for the page title."""
     per = {t: 0 for t in TABS}
     for r in rows:
         per[tab_for(r["status"])] += 1

@@ -1,6 +1,15 @@
 -- 003 — archive v1's ninety-two rows, without losing what they were.
 --
---   psql -d jobs_tracker -f automation/migrations/003_archive_v1_rows.sql
+-- ⛔ HISTORY, NOT CURRENT STATE. This ran on 2026-08-26 and was REVERSED the
+-- same day by `006_restore_v1_rows.sql`, once he asked for a separate database
+-- instead: "let's use a different database? like jobs_tracker_v2? this way we DO
+-- NOT interfere with v1 jobs?" `jobs_tracker` has no archived rows and no
+-- `archived_from` column today, and that is correct — do not re-run this file.
+-- It is kept because 006 is only readable next to it, and because the
+-- `archived_from` column it invented is what let the reversal recover v1's exact
+-- status distribution. Read 004, 005 and 006 for where things actually stand.
+--
+--   psql -d jobs_tracker -f db/migrations/003_archive_v1_rows.sql
 --
 -- ⚠ This is the FIRST migration against `jobs_tracker`. 001 and 002 are
 -- `v2_daily`'s. Read the connection string above before running it.

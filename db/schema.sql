@@ -1,7 +1,7 @@
 -- Daily-log state for the v2 full-time workspace.
 --
 --   createdb v2_daily
---   psql -d v2_daily -f automation/schema.sql
+--   psql -d v2_daily -f db/schema.sql
 --
 -- Two tables on purpose. task_state is the CURRENT state the page renders and
 -- is what a GET returns. task_event is the append-only history — every tick,
@@ -12,7 +12,7 @@
 -- `reasons` is an array: a move-out usually has more than one cause at once
 -- (the posting closed AND the band came back below floor). Which reasons a task
 -- carries decides whether it can come back — see `revivable` in daily/days.json.
--- Existing databases migrate via automation/migrations/001_reason_to_reasons.sql.
+-- Existing databases migrate via db/migrations/001_reason_to_reasons.sql.
 
 CREATE TABLE IF NOT EXISTS task_state (
   key        text PRIMARY KEY,

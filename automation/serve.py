@@ -25,7 +25,8 @@ and the launcher says the list is unavailable rather than rendering nothing,
 which would read as "no applications".
 
 Two databases, never one connection: `db` is `v2_daily` (read-write, the daily
-log), `jobs_db` is `jobs_tracker` (read-only, the launcher).
+log), `jobs_db` is `jobs_tracker_v2` (read-only, the launcher). v1's
+`jobs_tracker` is a third database and nothing here opens it.
 """
 import argparse
 import json
@@ -138,9 +139,9 @@ def main() -> None:
         print("[serve] the daily log will fall back to localStorage and say so", file=sys.stderr)
     try:
         rows = jobs_db.applications()
-        print(f"[serve] jobs_tracker ok — {len(rows)} application(s)", file=sys.stderr)
+        print(f"[serve] jobs_tracker_v2 ok — {len(rows)} application(s)", file=sys.stderr)
     except Exception as exc:                                    # noqa: BLE001
-        print(f"[serve] WARNING: jobs_tracker unreachable ({exc})", file=sys.stderr)
+        print(f"[serve] WARNING: jobs_tracker_v2 unreachable ({exc})", file=sys.stderr)
         print("[serve] the launcher will say the list is unavailable", file=sys.stderr)
     handler = partial(Handler, directory=str(ROOT))
 

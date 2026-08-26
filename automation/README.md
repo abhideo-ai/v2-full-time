@@ -127,10 +127,15 @@ is present, not that bold survived). If bold is flat, re-run with
 ## The launcher reads PostgreSQL (`jobs_db.py` · `jobs_sync.py`)
 
 The workspace launcher (`index.html`) used to carry its application cards as
-hand-written markup, appended by `resume.py new`. That is why the page showed
-**four** rows while `jobs_tracker` held **ninety-two**. The database is the
+hand-written markup, appended by `resume.py new`. That is why the page once
+showed **four** rows while the database held **ninety-two**. The database is the
 search layer; directories are storage, not an index — so the page renders from
 the database instead.
+
+⚠ **It reads `jobs_tracker_v2`, not `jobs_tracker`.** v2 has had its own database
+since 2026-08-26. v1's ninety-two rows are in `jobs_tracker` and nothing here
+opens it. See **`db/README.md`** for the three databases, the migrations and
+`db/verify.sql`.
 
 ```
 automation/.venv/bin/python automation/serve.py       # GET /api/jobs
@@ -139,10 +144,10 @@ automation/.venv/bin/python automation/jobs_sync.py   # seed + refresh scores
 automation/.venv/bin/python automation/jobs_sync.py --scores --dry-run
 ```
 
-- **`jobs_db.py`** — read-only queries against `jobs_tracker`
-  (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker`). Sibling of `db.py`, which
-  owns `v2_daily`; the two never share a connection. Nothing here writes, so the
-  module `serve.py` imports cannot mutate v1's record.
+- **`jobs_db.py`** — read-only queries against `jobs_tracker_v2`
+  (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker_v2`). Sibling of `db.py`,
+  which owns `v2_daily`; the two never share a connection. Nothing here writes,
+  so the module `serve.py` imports cannot mutate the record.
 - **`jobs_sync.py`** — the write side, deliberately in its own file. `seed`
   registers the seats that existed only as directories (ON CONFLICT DO NOTHING,
   so a re-run never overwrites a status changed since); `scores` re-reads every
@@ -161,7 +166,7 @@ automation/.venv/bin/python automation/jobs_sync.py --scores --dry-run
   rows arrive asynchronously, and a count computed before the fetch resolves
   read 0 above a full list. `initTabs()` still exists and still works; nothing
   depends on it being called.
-- **`resume.py new`** registers the seat in `jobs_tracker` as `resume_drafted`,
+- **`resume.py new`** registers the seat in `jobs_tracker_v2` as `resume_drafted`,
   which shows under **Ready to apply**. It no longer writes markup into
   `index.html`. **Never hand-write a row there** — a row added by hand is a row
   no query can see.
@@ -175,15 +180,19 @@ is deferred by user directive.
 
 ### Status → launcher tab
 
-Twelve `application_status` values, seven tabs — v1's six plus `archived`. Every
-row lands in exactly one tab; `tab_for()` raises `UnknownStatus` on anything
-unmapped rather than dropping a row, and `counts()` asserts the tabs total the
-row count.
+Eleven `application_status` values, six tabs — v1's tab set exactly. Every row
+lands in exactly one tab; `tab_for()` raises `UnknownStatus` on anything unmapped
+rather than dropping a row, and `counts()` asserts the tabs total the row count.
 
-**There is deliberately no `all` tab**, exactly as in v1. That is also what keeps
-the 92 archived rows out of every other view: `archived` is a tab, so it is the
-only way to reach them, and no default view can sweep them back in. `ready` is
-the tab that opens.
+**There is deliberately no `all` tab**, exactly as in v1. `ready` is the tab that
+opens.
+
+⚠ **There is no `archived` tab either, and no archive concept at all.** There was
+one, for a day: `db/migrations/003` archived v1's 92 rows in place and gave them
+a seventh tab. `db/migrations/006` reversed it once he asked for a separate
+database instead. `archived` is not in `TAB_FOR_STATUS`, not in `TABS`, and not
+even in `jobs_tracker_v2`'s enum — PostgreSQL refuses such a row before this
+module is asked for its tab.
 
 | tab | statuses | why |
 |---|---|---|
@@ -193,43 +202,49 @@ the tab that opens.
 | **Heard back** | `heard_back` · `interviewing` · `offer` | They replied and the process is live. This tab set has no interviewing tab, and burying a live process in `other` would be the worst answer available. |
 | **Not selected** | `rejected` | |
 | **Other** | `new` · `recommended_skip` | The catch-all, which is what a catch-all is for. It also retires the judgement call v2 inherited: 49 `recommended_skip` rows were scored and adjudicated out before any build, and they belong neither in the apply queue (they would corrupt the backlog gate) nor among seats that closed on their own. |
-| **Archived** | `archived` | v1's 92 rows, moved aside by `migrations/003_archive_v1_rows.sql`. |
 
-### Archiving — `migrations/003_archive_v1_rows.sql`
+### v1 and v2 are separate databases — `db/migrations/004`, `005`, `006`
 
-The first migration against `jobs_tracker` (001 and 002 are `v2_daily`'s). It
-adds `archived` to the enum and archives the **92 rows scraped before
-2026-08-25** — exactly v1's record; the four live seats were all created that
-day.
+Set by him on 2026-08-26: *"let's use a different database? like
+`jobs_tracker_v2`? this way we DO NOT interfere with v1 jobs?"*
 
-**Archiving is a status change and nothing else. No row is deleted.** What each
-row *was* survives it, twice over and for different reasons:
+| database | holds | read by |
+|---|---|---|
+| `jobs_tracker` | v1's record — **92 seats, frozen**, everything scraped before 2026-08-25 | nothing in v2 |
+| `jobs_tracker_v2` | v2's seats, everything from 2026-08-25 onward | the launcher, `jobs_sync.py`, `resume.py new` |
 
-- **`applications.archived_from`** — the authoritative previous status. One
-  column, one query (`SELECT archived_from, count(*) … GROUP BY 1`), and an
-  exact reverse (`SET status = archived_from, archived_from = NULL`). A CHECK
-  constraint, `applications_archive_remembers`, makes it mandatory in both
-  directions, in the same spirit as 001's "a move-out must carry a reason".
-- **`status_events`** — one appended row per archive, for *when*. Only 49 of the
-  96 rows had any history at all, so the event log alone could not be trusted to
-  answer "what was this before?".
+- **004** creates `jobs_tracker_v2` with `jobs_tracker`'s schema, derived from
+  `pg_dump --schema-only` so it cannot drift, minus exactly the three things 003
+  added: the `archived` enum value, `applications.archived_from`, and the CHECK
+  constraint.
+- **005** moves the four v2 seats across with `scoring_events`, `status_events`
+  and their ids, then compares every field back across the connection before it
+  commits.
+- **006** reverses 003 and deletes those four from `jobs_tracker`, but only the
+  ones `jobs_tracker_v2` confirms it already holds. `jobs_tracker` ends at 92
+  rows with v1's exact distribution: `recommended_skip` 49 · `new` 15 ·
+  `resume_finalized` 14 · `applied` 10 · `resume_drafted` 3 · `interviewing` 1.
 
-**`updated_at` is deliberately preserved**: the BEFORE UPDATE trigger is
-disabled for the one statement, because stamping all 92 rows with the moment of
-the migration destroys "when did v1 last touch this" and collapses the archived
-tab into a single timestamp. The archive's own timestamp is in
-`status_events.created_at`.
+**⛔ 003 is history, not current state.** It archived the 92 rows in place and was
+reversed the same day. Do not re-run it. The `archived_from` column it invented is
+what let 006 recover the exact distribution rather than guess at it — which is why
+both files are kept.
 
-Where the 92 came from:
+**The one thing 006 could not undo:** PostgreSQL has no `DROP VALUE` for an enum,
+so `archived` is still in `jobs_tracker`'s `application_status`, on zero rows,
+inert. `jobs_tracker_v2` never had it.
 
-| archived_from | rows |
-|---|---|
-| `recommended_skip` | 49 |
-| `new` | 15 |
-| `resume_finalized` | 14 |
-| `applied` | 10 |
-| `resume_drafted` | 3 |
-| `interviewing` | 1 |
+**`updated_at` was preserved through both.** The BEFORE UPDATE trigger is disabled
+for the one statement in each, because stamping all 92 rows with the moment of a
+migration destroys "when did v1 last touch this".
+
+Verify any of it, read-only, any time:
+
+```
+psql -d postgres -v ON_ERROR_STOP=1 -f db/verify.sql
+```
+
+Full detail, including how to run each migration: **`db/README.md`**.
 
 ### The two scores
 

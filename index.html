@@ -50,11 +50,12 @@
 
 <section>
   <h2>Applications</h2>
-  <!-- Seven tabs over twelve statuses. The mapping and the reasoning behind it
-       live in automation/jobs_db.py (TAB_FOR_STATUS) and automation/README.md.
-       There is deliberately no "all", and no "archived" tab either: v1's 92 rows
-       are archived in the database and simply never render here. Counts are filled from the rows by
-       static/tabs.js — never written here. -->
+  <!-- Six tabs over eleven statuses, which is v1's tab set exactly. The mapping
+       and the reasoning behind it live in automation/jobs_db.py (TAB_FOR_STATUS)
+       and automation/README.md. There is deliberately no "all", and no
+       "archived" either: this list comes from jobs_tracker_v2, which holds v2's
+       seats and only v2's seats — v1's 92 rows are in another database. Counts
+       are filled from the rows by static/tabs.js — never written here. -->
   <div class="app-controls">
     <div class="status-tabs" role="tablist" aria-label="Filter applications by status">
       <button class="status-tab active" type="button" data-tab="ready" role="tab" aria-selected="true">Ready to apply <span class="tab-count">0</span></button>

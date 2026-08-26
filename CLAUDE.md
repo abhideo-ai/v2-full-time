@@ -408,28 +408,38 @@ tomorrow** — the gap is where his read forms.
 
 ### The launcher renders from the database
 
-`index.html`'s Applications list comes from `jobs_tracker` via `GET /api/jobs`, not from
+`index.html`'s Applications list comes from `jobs_tracker_v2` via `GET /api/jobs`, not from
 markup. **Never hand-write a row into `#app-list`** — a row added by hand is a row no query
 can see, which is exactly how the page came to show 4 applications while the database held 92.
 
 - **One row per slug, grouped by intake date**, in v1's shape (set by him 2026-08-26 against
   v1's launcher): underlined text tabs with count badges, a right-aligned search box, a
   `COMPANY · TITLE · TECH · NON-TECH` strip per group, and an expandable detail row.
-- `automation/jobs_db.py` — read-only queries (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker`).
+- **v1 AND v2 ARE SEPARATE DATABASES — set by him 2026-08-26.** His words: *"let's use a
+  different database? like `jobs_tracker_v2`? this way we DO NOT interfere with v1 jobs?"*
+  `jobs_tracker` is v1's record — **92 seats, frozen, nothing in v2 opens it**.
+  `jobs_tracker_v2` holds v2's seats and only v2's seats. **All SQL lives in `db/`**:
+  `db/migrations/` (004 creates the database, 005 moves the seats, 006 reverses the archive),
+  `db/schema.sql` for `v2_daily`, and `db/README.md` explaining which applies to which.
+  Verify all three databases read-only with `psql -d postgres -f db/verify.sql`.
+- `automation/jobs_db.py` — read-only queries (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker_v2`).
 - `automation/jobs_sync.py` — registers a seat, and re-reads every workspace's `score.json` to
   refresh its technical score. Idempotent; re-run it after any re-scoring.
-- **Seven tabs over twelve statuses, and deliberately no `all`** — `Ready to apply · Applied ·
-  No longer available · Heard back · Not selected · Other · Archived`. The mapping and the
-  two-score derivation are documented in `automation/README.md`. `recommended_skip` → **Other**
-  is deliberate: those 49 rows must not drag on the ready-and-unsent backlog gate. Having no
-  `all` tab is what keeps archived rows out of every other view.
-- **v1's 92 rows are `archived`** — `migrations/003_archive_v1_rows.sql`, every row scraped
-  before 2026-08-25. **Nothing was deleted.** Each row's previous status is preserved in
-  `applications.archived_from` under a CHECK constraint, with a dated `status_events` entry,
-  and `updated_at` was deliberately left untouched so "when did v1 last touch this" survives.
-- **A v1 row's scores read `v1`, not a number.** They come off v1's five-axis triage rubric;
-  `technical 20` beside `technical 88.4` invites a ranking that does not exist. The rescaled
-  figures are still served and appear in the expanded row, labelled.
+- **Six tabs over eleven statuses, and deliberately no `all`** — `Ready to apply · Applied ·
+  No longer available · Heard back · Not selected · Other`. That is v1's tab set exactly. The
+  mapping and the two-score derivation are documented in `automation/README.md`.
+  `recommended_skip` → **Other** is deliberate: those rows must not drag on the ready-and-unsent
+  backlog gate.
+- **⛔ THERE IS NO `archived` TAB AND NO ARCHIVE CONCEPT.** There was one, for a day —
+  `db/migrations/003` archived v1's 92 rows in place. `db/migrations/006` reversed it when the
+  separate database replaced it. A row that must be filtered out of every view is a row in the
+  wrong database. `archived` is not in `TAB_FOR_STATUS`, not in `TABS`, and not in
+  `jobs_tracker_v2`'s enum. **Do not re-run 003.** (The one thing 006 could not undo: PostgreSQL
+  has no `DROP VALUE`, so `archived` remains in `jobs_tracker`'s enum, on zero rows, inert.)
+- **A v1-rubric row's scores read `v1`, not a number.** They come off v1's five-axis triage
+  rubric; `technical 20` beside `technical 88.4` invites a ranking that does not exist. No such
+  row is served any more, but the rendering stays: `jobs_sync.py` still refuses to overwrite a
+  five-axis breakdown, so the two rubrics can never be silently merged.
 - **Intake-date group headers say `<date> — N seats` and nothing more.** Any clause after that
   is hand-authored in `automation/intake_notes.json`, which ships empty. The date and the count
   are derived; a sentence characterising a group of seats is not, and is never composed.
@@ -454,8 +464,9 @@ automation/.venv/bin/python automation/daily.py     # regenerate the page from d
 
 - **State lives in PostgreSQL** (`v2_daily`), not in the HTML and not in the browser.
   `task_state` is what the page renders; `task_event` is append-only history — every tick,
-  park, push and drop with its reasons and timestamp. Schema: `automation/schema.sql`;
-  migrations in `automation/migrations/`.
+  park, push and drop with its reasons and timestamp. Schema: `db/schema.sql`;
+  migrations in `db/migrations/`. **All SQL in this repo lives in `db/`** — set by him
+  2026-08-26, so every schema and data change is re-runnable and verifiable later.
 - **`serve.py`, not `http.server`.** Same port 8006 so a pinned tab keeps working. It adds the
   state API, sends `no-store` so a refresh really refreshes, and binds `127.0.0.1` because it
   writes to a database. Against plain `http.server` the page falls back to localStorage and
@@ -480,7 +491,7 @@ automation/.venv/bin/python automation/resume.py sheet [--slug <slug>] [--since 
 
 - **`new`** scaffolds a whole job workspace: the dated directory, `upgrad_resume.html` copied
   from the master, an empty `paste_notes.json`, a `jd.md` to paste into, a per-workspace favicon,
-  and a row in `jobs_tracker` as `resume_drafted`, which the launcher shows under *building*.
+  and a row in `jobs_tracker_v2` as `resume_drafted`, which the launcher shows under *building*.
   Everything repeated 15–20 times a night.
 - **`sheet`** emits `<workspace>/paste_sheet.html` — every section as ONE copy block, generated
   **from** the résumé so it cannot disagree with what the bot writes. Which sections changed is
