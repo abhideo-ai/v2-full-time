@@ -12,6 +12,11 @@ __pycache__/
 # upgrad_resume.html; only the MASTER is canonical and tracked.
 **/upgrad_resume.html
 !master/upgrad_resume.html
+# Build artefact: rendered FROM the database by resume_db.py generate.
+# Byte-identical to the master by definition, so tracking it would be
+# pure duplication — and a stale copy is exactly the drift this whole
+# migration exists to kill.
+master/upgrad_resume.generated.html
 
 # upGrad credentials — NEVER commit (encrypted creds + decryption key, both local-only)
 automation/.upgrad_creds.enc

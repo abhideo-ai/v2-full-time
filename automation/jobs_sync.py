@@ -253,7 +253,14 @@ def hygiene(text: str, html: str, kind: str) -> dict:
         # Off the experience sections there is no "leading verb" — the skills
         # block is capability labels, not sentences — so NULL, not a wrong word.
         "leading_verb": leading_verb(text) if kind == "experience" else None,
-        "word_count":   len(text.split()),
+        # ⛔ NOT len(text.split()). CLAUDE.md's measurement traps name that
+        # counter by name: it counts a standalone " — " as a word, so a 25-word
+        # bullet reports as 26 and "four bullets were trimmed that did not need
+        # trimming". Count only tokens containing [A-Za-z0-9] — the same rule
+        # `hygiene_check.py:words()` and SQL's `resume_word_count()` use.
+        # Corrected 2026-08-27; it disagreed with both on 34 of the master's 91
+        # bullets and reported 3 false over-25s. Re-run `--bullets` to refresh.
+        "word_count":   sum(1 for w in re.split(r"\s+", text) if re.search(r"[A-Za-z0-9]", w)),
         "has_bold":     bool(_BOLD_RE.search(html)),
         # Mechanical proxy. "Scale marker or measurable outcome" is judgement.
         "has_number":   bool(re.search(r"[0-9%]", text)),

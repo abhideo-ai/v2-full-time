@@ -23,6 +23,7 @@ db/
     009_application_events.sql
     010_resume_bullets.sql
     011_resume_versions.sql
+    012_resume_master_source.sql
   operations/        re-runnable, once per event, for the rest of the search
     mark_applied.sql
     withdraw.sql
@@ -77,12 +78,19 @@ connection string rather than of every query remembering to exclude a status.
 | 009 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/009_application_events.sql` |
 | 010 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/010_resume_bullets.sql` |
 | 011 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/011_resume_versions.sql` |
+| 012 | `jobs_tracker_v2` | `psql -d jobs_tracker_v2 -f db/migrations/012_resume_master_source.sql` |
 
-**007–011 all target `jobs_tracker_v2`.** 007 made `source_url` nullable so a seat
+**007–012 all target `jobs_tracker_v2`.** 007 made `source_url` nullable so a seat
 with no public listing stores NULL rather than prose; 008 added `source_note` to
 hold the reason instead. 009 created `application_events`, the correspondence
 timeline. 010 created `resume_bullets`, derived and read-only. 011 added résumé
-versioning, whose trigger makes a sent résumé uneditable.
+versioning, whose trigger makes a sent résumé uneditable. **012 flipped the
+direction for the master résumé only** — `resume_documents` / `resume_roles` /
+`resume_education` / `resume_certifications` / `resume_profile` /
+`resume_sections` / `resume_blocks` are AUTHORED, and
+`master/upgrad_resume.html` is generated from them by
+`automation/resume_db.py`. `resume_bullets` is untouched and stays derived; the
+six per-seat workspaces are untouched and stay hand-authored.
 
 ---
 

@@ -1,0 +1,107 @@
+{# ===========================================================================
+   master_resume.html.j2 — the document SHELL for master/upgrad_resume.html.
+
+   ⛔ SCAFFOLDING LIVES HERE. CONTENT COMES FROM THE DATABASE.
+   Nothing in this file may state a fact about his career. If a name, a date, a
+   number or a bullet appears below as a literal, it is in the wrong place —
+   it belongs in resume_documents / resume_roles / resume_education /
+   resume_profile / resume_sections / resume_blocks (db/migrations/012).
+
+   ⛔ THE OUTPUT MUST BE BYTE-IDENTICAL to the committed master. Four rendering
+   settings are load-bearing and `automation/resume_db.py` sets all four:
+
+     autoescape=False        every value here is verbatim source HTML. With
+                             autoescape on, {{ b.html }} renders &lt;strong&gt;
+                             and &amp; doubles to &amp;amp; — all 91 paragraphs
+                             corrupted at once, invisibly until an exported PDF
+                             has no bold in it.
+     keep_trailing_newline   Jinja strips the final newline by default. The file
+                             ends "</html>\n"; one byte fails the gate.
+     trim_blocks             a line holding only {% … %} must vanish, not leave
+     lstrip_blocks           a blank line behind it.
+
+   Plain-text values from the database (a company, a title, a location, an
+   education line, a field label) pass through the `h` filter, which escapes
+   & < > and NOTHING else — McDonald's keeps its apostrophe, "Co-Founder & VP"
+   comes back as "Co-Founder &amp; VP". Verbatim-HTML values (bullets, headings,
+   the intro paragraph, the profile values) are emitted raw, because the database
+   holds them in the exact spelling the file uses.
+
+   Whitespace is part of the contract. Every section is:
+
+       <h2>N. Heading</h2>                     column 0, heading BEFORE its div
+       <div class="section copy-target" id="…"> column 0
+         <button …>Copy</button>                two spaces
+         <p>…</p>                               two spaces, one line per bullet
+       </div>                                   column 0
+       (exactly one blank line, after the last section too)
+   =========================================================================== #}
+<!doctype html>
+<html lang="{{ doc.lang }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ doc.title|h }}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ doc.favicon_href }}" />
+  <link rel="stylesheet" href="{{ doc.stylesheet_href }}" />
+</head>
+<body>
+<main class="page" id="main">
+
+<!--{{ doc.contract_comment }}-->
+
+<h1>{{ doc.title|h }}</h1>
+<p>{{ doc.intro_html }}</p>
+
+{# --- The dates table. CARD-ONLY: what reaches an exported PDF lives in the
+       Hiration card, which the bot never writes. This table is the assertion,
+       and the <strong> on the current role's end date is the file shouting the
+       one date the export checklist insists must be right. --------------- #}
+<h2>{{ doc.dates_heading|h }}</h2>
+<table>
+<tr><th>#</th><th>Employer</th><th>Title</th><th>From</th><th>To</th><th>Location</th></tr>
+{% for r in roles %}
+<tr><td>{{ r.n }}</td><td>{{ r.company|h }}</td><td>{{ r.role_title|h }}</td><td>{{ r.date_from|h }}</td><td>{% if r.date_to_emphasised %}<strong>{{ r.date_to|h }}</strong>{% else %}{{ r.date_to|h }}{% endif %}</td><td>{{ r.location|h }}</td></tr>
+{% endfor %}
+</table>
+{# --- Education. A CLAUDE.md fixed fact: "MS in Computer Science, University of
+       Houston. Never downgrade it." The note after it is an instruction to
+       whoever reads this file, not résumé text, and is stored separately. --- #}
+<p><strong>{{ doc.education_label|h }}:</strong> {{ education_lines|join('\n') }}
+{{ doc.education_note_html }}</p>
+
+<h2>{{ doc.personal_heading|h }}</h2>
+<p>{{ doc.personal_note_html }}</p>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+{% for p in profile %}
+<tr><td>{{ p.field_label|h }}</td><td>{{ p.value_html }}</td></tr>
+{% endfor %}
+</table>
+
+{# --- The fifteen sections. The ten `quick-*` ids are a parser contract:
+       upgrad_apply.py parses by id and a misspelt one is SKIPPED SILENTLY while
+       the export still reports success. resume_db.py asserts all ten are present
+       and non-empty before this template is rendered.
+
+       Every bullet is a standalone <p>, never a <ul><li>: upGrad's paste
+       sanitiser strips bold from list-rooted content. Emitting <p>
+       unconditionally turns that rule from documentation into a property of the
+       generator.
+
+       data-copy-html="1" is mandatory on every button — without it a copied
+       selection loses its bold, and that does not surface until the PDF. --- #}
+{% for s in sections %}
+<h2>{{ s.heading }}</h2>
+<div class="section copy-target" id="{{ s.section_id }}">
+  <button class="copy-btn" data-copy-target="#{{ s.section_id }}" data-copy-html="1">Copy</button>
+{% for b in s.blocks %}
+  <p>{{ b.html }}</p>
+{% endfor %}
+</div>
+
+{% endfor %}
+</main>
+<script src="{{ doc.script_src }}" defer></script>
+</body>
+</html>
