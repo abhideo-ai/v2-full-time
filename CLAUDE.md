@@ -599,7 +599,24 @@ diff them, and treat any downgrade as binding.
 line itself — *"components landing does not by itself convert a review verdict"* is its own
 wording. Anything derived from it inherits that precision.
 
-> ## ⛔ SUPERSEDED 2026-08-27 — the seven sections below describe a pipeline we have LEFT
+> ## ⛔ RETIRED 2026-08-27 — the seven sections below describe a pipeline that NO LONGER EXISTS
+>
+> **⛔ HIS UPGRAD ACCESS WAS REVOKED on 2026-08-27.** His words: *"My access to upgrad has been
+> revoked."* The résumé builder, both Hiration cards and every stored credential are unreachable.
+> This is not a preference any more; nothing in these sections can be run, and every entry point
+> now refuses with exit 3 (`automation/upgrad_retired.py`). **Do not try to revive it, and do not
+> diagnose the refusal as a bug.**
+>
+> **⚠ `master/live_card_dump*.json` and `.md` are now the ONLY surviving record of what those two
+> cards contained.** They cannot be refreshed. They are committed; keep them.
+>
+> **⚠ `master/Abhisheik_Deo_Resume.pdf` is the LAST upGrad export (25 Aug) and it is now WRONG.**
+> It says **Knockout.js** and **300**, and predates AngularJS, 280, Kubernetes, Terraform and the
+> axe DevTools bullets. **It must never be sent.** The next real PDF comes out of Canva.
+>
+> **⛔ `automation/upgrad_resume_paste.py` IS NOT PART OF THIS.** Despite the name it is the shared
+> résumé PARSER, imported by `resume_db.py`, `jobs_sync.py`, `daily.py`, `resume.py` and
+> `workspace_favicon.py`. It is load-bearing for the CURRENT path and is deliberately NOT guarded.
 >
 > **Set by him: we are moving off the upGrad / Hiration résumé builder. Résumé layout and PDF
 > export are done by hand in Canva Pro from now on, and the upGrad login/export step has been

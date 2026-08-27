@@ -921,4 +921,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    # ⛔ RETIRED 2026-08-27 — see automation/upgrad_retired.py
+    from upgrad_retired import refuse
+    refuse("upgrad_apply.py (the Hiration exporter)")
     main()
