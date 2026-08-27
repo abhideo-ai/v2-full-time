@@ -49,7 +49,7 @@
 
   <div class="kb-context" id="board-context">
       <div class="kb-ctx blocking" data-day="2026-08-25" data-group="0" hidden>
-        <h3>Blocking — the journey doc feeds the master, the master feeds the PDF</h3>
+        <h3>Blocking — the journey doc feeds the master, the master feeds the .docx</h3>
         <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
       </div>
       <div class="kb-ctx parallel" data-day="2026-08-25" data-group="1" hidden>
@@ -108,7 +108,7 @@ copied — one task is one row in the database and one node in the page.</p>
   <div class="dl-body">
 
     <div class="dl-group blocking" data-group="0">
-      <h3>Blocking — the journey doc feeds the master, the master feeds the PDF</h3>
+      <h3>Blocking — the journey doc feeds the master, the master feeds the .docx</h3>
       <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
       <ul class="dl-list">
         <li data-id="journey-doc" data-day="2026-08-25" data-group="0" data-ord="0" data-needs="" data-p="1" data-due="2026-08-25">
@@ -126,13 +126,13 @@ copied — one task is one row in the database and one node in the page.</p>
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="canva-export" data-day="2026-08-25" data-group="0" data-ord="1" data-needs="" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Build the résumé in Canva Pro and export the PDF by hand&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-canva-export" data-id="canva-export" />
-          <label for="t20260825-canva-export">
-            <span class="dl-task">Build the résumé in <strong>Canva Pro</strong> and export the PDF by hand</span>
+        <li data-id="verify-pdf" data-day="2026-08-25" data-group="0" data-ord="1" data-needs="" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Open master/Abhisheik_Deo_Resume.docx in Word and check it&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
+          <input type="checkbox" id="t20260825-verify-pdf" data-id="verify-pdf" />
+          <label for="t20260825-verify-pdf">
+            <span class="dl-task">Open <strong>master/Abhisheik_Deo_Resume.docx</strong> in Word and check it</span>
             <span class="dl-meta"><span class="pill red">P1</span></span>
-            <span class="dl-detail">Replaces the whole upGrad card chain. Content comes from <code>master/upgrad_resume.html</code>, which is now the complete source — all fifteen sections plus the dates table, Education, Certifications and Personal Information. Nothing is left in Hiration. <strong>Single column</strong>: most Canva résumé templates are two-column with icons, and a multi-column PDF is the classic applicant tracking system (ATS) parsing failure — the reader interleaves bullets across columns. Real text boxes, nothing baked into shapes or images. The LinkedIn slug must be a <strong>real link</strong>, not typed characters. Export as PDF Print, then check bold on the exported file rather than in the editor — <code>resume-issues-to-avoid/</code> rule 9 is exactly that failure.</span>
+            <span class="dl-detail">The <code>.docx</code> is generated from the database by <code>automation/resume_docx.py</code> and gated by <code>automation/verify_resume_docx.py</code> — 35 requirements, currently <strong>35 met, 0 failed</strong>. Three things that gate cannot see, so they are yours: <strong>the page count</strong> (no LibreOffice here, and the only pre-rewrite export was 39 bullets against today's 64) · <strong>the pale band running continuous across the tab gap</strong> between the role title and its dates · <strong>bold rendering visibly heavier</strong>, which <code>resume-issues-to-avoid/</code> rule 9 records as a defect that cratered a score once and was not noticed until the PDF. Also worth a glance: the ~0.26in margins are his format and are tight enough to clip on some printers.</span>
           </label>
           <span class="dl-actions">
             <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
@@ -141,13 +141,13 @@ copied — one task is one row in the database and one node in the page.</p>
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="verify-pdf" data-day="2026-08-25" data-group="0" data-ord="2" data-needs="canva-export" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Verify the exported PDF against all six checks&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-verify-pdf" data-id="verify-pdf" />
-          <label for="t20260825-verify-pdf">
-            <span class="dl-task">Verify the exported PDF against all six checks</span>
-            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>canva-export</code></span></span>
-            <span class="dl-detail">Dates correct (VoltusWave ended <strong>Apr 2026</strong>) · bold renders visibly heavier · contact details and the <code>abhisheikdeo</code> slug, as a real link annotation rather than typed text · no <code>[fill in metric]</code> · at most 3 pages · content matches <code>master/upgrad_resume.html</code>. <strong>Export is manual now</strong>, so this is the only gate — nothing upstream enforces it any more.</span>
+        <li data-id="freeze-sent-resumes" data-day="2026-08-25" data-group="0" data-ord="2" data-needs="" data-p="2" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Close the freeze gap — a sent résumé must be unwritable&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
+          <input type="checkbox" id="t20260825-freeze-sent-resumes" data-id="freeze-sent-resumes" />
+          <label for="t20260825-freeze-sent-resumes">
+            <span class="dl-task">Close the freeze gap — a <strong>sent</strong> résumé must be unwritable</span>
+            <span class="dl-meta"><span class="pill yellow">P2</span></span>
+            <span class="dl-detail">Migration 011's trigger makes editing a sent résumé raise — but it guards <code>resume_version_bullets</code>, and the <code>.docx</code> path uses <code>resume_documents</code> / <code>resume_blocks</code>. <code>resume_versions</code> holds <strong>zero rows</strong>. So nothing today stops <code>resume_db.py load --slug &lt;a-sent-seat&gt;</code> overwriting a résumé that has already gone out. The rule <em>"a sent résumé is history"</em> is currently enforced by convention on this path where it used to be enforced by the database. <strong>7 seats are now sent</strong>, so the exposure is real.</span>
           </label>
           <span class="dl-actions">
             <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
