@@ -45,6 +45,26 @@ def main() -> None:
 
     with headed_context(headless=False) as ctx:
         page = ctx.new_page()
+
+        # Watch the endpoint that mints the Hiration session. On 2026-08-27 it
+        # answered 400 "Null or empty token cannot be authenticated", with no
+        # Authorization and no Cookie header on the request, while a valid
+        # upgrad-auth-token.production cookie sat in the profile. Capturing it
+        # during a REAL sign-in shows whether a manual login sends a token the
+        # scripted one does not -- which is the whole open question.
+        def on_resp(resp):
+            if "resume/builder/auth" not in resp.url:
+                return
+            hdrs = {k.lower() for k in resp.request.headers}
+            try:
+                body = resp.text()[:200]
+            except Exception:                                    # noqa: BLE001
+                body = "<unreadable>"
+            print(f"  [auth-api] {resp.status} "
+                  f"auth-header={'authorization' in hdrs} "
+                  f"cookie-header={'cookie' in hdrs} :: {body}", file=sys.stderr)
+
+        page.on("response", on_resp)
         page.goto("https://careers.upgrad.com/resume-builder",
                   wait_until="domcontentloaded", timeout=60_000)
 
