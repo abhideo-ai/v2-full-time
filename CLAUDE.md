@@ -599,6 +599,44 @@ diff them, and treat any downgrade as binding.
 line itself — *"components landing does not by itself convert a review verdict"* is its own
 wording. Anything derived from it inherits that precision.
 
+> ## ⛔ SUPERSEDED 2026-08-27 — the seven sections below describe a pipeline we have LEFT
+>
+> **Set by him: we are moving off the upGrad / Hiration résumé builder. Résumé layout and PDF
+> export are done by hand in Canva Pro from now on, and the upGrad login/export step has been
+> removed from the automation workflow.**
+>
+> Everything from here to *Naukri quirk* — **upGrad export · Which master card · Card deletion ·
+> Copy blocks · Pasting into Hiration · Editing the card itself · upGrad paste quirk** — is kept
+> as history, not as instruction. Do not run it, do not re-add it to `daily/days.json`, and do not
+> plan work around it.
+>
+> **The files stay. He said so explicitly: "do not remove the files. just remove the step from the
+> automation workflow."** All nine scripts remain on disk — `upgrad_apply.py`, `upgrad_login.py`,
+> `upgrad_creds.py`, `upgrad_resume_paste.py`, `browser.py`, `cleanup_cards.py`,
+> `fix_master_card.py`, `dump_card.py`, `update_master_card.py` — along with both Hiration cards
+> and the encrypted credentials. Legacy, not garbage. **`cleanup_cards.py` is still never run.**
+>
+> **What changes in practice:**
+> - `master/upgrad_resume.html` is now the **complete content source**, not a ten-section paste
+>   feed. It already carries everything the card used to own: the dates table for all ten roles,
+>   Education, Certifications, and Personal Information (Hyderabad · +91 93640 27487 ·
+>   abhisheik@abhideo.ai · LinkedIn `abhisheikdeo`). Nothing is trapped in Hiration.
+> - The **paste matrix is moot.** `<p>`-versus-`<ul>` and the synthetic `ClipboardEvent` existed
+>   solely to force bold and bullets through Draft.js. Canva has no such constraint.
+> - There is **no ATS "Resume Review" score** any more. CLAUDE.md already said not to chase it.
+> - **`verify-pdf` is now the only gate.** Nothing upstream enforces dates, bold, the LinkedIn slug
+>   or the 3-page cap — a hand-built PDF can drift in ways no script catches.
+>
+> **Two ATS risks specific to Canva, worth stating once:** most Canva résumé templates are
+> two-column with icons, and a multi-column PDF is the classic parsing failure — the reader
+> interleaves bullets across columns. Single column, real text boxes, nothing baked into shapes.
+> And `resume-issues-to-avoid/` rule 9 is exactly the bold-stripped-on-export failure; verify bold
+> on the exported file, not in the editor.
+>
+> Still open, his call: whether the per-workspace `bullets_for_upgrad.html` artefact and the
+> `upgrad_resume.html` filename should be renamed now that nothing pastes into upGrad.
+
+
 ### upGrad export
 
 ```
@@ -847,11 +885,39 @@ resolves the graph neural network, the four Rocket metrics, the 70–80% consoli
 27 ms / P95 16 ms pairing or the 100,000-concurrent wording. Surface them in every prep
 artefact and leave the résumé wording alone.
 
-**⚠ ARCHITECTURE DECIDED 2026-08-26 — THE DATABASE BECOMES THE SOURCE, HTML A VIEW.**
-**⛔ NOT YET IMPLEMENTED. This is the FORWARD model** — his words: *"we can implement this AFTER
-we're done… GOING forward, we do that."* Until it is built, the files remain the source and the
-current flow stands. Do not half-migrate it; a master résumé caught mid-migration across a session
-boundary is the worst state to inherit. Set by him, in his own words:
+**⚠ ARCHITECTURE — THE DATABASE IS THE SOURCE, HTML IS A VIEW.**
+
+**✅ NO LONGER DEFERRED. He started it on 2026-08-27**, in his own words: *"remember, you SHOULD be
+using a DB to store the information"* · *"AND prepare the HTML from that DB"* · *"starting now, we
+do that"* · *"from the master resume"* · **_"DB is the source. No more grepping, etc etc"_**.
+
+**What this means in practice, and it is a hard change of habit:**
+
+- **The database is where résumé content LIVES.** Bullets, skills, the headline, the summary, role
+  metadata, education, certifications and personal information. Not the file.
+- **`master/upgrad_resume.html` is a GENERATED ARTEFACT.** Regenerate it; never hand-edit it. An
+  edit made in the file is lost on the next generate, exactly the way an `UPDATE` against a derived
+  table used to be lost on the next sync — the direction has simply reversed.
+- **⛔ STOP GREPPING THE RÉSUMÉ FILES. Query the database.** *"No more grepping, etc etc"* is his
+  instruction and it is the point of the whole change. Which bullets carry a number, which leading
+  verbs are taken, what a role claimed for a given seat, where a metric appears — these are `SELECT`s
+  now, not `grep -o` piped to `wc -l`. Every measurement trap this file records under
+  *Measurement traps* came from parsing minified HTML with regexes. A query cannot mis-count a line,
+  cannot match `p-e**lpa**so` for "LPA", and cannot mistake a Mermaid node id for Amazon S3.
+- **Scope, stated precisely so the boundary is never guessed: the MASTER résumé only.** The eight
+  per-seat workspace résumés are NOT migrated. Until they are, they remain files, and a sent one is
+  never edited at all.
+
+**⛔ THE GATE IS THE ROUND TRIP, AND IT IS NOT OPTIONAL.** Load the master into the database,
+regenerate the HTML, and diff. **Byte-identical, or every difference enumerated and justified.** A
+parse that silently drops a `<strong>` corrupts the master and would not surface until an exported
+PDF lost its bold. **A lossy migration is the worst outcome available; stop rather than proceed.**
+Until that proof passes for a given source, the FILE remains authoritative for it.
+
+Do not half-migrate. A master résumé caught mid-migration across a session boundary is the worst
+state to inherit.
+
+The shape he set out, in his own words:
 
 > 1. master resume has it's own bullets in a table · 2. you retrieve them, compare them to the JD ·
 > 3. score & improve · 4. new bullets are stored in the DB again · 5. using these DB bullets, you

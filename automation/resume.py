@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from upgrad_resume_paste import _resolve_resume_paste  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-NUMS = "①②③④⑤⑥⑦⑧⑨⑩"
+NUMS = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮"
 
 SECTIONS = [
     ("quick-headline", "Headline"),
@@ -52,6 +52,14 @@ SECTIONS = [
     ("quick-rocket", "Rocket Software"),
     ("quick-voltuswave-cofounder", "VoltusWave — Co-Founder &amp; VP of Technology"),
     ("quick-teletext", "Teletext India"),
+    # The five pre-2016 roles are CARD-ONLY -- upgrad_apply.py never writes them,
+    # and fix_master_card.py cannot make a bullet rewrite survive the save. They
+    # are therefore the sections most in need of a paste block, not the least.
+    ("p-cura", "CURA Software Solutions — card-only"),
+    ("p-innroad", "innRoad — card-only"),
+    ("p-mcd", "McDonald's Corporation — card-only"),
+    ("p-elpaso", "El Paso Corporation — card-only · the Java years"),
+    ("p-lynton", "LyntonWeb — card-only"),
 ]
 
 
@@ -314,7 +322,7 @@ def cmd_sheet(slug: str | None, since: str = "HEAD") -> None:
 <p class="breadcrumb"><a href="{up}index.html">Full-time JD workspace</a> · {H.escape(label)} · paste sheet</p>
 
 <header>
-  <p class="eyebrow">Card build · {changed} of 10 sections changed since {H.escape(since)}</p>
+  <p class="eyebrow">Card build · {changed} of {len(SECTIONS)} sections changed since {H.escape(since)}</p>
   <h1>Paste into the Hiration card, section by section</h1>
 </header>
 
@@ -397,7 +405,7 @@ hygiene, not on fit.</p>
 </body>
 </html>
 ''')
-    print(f"[resume] wrote {out.relative_to(ROOT)} — {changed} of 10 sections changed"
+    print(f"[resume] wrote {out.relative_to(ROOT)} — {changed} of {len(SECTIONS)} sections changed"
           + ("" if prev else " (new file, nothing to diff against)"))
 
 

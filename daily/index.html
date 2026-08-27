@@ -21,18 +21,18 @@
 
 <div class="tldr" id="standing">
   <strong>Where things stand</strong>
-  <strong>8</strong> job workspaces built · <strong>4</strong> sent · ready-and-unsent backlog <strong>3</strong>, under the roughly-five gate.
+  <strong>8</strong> job workspaces built · <strong>6</strong> sent · ready-and-unsent backlog <strong>1</strong>, under the roughly-five gate.
   Sending is the north star, not building. Anything left unticked rolls over to the next day
   automatically. <span class="dim">Generated from <code>daily/days.json</code>; counts read from <code>jobs_tracker_v2</code> on each render.</span>
 </div>
 
 <div class="callout good">
-  <b>Pre-flight green — no action needed.</b> Checked on this render, not quoted from memory: all <strong>10</strong> <code>quick-*</code> ids present in <code>master/upgrad_resume.html</code>, all parse with no silent skip, skills 6 · 17 · 6 and experience 10 · 6 · 4 · 3 · 4 = <strong>27</strong> bullets, zero <code>[fill in metric]</code>. Nothing in the HTML is blocking an export — only the card is.
+  <b>Pre-flight green — no action needed.</b> Checked on this render, not quoted from memory: all <strong>10</strong> <code>quick-*</code> ids present in <code>master/upgrad_resume.html</code>, all parse with no silent skip, skills 4 · 17 · 4 and experience 24 · 14 · 4 · 3 · 4 = <strong>49</strong> bullets, zero <code>[fill in metric]</code>. Nothing in the HTML is blocking an export — only the card is.
 </div>
 
-<section class="kb" id="board" data-day="2026-08-26" aria-labelledby="board-date">
+<section class="kb" id="board" data-day="2026-08-27" aria-labelledby="board-date">
   <div class="kb-head">
-    <h2 id="board-date">Wed 26 Aug 2026</h2>
+    <h2 id="board-date">Thu 27 Aug 2026</h2>
     <p class="kb-rolled" id="board-rolled" hidden></p>
   </div>
   <p class="kb-help" id="kb-help">Drag a card by its <span aria-hidden="true">&#x283F;</span> handle,
@@ -49,11 +49,11 @@
 
   <div class="kb-context" id="board-context">
       <div class="kb-ctx blocking" data-day="2026-08-25" data-group="0" hidden>
-        <h3>Blocking — the journey doc feeds the master, the master feeds the card</h3>
+        <h3>Blocking — the journey doc feeds the master, the master feeds the PDF</h3>
         <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
       </div>
       <div class="kb-ctx parallel" data-day="2026-08-25" data-group="1" hidden>
-        <h3>Parallel — does not wait on the card</h3>
+        <h3>Parallel — independent of the résumé build</h3>
         <p class="dl-why">The card work above is all manual UI work. Sourcing is not blocked by any of it, and with nothing in the pipeline there is no backlog reason to hold off.</p>
       </div>
   </div>
@@ -108,7 +108,7 @@ copied — one task is one row in the database and one node in the page.</p>
   <div class="dl-body">
 
     <div class="dl-group blocking" data-group="0">
-      <h3>Blocking — the journey doc feeds the master, the master feeds the card</h3>
+      <h3>Blocking — the journey doc feeds the master, the master feeds the PDF</h3>
       <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
       <ul class="dl-list">
         <li data-id="journey-doc" data-day="2026-08-25" data-group="0" data-ord="0" data-needs="" data-p="1" data-due="2026-08-25">
@@ -126,13 +126,13 @@ copied — one task is one row in the database and one node in the page.</p>
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="clone-card" data-day="2026-08-25" data-group="0" data-ord="1" data-needs="" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Clone august_master_resume, rename the copy august_ic_master_resume&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-clone-card" data-id="clone-card" />
-          <label for="t20260825-clone-card">
-            <span class="dl-task">Clone <code>august_master_resume</code>, rename the copy <code>august_ic_master_resume</code></span>
+        <li data-id="canva-export" data-day="2026-08-25" data-group="0" data-ord="1" data-needs="" data-p="1" data-due="2026-08-25">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Build the résumé in Canva Pro and export the PDF by hand&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
+          <input type="checkbox" id="t20260825-canva-export" data-id="canva-export" />
+          <label for="t20260825-canva-export">
+            <span class="dl-task">Build the résumé in <strong>Canva Pro</strong> and export the PDF by hand</span>
             <span class="dl-meta"><span class="pill red">P1</span></span>
-            <span class="dl-detail">Clone, never start from blank. The base already carries all ten experience entries — the five the bot writes plus the five pre-2016 roles — along with dates, education and certifications. Building the IC card is <em>overwriting text in an existing skeleton</em>, not creating sections.</span>
+            <span class="dl-detail">Replaces the whole upGrad card chain. Content comes from <code>master/upgrad_resume.html</code>, which is now the complete source — all fifteen sections plus the dates table, Education, Certifications and Personal Information. Nothing is left in Hiration. <strong>Single column</strong>: most Canva résumé templates are two-column with icons, and a multi-column PDF is the classic applicant tracking system (ATS) parsing failure — the reader interleaves bullets across columns. Real text boxes, nothing baked into shapes or images. The LinkedIn slug must be a <strong>real link</strong>, not typed characters. Export as PDF Print, then check bold on the exported file rather than in the editor — <code>resume-issues-to-avoid/</code> rule 9 is exactly that failure.</span>
           </label>
           <span class="dl-actions">
             <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
@@ -141,103 +141,13 @@ copied — one task is one row in the database and one node in the page.</p>
             <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
           </span>
         </li>
-        <li data-id="verify-dates" data-day="2026-08-25" data-group="0" data-ord="2" data-needs="clone-card" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Verify the clone kept the dates — VoltusWave Mar 2025 → Apr 2026, Deque Dec 2019 → Feb 2025&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-verify-dates" data-id="verify-dates" />
-          <label for="t20260825-verify-dates">
-            <span class="dl-task">Verify the clone kept the dates — VoltusWave Mar 2025 → <strong>Apr 2026</strong>, Deque Dec 2019 → Feb 2025</span>
-            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>clone-card</code></span></span>
-            <span class="dl-detail">Dates live in the card, never in the HTML — the bot overwrites bullet text only. They are correct on <code>august_master_resume</code>; check rather than assume the clone preserved them.</span>
-          </label>
-          <span class="dl-actions">
-            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
-            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
-            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
-            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
-          </span>
-        </li>
-        <li data-id="fix-el-paso" data-day="2026-08-25" data-group="0" data-ord="3" data-needs="clone-card" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Fix El Paso (paste sheet §14) — the v1 card calls it .NET; it is a Senior Java Developer role&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-fix-el-paso" data-id="fix-el-paso" />
-          <label for="t20260825-fix-el-paso">
-            <span class="dl-task">Fix El Paso (paste sheet §14) — the v1 card calls it .NET; it is a <strong>Senior Java Developer</strong> role</span>
-            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>clone-card</code></span></span>
-            <span class="dl-detail">Java Server Pages (JSP), Java Enterprise Edition (Java EE), Tennessee Gas Pipeline. Leaving it as .NET hides four of the eleven Java years — the single highest-value correction on this list.</span>
-          </label>
-          <span class="dl-actions">
-            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
-            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
-            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
-            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
-          </span>
-        </li>
-        <li data-id="paste-1-10" data-day="2026-08-25" data-group="0" data-ord="4" data-needs="clone-card" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Paste §§1–10 from the master résumé — headline, summary, three skills blocks, five experience roles&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-paste-1-10" data-id="paste-1-10" />
-          <label for="t20260825-paste-1-10">
-            <span class="dl-task">Paste §§1–10 from the <a href="../master/upgrad_resume.html">master résumé</a> — headline, summary, three skills blocks, five experience roles</span>
-            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>clone-card</code></span></span>
-            <span class="dl-detail">Use the copy buttons; they carry <code>data-copy-html="1"</code> so bold reaches the clipboard. Every bullet on that sheet is a standalone <code>&lt;p&gt;</code> by design — upGrad strips bold from list-rooted content, so pasting out of a list silently loses every bold fact.</span>
-          </label>
-          <span class="dl-actions">
-            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
-            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
-            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
-            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
-          </span>
-        </li>
-        <li data-id="first-export" data-day="2026-08-25" data-group="0" data-ord="5" data-needs="paste-1-10" data-p="1" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;First export — smoke-test the whole chain&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-first-export" data-id="first-export" />
-          <label for="t20260825-first-export">
-            <span class="dl-task">First export — smoke-test the whole chain</span>
-            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>paste-1-10</code></span></span>
-            <span class="dl-detail">Run from the repo root; the persistent browser profile sits there, so the working directory matters. <code>UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py --slug master --no-pause --reset</code> — <code>--slug</code> is required, and the resolver accepts a root-level directory, so <code>master</code> resolves to <code>master/</code>, which already holds a valid <code>upgrad_resume.html</code>. It clones the IC card to <code>master_ats_resume</code> and writes <code>master/Abhisheik_Deo_Resume.pdf</code>. No job workspace needed to prove the chain works.</span>
-          </label>
-          <span class="dl-actions">
-            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
-            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
-            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
-            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
-          </span>
-        </li>
-        <li data-id="verify-pdf" data-day="2026-08-25" data-group="0" data-ord="6" data-needs="first-export,verify-dates,fix-el-paso,personal-info" data-p="1" data-due="2026-08-25">
+        <li data-id="verify-pdf" data-day="2026-08-25" data-group="0" data-ord="2" data-needs="canva-export" data-p="1" data-due="2026-08-25">
           <button type="button" class="kb-grab" aria-label="Move &lsquo;Verify the exported PDF against all six checks&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
           <input type="checkbox" id="t20260825-verify-pdf" data-id="verify-pdf" />
           <label for="t20260825-verify-pdf">
             <span class="dl-task">Verify the exported PDF against all six checks</span>
-            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>first-export</code>, <code>verify-dates</code>, <code>fix-el-paso</code>, <code>personal-info</code></span></span>
-            <span class="dl-detail">Dates correct (VoltusWave ended <strong>Apr 2026</strong>) · bold renders visibly heavier · contact details and the <code>abhisheikdeo</code> slug · no <code>[fill in metric]</code> · at most 3 pages · content matches the paste sheet. Ignore the applicant tracking system (ATS) "Resume Review" score — it wobbles 87–99 on hygiene, not on fit.</span>
-          </label>
-          <span class="dl-actions">
-            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
-            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
-            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
-            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
-          </span>
-        </li>
-        <li data-id="personal-info" data-day="2026-08-25" data-group="0" data-ord="7" data-needs="clone-card" data-p="2" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Check the Personal Information modal — Hyderabad · phone · email · LinkedIn abhisheikdeo&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-personal-info" data-id="personal-info" />
-          <label for="t20260825-personal-info">
-            <span class="dl-task">Check the Personal Information modal — Hyderabad · phone · email · LinkedIn <strong>abhisheikdeo</strong></span>
-            <span class="dl-meta"><span class="pill yellow">P2</span><span class="dl-needs">after <code>clone-card</code></span></span>
-            <span class="dl-detail">The slug is <code>abhisheikdeo</code>, not <code>abhideo</code> — that is the email domain. Exact phone and email are in <a href="../master/upgrad_resume.html">§0 of the paste sheet</a>. Card-only: the bot only ever writes the headline field.</span>
-          </label>
-          <span class="dl-actions">
-            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
-            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
-            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
-            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
-          </span>
-        </li>
-        <li data-id="paste-11-15" data-day="2026-08-25" data-group="0" data-ord="8" data-needs="clone-card" data-p="3" data-due="2026-08-25">
-          <button type="button" class="kb-grab" aria-label="Move &lsquo;Correct the other four pre-2016 roles by hand — §11 CURA, §12 innRoad, §13 McDonald&#x27;s, §15 LyntonWeb&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
-          <input type="checkbox" id="t20260825-paste-11-15" data-id="paste-11-15" />
-          <label for="t20260825-paste-11-15">
-            <span class="dl-task">Correct the other four pre-2016 roles by hand — §11 CURA, §12 innRoad, §13 McDonald's, §15 LyntonWeb</span>
-            <span class="dl-meta"><span class="pill fact">P3</span><span class="dl-needs">after <code>clone-card</code></span></span>
-            <span class="dl-detail">Card-only; the bot never touches these. They exist already, carried over from v1, so the work is correcting their text in place.</span>
+            <span class="dl-meta"><span class="pill red">P1</span><span class="dl-needs">after <code>canva-export</code></span></span>
+            <span class="dl-detail">Dates correct (VoltusWave ended <strong>Apr 2026</strong>) · bold renders visibly heavier · contact details and the <code>abhisheikdeo</code> slug, as a real link annotation rather than typed text · no <code>[fill in metric]</code> · at most 3 pages · content matches <code>master/upgrad_resume.html</code>. <strong>Export is manual now</strong>, so this is the only gate — nothing upstream enforces it any more.</span>
           </label>
           <span class="dl-actions">
             <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
@@ -250,7 +160,7 @@ copied — one task is one row in the database and one node in the page.</p>
     </div>
 
     <div class="dl-group parallel" data-group="1">
-      <h3>Parallel — does not wait on the card</h3>
+      <h3>Parallel — independent of the résumé build</h3>
       <p class="dl-why">The card work above is all manual UI work. Sourcing is not blocked by any of it, and with nothing in the pipeline there is no backlog reason to hold off.</p>
       <ul class="dl-list">
         <li data-id="source-ic" data-day="2026-08-25" data-group="1" data-ord="0" data-needs="" data-p="2" data-due="2026-08-25">

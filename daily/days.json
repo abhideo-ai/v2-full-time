@@ -5,7 +5,7 @@
       "date": "2026-08-25",
       "groups": [
         {
-          "title": "Blocking — the journey doc feeds the master, the master feeds the card",
+          "title": "Blocking — the journey doc feeds the master, the master feeds the PDF",
           "kind": "blocking",
           "why": "All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.",
           "items": [
@@ -17,82 +17,25 @@
               "detail": "He said this is key, and it sits upstream of everything else: the master résumé is <em>derived</em> from the journey document and loses when they disagree. Enriching it — roles, tools, decisions, numbers — is what makes the JD matching sharper. <strong>Do not restructure or rewrite it.</strong> When he adds detail, treat it as first-class intake: read it, reconcile it against what the master already claims, and flag contradictions rather than smoothing them over."
             },
             {
-              "id": "clone-card",
-              "task": "Clone <code>august_master_resume</code>, rename the copy <code>august_ic_master_resume</code>",
-              "detail": "Clone, never start from blank. The base already carries all ten experience entries — the five the bot writes plus the five pre-2016 roles — along with dates, education and certifications. Building the IC card is <em>overwriting text in an existing skeleton</em>, not creating sections.",
+              "id": "canva-export",
               "p": 1,
-              "needs": []
-            },
-            {
-              "id": "verify-dates",
-              "task": "Verify the clone kept the dates — VoltusWave Mar 2025 → <strong>Apr 2026</strong>, Deque Dec 2019 → Feb 2025",
-              "detail": "Dates live in the card, never in the HTML — the bot overwrites bullet text only. They are correct on <code>august_master_resume</code>; check rather than assume the clone preserved them.",
-              "p": 1,
-              "needs": [
-                "clone-card"
-              ]
-            },
-            {
-              "id": "fix-el-paso",
-              "task": "Fix El Paso (paste sheet §14) — the v1 card calls it .NET; it is a <strong>Senior Java Developer</strong> role",
-              "detail": "Java Server Pages (JSP), Java Enterprise Edition (Java EE), Tennessee Gas Pipeline. Leaving it as .NET hides four of the eleven Java years — the single highest-value correction on this list.",
-              "p": 1,
-              "needs": [
-                "clone-card"
-              ]
-            },
-            {
-              "id": "paste-1-10",
-              "task": "Paste §§1–10 from the <a href=\"../master/upgrad_resume.html\">master résumé</a> — headline, summary, three skills blocks, five experience roles",
-              "detail": "Use the copy buttons; they carry <code>data-copy-html=\"1\"</code> so bold reaches the clipboard. Every bullet on that sheet is a standalone <code>&lt;p&gt;</code> by design — upGrad strips bold from list-rooted content, so pasting out of a list silently loses every bold fact.",
-              "p": 1,
-              "needs": [
-                "clone-card"
-              ]
-            },
-            {
-              "id": "first-export",
-              "task": "First export — smoke-test the whole chain",
-              "detail": "Run from the repo root; the persistent browser profile sits there, so the working directory matters. <code>UPGRAD_HEADLESS=1 automation/.venv/bin/python automation/upgrad_apply.py --slug master --no-pause --reset</code> — <code>--slug</code> is required, and the resolver accepts a root-level directory, so <code>master</code> resolves to <code>master/</code>, which already holds a valid <code>upgrad_resume.html</code>. It clones the IC card to <code>master_ats_resume</code> and writes <code>master/Abhisheik_Deo_Resume.pdf</code>. No job workspace needed to prove the chain works.",
-              "p": 1,
-              "needs": [
-                "paste-1-10"
-              ]
+              "needs": [],
+              "task": "Build the résumé in <strong>Canva Pro</strong> and export the PDF by hand",
+              "detail": "Replaces the whole upGrad card chain. Content comes from <code>master/upgrad_resume.html</code>, which is now the complete source — all fifteen sections plus the dates table, Education, Certifications and Personal Information. Nothing is left in Hiration. <strong>Single column</strong>: most Canva résumé templates are two-column with icons, and a multi-column PDF is the classic applicant tracking system (ATS) parsing failure — the reader interleaves bullets across columns. Real text boxes, nothing baked into shapes or images. The LinkedIn slug must be a <strong>real link</strong>, not typed characters. Export as PDF Print, then check bold on the exported file rather than in the editor — <code>resume-issues-to-avoid/</code> rule 9 is exactly that failure."
             },
             {
               "id": "verify-pdf",
               "task": "Verify the exported PDF against all six checks",
-              "detail": "Dates correct (VoltusWave ended <strong>Apr 2026</strong>) · bold renders visibly heavier · contact details and the <code>abhisheikdeo</code> slug · no <code>[fill in metric]</code> · at most 3 pages · content matches the paste sheet. Ignore the applicant tracking system (ATS) \"Resume Review\" score — it wobbles 87–99 on hygiene, not on fit.",
+              "detail": "Dates correct (VoltusWave ended <strong>Apr 2026</strong>) · bold renders visibly heavier · contact details and the <code>abhisheikdeo</code> slug, as a real link annotation rather than typed text · no <code>[fill in metric]</code> · at most 3 pages · content matches <code>master/upgrad_resume.html</code>. <strong>Export is manual now</strong>, so this is the only gate — nothing upstream enforces it any more.",
               "p": 1,
               "needs": [
-                "first-export",
-                "verify-dates",
-                "fix-el-paso",
-                "personal-info"
-              ]
-            },
-            {
-              "id": "personal-info",
-              "task": "Check the Personal Information modal — Hyderabad · phone · email · LinkedIn <strong>abhisheikdeo</strong>",
-              "detail": "The slug is <code>abhisheikdeo</code>, not <code>abhideo</code> — that is the email domain. Exact phone and email are in <a href=\"../master/upgrad_resume.html\">§0 of the paste sheet</a>. Card-only: the bot only ever writes the headline field.",
-              "p": 2,
-              "needs": [
-                "clone-card"
-              ]
-            },
-            {
-              "id": "paste-11-15",
-              "task": "Correct the other four pre-2016 roles by hand — §11 CURA, §12 innRoad, §13 McDonald's, §15 LyntonWeb",
-              "detail": "Card-only; the bot never touches these. They exist already, carried over from v1, so the work is correcting their text in place.",
-              "p": 3,
-              "needs": [
-                "clone-card"
+                "canva-export"
               ]
             }
           ]
         },
         {
-          "title": "Parallel — does not wait on the card",
+          "title": "Parallel — independent of the résumé build",
           "kind": "parallel",
           "why": "The card work above is all manual UI work. Sourcing is not blocked by any of it, and with nothing in the pipeline there is no backlog reason to hold off.",
           "items": [
