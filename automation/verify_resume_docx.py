@@ -120,7 +120,11 @@ req("every <strong> occurrence is bold (multiplicity, not membership)", not shor
     f"{len(db_spans)} spans, {len(set(db_spans))} distinct; shortfall {sum(short.values())}")
 
 # ── CONTENT: the facts he settled, and no stale content ─────────────────────
-for term, want_present in [("AngularJS", True), ("280", True), ("Aurora", True), ("Apr 2026", True),
+# ⚠ "Apr '26", not "Apr 2026" — dates render short-year since 2026-08-27, his
+# choice, matching his reference format. The REQUIREMENT is unchanged: CLAUDE.md,
+# master/README.md and the export checklist all insist VoltusWave's end date is
+# visible and correct. Only the string it renders as has changed.
+for term, want_present in [("AngularJS", True), ("280", True), ("Aurora", True), ("Apr '26", True),
                            ("Knockout", False), ("Product & Platform Strategy", False),
                            ("300+", False)]:
     present = term in text

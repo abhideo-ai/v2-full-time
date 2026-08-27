@@ -76,7 +76,7 @@ import psycopg
 from psycopg.rows import dict_row
 
 from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -129,15 +129,33 @@ PAGE_W, PAGE_H = Twips(11906), Twips(16838)
 MARGIN_TOP, MARGIN_RIGHT = Twips(367), Twips(390)
 MARGIN_BOTTOM, MARGIN_LEFT = Twips(484), Twips(397)
 
-# ⚠ THE RIGHT TAB STOP IS DELIBERATELY NOT USED. The reference right-aligns
-# dates and locations with a single tab stop at 11131 twips (exactly the text
-# width), which is the good, table-free half of its layout. It needs a role
-# entry split across TWO lines — title/dates, then company/location — and this
-# generator emits ONE composite line per role, `company · title · dates ·
-# location`, straight from `resume_roles`. Splitting it is a content-structure
-# change, not a styling one: it would rewrite `_role_heading`, its gate in
-# `check()`, and what an ATS sees as the employer field. Left as one line
-# on purpose; the two-tone colour below carries the same scanning cue.
+# ── the right tab stop ────────────────────────────────────────────────────
+# A role is TWO lines, with dates and location pushed to the right margin:
+#
+#     Principal Software Architect            Mar '25 - Apr '26   ← band
+#     VoltusWave Technologies                         Hyderabad   ← no band
+#
+# ⚠ THIS REVERSES AN EARLIER DECISION IN THIS FILE, AND THE REASON IT GIVES WAS
+# WRONG. The previous comment declined the tab stop because "it would change
+# what an ATS sees as the employer field", citing a parse of the reference that
+# yields `Deque Software⇥Hyderabad` with no title and no dates. That parse is
+# real but it comes from the reference's DEGRADED region: body child 80 is a
+# 2-column layout table holding the four oldest roles, with the role titles
+# leaked into trailing bullet runs. Only 6 of its 11 entries use the clean
+# two-line pattern. `Title⇥Dates` / `Company⇥Location` is a standard résumé
+# shape and parses correctly — the objection was an artefact of the conversion,
+# not a property of the layout. He asked for the format; it was his to choose.
+#
+# Derived, never hardcoded: the reference's 11131 is 11918 − 397 − 390 on ITS
+# page. Ours is true A4, so the same arithmetic gives 11119. A literal would
+# silently misalign the moment a margin moves.
+ROLE_TAB = Twips(11906 - 397 - 390)
+
+# Dates render `Mar '25 - Apr '26` (his choice, 2026-08-27, matching the
+# reference). U+0027 straight apostrophe and U+002D hyphen-minus with spaces —
+# verified against all 12 date strings in the reference, which contains no
+# U+2019 anywhere and uses en dashes only in body copy, never in dates.
+DATE_SEP = " - "
 
 # ── colour ────────────────────────────────────────────────────────────────
 ACCENT = RGBColor(0x32, 0x8E, 0xF7)      # 59 uses in the reference; the one accent
@@ -703,6 +721,49 @@ def _style_document(document: Document) -> None:
         link.font.underline = True
 
 
+# A run whose text is this sentinel becomes a <w:tab/> rather than literal text.
+# Chosen because it cannot occur in résumé content: `resume_roles` and
+# `resume_blocks` are checked for it in check().
+TAB = "\x00TAB\x00"
+
+_DATE_RE = re.compile(r"^([A-Z][a-z]{2})\s+(\d{4})$")
+
+
+def _short_date(value: str) -> str:
+    """`Mar 2025` -> `Mar '25`, matching the reference's twelve date strings.
+
+    ⛔ PASSES ANYTHING ELSE THROUGH UNCHANGED. `resume_roles.date_from/date_to`
+    are free-text columns, not dates — a value this does not recognise is
+    returned as-is rather than mangled, because a silently corrupted date on a
+    résumé is far worse than an unconverted one. check() asserts every role's
+    dates actually matched, so a pass-through cannot hide.
+    """
+    v = value.strip()
+    m = _DATE_RE.match(v)
+    if m:
+        return f"{m.group(1)} '{m.group(2)[-2:]}"
+    # A RANGE — `resume_education.date_range` holds "Aug 2004 – Dec 2007" as one
+    # string, where the role columns hold two. Shorten both halves and rejoin
+    # with DATE_SEP, so education reads the same as experience. Without this the
+    # two education rows rendered in DIFFERENT formats — "Aug 2004 – Dec 2007"
+    # beside "Jan '21" — because only the single-date one matched.
+    for dash in ("–", "—", "-"):
+        if dash in v:
+            left, _, right = v.partition(dash)
+            l, r = _DATE_RE.match(left.strip()), _DATE_RE.match(right.strip())
+            if l and r:
+                return (f"{l.group(1)} '{l.group(2)[-2:]}{DATE_SEP}"
+                        f"{r.group(1)} '{r.group(2)[-2:]}")
+            break
+    return v
+
+
+def _tab_stop(paragraph) -> None:
+    """A single right tab stop on the text edge — see ROLE_TAB."""
+    paragraph.paragraph_format.tab_stops.add_tab_stop(
+        ROLE_TAB, WD_TAB_ALIGNMENT.RIGHT)
+
+
 def _add_runs(paragraph, runs, color=None, size=None) -> None:
     """Emit (text, bold) — or (text, bold, color) — runs into a paragraph.
 
@@ -713,6 +774,11 @@ def _add_runs(paragraph, runs, color=None, size=None) -> None:
     for run_spec in runs:
         text, bold = run_spec[0], run_spec[1]
         run_color = run_spec[2] if len(run_spec) > 2 else color
+        if text == TAB:
+            # The tab lives in its own run so the runs either side keep their
+            # own colour and weight, which is how the reference does it.
+            paragraph.add_run().add_tab()
+            continue
         run = paragraph.add_run(text)
         # ⛔ Set bold ONLY when true. `run.bold = False` writes an explicit
         # <w:b w:val="0"/>, and direct formatting outranks the style — 299 of
@@ -759,32 +825,42 @@ def _add_hyperlink(paragraph, url: str, text: str, bold: bool, size=None) -> Non
     paragraph._p.append(link)
 
 
-def _role_heading(section: dict) -> list[tuple[str, bool, RGBColor | None]]:
-    """company · title · dates · location, composed from `resume_roles`.
+def _role_lines(section: dict) -> tuple[list, list]:
+    """Two lines per role, matching the reference:
+
+        Principal Software Architect            Mar '25 - Apr '26   <- band
+        VoltusWave Technologies                         Hyderabad   <- no band
 
     NOT from `heading_html`: that column exists to reproduce the HTML build
     artefact byte-for-byte and carries its wording — `— card-only`, and
     `· THE JAVA YEARS` on El Paso. Both are notes to the reader of that file and
     neither belongs on a résumé he sends.
 
-    `date_to_emphasised` is TRUE on exactly one role. Migration 012 records why:
-    CLAUDE.md, master/README.md and the export checklist all insist VoltusWave
-    must read Apr 2026, "and the bold is the file shouting it. A plain-text store
-    drops it silently and it does not surface until an exported PDF."
+    ⚑ THE TITLE LEADS, not the company. That is the reference's order, and it is
+    the stronger one for this seat class: the title is what a screener matches
+    against the role they are filling.
 
-    ⚑ THE TWO-TONE TREATMENT, from the reference. It puts the company in bold
-    accent blue and everything after it in plain black — a colour change, not a
-    weight change, so the eye finds the employer without the line shouting. The
-    third element of each tuple is that colour; `None` means inherit the style,
-    which for `Heading 3` is the accent.
+    ⚑ THE DATE IS BLACK AND THE TITLE IS ACCENT — a colour change rather than a
+    weight change, so the eye finds the role without the line shouting. `None`
+    means inherit the style, which for `S_ROLE` is the accent.
+
+    ⚠ `date_to_emphasised` KEEPS ITS BOLD, AND THIS DEPARTS FROM THE REFERENCE
+    DELIBERATELY. The reference bolds no date. But CLAUDE.md, master/README.md
+    and the export checklist all require VoltusWave to read Apr 2026, and
+    migration 012 records why the flag exists: "the bold is the file shouting
+    it. A plain-text store drops it silently and it does not surface until an
+    exported PDF." Do not "restore fidelity" by removing this.
     """
-    runs = [(section["company"], True, None),
-            (" · " + section["role_title"], False, BODY_COLOR),
-            (" · " + section["date_from"] + " – ", False, BODY_COLOR)]
-    runs.append((section["date_to"], bool(section["date_to_emphasised"]), BODY_COLOR))
+    dates = _short_date(section["date_from"]) + DATE_SEP
+    line1 = [(section["role_title"], True, None),
+             (TAB, False, None),
+             (dates, False, BODY_COLOR),
+             (_short_date(section["date_to"]),
+              bool(section["date_to_emphasised"]), BODY_COLOR)]
+    line2 = [(section["company"], True, None)]
     if section["location"]:
-        runs.append((" · " + section["location"], False, BODY_COLOR))
-    return runs
+        line2 += [(TAB, False, None), (section["location"], False, BODY_COLOR)]
+    return line1, line2
 
 
 def build(model: dict) -> Document:
@@ -843,7 +919,7 @@ def build(model: dict) -> Document:
             _add_runs(document.add_paragraph(style=S_BULLET),
                       inline_runs(block["html"]))
 
-    document.add_paragraph("Experience", style=S_SECTION)
+    document.add_paragraph("Professional Experience", style=S_SECTION)
     for section in model["sections"]:
         if section["kind"] != "experience":
             continue
@@ -852,9 +928,19 @@ def build(model: dict) -> Document:
         # boundaries in a dense three-page document. Paragraph-level shading, so
         # it spans the full width instead of breaking at every run boundary the
         # way the reference's 35 run-level fills do.
-        role = document.add_paragraph(style=S_ROLE)
-        _shading(role, BAND_HEX)
-        _add_runs(role, _role_heading(section))
+        line1, line2 = _role_lines(section)
+        # Line 1 carries the band. PARAGRAPH-level shading, deliberately: the
+        # reference paints 35 RUN-level fills, which break the band at every run
+        # boundary — including across the tab gap, where it matters most. One
+        # element instead of three, and a band that cannot break.
+        head = document.add_paragraph(style=S_ROLE)
+        _tab_stop(head)
+        _shading(head, BAND_HEX)
+        _add_runs(head, line1)
+        # Line 2 is unshaded, which is what separates the two visually.
+        sub = document.add_paragraph(style=S_ROLE)
+        _tab_stop(sub)
+        _add_runs(sub, line2)
         for block in section["blocks"]:
             _add_runs(document.add_paragraph(style=S_BULLET),
                       inline_runs(block["html"]))
@@ -865,14 +951,17 @@ def build(model: dict) -> Document:
         # shaded band, accent credential, 9.5pt. Rendering it as plain 8pt body
         # copy was the one place this file diverged from his format without a
         # reason, so it is the only defect the verifiers held the promote on.
-        para = document.add_paragraph(style=S_ROLE)
-        _shading(para, BAND_HEX)
-        # ⛔ The trailing run needs an EXPLICIT black. S_ROLE is Heading 3 and
-        # carries #328EF7 at style level, so without this BOTH runs go blue —
-        # which the role headings deliberately avoid.
-        credential, rest = _add_runs(para, [(row["credential"], True)]), None
-        tail = para.add_run(", " + row["institution"] + " (" + row["date_range"] + ")")
-        tail.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
+        # The reference builds education EXACTLY like a role — two lines, band
+        # on the first, dates to the right margin (its body children 85/86 and
+        # 87/88). Same treatment here, from the same helpers.
+        head = document.add_paragraph(style=S_ROLE)
+        _tab_stop(head)
+        _shading(head, BAND_HEX)
+        _add_runs(head, [(row["credential"], True, None),
+                         (TAB, False, None),
+                         (_short_date(row["date_range"]), False, BODY_COLOR)])
+        sub = document.add_paragraph(style=S_ROLE)
+        _add_runs(sub, [(row["institution"], True, None)])
 
     # ⛔ `resume_certifications` is DELIBERATELY EMPTY — migration 012: "His
     # certifications live only in the Hiration card … The emptiness is the record
@@ -1008,10 +1097,30 @@ def check(document: Document, model: dict) -> list[str]:
             if name not in group_heads:
                 problems.append(f"skills group heading missing: {name!r}")
         elif section["kind"] == "experience":
-            wanted = "".join(run_spec[0] for run_spec in _role_heading(section))
-            if wanted not in role_heads:
-                problems.append(f"role heading missing: {wanted!r}")
-    for label in ("Summary", "Key Skills", "Experience", "Education"):
+            # A role is TWO paragraphs now. Assert BOTH, and assert they are
+            # ADJACENT and in order — a title line orphaned from its company
+            # line renders as two unrelated bands and no automated check below
+            # would notice. The tab is a real <w:tab/>, which extracts as \t.
+            l1, l2 = _role_lines(section)
+            want1 = "".join(r[0] for r in l1).replace(TAB, "\t")
+            want2 = "".join(r[0] for r in l2).replace(TAB, "\t")
+            try:
+                i = role_heads.index(want1)
+            except ValueError:
+                problems.append(f"role line 1 missing: {want1!r}")
+                continue
+            if i + 1 >= len(role_heads) or role_heads[i + 1] != want2:
+                problems.append(f"role line 2 missing or not adjacent to line 1: "
+                                f"{want2!r}")
+        # ⛔ The dates must have SHORTENED. _short_date passes an unrecognised
+        # value through unchanged by design, so without this a schema change or
+        # a stray value would silently ship `Mar 2025` beside `Mar '25`.
+        if section["kind"] == "experience":
+            for col in ("date_from", "date_to"):
+                if _short_date(section[col]) == section[col] and section[col]:
+                    problems.append(f"date not shortened for {section['company']!r}: "
+                                    f"{section[col]!r} — _short_date did not match it")
+    for label in ("Summary", "Key Skills", "Professional Experience", "Education"):
         if label not in [p["text"] for p in by_style.get(S_SECTION, [])]:
             problems.append(f"section heading missing: {label!r}")
     if model["certifications"] and "Certifications" not in [
@@ -1020,9 +1129,15 @@ def check(document: Document, model: dict) -> list[str]:
 
     # 5. Education, contact, name.
     for row in model["education"]:
-        if not any(row["credential"] in p["text"] and row["institution"] in p["text"]
-                   for p in paras):
-            problems.append(f"education row missing: {row['credential']!r}")
+        if _short_date(row["date_range"]) == row["date_range"]:
+            problems.append(f"education date not shortened: {row['date_range']!r} — "
+                            f"_short_date did not match it")
+        # Education is two paragraphs now, same as a role: credential + dates,
+        # then institution. Assert each separately rather than on one line.
+        if not any(row["credential"] in p["text"] for p in paras):
+            problems.append(f"education credential missing: {row['credential']!r}")
+        if not any(row["institution"] in p["text"] for p in paras):
+            problems.append(f"education institution missing: {row['institution']!r}")
     wanted_contact = "".join(t for t, _, _ in contact(model["profile"]))
     if not any(p["text"] == wanted_contact for p in paras):
         problems.append(f"contact line missing or altered — wanted {wanted_contact!r}")
