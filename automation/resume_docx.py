@@ -80,7 +80,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Inches, Pt, RGBColor
+from docx.shared import Pt, RGBColor, Twips
 
 DSN = os.environ.get("JOBS_TRACKER_DSN", "dbname=jobs_tracker_v2")
 ROOT = Path(__file__).resolve().parent.parent
@@ -98,11 +98,115 @@ CANDIDATE_NAME = "Abhisheik Deo"
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from resume_db import CONTRACT_IDS  # noqa: E402
 
-# A4, not python-docx's US-Letter default: he is in Hyderabad applying largely to
-# India-based seats. One line to flip if that ever stops being true.
-PAGE_W, PAGE_H = Inches(8.27), Inches(11.69)
-MARGIN_TB, MARGIN_LR = Inches(0.5), Inches(0.6)
-BASE_FONT, BASE_SIZE = "Calibri", Pt(10.5)
+# ═══════════════════════════════════════════════════════════════════════════
+# DESIGN TOKENS — the whole look, in one block. Restyling is editing these.
+# ═══════════════════════════════════════════════════════════════════════════
+# Measured from `master/Abhisheik_Deo_Resume.SUPERSEDED-2026-08-25.docx`, the
+# reference he pointed at on 2026-08-27: "is the format for you to use". Every
+# value below was re-verified against that file's XML rather than taken on
+# trust — see the two corrections flagged inline.
+#
+# ⛔ WHAT IS DELIBERATELY *NOT* COPIED FROM THE REFERENCE. That file is a
+# PDF→Word conversion and its structure is broken: two layout tables, a 217KB
+# inline headshot, ten DrawingML shapes, eight `<w:b w:val="0"/>`, eight
+# duplicate numbering definitions, and three paragraphs where a heading is
+# fused into the text above it. Those damage ATS parsing, which is the entire
+# reason this .docx exists. The tokens are taken; the structure is rebuilt.
+
+# ── page ──────────────────────────────────────────────────────────────────
+# The reference's A4 is 12/20 twips over the true value (11906×16838) — pdf-lib
+# rounding, 0.008in, invisible. True A4 is used here; either is correct.
+PAGE_W, PAGE_H = Twips(11906), Twips(16838)
+
+# ⚠ WHY THE MARGINS ARE THIS TIGHT — 0.26in, against a 0.5-1in convention.
+# They are the mechanism that makes a three-page résumé achievable. At 64
+# bullets the reference fits three pages ONLY because of these margins
+# combined with the 8pt body below; widen either and the page count grows.
+# The master now carries 89 bullets — 25 more than the reference — so THE
+# THREE-PAGE CAP HAS NEVER BEEN VERIFIED AT THIS LENGTH, and cannot be
+# verified on this machine (no LibreOffice, and CLAUDE.md forbids driving a
+# browser to check rendering). Treat three pages as the intent, not a fact.
+MARGIN_TOP, MARGIN_RIGHT = Twips(367), Twips(390)
+MARGIN_BOTTOM, MARGIN_LEFT = Twips(484), Twips(397)
+
+# ⚠ THE RIGHT TAB STOP IS DELIBERATELY NOT USED. The reference right-aligns
+# dates and locations with a single tab stop at 11131 twips (exactly the text
+# width), which is the good, table-free half of its layout. It needs a role
+# entry split across TWO lines — title/dates, then company/location — and this
+# generator emits ONE composite line per role, `company · title · dates ·
+# location`, straight from `resume_roles`. Splitting it is a content-structure
+# change, not a styling one: it would rewrite `_role_heading`, its gate in
+# `check()`, and what an ATS sees as the employer field. Left as one line
+# on purpose; the two-tone colour below carries the same scanning cue.
+
+# ── colour ────────────────────────────────────────────────────────────────
+ACCENT = RGBColor(0x32, 0x8E, 0xF7)      # 59 uses in the reference; the one accent
+ACCENT_HEX = "328EF7"                    # w:pBdr / w:shd take a bare hex string
+BAND_HEX = "EBF4FE"                      # pale tint behind each role heading
+BODY_COLOR = RGBColor(0, 0, 0)
+
+# ── type scale ────────────────────────────────────────────────────────────
+BASE_FONT = "Calibri"                    # the only face in the reference
+SZ_NAME = Pt(20)                         # w:sz 40
+SZ_SECTION = Pt(11)                      # w:sz 22 — section headings and the headline
+SZ_ROLE = Pt(9.5)                        # w:sz 19 — role headings
+SZ_CONTACT = Pt(9)                       # w:sz 18 — the contact strip only
+SZ_BODY = Pt(8)                          # w:sz 16 — body, bullets, skills, education
+
+# ⚠⚠ THE BRIEF SAID BODY IS 9.5pt. IT IS 8pt, AND THIS WAS RE-VERIFIED HERE.
+# `grep -c 'w:sz w:val="19"'` makes 9.5pt look like the most common size. It is
+# the most common *explicit* one, and it dresses role and education lines only.
+# Resolving style inheritance over every text-bearing run in the reference gives
+# the real census — 268 runs at 8pt, 50 at 9.5pt, 6 at 11pt, 1 at 20pt — and
+# 64 of its 67 bullet paragraphs carry no `w:sz` at all, inheriting Normal's
+# `w:sz w:val="16"`. This is CLAUDE.md's "check the measurement before trusting
+# a measurement" trap exactly. Building the body at 9.5pt would run ~19% large
+# and would not look like his file.
+# ⚠ 8pt is small. It is what his reference does, and it is one constant to
+# raise — but raising it costs pages, so decide the two together.
+
+# ── spacing (reference values, twips → points) ────────────────────────────
+LINE_SPACING = 259 / 240                 # w:line="259" lineRule="auto" ≈ 1.08
+SPACE_BODY_AFTER = Pt(2.25)              # w:after="45"  — Normal
+SPACE_SECTION_BEFORE = Pt(8)             # air above the section rule
+SPACE_SECTION_AFTER = Pt(2.4)            # w:after="48"  — Heading 1 in the reference
+SPACE_ROLE_BEFORE, SPACE_ROLE_AFTER = Pt(4), Pt(5)      # w:after="100"
+SPACE_GROUP_BEFORE, SPACE_GROUP_AFTER = Pt(4), Pt(2.25)
+SPACE_BULLET_AFTER = Pt(1.95)            # w:after="39"
+SPACE_HEADLINE_AFTER = Pt(6)
+
+# ── bullets ───────────────────────────────────────────────────────────────
+# The reference's own indents are degenerate — numbering `left=66` fighting a
+# paragraph `hanging=162` puts the glyph at −96 twips, inside the margin. These
+# are the equivalent geometry arrived at cleanly: glyph at the margin, text and
+# every wrapped line at 240 twips.
+BULLET_TEXT_INDENT, BULLET_HANGING = Twips(240), Twips(168)
+BULLET_GLYPH = "•"                       # reference uses Calibri •, not Symbol
+
+# ── section rule ──────────────────────────────────────────────────────────
+# The reference draws five full-width 1.5pt rules as DrawingML shapes in empty
+# paragraphs (its `w:pBdr` count is zero). Same look, rebuilt as a real top
+# border on the heading style: no shapes, no spacer paragraphs, invisible to an
+# ATS. `w:sz` on a border is EIGHTHS of a point, so 1.5pt = 12.
+RULE_WEIGHT, RULE_SPACE = 12, 3
+CONTACT_BORDER_WEIGHT = 6                # 0.75pt box around the contact strip
+
+# ── justification ─────────────────────────────────────────────────────────
+# The reference's Normal is `jc=both`, so its summary and bullets render
+# justified. Left here deliberately: at 8pt across a 7.7in measure, justified
+# text opens visible word-spacing rivers. One constant to flip back.
+BODY_ALIGN = WD_ALIGN_PARAGRAPH.LEFT
+
+# ── style map ─────────────────────────────────────────────────────────────
+# Built-in style NAMES only, so he can restyle any of these from Word's style
+# pane. The reference defines just eight styles and gives its bullets their look
+# from numbering plus direct indents, which is not restylable.
+S_NAME = "Heading 1"        # Abhisheik Deo
+S_HEADLINE = "Subtitle"     # the tagline
+S_SECTION = "Heading 2"     # SUMMARY / KEY SKILLS / EXPERIENCE / EDUCATION
+S_ROLE = "Heading 3"        # one role heading line
+S_GROUP = "Heading 4"       # a Key Skills group label
+S_BULLET = "List Bullet"
 
 LINKEDIN_PREFIX = "linkedin.com/in/"
 LINKEDIN_URL = "https://www.linkedin.com/in/"
@@ -301,6 +405,159 @@ def _pin_font(style, name: str) -> None:
         rf.set(qn(attr), name)
 
 
+# ⛔ WHY THESE TWO HELPERS EXIST AND WHY THEY INSERT RATHER THAN APPEND.
+# python-docx models neither `w:pBdr` (the section rule) nor `w:shd` (the band
+# behind a role heading), so both are built by hand. `w:pPr`'s children are a
+# SEQUENCE, not a set: pBdr is #9, shd is #10, tabs is #11, spacing #14, ind
+# #15, jc #18. Appending `w:shd` to a pPr that already carries a tab stop emits
+# it after `w:tabs`, which is schema-invalid — Word then either silently
+# repairs the file or declares it corrupt, and neither surfaces until he opens
+# it. `insert_element_before` puts each element at its correct position
+# whatever order the calls arrive in.
+_AFTER_PBDR = ("w:shd", "w:tabs", "w:suppressAutoHyphens", "w:kinsoku", "w:wordWrap",
+               "w:overflowPunct", "w:topLinePunct", "w:autoSpaceDE", "w:autoSpaceDN",
+               "w:bidi", "w:adjustRightInd", "w:snapToGrid", "w:spacing", "w:ind",
+               "w:contextualSpacing", "w:mirrorIndents", "w:suppressOverlap", "w:jc",
+               "w:textDirection", "w:textAlignment", "w:textboxTightWrap",
+               "w:outlineLvl", "w:divId", "w:cnfStyle", "w:rPr", "w:sectPr",
+               "w:pPrChange")
+_AFTER_SHD = _AFTER_PBDR[1:]
+
+
+def _p_pr(target):
+    """The `w:pPr` of a Paragraph or of a ParagraphStyle — they differ.
+
+    ⚠ `getattr(target, "_p", None) or target.element` is WRONG here: an empty
+    `<w:p>` is falsy in lxml, so a freshly-created paragraph silently routes to
+    the style branch and the formatting lands on the wrong object. Test against
+    None explicitly.
+    """
+    element = getattr(target, "_p", None)
+    if element is None:
+        element = target.element
+    return element.get_or_add_pPr()
+
+
+def _border(target, edges: tuple[str, ...], weight: int, color: str, space: int = 0) -> None:
+    """`weight` is EIGHTHS of a point — 12 is 1.5pt, 6 is 0.75pt. `space` is points."""
+    p_pr = _p_pr(target)
+    bdr = p_pr.find(qn("w:pBdr"))
+    if bdr is None:
+        bdr = OxmlElement("w:pBdr")
+        p_pr.insert_element_before(bdr, *_AFTER_PBDR)
+    for edge in edges:                       # emitted in schema order: top, left, bottom, right
+        node = OxmlElement(f"w:{edge}")
+        node.set(qn("w:val"), "single")
+        node.set(qn("w:sz"), str(weight))
+        node.set(qn("w:space"), str(space))
+        node.set(qn("w:color"), color)
+        bdr.append(node)
+
+
+def _shading(target, fill: str) -> None:
+    """Paragraph-level shading — a full-width band.
+
+    The reference does this with 35 RUN-level `w:shd`, which paints only behind
+    the glyphs and breaks the band wherever a run boundary falls. Paragraph
+    level is what its own source PDF actually renders, and it is one element
+    instead of three per line.
+    """
+    p_pr = _p_pr(target)
+    shd = p_pr.find(qn("w:shd"))
+    if shd is None:
+        shd = OxmlElement("w:shd")
+        p_pr.insert_element_before(shd, *_AFTER_SHD)
+    shd.set(qn("w:val"), "clear")
+    shd.set(qn("w:color"), "auto")
+    shd.set(qn("w:fill"), fill)
+
+
+def _scrub_stock_subtitle(style) -> None:
+    """Strip the two things python-docx's stock `Subtitle` carries that this
+    résumé must not inherit.
+
+    Found by unzipping the output and reading styles.xml, not by reasoning about
+    it — the stock style ships `<w:numPr><w:ilvl w:val="1"/></w:numPr>`, which
+    puts the headline on a list level and indents it, and `<w:spacing
+    w:val="15"/>`, which is 0.75pt of letter-spacing. The reference has ZERO
+    letter-spacing anywhere in the document, and the headline is not a list item.
+    Neither is reachable through python-docx's font/paragraph_format API, and
+    neither would have been visible until he opened the file.
+    """
+    p_pr = style.element.get_or_add_pPr()
+    num_pr = p_pr.find(qn("w:numPr"))
+    if num_pr is not None:
+        p_pr.remove(num_pr)
+    r_pr = style.element.get_or_add_rPr()
+    letter_spacing = r_pr.find(qn("w:spacing"))   # in rPr this is TRACKING, not leading
+    if letter_spacing is not None:
+        r_pr.remove(letter_spacing)
+
+
+def _restyle_bullet_glyph(document: Document) -> None:
+    """python-docx's `List Bullet` numbering is Symbol U+F0B7, not Calibri `•`.
+
+    Symbol is a legacy symbol-encoded face; where it is unavailable the glyph
+    renders as a box or drops entirely, and some PDF text extractors read it as
+    a private-use codepoint that lands in the extracted text. The reference pins
+    Calibri `•` in all eight of its numbering definitions. One definition is
+    enough — the eight are byte-identical apart from indent.
+
+    Removing `w:hint="default"` matters: it is what pulls Symbol back in even
+    after the `w:ascii` face has been overridden.
+    """
+    # Resolve the ONE definition List Bullet actually uses — style → numId →
+    # abstractNumId — rather than rewriting every ilvl-0 in the part. The
+    # template ships nine numbering definitions and four of them are bulleted;
+    # blanket-editing them would silently restyle List Number too.
+    style_p_pr = document.styles[S_BULLET].element.find(qn("w:pPr"))
+    num_pr = None if style_p_pr is None else style_p_pr.find(qn("w:numPr"))
+    if num_pr is None:
+        raise BuildError(f"style {S_BULLET!r} carries no numbering reference")
+    num_id = num_pr.find(qn("w:numId")).get(qn("w:val"))
+
+    numbering = document.part.numbering_part.element
+    num = next((n for n in numbering.findall(qn("w:num"))
+                if n.get(qn("w:numId")) == num_id), None)
+    if num is None:
+        raise BuildError(f"numbering has no w:num with numId {num_id!r}")
+    abstract_id = num.find(qn("w:abstractNumId")).get(qn("w:val"))
+    abstract = next((a for a in numbering.findall(qn("w:abstractNum"))
+                     if a.get(qn("w:abstractNumId")) == abstract_id), None)
+    if abstract is None:
+        raise BuildError(f"numbering has no abstractNum {abstract_id!r}")
+
+    lvl = next((l for l in abstract.findall(qn("w:lvl"))
+                if l.get(qn("w:ilvl")) == "0"), None)
+    if lvl is None:
+        raise BuildError(f"abstractNum {abstract_id!r} has no ilvl 0")
+    lvl.find(qn("w:lvlText")).set(qn("w:val"), BULLET_GLYPH)
+    r_pr = lvl.find(qn("w:rPr"))
+    fonts = None if r_pr is None else r_pr.find(qn("w:rFonts"))
+    if fonts is None:
+        raise BuildError(f"abstractNum {abstract_id!r} ilvl 0 has no w:rFonts to repoint")
+    if qn("w:hint") in fonts.attrib:
+        del fonts.attrib[qn("w:hint")]
+    for attr in ("w:ascii", "w:hAnsi", "w:eastAsia", "w:cs"):
+        fonts.set(qn(attr), BASE_FONT)
+
+    # Align the numbering's own indent and its `num` tab with the style's, so
+    # the two cannot disagree. The style's `w:ind` does win in Word, but the
+    # stock definition's left=360/hanging=360 and its num tab at 360 sit 120
+    # twips outside BULLET_TEXT_INDENT — the exact fight that leaves the
+    # reference's glyph at −96 twips, inside the margin. One source of truth.
+    lvl_p_pr = lvl.find(qn("w:pPr"))
+    if lvl_p_pr is not None:
+        ind = lvl_p_pr.find(qn("w:ind"))
+        if ind is not None:
+            ind.set(qn("w:left"), str(BULLET_TEXT_INDENT.twips))
+            ind.set(qn("w:hanging"), str(BULLET_HANGING.twips))
+        tabs = lvl_p_pr.find(qn("w:tabs"))
+        tab = None if tabs is None else tabs.find(qn("w:tab"))
+        if tab is not None:
+            tab.set(qn("w:pos"), str(BULLET_TEXT_INDENT.twips))
+
+
 def _drop_contextual_spacing(style) -> None:
     """`List Bullet` ships with `<w:contextualSpacing/>`, which makes any spacing
     set between consecutive bullets dead on arrival. python-docx does not expose
@@ -313,58 +570,145 @@ def _drop_contextual_spacing(style) -> None:
 
 
 def _style_document(document: Document) -> None:
+    """Every visual decision, applied at STYLE level and nowhere else.
+
+    ⛔ WHY STYLE LEVEL AND NOT DIRECT FORMATTING. Direct run formatting outranks
+    a style, so a document formatted run-by-run cannot be restyled from Word's
+    style pane at all — the pane appears to do nothing. He edits this file in
+    Word; that pane is his only lever. The two things still set per-run are
+    bold (which is DATA, one `<strong>` from the database) and colour on the
+    non-company half of a role heading (which a style cannot express).
+    """
     section = document.sections[0]
     section.page_width, section.page_height = PAGE_W, PAGE_H
-    section.top_margin = section.bottom_margin = MARGIN_TB
-    section.left_margin = section.right_margin = MARGIN_LR
+    section.top_margin, section.bottom_margin = MARGIN_TOP, MARGIN_BOTTOM
+    section.left_margin, section.right_margin = MARGIN_LEFT, MARGIN_RIGHT
 
     styles = document.styles
+
+    # ── Normal — body, summary, contact, education ────────────────────────
     normal = styles["Normal"]
-    normal.font.size = BASE_SIZE
+    normal.font.size = SZ_BODY
+    normal.font.color.rgb = BODY_COLOR
     _pin_font(normal, BASE_FONT)
     normal.paragraph_format.space_before = Pt(0)
-    normal.paragraph_format.space_after = Pt(3)
+    normal.paragraph_format.space_after = SPACE_BODY_AFTER
+    normal.paragraph_format.alignment = BODY_ALIGN
     # ⛔ python-docx's default template carries <w:spacing w:line="276"> in
     # docDefaults — 276/240 = 1.15 line spacing — and NOTHING here overrode it.
     # It applied to all 112 paragraphs, cost roughly half a page, and silently
-    # defeated the deliberate Pt(0)/Pt(1)/Pt(2) spacing set below. Half a page
-    # matters: the 3-page cap has never been verified at 64 bullets.
-    normal.paragraph_format.line_spacing = 1.0
+    # defeated the deliberate spacing set below. Half a page matters: the
+    # 3-page cap has never been verified at 89 bullets. The reference's own
+    # value is 259/240, which is what LINE_SPACING carries.
+    normal.paragraph_format.line_spacing = LINE_SPACING
 
-    h1 = styles["Heading 1"]                      # the name
-    h1.font.size, h1.font.bold, h1.font.color.rgb = Pt(20), True, RGBColor(0, 0, 0)
-    _pin_font(h1, BASE_FONT)
-    h1.paragraph_format.space_before, h1.paragraph_format.space_after = Pt(0), Pt(2)
+    # ── the name ─────────────────────────────────────────────────────────
+    name = styles[S_NAME]
+    name.font.size, name.font.bold, name.font.color.rgb = SZ_NAME, True, ACCENT
+    _pin_font(name, BASE_FONT)
+    name.paragraph_format.space_before, name.paragraph_format.space_after = Pt(0), Pt(0)
 
-    h2 = styles["Heading 2"]                      # SUMMARY / KEY SKILLS / …
-    h2.font.size, h2.font.bold, h2.font.color.rgb = Pt(11), True, RGBColor(0, 0, 0)
-    h2.font.all_caps = True   # displays SUMMARY; the extracted text stays "Summary"
-    _pin_font(h2, BASE_FONT)
-    h2.paragraph_format.space_before, h2.paragraph_format.space_after = Pt(8), Pt(2)
+    # ── the headline / tagline ───────────────────────────────────────────
+    # ⛔ Bold lives on the STYLE, never on the runs. The headline is the one
+    # block the database legitimately stores with no <strong> in it, so bolding
+    # its runs would put `<w:b/>` elements in the document that no database
+    # value accounts for — inventing emphasis, and muddying the one gate that
+    # proves bold survived. A style-level `w:b` renders identically and leaves
+    # the run stream a faithful image of the data.
+    headline = styles[S_HEADLINE]
+    headline.font.size, headline.font.bold = SZ_SECTION, True
+    headline.font.color.rgb = ACCENT
+    # ⛔ None, NOT False. `= False` writes `<w:i w:val="0"/>`; `= None` removes
+    # the stock `<w:i/>` so the style simply inherits Normal. Same reasoning as
+    # bold: an explicit negation is a value that has to win an argument, and
+    # arguments in Word's style inheritance are what make a style pane useless.
+    headline.font.italic = None
+    _scrub_stock_subtitle(headline)
+    _pin_font(headline, BASE_FONT)
+    headline.paragraph_format.space_before = Pt(0)
+    headline.paragraph_format.space_after = SPACE_HEADLINE_AFTER
+    headline.paragraph_format.alignment = BODY_ALIGN
 
-    h3 = styles["Heading 3"]                      # a role, or a skills group
-    h3.font.size, h3.font.bold, h3.font.color.rgb = Pt(10.5), False, RGBColor(0, 0, 0)
-    _pin_font(h3, BASE_FONT)
-    h3.paragraph_format.space_before, h3.paragraph_format.space_after = Pt(5), Pt(1)
+    # ── section headings, each under its own rule ────────────────────────
+    heading = styles[S_SECTION]
+    heading.font.size, heading.font.bold = SZ_SECTION, True
+    heading.font.color.rgb = ACCENT
+    heading.font.all_caps = True   # displays SUMMARY; the extracted text stays "Summary"
+    _pin_font(heading, BASE_FONT)
+    heading.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    heading.paragraph_format.space_before = SPACE_SECTION_BEFORE
+    heading.paragraph_format.space_after = SPACE_SECTION_AFTER
+    heading.paragraph_format.keep_with_next = True
+    heading.paragraph_format.keep_together = True
+    # The full-width rule. In the reference this is a DrawingML shape sitting in
+    # an empty paragraph above the heading; here it is the heading's own top
+    # border, which needs no shape, no spacer paragraph and no image part.
+    _border(heading, ("top",), RULE_WEIGHT, ACCENT_HEX, RULE_SPACE)
 
-    bullet = styles["List Bullet"]
-    bullet.font.size = BASE_SIZE
+    # ── a role heading ───────────────────────────────────────────────────
+    # ⛔ NOT bold at style level, and that is the whole trick. The reference
+    # makes its company line a bold style and then needs `<w:b w:val="0"/>` on
+    # the location to undo it — eight times. Direct formatting beats the style,
+    # so those negations are what make a style pane useless. Leave the style
+    # non-bold and let the company run carry the one `<w:b/>` the database asks
+    # for, and the same look costs zero negations.
+    role = styles[S_ROLE]
+    role.font.size, role.font.color.rgb = SZ_ROLE, ACCENT
+    role.font.bold = None      # removes the stock <w:b/>; inherits Normal, not bold
+    _pin_font(role, BASE_FONT)
+    role.paragraph_format.space_before = SPACE_ROLE_BEFORE
+    role.paragraph_format.space_after = SPACE_ROLE_AFTER
+    role.paragraph_format.keep_with_next = True
+    role.paragraph_format.keep_together = True
+
+    # ── a Key Skills group label ─────────────────────────────────────────
+    # Deliberately the quietest thing on the page — 8pt, black, not bold — so it
+    # reads as a divider between skill bullets rather than competing with a role
+    # heading. That is the reference's own treatment, and it is why this needs a
+    # style of its own rather than sharing the role heading's.
+    group = styles[S_GROUP]
+    group.font.size, group.font.color.rgb = SZ_BODY, BODY_COLOR
+    group.font.bold = group.font.italic = None    # inherit Normal, never negate
+    _pin_font(group, BASE_FONT)
+    group.paragraph_format.space_before = SPACE_GROUP_BEFORE
+    group.paragraph_format.space_after = SPACE_GROUP_AFTER
+    group.paragraph_format.keep_with_next = True
+
+    # ── bullets ──────────────────────────────────────────────────────────
+    bullet = styles[S_BULLET]
+    bullet.font.size = SZ_BODY
+    bullet.font.color.rgb = BODY_COLOR
     _pin_font(bullet, BASE_FONT)
     _drop_contextual_spacing(bullet)
-    bullet.paragraph_format.left_indent = Inches(0.22)
-    bullet.paragraph_format.first_line_indent = Inches(-0.22)
-    bullet.paragraph_format.space_before, bullet.paragraph_format.space_after = Pt(0), Pt(1)
+    bullet.paragraph_format.left_indent = BULLET_TEXT_INDENT
+    bullet.paragraph_format.first_line_indent = -BULLET_HANGING
+    bullet.paragraph_format.space_before = Pt(0)
+    bullet.paragraph_format.space_after = SPACE_BULLET_AFTER
+    bullet.paragraph_format.line_spacing = LINE_SPACING
+    bullet.paragraph_format.alignment = BODY_ALIGN
+    _restyle_bullet_glyph(document)
 
     # There is no built-in Hyperlink character style in python-docx's template.
+    # Coloured with the accent rather than a second blue: the reference's link
+    # colour (0645AD) is an orphan used nowhere else and clashes with the
+    # 328EF7 text it sits beside on the contact strip.
     if "Hyperlink" not in [s.name for s in styles]:
         from docx.enum.style import WD_STYLE_TYPE
         link = styles.add_style("Hyperlink", WD_STYLE_TYPE.CHARACTER)
-        link.font.color.rgb = RGBColor(0x0B, 0x4F, 0x9E)
+        link.font.color.rgb = ACCENT
         link.font.underline = True
 
 
-def _add_runs(paragraph, runs: list[tuple[str, bool]]) -> None:
-    for text, bold in runs:
+def _add_runs(paragraph, runs, color=None, size=None) -> None:
+    """Emit (text, bold) — or (text, bold, color) — runs into a paragraph.
+
+    `color` / `size` are the fallback for runs that do not carry their own.
+    Colour and size are safe to set per-run: unlike bold they express something
+    a style genuinely cannot (two colours on one line), and neither is data.
+    """
+    for run_spec in runs:
+        text, bold = run_spec[0], run_spec[1]
+        run_color = run_spec[2] if len(run_spec) > 2 else color
         run = paragraph.add_run(text)
         # ⛔ Set bold ONLY when true. `run.bold = False` writes an explicit
         # <w:b w:val="0"/>, and direct formatting outranks the style — 299 of
@@ -373,9 +717,13 @@ def _add_runs(paragraph, runs: list[tuple[str, bool]]) -> None:
         # the document editable.
         if bold:
             run.bold = True
+        if run_color is not None:
+            run.font.color.rgb = run_color
+        if size is not None:
+            run.font.size = size
 
 
-def _add_hyperlink(paragraph, url: str, text: str, bold: bool) -> None:
+def _add_hyperlink(paragraph, url: str, text: str, bold: bool, size=None) -> None:
     """python-docx 1.2 has no hyperlink API — `paragraph.hyperlinks` is read-only.
 
     Worth the hand-built element: CLAUDE.md's measurement traps record that the
@@ -393,6 +741,11 @@ def _add_hyperlink(paragraph, url: str, text: str, bold: bool) -> None:
     r_pr.append(style)
     if bold:
         r_pr.append(OxmlElement("w:b"))
+    if size is not None:
+        # `w:sz` is HALF-points, and it must follow `w:b` in the rPr sequence.
+        sz = OxmlElement("w:sz")
+        sz.set(qn("w:val"), str(int(size.pt * 2)))
+        r_pr.append(sz)
     run.append(r_pr)
     node = OxmlElement("w:t")
     node.text = text
@@ -402,7 +755,7 @@ def _add_hyperlink(paragraph, url: str, text: str, bold: bool) -> None:
     paragraph._p.append(link)
 
 
-def _role_heading(section: dict) -> list[tuple[str, bool]]:
+def _role_heading(section: dict) -> list[tuple[str, bool, RGBColor | None]]:
     """company · title · dates · location, composed from `resume_roles`.
 
     NOT from `heading_html`: that column exists to reproduce the HTML build
@@ -414,12 +767,19 @@ def _role_heading(section: dict) -> list[tuple[str, bool]]:
     CLAUDE.md, master/README.md and the export checklist all insist VoltusWave
     must read Apr 2026, "and the bold is the file shouting it. A plain-text store
     drops it silently and it does not surface until an exported PDF."
+
+    ⚑ THE TWO-TONE TREATMENT, from the reference. It puts the company in bold
+    accent blue and everything after it in plain black — a colour change, not a
+    weight change, so the eye finds the employer without the line shouting. The
+    third element of each tuple is that colour; `None` means inherit the style,
+    which for `Heading 3` is the accent.
     """
-    runs = [(section["company"], True), (" · " + section["role_title"], False),
-            (" · " + section["date_from"] + " – ", False)]
-    runs.append((section["date_to"], bool(section["date_to_emphasised"])))
+    runs = [(section["company"], True, None),
+            (" · " + section["role_title"], False, BODY_COLOR),
+            (" · " + section["date_from"] + " – ", False, BODY_COLOR)]
+    runs.append((section["date_to"], bool(section["date_to_emphasised"]), BODY_COLOR))
     if section["location"]:
-        runs.append((" · " + section["location"], False))
+        runs.append((" · " + section["location"], False, BODY_COLOR))
     return runs
 
 
@@ -427,12 +787,23 @@ def build(model: dict) -> Document:
     document = Document()
     _style_document(document)
 
-    document.add_paragraph(CANDIDATE_NAME, style="Heading 1")
+    document.add_paragraph(CANDIDATE_NAME, style=S_NAME)
 
+    # ── the contact strip ────────────────────────────────────────────────
+    # The reference renders this as a bordered, tinted, full-width band — and
+    # builds it out of a THREE-CELL LAYOUT TABLE. The band is the design; the
+    # table is conversion damage that an ATS reads as three columns. One
+    # centred paragraph with a four-sided border and a fill is the same look
+    # with a single text flow.
     line = document.add_paragraph(style="Normal")
+    line.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    line.paragraph_format.space_before = Pt(2)
+    line.paragraph_format.space_after = Pt(6)
+    _border(line, ("top", "left", "bottom", "right"), CONTACT_BORDER_WEIGHT, ACCENT_HEX)
+    _shading(line, BAND_HEX)
     for text, bold, url in contact(model["profile"]):
         if url:
-            _add_hyperlink(line, url, text, bold)
+            _add_hyperlink(line, url, text, bold, size=SZ_CONTACT)
         else:
             run = line.add_run(text)
             # ⛔ Set bold ONLY when true. `run.bold = False` writes an explicit
@@ -442,44 +813,62 @@ def build(model: dict) -> Document:
             # the document editable.
             if bold:
                 run.bold = True
+            run.font.size = SZ_CONTACT
+            run.font.color.rgb = ACCENT
 
     by_id = {s["section_id"]: s for s in model["sections"]}
 
     # Headline — the only block with no bold, legitimately: the DB's own
     # `resume_blocks_bold` constraint is scoped to experience sections. Do not
-    # assert bold here and never invent it.
-    headline = document.add_paragraph(style="Normal")
+    # assert bold here and never invent it. Its accent colour and weight come
+    # from the Subtitle style, so no run here carries formatting of its own.
+    headline = document.add_paragraph(style=S_HEADLINE)
     _add_runs(headline, inline_runs(by_id["quick-headline"]["blocks"][0]["html"]))
-    headline.paragraph_format.space_after = Pt(6)
 
-    document.add_paragraph("Summary", style="Heading 2")
+    document.add_paragraph("Summary", style=S_SECTION)
     summary = document.add_paragraph(style="Normal")
     _add_runs(summary, inline_runs(by_id["quick-summary"]["blocks"][0]["html"]))
 
-    document.add_paragraph("Key Skills", style="Heading 2")
+    document.add_paragraph("Key Skills", style=S_SECTION)
     for section in model["sections"]:
         if section["kind"] != "skills":
             continue
         document.add_paragraph(RE_SKILLS_PREFIX.sub("", section["heading"]),
-                               style="Heading 3")
+                               style=S_GROUP)
         for block in section["blocks"]:
-            _add_runs(document.add_paragraph(style="List Bullet"),
+            _add_runs(document.add_paragraph(style=S_BULLET),
                       inline_runs(block["html"]))
 
-    document.add_paragraph("Experience", style="Heading 2")
+    document.add_paragraph("Experience", style=S_SECTION)
     for section in model["sections"]:
         if section["kind"] != "experience":
             continue
-        _add_runs(document.add_paragraph(style="Heading 3"), _role_heading(section))
+        # The pale band behind each role heading is the reference's strongest
+        # single wayfinding device — it is what lets the eye find the eight role
+        # boundaries in a dense three-page document. Paragraph-level shading, so
+        # it spans the full width instead of breaking at every run boundary the
+        # way the reference's 35 run-level fills do.
+        role = document.add_paragraph(style=S_ROLE)
+        _shading(role, BAND_HEX)
+        _add_runs(role, _role_heading(section))
         for block in section["blocks"]:
-            _add_runs(document.add_paragraph(style="List Bullet"),
+            _add_runs(document.add_paragraph(style=S_BULLET),
                       inline_runs(block["html"]))
 
-    document.add_paragraph("Education", style="Heading 2")
+    document.add_paragraph("Education", style=S_SECTION)
     for row in model["education"]:
-        para = document.add_paragraph(style="Normal")
-        _add_runs(para, [(row["credential"], True),
-                         (", " + row["institution"] + " (" + row["date_range"] + ")", False)])
+        # His reference builds an education entry EXACTLY like a role heading —
+        # shaded band, accent credential, 9.5pt. Rendering it as plain 8pt body
+        # copy was the one place this file diverged from his format without a
+        # reason, so it is the only defect the verifiers held the promote on.
+        para = document.add_paragraph(style=S_ROLE)
+        _shading(para, BAND_HEX)
+        # ⛔ The trailing run needs an EXPLICIT black. S_ROLE is Heading 3 and
+        # carries #328EF7 at style level, so without this BOTH runs go blue —
+        # which the role headings deliberately avoid.
+        credential, rest = _add_runs(para, [(row["credential"], True)]), None
+        tail = para.add_run(", " + row["institution"] + " (" + row["date_range"] + ")")
+        tail.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
     # ⛔ `resume_certifications` is DELIBERATELY EMPTY — migration 012: "His
     # certifications live only in the Hiration card … The emptiness is the record
@@ -489,7 +878,7 @@ def build(model: dict) -> Document:
     # The one certification-shaped item in the corpus, the IIIT PG Diploma, is
     # stored as education and renders above, which is where the master puts it.
     if model["certifications"]:
-        document.add_paragraph("Certifications", style="Heading 2")
+        document.add_paragraph("Certifications", style=S_SECTION)
         for row in model["certifications"]:
             para = document.add_paragraph(style="Normal")
             runs = [(row["name"], True)]
@@ -600,21 +989,29 @@ def check(document: Document, model: dict) -> list[str]:
                         f"{[(k, f'want {want[k]}, have {have.get(k, 0)}') for k in list(short)[:5]]}")
 
     # 4. All fifteen sections reachable, all ten roles headed with their dates.
-    heads = [p["text"] for p in by_style.get("Heading 3", [])]
+    #    ⚠ Skills groups and role headings now live in DIFFERENT styles — the
+    #    reference treats them as opposites (a role heading is 9.5pt bold accent
+    #    on a band; a group label is deliberately the quietest text on the page)
+    #    and one style cannot be both. Look each up where it is actually emitted,
+    #    via the S_* constants, so a future restyle cannot leave this asserting
+    #    against a style nothing is written in — which would pass by finding
+    #    nothing to disagree with.
+    role_heads = [p["text"] for p in by_style.get(S_ROLE, [])]
+    group_heads = [p["text"] for p in by_style.get(S_GROUP, [])]
     for section in model["sections"]:
         if section["kind"] == "skills":
             name = RE_SKILLS_PREFIX.sub("", section["heading"])
-            if name not in heads:
+            if name not in group_heads:
                 problems.append(f"skills group heading missing: {name!r}")
         elif section["kind"] == "experience":
-            wanted = "".join(t for t, _ in _role_heading(section))
-            if wanted not in heads:
+            wanted = "".join(run_spec[0] for run_spec in _role_heading(section))
+            if wanted not in role_heads:
                 problems.append(f"role heading missing: {wanted!r}")
     for label in ("Summary", "Key Skills", "Experience", "Education"):
-        if label not in [p["text"] for p in by_style.get("Heading 2", [])]:
+        if label not in [p["text"] for p in by_style.get(S_SECTION, [])]:
             problems.append(f"section heading missing: {label!r}")
     if model["certifications"] and "Certifications" not in [
-            p["text"] for p in by_style.get("Heading 2", [])]:
+            p["text"] for p in by_style.get(S_SECTION, [])]:
         problems.append("certifications exist in the DB but no Certifications heading")
 
     # 5. Education, contact, name.
@@ -625,7 +1022,7 @@ def check(document: Document, model: dict) -> list[str]:
     wanted_contact = "".join(t for t, _, _ in contact(model["profile"]))
     if not any(p["text"] == wanted_contact for p in paras):
         problems.append(f"contact line missing or altered — wanted {wanted_contact!r}")
-    if not any(p["text"] == CANDIDATE_NAME for p in by_style.get("Heading 1", [])):
+    if not any(p["text"] == CANDIDATE_NAME for p in by_style.get(S_NAME, [])):
         problems.append("name heading missing")
 
     # 6. ATS layout — the parsing failure `resume-issues-to-avoid/` names.
@@ -638,6 +1035,51 @@ def check(document: Document, model: dict) -> list[str]:
         if "•" in para["text"]:
             problems.append(f"literal bullet glyph in text: {para['text'][:60]!r}")
 
+    # 7. THE RESTYLE'S OWN INVARIANTS — the reference's damage, kept out.
+    #    Every one of these is something the reference file actually does, and
+    #    the whole point of rebuilding rather than cloning it is that none of
+    #    them survives. Asserted here so a later styling change cannot quietly
+    #    reintroduce one.
+    body_xml = body.xml
+    negations = len(re.findall(r'<w:b w:val="0"', body_xml))
+    if negations:
+        # ⚠ SCOPED TO document.xml ON PURPOSE. python-docx's own template ships
+        # seven <w:b w:val="0"/> inside unused MediumGrid2* TABLE styles; a
+        # whole-package grep would fail on the template's noise forever and the
+        # real gate would get switched off to silence it.
+        problems.append(f"{negations} <w:b w:val=\"0\"/> in the body — direct formatting "
+                        f"beats the style and makes Word's style pane useless")
+    # ⚠ AND ON THE STYLES THIS RÉSUMÉ USES. Setting `style.font.bold = False`
+    # writes the same negation into styles.xml, where the body-scoped check
+    # above cannot see it — this restyle introduced exactly that on two heading
+    # styles and only an unzip caught it. `= None` is the fix: it removes the
+    # stock element and lets the style inherit. Scoped to the styles actually
+    # used, because the stock template ships seven of these on unused
+    # MediumGrid2* TABLE styles and a whole-file count could never reach zero.
+    for style_name in (S_NAME, S_HEADLINE, S_SECTION, S_ROLE, S_GROUP, S_BULLET, "Normal"):
+        r_pr = document.styles[style_name].element.find(qn("w:rPr"))
+        bold = None if r_pr is None else r_pr.find(qn("w:b"))
+        if bold is not None and bold.get(qn("w:val")) in ("0", "false"):
+            problems.append(f"style {style_name!r} carries <w:b w:val=\"0\"/> — "
+                            f"set .font.bold = None to inherit instead of negating")
+
+    if body.findall(".//" + qn("w:drawing")) or body.findall(".//" + qn("w:pict")):
+        problems.append("document contains a drawing or picture — the reference's rules, "
+                        "icons and headshot are all shapes, and none is ATS-readable")
+    # ⚠ NUMBERING LIVES IN THE STYLE, NOT ON THE PARAGRAPHS. `List Bullet`
+    # carries `w:numPr` in styles.xml, so document.xml holds none and a grep for
+    # numPr over the body reads a perfectly good file as having no bullets —
+    # this assertion was written that way first and failed on correct output.
+    # Real list numbering is what matters (an ATS reads it as a list, and he can
+    # restyle every bullet at once); assert it where it is.
+    if bullets:
+        style_p_pr = document.styles[S_BULLET].element.find(qn("w:pPr"))
+        style_num = None if style_p_pr is None else style_p_pr.find(qn("w:numPr"))
+        if style_num is None and not body.findall(".//" + qn("w:numPr")):
+            problems.append(f"{len(bullets)} bullet paragraph(s) but neither the "
+                            f"{S_BULLET!r} style nor any paragraph carries w:numPr — "
+                            f"they are not real list items")
+
     return problems
 
 
@@ -647,16 +1089,49 @@ def _report(document: Document, model: dict) -> None:
                 for span in strong_spans(b["html"])]
     doc_spans = [span for p in paras for span in _bold_spans(p["runs"])]
     xml = document.element.body.xml
+    section = document.sections[0]
     print(f"  blocks in DB      : {sum(len(s['blocks']) for s in model['sections'])}")
     print(f"  paragraphs        : {len(paras)}")
-    print(f"  bullets           : {sum(1 for p in paras if p['style'] == 'List Bullet')}")
-    print(f"  role headings     : {sum(1 for p in paras if p['style'] == 'Heading 3')}")
+    print(f"  bullets           : {sum(1 for p in paras if p['style'] == S_BULLET)}")
+    print(f"  role headings     : {sum(1 for p in paras if p['style'] == S_ROLE)}")
+    print(f"  skills groups     : {sum(1 for p in paras if p['style'] == S_GROUP)}")
     print(f"  DB <strong> spans : {len(db_spans)}")
     print(f"  bold spans in docx: {len(doc_spans)}")
     print(f"  <w:b/> elements   : {len(re.findall(r'<w:b/>', xml))}")
+    print(f"  <w:b w:val=\"0\"/>  : {len(re.findall(r'<w:b w:val=.0.', xml))}  (must be 0)")
     print(f"  xml:space=preserve: {len(re.findall(r'xml:space=\"preserve\"', xml))}")
-    print(f"  tables · textboxes: {len(re.findall(qn('w:tbl'), xml))} · "
-          f"{len(re.findall(qn('w:txbxContent'), xml))}")
+    print(f"  page · margins    : {section.page_width.twips}×{section.page_height.twips} tw · "
+          f"{section.top_margin.twips}/{section.right_margin.twips}/"
+          f"{section.bottom_margin.twips}/{section.left_margin.twips} tw")
+    print(f"  accent · band     : #{ACCENT_HEX} ×{len(re.findall(ACCENT_HEX, xml))} · "
+          f"#{BAND_HEX} ×{len(re.findall(BAND_HEX, xml))}")
+    # ⛔ COUNTED OVER THE ELEMENT TREE, NEVER `re.findall(qn(...), xml)`.
+    # `qn("w:tbl")` expands to `{http://…/main}tbl`, which is lxml's internal
+    # form and appears NOWHERE in serialized XML — the serialized form is
+    # `<w:tbl>`. So the old `tables · textboxes` line printed 0 · 0 whatever the
+    # document contained: a gate-shaped number that could not fail. (The gate in
+    # `check()` was always correct; it uses `body.findall`. Only the report
+    # lied.) CLAUDE.md's measurement traps, one more time.
+    body = document.element.body
+
+    def count(tag: str) -> int:
+        return len(body.findall(".//" + qn(tag)))
+
+    # ⚠ Scoped to the section-heading style, not a whole-file pBdr count: the
+    # stock template also puts borders on `Title` and `Intense Quote`, neither
+    # of which this résumé uses. A file-wide 3 would read as two rules that do
+    # not exist.
+    section_p_pr = document.styles[S_SECTION].element.find(qn("w:pPr"))
+    has_rule = section_p_pr is not None and section_p_pr.find(qn("w:pBdr")) is not None
+    print(f"  tables · textboxes: {count('w:tbl')} · {count('w:txbxContent')}   (must be 0 · 0)")
+    print(f"  drawings · picts  : {count('w:drawing')} · {count('w:pict')}   (must be 0 · 0)")
+    print(f"  body shd · pBdr   : {count('w:shd')} · {count('w:pBdr')}"
+          f"   (10 role bands + contact strip · contact strip)")
+    print(f"  section rule      : {'yes' if has_rule else 'NO'} — a top border on the "
+          f"{S_SECTION!r} style, not a shape")
+    print(f"  {S_BULLET} numPr : "
+          f"{'yes' if document.styles[S_BULLET].element.find(qn('w:pPr')) is not None else 'NO'}"
+          f" (style-level; document.xml correctly holds none)")
 
 
 # ---------------------------------------------------------------------------
