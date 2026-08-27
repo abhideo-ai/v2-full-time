@@ -1,0 +1,86 @@
+{
+  "slug": "adhd-autism-founding-engineer",
+  "scored_at": "2026-08-27",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 77.95,
+  "target": 95,
+  "ceiling_is_honest": false,
+  "honest_ceiling": 90.4,
+  "binding_constraint": "FHIR. Measured zero across professional-journey.md, professional-journey-original.md, master/upgrad_resume.html and all ~198,000 words of killer-query-case-studies/ — re-measured independently three times with grep -o, with a control test proving the paths and pattern sound. The poster states 5+ years and FHIR is the NAME OF THE ROLE. At weight 0.12 scoring 2/10 this forfeits 9.6 points, so the technical ceiling is 90.4 even with a perfect 10 on every other criterion. 95+ is NOT honestly reachable on this seat.",
+  "smallest_honest_lift": "Rule 7 re-vectoring of real work already in the record — no new claim. Twelve bullets were re-vectored; they move Python from a skills label to three experience bullets, surface the evaluation contract and the shared-platform ledger, and land the audit-before-serve mechanism. Estimated movement +1.5 to +2.0 points, all inside criteria 1–4. NOTHING moves criterion 5. No rewrite manufactures five years of FHIR.",
+  "non_technical": {
+    "note": "INFORMATIONAL ONLY — never a gate, never a drag on the technical score (CLAUDE.md).",
+    "not_scored_as_a_number": true,
+    "domain_fit": "strong — chronic-care clinical platform, PHI in-VPC, 80+ conditions, 9–10 years of patient history",
+    "location_fit": "direct hit — remote India, Bengaluru/Hyderabad preferred; he is in Hyderabad; ~5.5h UK overlap",
+    "legitimacy": "UNRESOLVED — posted by Nexifyr, a Bengaluru recruitment agency. The end client is not named and could not be identified. CLAUDE.md's 'verify JD claims against the company's own site' is UNSATISFIABLE for this seat.",
+    "track": "leadership-shaped in the body (hire and lead the first 2–3 engineers, CTO on a milestone) against an IC-only v2; LinkedIn grades it Mid-Senior level. Build proceeds per CLAUDE.md; the SEND decision is his.",
+    "compensation": "DEFERRED — not researched, not surfaced, not gated on."
+  },
+  "measurement_notes": [
+    "FHIR / HL7 / DICOM / DSPT / DTAC / DCB0129 / SNOMED / LOINC / ICD-10 / OMOP / openEHR: 0 hits, all four sources.",
+    "Ambient transcription: transcri 0, speech-to-text 0, Whisper 0, ASR 0, dictation 0, audio 0. The single 'ambient' hit is kq6-qa's 'an ambient property of the dashboard' — a false positive of exactly the class CLAUDE.md warns about.",
+    "Production Python ~14 months (Mar 2025 – Apr 2026). Python: 1 hit in professional-journey.md, 0 in the original, 1 in the master (a skills label), 1 across the corpus. Java for contrast: 38 / 3 / 15.",
+    "HIPAA: 0 hits across the Amura corpus, 4 in the master, 1 in the journey doc — independently corroborating CLAUDE.md's rule that HIPAA attaches to the CHAT PLATFORM, not Amura.",
+    "'canonical' returns 232 corpus hits and looks like canonical-data-model evidence. It is not — every instance is a canonical CACHE KEY. Not interoperability evidence.",
+    "'14 shared contracts' was re-counted from killer-query-case-studies/index.html rather than inherited: 15 ledger rows, 14 landed, 1 pending."
+  ],
+  "scores": [
+    {
+      "criterion": "production-llm-pipelines-with-evaluation-discipline — \"Build LLM pipelines for clinical summarisation, structured extraction and ambient transcription, with evaluation harnesses rather than vibes\" (jd.md, What you'll do, bullet 2) and \"Real production LLM work, including evaluation and failure-mode handling\" (What we're looking for, bullet 2)",
+      "weight": 0.2,
+      "score_out_of_10": 8,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 16.0,
+      "points_lost": 4.0
+    },
+    {
+      "criterion": "hands-on-backend-and-cloud-still-shipping — \"Deep hands-on backend and cloud experience; you still ship\" (jd.md, What we're looking for, bullet 1); Skills list names Python, TypeScript, AWS, PostgreSQL, API Development",
+      "weight": 0.18,
+      "score_out_of_10": 8.5,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 15.3,
+      "points_lost": 2.7
+    },
+    {
+      "criterion": "longitudinal-clinical-data-modelling — \"Design the longitudinal clinical data model that horizon two depends on\" (jd.md, What you'll do, bullet 3); poster-added bar \"6+ years of work experience with Data Modeling\"",
+      "weight": 0.15,
+      "score_out_of_10": 8.5,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 12.75,
+      "points_lost": 2.25
+    },
+    {
+      "criterion": "regulated-environment-audit-and-evidence — \"Experience building software in a regulated environment (healthcare, fintech, or similar) where audit and evidence mattered\" (jd.md, What we're looking for, bullet 3) and \"Build a data layer that stands up to NHS scrutiny: UK-hosted, encrypted, auditable, least-privilege\" (What you'll do, bullet 4)",
+      "weight": 0.15,
+      "score_out_of_10": 9,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 13.5,
+      "points_lost": 1.5
+    },
+    {
+      "criterion": "health-data-interoperability-fhir-hl7 — the POSTED JOB TITLE is \"Lead Engineer — FHIR\"; poster-added bar \"5+ years of work experience with Fast Healthcare Interoperability Resources (FHIR)\"; the JD BODY files it under Nice to have as \"FHIR, HL7, or equivalent\"",
+      "weight": 0.12,
+      "score_out_of_10": 2,
+      "ramp_or_cap": "capability-cap",
+      "contribution": 2.4,
+      "points_lost": 9.6
+    },
+    {
+      "criterion": "platform-architecture-while-shipping-a-product — \"Someone who can design for a platform while shipping a product, and knows the difference\" (jd.md, What we're looking for, bullet 4)",
+      "weight": 0.12,
+      "score_out_of_10": 9,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 10.8,
+      "points_lost": 1.2
+    },
+    {
+      "criterion": "hiring-and-leading-the-first-engineers — \"Hire and lead the first two to three engineers\" (jd.md, What you'll do, bullet 6); \"Within 12 months it means hiring and leading a small team\"",
+      "weight": 0.08,
+      "score_out_of_10": 9,
+      "ramp_or_cap": "met",
+      "contribution": 7.2,
+      "points_lost": 0.8
+    }
+  ]
+}

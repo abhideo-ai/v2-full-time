@@ -6,17 +6,68 @@ database migration, and a dozen of his own decisions. Spread across four
 documents and a conversation, "does it meet our requirements" is unanswerable.
 Here they are executable, so the answer is measured rather than recalled.
 
-    automation/.venv/bin/python automation/verify_resume_docx.py [path]
+    automation/.venv/bin/python automation/verify_resume_docx.py [path] [--doc-key K | --slug S]
 
 Exit 0 = every checkable requirement met. Exit 1 = at least one failed.
 One requirement is deliberately NOT checkable here and says so: the 3-page cap.
+
+⛔ THE GATE MUST BE TOLD WHICH DOCUMENT IT IS CHECKING.
+Every content requirement below is proved against `resume_blocks` for one
+`doc_key`. Checking a per-seat .docx against the MASTER's rows is a false pass in
+both directions: the seat's tailored bullets are "missing", and a master bullet
+the seat dropped is silently never looked for. So the key is derived from the
+path when it can be, and stated when it cannot.
+
+    verify_resume_docx.py                                  -> master
+    verify_resume_docx.py <workspace>/Abhisheik_Deo_Resume.docx
+                                                           -> seat:<slug>, inferred
+    verify_resume_docx.py <path> --doc-key seat:<slug>     -> stated outright
 """
 import re, sys, zipfile, subprocess, collections, pathlib, html as _html
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DOCX = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "master/Abhisheik_Deo_Resume.docx"
 DSN = "dbname=jobs_tracker_v2"
+
+argv = sys.argv[1:]
+_key = _slug = None
+_rest = []
+i = 0
+while i < len(argv):
+    if argv[i] == "--doc-key":
+        _key = argv[i + 1]; i += 2
+    elif argv[i] == "--slug":
+        _slug = argv[i + 1]; i += 2
+    else:
+        _rest.append(argv[i]); i += 1
+if _key and _slug:
+    sys.exit("verify_resume_docx: pass --doc-key OR --slug, not both")
+DOCX = pathlib.Path(_rest[0]) if _rest else ROOT / "master/Abhisheik_Deo_Resume.docx"
+
+if _slug:
+    DOC_KEY = f"seat:{_slug}"
+elif _key:
+    DOC_KEY = _key
+else:
+    # Infer from the path, then PROVE the inference against the database rather
+    # than trusting it. A .docx sitting in a workspace directory is that seat's.
+    try:
+        rel = DOCX.resolve().relative_to(ROOT)
+        DOC_KEY = ("master" if rel.parts[0] == "master"
+                   else f"seat:{DOCX.resolve().parent.name}")
+    except ValueError:
+        DOC_KEY = "master"
+
+_known = subprocess.run(
+    ["psql", "-d", "jobs_tracker_v2", "-t", "-A", "-c",
+     "select doc_key from resume_documents order by 1"],
+    capture_output=True, text=True).stdout.split()
+if DOC_KEY not in _known:
+    sys.exit(f"verify_resume_docx: no document {DOC_KEY!r} in jobs_tracker_v2 "
+             f"(have: {', '.join(_known) or 'none'}).\n"
+             f"  Load it first:  resume_db.py load --slug <slug>\n"
+             f"  Or name it:     --doc-key <key>\n"
+             f"REFUSING rather than checking a per-seat file against the master's rows.")
 
 ok, bad, skip = [], [], []
 def req(name, passed, detail=""):
@@ -46,8 +97,8 @@ for p in re.findall(r"<w:p\b.*?</w:p>", doc, re.S):
 text = "\n".join(p["text"] for p in paras)
 
 # ── CONTENT: every live block byte-identical to the database ────────────────
-blocks = q("select section_id, html from resume_blocks where doc_key='master' "
-           "and retired_at is null order by section_id, ord")
+blocks = q("select section_id, html from resume_blocks where doc_key='%s' "
+           "and retired_at is null order by section_id, ord" % DOC_KEY)
 db_texts = [strip_tags(h) for _, h in blocks]
 missing = [t for t in db_texts if t not in text]
 req("every database block present, byte-identical", not missing,
@@ -85,9 +136,9 @@ for label, needle in [("phone", "93640 27487"), ("email", "abhisheik@abhideo.ai"
 req("LinkedIn is a real hyperlink", "<w:hyperlink" in doc)
 
 # ── CONTENT: sections and roles ─────────────────────────────────────────────
-nsec = int(q("select count(*) from resume_sections where doc_key='master'")[0][0])
-nrole = int(q("select count(*) from resume_roles where doc_key='master'")[0][0])
-roles = q("select company, role_title from resume_roles where doc_key='master' order by n")
+nsec = int(q("select count(*) from resume_sections where doc_key='%s'" % DOC_KEY)[0][0])
+nrole = int(q("select count(*) from resume_roles where doc_key='%s'" % DOC_KEY)[0][0])
+roles = q("select company, role_title from resume_roles where doc_key='%s' order by n" % DOC_KEY)
 missing_roles = [c for c, t in roles if c not in text]
 req(f"all {nrole} roles present", not missing_roles, f"missing: {missing_roles}")
 
@@ -150,7 +201,7 @@ skip.append(("3 pages or fewer",
              "export was the 39-bullet version. Open it in Word."))
 
 # ── report ──────────────────────────────────────────────────────────────────
-print(f"{'='*74}\n  REQUIREMENTS — {DOCX.name}\n{'='*74}")
+print(f"{'='*74}\n  REQUIREMENTS — {DOCX.name}   [doc_key: {DOC_KEY}]\n{'='*74}")
 for n, d in ok:   print(f"  ✅ {n}" + (f"  ({d})" if d else ""))
 for n, d in bad:  print(f"  ⛔ {n}" + (f"  ({d})" if d else ""))
 for n, d in skip: print(f"  ⏸  {n}\n       {d}")

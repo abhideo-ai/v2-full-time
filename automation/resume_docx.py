@@ -96,7 +96,7 @@ CANDIDATE_NAME = "Abhisheik Deo"
 # ⛔ The ten ids the résumé cannot be missing. Same list as `resume_db.CONTRACT_IDS`,
 # imported so the two can never drift.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from resume_db import CONTRACT_IDS  # noqa: E402
+from resume_db import CONTRACT_IDS, workspace_resume  # noqa: E402
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DESIGN TOKENS — the whole look, in one block. Restyling is editing these.
@@ -284,19 +284,23 @@ def strong_spans(html: str) -> list[str]:
 # fetch — the whole document, in render order, in one place
 # ---------------------------------------------------------------------------
 
-def fetch() -> dict:
+def fetch(doc_key: str = DOC_KEY) -> dict:
+    """Every row for one document. `doc_key` defaults to the master; a per-seat
+    workspace résumé lives under 'seat:<slug>', loaded by `resume_db.py load --slug`.
+    The tables are namespaced by doc_key throughout, so a seat build reads no
+    master row and writes none."""
     with psycopg.connect(DSN, row_factory=dict_row) as conn, conn.cursor() as cur:
-        cur.execute("SELECT * FROM resume_documents WHERE doc_key = %s", (DOC_KEY,))
+        cur.execute("SELECT * FROM resume_documents WHERE doc_key = %s", (doc_key,))
         doc = cur.fetchone()
         if doc is None:
-            raise BuildError(f"no document {DOC_KEY!r} in {DSN} — run `resume_db.py load`")
+            raise BuildError(f"no document {doc_key!r} in {DSN} — run `resume_db.py load`")
 
-        cur.execute("SELECT * FROM resume_profile WHERE doc_key=%s ORDER BY ord", (DOC_KEY,))
+        cur.execute("SELECT * FROM resume_profile WHERE doc_key=%s ORDER BY ord", (doc_key,))
         profile = cur.fetchall()
-        cur.execute("SELECT * FROM resume_education WHERE doc_key=%s ORDER BY ord", (DOC_KEY,))
+        cur.execute("SELECT * FROM resume_education WHERE doc_key=%s ORDER BY ord", (doc_key,))
         education = cur.fetchall()
         cur.execute("""SELECT * FROM resume_certifications WHERE doc_key=%s ORDER BY ord""",
-                    (DOC_KEY,))
+                    (doc_key,))
         certifications = cur.fetchall()
 
         # ⛔ ORDER BY s.ord, b.ord — see the module docstring. And `retired_at IS
@@ -314,7 +318,7 @@ def fetch() -> dict:
                                        AND b.retired_at IS NULL
              WHERE s.doc_key = %s
              ORDER BY s.ord, b.ord
-        """, (DOC_KEY,))
+        """, (doc_key,))
         rows = cur.fetchall()
 
     sections: list[dict] = []
@@ -1136,8 +1140,8 @@ def _report(document: Document, model: dict) -> None:
 
 # ---------------------------------------------------------------------------
 
-def generate(out_path: Path) -> int:
-    model = fetch()
+def generate(out_path: Path, doc_key: str = DOC_KEY) -> int:
+    model = fetch(doc_key)
     document = build(model)
 
     # ⛔ CHECKED BEFORE IT IS WRITTEN. A silently-wrong résumé on disk is worse
@@ -1152,7 +1156,7 @@ def generate(out_path: Path) -> int:
     core = document.core_properties
     core.author = core.last_modified_by = "Abhisheik Deo"
     core.title = "Abhisheik Deo — Resume"
-    core.subject = "Principal Software Architect"
+    core.subject = "Principal Software Architect"   # role family, not a per-seat title
     core.comments = ""
     core.category = core.keywords = ""
 
@@ -1191,11 +1195,11 @@ def generate(out_path: Path) -> int:
     return 0
 
 
-def verify(out_path: Path) -> int:
+def verify(out_path: Path, doc_key: str = DOC_KEY) -> int:
     if not out_path.exists():
         print(f"[resume-docx] no file at {out_path} — run `generate` first", file=sys.stderr)
         return 2
-    model = fetch()
+    model = fetch(doc_key)
     document = Document(str(out_path))   # re-read from disk, not the object in memory
     print(f"{'=' * 68}\n  DOCX GATE — {out_path}\n{'=' * 68}")
     print(f"  sha256            : {hashlib.sha256(out_path.read_bytes()).hexdigest()}")
@@ -1218,14 +1222,38 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="The master résumé as a Word document, rendered from jobs_tracker_v2.")
     sub = parser.add_subparsers(dest="cmd", required=True)
-    p_gen = sub.add_parser("generate", help="render the DB to a .docx")
-    p_gen.add_argument("--out", type=Path, default=OUT, help=f"output path (default {OUT})")
-    p_ver = sub.add_parser("verify", help="re-open the .docx and prove it from the DB")
-    p_ver.add_argument("--out", type=Path, default=OUT, help=f"file to check (default {OUT})")
+    for name, helptext in (("generate", "render the DB to a .docx"),
+                           ("verify", "re-open the .docx and prove it from the DB")):
+        p = sub.add_parser(name, help=helptext)
+        p.add_argument("--out", type=Path, default=None,
+                       help=f"output path (default {OUT}, or the workspace with --slug)")
+        p.add_argument("--doc-key", default=None,
+                       help="document key (default 'master'); exclusive with --slug")
+        p.add_argument("--slug", default=None,
+                       help="workspace slug -> doc_key 'seat:<slug>', written into "
+                            "that workspace as Abhisheik_Deo_Resume.docx")
 
     args = parser.parse_args()
     try:
-        return generate(args.out) if args.cmd == "generate" else verify(args.out)
+        # ⛔ Both name the document. Preferring one silently is how a seat gets
+        # built from the master's rows and nobody notices until he opens it.
+        if args.slug and args.doc_key:
+            raise SystemExit("[resume-docx] pass --slug OR --doc-key, not both")
+        doc_key = args.doc_key or (f"seat:{args.slug}" if args.slug else DOC_KEY)
+        out = args.out
+        if out is None:
+            out = (workspace_resume(args.slug).parent / "Abhisheik_Deo_Resume.docx"
+                   if args.slug else OUT)
+        # ⛔ A seat build must not land on the master .docx, and a master build
+        # must not land in a workspace. Both are silent, plausible-looking wrongs.
+        if doc_key != DOC_KEY and out.resolve() == OUT.resolve():
+            raise SystemExit(f"[resume-docx] REFUSING: {out} is the MASTER .docx and "
+                             f"doc_key is {doc_key!r}")
+        if doc_key == DOC_KEY and out.resolve() != OUT.resolve():
+            raise SystemExit(f"[resume-docx] REFUSING: writing the master document to "
+                             f"{out} — pass --slug or --doc-key if this is a seat")
+        return (generate(out, doc_key) if args.cmd == "generate"
+                else verify(out, doc_key))
     except BuildError as exc:
         print(f"[resume-docx] REFUSING: {exc}", file=sys.stderr)
         return 2

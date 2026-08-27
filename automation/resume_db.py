@@ -66,6 +66,24 @@ GENERATED = ROOT / "master" / "upgrad_resume.generated.html"
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates"
 DOC_KEY = "master"
 
+
+def workspace_resume(slug: str) -> Path:
+    """<Month-YYYY>/<DD>/<slug>/upgrad_resume.html, or a root-level <slug>/.
+
+    Mirrors `upgrad_apply._resolve_slug_dir`: the dated layout is current, and a
+    flat root-level workspace already works. Ambiguity is refused, never guessed.
+    """
+    hits = sorted(ROOT.glob(f"*-[0-9][0-9][0-9][0-9]/[0-9][0-9]/{slug}/upgrad_resume.html"))
+    flat = ROOT / slug / "upgrad_resume.html"
+    if flat.exists():
+        hits.append(flat)
+    if not hits:
+        raise SystemExit(f"[resume-db] no workspace résumé for slug {slug!r}")
+    if len(hits) > 1:
+        raise SystemExit(f"[resume-db] slug {slug!r} is ambiguous: "
+                         + ", ".join(str(h) for h in hits))
+    return hits[0]
+
 # ⛔ The ten ids `upgrad_apply.py` parses. master/README.md records the trap: a
 # misspelt id is SKIPPED SILENTLY and the export still looks successful. Nothing
 # is written unless all ten are present and non-empty.
@@ -143,7 +161,7 @@ def _split_row(line: str, tag: str, n: int) -> list[str]:
     return cells
 
 
-def parse_master(source: str) -> dict:
+def parse_master(source: str, doc_key: str = DOC_KEY) -> dict:
     """Every storable thing in the master, verbatim. Touches no database."""
     for ent in RE_ENTITY.findall(source):
         if ent not in KNOWN_ENTITIES:
@@ -233,7 +251,7 @@ def parse_master(source: str) -> dict:
         return m.group(1)
 
     doc = {
-        "doc_key":         DOC_KEY,
+        "doc_key":         doc_key,
         "lang":            one(1, r'<html lang="([^"]+)">', "lang"),
         "title":           _cell_text(one(5, r"  <title>(.*)</title>", "title")),
         "favicon_href":    one(6, r'  <link rel="icon" type="image/svg\+xml" href="([^"]+)" />',
@@ -434,10 +452,16 @@ def derive_keys(sections: list[dict], carried: dict[str, str]) -> None:
 # load
 # ---------------------------------------------------------------------------
 
-def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dict:
-    """Parse one master résumé into the database. Idempotent, one transaction."""
+def load_from(path: Path, source: str | None = None, quiet: bool = False,
+              doc_key: str = DOC_KEY) -> dict:
+    """Parse one résumé into the database. Idempotent, one transaction.
+
+    `doc_key` defaults to the master. A per-seat workspace résumé loads under its
+    own key — the rows are namespaced by doc_key throughout, so a seat can never
+    overwrite the master and the master's round trip is unaffected.
+    """
     raw = source if source is not None else path.read_text(encoding="utf-8")
-    parsed = parse_master(raw)
+    parsed = parse_master(raw, doc_key=doc_key)
 
     missing = [s for s in CONTRACT_IDS
                if s not in {sec["section_id"] for sec in parsed["sections"]}]
@@ -447,7 +471,7 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
     with psycopg.connect(DSN, row_factory=dict_row) as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT html, bullet_key FROM resume_blocks WHERE doc_key = %s",
-                        (DOC_KEY,))
+                        (doc_key,))
             carried = {r["html"]: r["bullet_key"] for r in cur.fetchall()}
             derive_keys(parsed["sections"], carried)
 
@@ -462,13 +486,13 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
             # bullet_key is carried.
             cur.execute("""SELECT section_id, ord, html, bullet_key, retired_at
                              FROM resume_blocks
-                            WHERE doc_key = %s AND retired_at IS NOT NULL""", (DOC_KEY,))
+                            WHERE doc_key = %s AND retired_at IS NOT NULL""", (doc_key,))
             retired = cur.fetchall()
 
             # Delete-and-reinsert wholesale, exactly like `jobs_sync --bullets`,
             # so a half-written document can never be committed. resume_documents
             # cascades to every child table.
-            cur.execute("DELETE FROM resume_documents WHERE doc_key = %s", (DOC_KEY,))
+            cur.execute("DELETE FROM resume_documents WHERE doc_key = %s", (doc_key,))
             d = parsed["doc"]
             cur.execute("""
                 INSERT INTO resume_documents (
@@ -486,7 +510,7 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
                     INSERT INTO resume_roles (doc_key, n, company, role_title,
                         date_from, date_to, location, date_to_emphasised)
                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
-                    (DOC_KEY, r["n"], r["company"], r["role_title"], r["date_from"],
+                    (doc_key, r["n"], r["company"], r["role_title"], r["date_from"],
                      r["date_to"], r["location"], r["date_to_emphasised"]))
 
             for e in parsed["education"]:
@@ -494,14 +518,14 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
                     INSERT INTO resume_education (doc_key, ord, credential,
                         institution, date_range, is_highest)
                     VALUES (%s,%s,%s,%s,%s,%s)""",
-                    (DOC_KEY, e["ord"], e["credential"], e["institution"],
+                    (doc_key, e["ord"], e["credential"], e["institution"],
                      e["date_range"], e["is_highest"]))
 
             for p in parsed["profile"]:
                 cur.execute("""
                     INSERT INTO resume_profile (doc_key, ord, field_label, value_html)
                     VALUES (%s,%s,%s,%s)""",
-                    (DOC_KEY, p["ord"], p["field_label"], p["value_html"]))
+                    (doc_key, p["ord"], p["field_label"], p["value_html"]))
 
             seen_experience = 0
             for sec in parsed["sections"]:
@@ -513,14 +537,14 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
                     INSERT INTO resume_sections (doc_key, ord, section_id,
                         section_kind, heading_html, card_only, role_n)
                     VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                    (DOC_KEY, sec["ord"], sec["section_id"], sec["section_kind"],
+                    (doc_key, sec["ord"], sec["section_id"], sec["section_kind"],
                      sec["heading_html"], sec["card_only"], role_n))
                 for i, raw in enumerate(sec["blocks"], 1):
                     cur.execute("""
                         INSERT INTO resume_blocks (doc_key, section_id, section_kind,
                             ord, bullet_key, html)
                         VALUES (%s,%s,%s,%s,%s,%s)""",
-                        (DOC_KEY, sec["section_id"], sec["section_kind"], i,
+                        (doc_key, sec["section_id"], sec["section_kind"], i,
                          sec["keys"][i - 1], raw))
 
             # Put the retired bullets back. They are invisible to render(), so
@@ -531,7 +555,7 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
             # the live row supersedes it, and re-inserting both would violate
             # UNIQUE (doc_key, bullet_key). Carry only the ones the file no longer
             # contains; those are the ones history would otherwise lose.
-            cur.execute("SELECT bullet_key FROM resume_blocks WHERE doc_key=%s", (DOC_KEY,))
+            cur.execute("SELECT bullet_key FROM resume_blocks WHERE doc_key=%s", (doc_key,))
             live_keys = {r["bullet_key"] for r in cur.fetchall()}
             revived = [r for r in retired if r["bullet_key"] in live_keys]
             retired = [r for r in retired if r["bullet_key"] not in live_keys]
@@ -547,14 +571,14 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
                 sid = r["section_id"]
                 if sid not in tail:
                     cur.execute("""SELECT coalesce(max(ord), 0) AS m FROM resume_blocks
-                                    WHERE doc_key=%s AND section_id=%s""", (DOC_KEY, sid))
+                                    WHERE doc_key=%s AND section_id=%s""", (doc_key, sid))
                     tail[sid] = cur.fetchone()["m"]
                 tail[sid] += 1
                 cur.execute("""
                     INSERT INTO resume_blocks (doc_key, section_id, section_kind,
                         ord, bullet_key, html, retired_at)
                     VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                    (DOC_KEY, sid,
+                    (doc_key, sid,
                      next((x["section_kind"] for x in parsed["sections"]
                            if x["section_id"] == sid), "experience"),
                      tail[sid], r["bullet_key"], r["html"], r["retired_at"]))
@@ -563,7 +587,7 @@ def load_from(path: Path, source: str | None = None, quiet: bool = False) -> dic
     n_blocks = sum(len(s["blocks"]) for s in parsed["sections"])
     if not quiet:
         digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
-        print(f"[resume-db] loaded {DOC_KEY} from {path} (sha256 {digest[:8]}…)")
+        print(f"[resume-db] loaded {doc_key} from {path} (sha256 {digest[:8]}…)")
         print(f"[resume-db]   {len(parsed['sections'])} sections · {n_blocks} blocks · "
               f"{len(parsed['roles'])} roles · {len(parsed['education'])} education · "
               f"{len(parsed['profile'])} profile fields")
@@ -590,24 +614,24 @@ def _env():
     return env
 
 
-def render() -> str:
+def render(doc_key: str = DOC_KEY) -> str:
     with psycopg.connect(DSN, row_factory=dict_row) as conn, conn.cursor() as cur:
-        cur.execute("SELECT * FROM resume_documents WHERE doc_key = %s", (DOC_KEY,))
+        cur.execute("SELECT * FROM resume_documents WHERE doc_key = %s", (doc_key,))
         doc = cur.fetchone()
         if doc is None:
-            raise SystemExit(f"[resume-db] no document {DOC_KEY!r} — run `resume_db.py load`")
-        cur.execute("SELECT * FROM resume_roles WHERE doc_key=%s ORDER BY n", (DOC_KEY,))
+            raise SystemExit(f"[resume-db] no document {doc_key!r} — run `resume_db.py load`")
+        cur.execute("SELECT * FROM resume_roles WHERE doc_key=%s ORDER BY n", (doc_key,))
         roles = cur.fetchall()
-        cur.execute("SELECT * FROM resume_education WHERE doc_key=%s ORDER BY ord", (DOC_KEY,))
+        cur.execute("SELECT * FROM resume_education WHERE doc_key=%s ORDER BY ord", (doc_key,))
         education = cur.fetchall()
-        cur.execute("SELECT * FROM resume_profile WHERE doc_key=%s ORDER BY ord", (DOC_KEY,))
+        cur.execute("SELECT * FROM resume_profile WHERE doc_key=%s ORDER BY ord", (doc_key,))
         profile = cur.fetchall()
         cur.execute("""SELECT ord, section_id, section_kind, heading_html, card_only
-                         FROM resume_sections WHERE doc_key=%s ORDER BY ord""", (DOC_KEY,))
+                         FROM resume_sections WHERE doc_key=%s ORDER BY ord""", (doc_key,))
         sections = cur.fetchall()
         cur.execute("""SELECT section_id, ord, html FROM resume_blocks
                         WHERE doc_key=%s AND retired_at IS NULL
-                        ORDER BY section_id, ord""", (DOC_KEY,))
+                        ORDER BY section_id, ord""", (doc_key,))
         blocks = cur.fetchall()
 
     by_section: dict[str, list[dict]] = {}
@@ -640,14 +664,14 @@ def render() -> str:
     return out
 
 
-def generate(out_path: Path, quiet: bool = False) -> str:
+def generate(out_path: Path, quiet: bool = False, doc_key: str = DOC_KEY) -> str:
     # ⛔ The master file is never written by this tool. It is the thing the
     # generated output is CHECKED AGAINST; promoting a generated file over it is
     # a decision for the session, taken by hand, after reading the diff.
     if out_path.resolve() == MASTER.resolve():
         raise SystemExit(f"[resume-db] REFUSING to write {MASTER} — generate to "
                          f"{GENERATED.name} and promote it by hand after reading the diff")
-    text = render()
+    text = render(doc_key)
 
     # CLAUDE.md's measurement traps: `src="../static/copy.js"` resolving nowhere
     # left every copy button on every tailored résumé dead through six
@@ -768,10 +792,18 @@ def main() -> int:
     p_load = sub.add_parser("load", help="parse master/upgrad_resume.html into the DB")
     p_load.add_argument("--file", type=Path, default=MASTER,
                         help=f"source to parse (default {MASTER})")
+    p_load.add_argument("--doc-key", default=None,
+                        help="document key to load under (default 'master'); "
+                             "mutually exclusive with --slug")
+    p_load.add_argument("--slug", default=None,
+                        help="workspace slug — loads <slug>/upgrad_resume.html under "
+                             "doc_key 'seat:<slug>'")
 
     p_gen = sub.add_parser("generate", help="render the DB back to HTML")
     p_gen.add_argument("--out", type=Path, default=GENERATED,
                        help=f"output path (default {GENERATED})")
+    p_gen.add_argument("--doc-key", default=None, help="document key to render (default 'master')")
+    p_gen.add_argument("--slug", default=None, help="workspace slug -> doc_key 'seat:<slug>'")
 
     p_ver = sub.add_parser("verify", help="render from the DB and diff against the master (READ-ONLY)")
     p_ver.add_argument("--out", type=Path, default=GENERATED,
@@ -779,11 +811,32 @@ def main() -> int:
 
     args = ap.parse_args()
     try:
+        if args.cmd in ("load", "generate"):
+            # ⛔ --slug and --doc-key both name the document; accepting both and
+            # silently preferring one is how a seat ends up written under the
+            # master's key. Refuse instead.
+            if args.slug and args.doc_key:
+                raise SystemExit("[resume-db] pass --slug OR --doc-key, not both")
+            doc_key = args.doc_key or (f"seat:{args.slug}" if args.slug else DOC_KEY)
         if args.cmd == "load":
-            load_from(args.file)
+            path = args.file
+            if args.slug and path == MASTER:
+                path = workspace_resume(args.slug)
+            # ⛔ Loading a seat's file under the master key would overwrite the
+            # master's rows with a tailored résumé. The master is loaded from the
+            # master file and from nothing else.
+            if doc_key == DOC_KEY and path.resolve() != MASTER.resolve():
+                raise SystemExit(
+                    f"[resume-db] REFUSING to load {path} under doc_key 'master' — "
+                    f"pass --slug <slug> (or --doc-key) for a per-seat document")
+            if doc_key != DOC_KEY and path.resolve() == MASTER.resolve():
+                raise SystemExit(
+                    f"[resume-db] REFUSING to load the master file under doc_key "
+                    f"{doc_key!r} — that would clone the master, not the seat")
+            load_from(path, doc_key=doc_key)
             return 0
         if args.cmd == "generate":
-            generate(args.out)
+            generate(args.out, doc_key=doc_key)
             return 0
         return verify(args.out)
     except ParseError as exc:
