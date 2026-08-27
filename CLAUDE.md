@@ -902,6 +902,41 @@ resolves the graph neural network, the four Rocket metrics, the 70–80% consoli
 27 ms / P95 16 ms pairing or the 100,000-concurrent wording. Surface them in every prep
 artefact and leave the résumé wording alone.
 
+**⚠ .docx IS THE OUTPUT FORM — set by him 2026-08-27.** His words: *"for resumes, we can create
+docx. right? wouldn't that be easier?"* · *"we create .docx file(s) that I can also edit easily."* ·
+*"that's going to be our form now."* · *"No need of a HTML page or anything."*
+
+```
+automation/.venv/bin/python automation/resume_docx.py generate   # DB -> master/Abhisheik_Deo_Resume.docx
+automation/.venv/bin/python automation/resume_docx.py verify     # re-open it and prove fidelity
+```
+
+- **The pipeline is `jobs_tracker_v2` → `.docx` → he edits in Word.** No HTML in the delivery path,
+  no copy/paste sheet, no card. `master/upgrad_resume.html` survives ONLY as the round-trip
+  verification artefact that proves a parse did not silently drop a `<strong>` — `resume_docx.py`
+  refuses to write to it.
+- **It REFUSES rather than emitting a quietly-wrong document.** A missing block, an absent section,
+  or one `<strong>` that failed to become a bold run is a refusal, not a warning.
+- **The bold gate counts OCCURRENCES, not membership.** 209 database spans are only 182 distinct;
+  a membership test let bold vanish from three of the four `Java and Spring Boot` spans and still
+  passed. `resume-issues-to-avoid/` rule 9 is exactly that failure, so its only detector must not be
+  blind to repeats.
+- **Never `run.bold = False`.** It writes an explicit `<w:b w:val="0"/>`, and direct formatting
+  outranks the style — 299 of them meant editing *List Bullet* in Word's style pane did nothing.
+  Bold is set only when true, so the document stays restyleable.
+
+**⛔ SCOPE — per-seat résumés, set by him 2026-08-27: `.docx` for NEW JOBS ONLY.** His words:
+*"similar path for workspace specific resumes as well"* · *"new jobs that is"* · **_"ones we've
+already applied to - do NOT change them."_**
+
+- **The seven sent/withdrawn seats are frozen.** No `.docx`, no regeneration, no migration, no
+  edits. The PDFs already sent are the record. Migration 011's trigger makes editing a sent version
+  raise, so this is enforced rather than remembered.
+- **Wipro is the first real selection**, and every new seat after it. A per-seat résumé is a
+  **selection with edits** in `resume_versions` / `resume_version_bullets` — never a copied file.
+  The copying is the bug: eight workspace copies of his whole career already exist and every one
+  went stale silently when the master changed.
+
 **⚠ ARCHITECTURE — THE DATABASE IS THE SOURCE, HTML IS A VIEW.**
 
 **✅ NO LONGER DEFERRED. He started it on 2026-08-27**, in his own words: *"remember, you SHOULD be
