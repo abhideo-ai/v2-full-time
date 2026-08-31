@@ -21,7 +21,7 @@
 
 <div class="tldr" id="standing">
   <strong>Where things stand</strong>
-  <strong>9</strong> job workspaces built · <strong>7</strong> sent · ready-and-unsent backlog <strong>1</strong>, under the roughly-five gate.
+  <strong>10</strong> job workspaces built · <strong>7</strong> sent · ready-and-unsent backlog <strong>2</strong>, under the roughly-five gate.
   Sending is the north star, not building. Anything left unticked rolls over to the next day
   automatically. <span class="dim">Generated from <code>daily/days.json</code>; counts read from <code>jobs_tracker_v2</code> on each render.</span>
 </div>
@@ -30,9 +30,9 @@
   <b>Pre-flight green — no action needed.</b> Checked on this render, not quoted from memory: all <strong>10</strong> <code>quick-*</code> ids present in <code>master/upgrad_resume.html</code>, all parse with no silent skip, skills 4 · 17 · 4 and experience 24 · 14 · 4 · 3 · 4 = <strong>49</strong> bullets, zero <code>[fill in metric]</code>. Nothing in the HTML is blocking an export — only the card is.
 </div>
 
-<section class="kb" id="board" data-day="2026-08-28" aria-labelledby="board-date">
+<section class="kb" id="board" data-day="2026-08-31" aria-labelledby="board-date">
   <div class="kb-head">
-    <h2 id="board-date">Fri 28 Aug 2026</h2>
+    <h2 id="board-date">Mon 31 Aug 2026</h2>
     <p class="kb-rolled" id="board-rolled" hidden></p>
   </div>
   <p class="kb-help" id="kb-help">Drag a card by its <span aria-hidden="true">&#x283F;</span> handle,
@@ -48,6 +48,10 @@
   </div>
 
   <div class="kb-context" id="board-context">
+      <div class="kb-ctx" data-day="2026-08-31" data-group="0" hidden>
+        <h3>Aezion — inbound from a recruiter, no job description yet</h3>
+        <p class="dl-why">Sravan K Chelimalla, talent acquisition group (TAG) manager at Aezion, Inc., emailed cold on 31 August. He named <strong>no role, no level, no location and no stack</strong> — only “an opportunity I have in mind”. There is nothing to score: a weighted rubric with no requirements to weight would be invented, not derived. So the work here is two things — <strong>reply</strong>, and <strong>find out what the seat is, on the call</strong>.</p>
+      </div>
       <div class="kb-ctx blocking" data-day="2026-08-25" data-group="0" hidden>
         <h3>Blocking — the journey doc feeds the master, the master feeds the .docx</h3>
         <p class="dl-why">All of this is hand-work in Hiration's user interface (UI). The bot cannot create the card; it can only clone one that already exists and overwrite ten of its sections. Until a card exists under the exact name <code>august_ic_master_resume</code>, every export fails loudly at <code>stage_find_master</code> — which is intended behaviour, not a bug.</p>
@@ -101,7 +105,50 @@
 <p class="dl-archive-note">Every task exactly as authored in <code>daily/days.json</code>, by the
 day it was written for. Cards on the board above were <em>moved</em> out of these lists, never
 copied — one task is one row in the database and one node in the page.</p>
-<p class="dl-archive-empty">One day on file so far — every card on the board above came from it.</p>
+
+<details class="dl-day today" data-day="2026-08-31" open>
+  <summary>Mon 31 Aug 2026 <span class="pill note">today</span><span class="dl-count"></span><span class="dl-onboard"></span></summary>
+  <div class="dl-body">
+
+    <div class="dl-group" data-group="0">
+      <h3>Aezion — inbound from a recruiter, no job description yet</h3>
+      <p class="dl-why">Sravan K Chelimalla, talent acquisition group (TAG) manager at Aezion, Inc., emailed cold on 31 August. He named <strong>no role, no level, no location and no stack</strong> — only “an opportunity I have in mind”. There is nothing to score: a weighted rubric with no requirements to weight would be invented, not derived. So the work here is two things — <strong>reply</strong>, and <strong>find out what the seat is, on the call</strong>.</p>
+      <ul class="dl-list">
+        <li data-id="aezion-reply" data-day="2026-08-31" data-group="0" data-ord="0" data-needs="" data-p="1" data-due="2026-08-31">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;Send the reply to Sravan — reply.html, one copy button&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
+          <input type="checkbox" id="t20260831-aezion-reply" data-id="aezion-reply" />
+          <label for="t20260831-aezion-reply">
+            <span class="dl-task">Send the reply to Sravan — <a href="../August-2026/31/aezion-inbound-sravan/reply.html">reply.html</a>, one copy button</span>
+            <span class="dl-meta"><span class="pill red">P1</span></span>
+            <span class="dl-detail">It answers the one thing he asked, leads with <strong>available immediately</strong>, gives one piece of evidence for each of the three things he picked out, and puts <strong>Wednesday 2 September</strong> and the phone number on the table. <strong>It deliberately asks nothing</strong> — not the role, not the job description, not the location. Every extra question is one more round trip standing between him and a phone call; all of it goes to the call instead. The forcing questions are in <a href="../August-2026/31/aezion-inbound-sravan/research.html">research.html</a>.</span>
+          </label>
+          <span class="dl-actions">
+            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
+            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
+            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
+            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
+          </span>
+        </li>
+        <li data-id="aezion-jd" data-day="2026-08-31" data-group="0" data-ord="1" data-needs="aezion-reply" data-p="2" data-due="2026-08-31">
+          <button type="button" class="kb-grab" aria-label="Move &lsquo;When the role and the job description (JD) arrive, paste them — then it gets the full build&rsquo; to another lane" aria-keyshortcuts="ArrowLeft ArrowRight" aria-describedby="kb-help">&#x283F;</button>
+          <input type="checkbox" id="t20260831-aezion-jd" data-id="aezion-jd" />
+          <label for="t20260831-aezion-jd">
+            <span class="dl-task">When the role and the job description (JD) arrive, paste them — then it gets the full build</span>
+            <span class="dl-meta"><span class="pill yellow">P2</span><span class="dl-needs">after <code>aezion-reply</code></span></span>
+            <span class="dl-detail">Ask on the call, or take whatever Sravan sends afterwards. <strong>Ask for the posting link too</strong> if one exists — a workspace whose posting cannot be reopened cannot be re-checked. Until then the seat carries no technical score, and that is a recorded absence, not an oversight.</span>
+          </label>
+          <span class="dl-actions">
+            <button type="button" class="dl-act" data-act="parked" title="Park with a reason">Park</button>
+            <button type="button" class="dl-act" data-act="pushed" title="Push to a later day">Push</button>
+            <button type="button" class="dl-act" data-act="dropped" title="Drop for good">Drop</button>
+            <button type="button" class="dl-act restore" data-act="restored" title="Put it back">Restore</button>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</details>
 
 <details class="dl-day" data-day="2026-08-25">
   <summary>Tue 25 Aug 2026<span class="dl-count"></span><span class="dl-onboard"></span></summary>

@@ -43,8 +43,9 @@ automation/.venv/bin/python automation/verify_resume_docx.py [file] [--doc-key .
 psql -d jobs_tracker_v2 -c "select slug, company, status, fit_score, applied_at from applications order by fit_score desc nulls last;"
 ```
 
-**7 applied · 1 awaiting JD (Wipro) · 1 withdrawn.** Newest: **Nexifyr, Lead Engineer — FHIR, 78,
-applied 28 Aug.**
+**7 applied · 2 awaiting JD (Wipro, Aezion) · 1 withdrawn.** Newest: **Aezion, Inc. — inbound
+recruiter email, 31 Aug, no role named and so no score.** Last sent: **Nexifyr, Lead Engineer — FHIR,
+78, applied 28 Aug.**
 
 ---
 
@@ -71,15 +72,27 @@ VoltusWave Technologies                         Hyderabad   <- no band
 
 ## THE JOB WAITING FOR YOU
 
-1. **He opens the .docx in Word.** Three things no gate here can see: **the page count** (never
+1. **Send the Aezion reply.** `August-2026/31/aezion-inbound-sravan/reply.html`, one copy button,
+   70 words. Sravan K Chelimalla emailed cold on 31 Aug naming **no role, no level, no location and
+   no stack** — so there is **no technical score**, and that is a recorded absence, not an oversight.
+   The reply deliberately **asks him nothing**, not even for the job description: he had already read
+   the LinkedIn profile and quoted it back, so the evidence recitation was cut and everything moved to
+   the call. Offers **Wed 2 Sep**, 11am–6pm IST, with the number. `research.html` carries the verdict,
+   the flags and thirteen forcing questions.
+   ⚠ **Two things from that research to carry into the room.** Aezion sells **dedicated offshore
+   teams and build-operate-transfer** (its Global Capability Centers line), so "architect" there may
+   mean an *engagement* architect on a client account — ask which in the first eight minutes. And
+   **Spring Boot appears nowhere on their site**; their only genuinely senior seat is a .NET architect
+   role naming Azure and Kafka, both never-claim items.
+2. **He opens the .docx in Word.** Three things no gate here can see: **the page count** (never
    verified at 64 bullets; no LibreOffice on this machine), the **band running continuous across the
    tab gap**, and **bold rendering heavier**. If it spills past 3 pages, the ranked cut list is in
    `PENDING.md` — vp#2 and the second statistics bullet are the two free ones.
-2. **The freeze gap — real exposure, 7 seats sent.** Migration 011's trigger guards
+3. **The freeze gap — real exposure, 7 seats sent.** Migration 011's trigger guards
    `resume_version_bullets`, but the `.docx` path uses `resume_documents`/`resume_blocks` and
    `resume_versions` holds **zero rows**. Nothing stops `resume_db.py load --slug <a-sent-seat>`
    overwriting a résumé that has gone out. On the board as `freeze-sent-resumes`.
-3. **Four structural findings on the master, his call, none acted on:** the **VoltusWave return is
+4. **Four structural findings on the master, his call, none acted on:** the **VoltusWave return is
    never explained** (he appears to go Co-Founder & VP → Principal Architect at the same company —
    six words in the summary closes it) · the screener's window is all chat platform while Kubernetes
    sits at bullet 23 · **Deque reads as generic SaaS** — `accessib` appears once in five years ·

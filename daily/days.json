@@ -61,6 +61,35 @@
           "body": "The confirm-or-reject items — roughly 300 customers versus instances, the 70–80% consolidation, two Rocket metrics, where the +65% conversion lift attaches, the 100,000-concurrent wording, the graph neural network, the narrative guardrails, the 27 ms / P95 16 ms pairing, and the nine bullets carrying scale markers instead of digits — are standing decisions only you can settle, not day-work. They live in <a href=\"../CLAUDE.md\">CLAUDE.md</a> and none of them block today's export."
         }
       ]
+    },
+    {
+      "date": "2026-08-31",
+      "groups": [
+        {
+          "title": "Aezion — inbound from a recruiter, no job description yet",
+          "kind": "",
+          "why": "Sravan K Chelimalla, talent acquisition group (TAG) manager at Aezion, Inc., emailed cold on 31 August. He named <strong>no role, no level, no location and no stack</strong> — only “an opportunity I have in mind”. There is nothing to score: a weighted rubric with no requirements to weight would be invented, not derived. So the work here is two things — <strong>reply</strong>, and <strong>find out what the seat is, on the call</strong>.",
+          "items": [
+            {
+              "id": "aezion-reply",
+              "p": 1,
+              "needs": [],
+              "task": "Send the reply to Sravan — <a href=\"../August-2026/31/aezion-inbound-sravan/reply.html\">reply.html</a>, one copy button",
+              "detail": "It answers the one thing he asked, leads with <strong>available immediately</strong>, gives one piece of evidence for each of the three things he picked out, and puts <strong>Wednesday 2 September</strong> and the phone number on the table. <strong>It deliberately asks nothing</strong> — not the role, not the job description, not the location. Every extra question is one more round trip standing between him and a phone call; all of it goes to the call instead. The forcing questions are in <a href=\"../August-2026/31/aezion-inbound-sravan/research.html\">research.html</a>."
+            },
+            {
+              "id": "aezion-jd",
+              "p": 2,
+              "needs": [
+                "aezion-reply"
+              ],
+              "task": "When the role and the job description (JD) arrive, paste them — then it gets the full build",
+              "detail": "Ask on the call, or take whatever Sravan sends afterwards. <strong>Ask for the posting link too</strong> if one exists — a workspace whose posting cannot be reopened cannot be re-checked. Until then the seat carries no technical score, and that is a recorded absence, not an oversight."
+            }
+          ]
+        }
+      ],
+      "callouts": []
     }
   ],
   "reasons": [
