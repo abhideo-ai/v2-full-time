@@ -1,0 +1,125 @@
+{
+  "slug": "tachyon-ai-architect",
+  "scored_at": "2026-09-20",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 90.32,
+  "target": 95,
+  "ceiling_is_honest": false,
+  "honest_ceiling": 92.5,
+  "binding_constraint": "NOT a capability gap — a resume-surface gap. KQ10 is a shipped, production-deployed deterministic multi-agent LangGraph orchestrator ('Status: Live in production', 'Shipped after executive sign-off'), which answers the JD's hardest bar outright. But across all 64 experience bullets of the MASTER the words agent, agentic, multi-agent, LangChain, LangGraph, Python and FastAPI appeared ZERO times — every one lived in a single skills label. CLAUDE.md records that exact shape (top-of-resume-only tailoring) producing ZERO CALLS in June 2026. The permanent residual is that NO measured production outcomes exist for any Amura service: he left VoltusWave before they were captured, so every latency and quality figure is a pre-registered acceptance target and the corpus says so in its own words. No wording fixes that.",
+  "smallest_honest_lift": "Rule 7 re-vectoring of real work already in the record — no new claim. 22 edits proposed, each verified by three independent adversarial lenses (source / hygiene / interview-room); 2 killed by majority refutation. 18 blocks changed in the seat document (14 edited in place + 4 new) plus 2 ordering operations, all via db/seats/tachyon-ai-architect.sql. NOTE: one UPDATE initially matched zero rows because its bullet_key was transcribed from a truncated listing ('...platforms-e' for '...platforms-event'); SQL treats a zero-row UPDATE as success, so it failed silently. Caught by the changes-page diff against the database and fixed. Two new bullets use leading verbs verified stem-free against the whole document (Choreographed, Routed) — the stem 'orchestrat' is burnt because Orchestrated already leads quick-deque #10. Result: agent, multi-agent, LangGraph, LangChain, Python, FastAPI and serverless now all appear in EXPERIENCE bullets, and the VoltusWave role opens with the agentic/AI/cloud cluster instead of burying it at position 10-23.",
+  "non_technical": {
+    "note": "INFORMATIONAL ONLY — never a gate, never a drag on the technical score (CLAUDE.md).",
+    "not_scored_as_a_number": true,
+    "domain_fit": "partial — he is a product/platform architect; Tachyon is an enterprise consultancy whose published delivery is SAP and Salesforce. All 17 of their case studies are SAP/Salesforce/analytics and NOT ONE is an AI project.",
+    "location_fit": "direct hit — Hyderabad, where he already lives, against a real 35,000 sq ft delivery centre in the Financial District. Hybrid.",
+    "legitimacy": "VERIFIED end to end — the seat sits on Tachyon's own site, in their own applicant tracking system (Oorwin, tachyonind.oorwin.ai), under requisition TYI-4328, posted 19 Sep 2026.",
+    "track": "individual contributor — architecture seat asking for mentoring of senior engineers, not people management. Matches the v2 IC-only rule.",
+    "compensation": "DEFERRED — not researched, not surfaced, not gated on."
+  },
+  "real_world_gates": [
+    "TWO different 'AI Architect' pages exist on Tachyon's own site. /jobs/ai-architect/ is a 'Contractual, Long-term' staff-augmentation placement in Winchester, Virginia on Salesforce Financial Services Cloud. The Hyderabad full-time seat is /jobs/ai-architect-2/. Both return HTTP 200 and carry the IDENTICAL page title 'AI Architect - Tachyon'. Verification limit stated honestly: the main thread confirmed both exist and are distinct but could NOT confirm which is which, because the content is JavaScript-rendered. CHECK THE LOCATION ON THE PAGE BEFORE APPLYING.",
+    "Azure is named FIRST in the job description and Azure is a never-claim item. The requirement reads 'Azure, AWS, or GCP', so AWS satisfies it as written — but four of ten current Hyderabad roles are Azure-titled, so expect Azure in the room.",
+    "Whether this is an internal platform-architect seat or a billable client-facing consulting seat is NOT stated anywhere and could not be established from outside. Single most consequential unknown.",
+    "Job security is the weakest axis on every review platform that measures it, and the stated reason is always client-project dependency — bench risk, the structural signature of a staffing-and-deployment model.",
+    "The JD body says 15+ years; the live requisition TYI-4328 says 15-20. He is at 19+, inside either reading."
+  ],
+  "measurement_notes": [
+    "Term counts are occurrence counts (grep -o | wc -l, tags stripped), never grep -c line counts — these files are minified.",
+    "Corpus verified: LangGraph 36, LangChain 39, multi-agent 15, Ollama 15, LangSmith 29, Pydantic 20, dense_vector 7.",
+    "Verified ZERO across the corpus AND both journey files: Bedrock, Azure, GCP, Salesforce, SAP, ServiceNow, ERP, CRM, serverless, tool call, function call, Model Context Protocol, Django.",
+    "MCP is claimable on his word (CLAUDE.md safe-to-claim) but UNNARRATABLE — zero written detail behind it. It stays in the skills block; no bullet was built on it.",
+    "Page count is NOT verifiable on this machine — no LibreOffice. The seat resume carries 66 experience bullets against the master's 64. He checks the 3-page cap in Word.",
+    "Counts of applied edits are derived from a full-outer-join diff of resume_blocks master vs seat:tachyon-ai-architect, never from the count of statements written. A zero-row UPDATE is a successful statement in SQL and will not error."
+  ],
+  "scores": [
+    {
+      "criterion": "production-genai-agentic-system-shipped-not-a-poc",
+      "weight": 0.18,
+      "score_out_of_10": 9.0,
+      "ramp_or_cap": "residual-structural",
+      "contribution": 16.2,
+      "points_lost": 1.8
+    },
+    {
+      "criterion": "deep-hands-on-cloud-architecture-azure-aws-or-gcp",
+      "weight": 0.14,
+      "score_out_of_10": 9.2,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 12.88,
+      "points_lost": 1.12
+    },
+    {
+      "criterion": "ai-frameworks-langchain-langgraph-semantic-kernel-autogen-crewai",
+      "weight": 0.1,
+      "score_out_of_10": 9.3,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 9.3,
+      "points_lost": 0.7
+    },
+    {
+      "criterion": "15-plus-years-with-recent-hands-on-technical-work",
+      "weight": 0.08,
+      "score_out_of_10": 9.5,
+      "ramp_or_cap": "none",
+      "contribution": 7.6,
+      "points_lost": 0.4
+    },
+    {
+      "criterion": "engineering-foundation-and-hands-on-python",
+      "weight": 0.1,
+      "score_out_of_10": 9.0,
+      "ramp_or_cap": "residual-structural",
+      "contribution": 9.0,
+      "points_lost": 1.0
+    },
+    {
+      "criterion": "microservices-rest-event-driven-enterprise-integration-patterns",
+      "weight": 0.1,
+      "score_out_of_10": 9.2,
+      "ramp_or_cap": "none",
+      "contribution": 9.2,
+      "points_lost": 0.8
+    },
+    {
+      "criterion": "relational-nosql-and-vector-data-platforms",
+      "weight": 0.1,
+      "score_out_of_10": 9.3,
+      "ramp_or_cap": "ramp-item",
+      "contribution": 9.3,
+      "points_lost": 0.7
+    },
+    {
+      "criterion": "enterprise-platform-integrations-salesforce-sap-servicenow-erp-crm",
+      "weight": 0.05,
+      "score_out_of_10": 6.0,
+      "ramp_or_cap": "structural",
+      "contribution": 3.0,
+      "points_lost": 2.0
+    },
+    {
+      "criterion": "ai-evaluation-and-observability",
+      "weight": 0.06,
+      "score_out_of_10": 9.4,
+      "ramp_or_cap": "none",
+      "contribution": 5.64,
+      "points_lost": 0.36
+    },
+    {
+      "criterion": "guardrails-human-in-the-loop-identity-access-responsible-ai",
+      "weight": 0.05,
+      "score_out_of_10": 9.2,
+      "ramp_or_cap": "none",
+      "contribution": 4.6,
+      "points_lost": 0.4
+    },
+    {
+      "criterion": "blueprints-reference-patterns-standards-mentoring",
+      "weight": 0.04,
+      "score_out_of_10": 9.0,
+      "ramp_or_cap": "none",
+      "contribution": 3.6,
+      "points_lost": 0.4
+    }
+  ]
+}

@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tachyon Technologies — AI Architect, Hyderabad · research</title>
+  <link rel="icon" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD workspace</a> · September 2026 · 20 · tachyon-ai-architect · research</p>
+
+<header>
+  <p class="eyebrow">Company research · 20 Sep 2026</p>
+  <h1>Tachyon Technologies — <span class="nowrap">AI Architect</span></h1>
+  <p class="subtitle">A senior artificial-intelligence architecture seat in Hyderabad, at a fifteen-year-old American enterprise-software consultancy that is building an AI practice on top of a much older SAP and Salesforce business. This page is everything five research passes could establish from outside, plus a plain list of what they could not.</p>
+</header>
+
+<div class="meta">
+  <span><b>Seat</b> AI Architect</span>
+  <span><b>Location</b> Hyderabad, Telangana</span>
+  <span><b>Employment</b> Full-time</span>
+  <span><b>Posted</b> 19 Sep 2026</span>
+  <span><b>Requisition</b> TYI-4328</span>
+  <span><b>Posting</b> <a href="https://www.linkedin.com/jobs/view/4469298952">LinkedIn 4469298952</a></span>
+  <span><b>Company page</b> <a href="https://www.tachyontech.com/jobs/ai-architect-2/">tachyontech.com</a></span>
+</div>
+
+<div class="banner">
+  <p><b>Read this before you click anything.</b> There are <b>two different pages on Tachyon's own website with the words "AI Architect" in the title</b>, and the obvious-looking one is the wrong job. <a href="https://www.tachyontech.com/jobs/ai-architect/">/jobs/ai-architect/</a> is a <em>contract</em> placement in Winchester, Virginia, United States, at an insurance and wealth-management client, built around Salesforce Financial Services Cloud. The seat in this workspace is <a href="https://www.tachyontech.com/jobs/ai-architect-2/">/jobs/ai-architect-<b>2</b>/</a>, Hyderabad, full time. When you or anyone else re-checks this posting later, use the <code>-2</code> URL.</p>
+</div>
+
+<!-- ================================================================
+     1. GLOSSARY
+     ================================================================ -->
+
+<h2 id="glossary">1. First, the vocabulary</h2>
+
+<p class="lede">This job description names roughly twenty tools, standards and platforms that do not appear anywhere in your own record. That is not a problem to hide; it is simply a list of words you should be able to say out loud without hesitating. Below, each one gets a plain-English line saying <em>what it actually is</em>, and then a second line saying <b>what the nearest thing in your own confirmed record is</b>. Where your record has nothing close, this page says so in those words rather than stretching.</p>
+
+<div class="callout">
+  <p><b>How to read the "closest in your record" lines.</b> They are written strictly against what CLAUDE.md records as claimable or user-confirmed. Where something is genuinely absent, the line says <em>nothing in the record</em>. That is deliberate. A ramp item you can name honestly is a much stronger answer in a room than a stretched equivalence that an architect on the other side of the table will puncture in one follow-up question.</p>
+</div>
+
+<h3>The agent-building frameworks</h3>
+
+<dl class="context-grid">
+
+  <dt>LangChain</dt>
+  <dd>A Python and JavaScript library for wiring a large language model (LLM) to other things: prompts, tools, retrieval, memory, and chains of steps. It is the oldest and most widely used of this family.
+  <br /><span class="dim"><b>Closest in his record:</b> this one is his. LangChain is on the confirmed safe-to-claim list.</span></dd>
+
+  <dt>LangGraph</dt>
+  <dd>Built by the same team as LangChain. Where LangChain thinks in <em>chains</em> (one step after another), LangGraph thinks in <em>graphs</em>, so an agent can loop, branch, retry, and hand control between several agents. This is what people normally mean by "multi-agent orchestration".
+  <br /><span class="dim"><b>Closest in his record:</b> also his. LangGraph is on the confirmed safe-to-claim list.</span></dd>
+
+  <dt>Semantic Kernel</dt>
+  <dd>Microsoft's equivalent of LangChain, written first for C# and .NET and later for Python and Java. Same job — connect a model to tools, memory and planning steps — but it is the Microsoft-ecosystem answer, and it is usually chosen because a shop is already on Azure and .NET rather than on technical merit.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing directly. The honest framing is that it is the same problem shape as LangChain with Microsoft naming, and that he has not used it. The job description says "such as LangChain, LangGraph, Semantic Kernel, AutoGen, or CrewAI", which under the generous-qualifier rule means LangChain and LangGraph satisfy the line outright (<a href="https://www.tachyontech.com/jobs/ai-architect-2/">requirement text</a>).</span></dd>
+
+  <dt>AutoGen</dt>
+  <dd>A Microsoft Research framework for multi-agent conversation: you define several agents with different roles, and they talk to each other and to tools until a task is done. Its distinguishing idea is that agents converse rather than being called in a fixed sequence.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing by that name. The nearest honest comparison is LangGraph, which solves the same multi-agent coordination problem with an explicit graph instead of a conversation.</span></dd>
+
+  <dt>CrewAI</dt>
+  <dd>A lighter, more opinionated multi-agent framework. You describe a "crew" of agents by role ("researcher", "writer", "reviewer"), give each a goal and tools, and it runs them. Popular for quick builds; less used for large regulated systems.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing by that name. Same category as LangGraph and AutoGen.</span></dd>
+
+  <dt>Model Context Protocol (MCP)</dt>
+  <dd>An open standard, published by Anthropic, for how a language model connects to outside tools and data. Instead of every application inventing its own plug-in format, a system exposes an "MCP server", and any MCP-aware model can call it. It is the universal-adapter idea applied to model tooling.
+  <br /><span class="dim"><b>Closest in his record:</b> <b>this is a direct hit, not an adjacency.</b> Real MCP servers are on his confirmed safe-to-claim list, and Tachyon's own product page advertises an <b>"MCP Connector Framework"</b> reaching ServiceNow, Salesforce, Jira and Splunk (<a href="https://www.tachyontech.com/aura/">Tachyon Aura page</a>). Of everything in this glossary, this is the term where he is ahead of the job description rather than behind it.</span></dd>
+
+</dl>
+
+<h3>The cloud model services</h3>
+
+<dl class="context-grid">
+
+  <dt>Azure OpenAI Service / Azure AI Foundry</dt>
+  <dd>Microsoft's way of selling OpenAI's models (the GPT family) inside its own cloud, so that an enterprise gets the model behind Azure's contracts, networking and access controls rather than calling OpenAI directly. "AI Foundry" is Microsoft's newer umbrella name for the surrounding build-and-deploy tooling: model catalogue, evaluation, deployment, agent hosting.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing. <b>Azure is on the never-claim list</b> and must stay there. The honest sentence is that he has built the same class of system on Amazon Web Services (AWS) and would ramp on the Azure packaging.</span></dd>
+
+  <dt>AWS Bedrock</dt>
+  <dd>Amazon's equivalent: one application programming interface (API) through which you call many different vendors' models (Anthropic, Meta, Mistral, Amazon's own), with the billing, logging and network controls already inside your AWS account.
+  <br /><span class="dim"><b>Closest in his record:</b> <b>Bedrock by name is not established anywhere in his material</b> — do not claim it. What <em>is</em> his is deep AWS architecture generally, plus LangChain and LangGraph orchestration around models. Bedrock is a ramp item measured in days, and it is fair to say exactly that.</span></dd>
+
+  <dt>Google Vertex AI / Gemini</dt>
+  <dd>Google Cloud's equivalent again. Vertex AI is the platform; Gemini is Google's own model family served through it.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing. <b>Google Cloud Platform is on the never-claim list.</b></span></dd>
+
+</dl>
+
+<div class="note">
+  <p><b>The important thing about all three of these is that the job description joins them with "or", not "and".</b> The requirement reads "Deep, hands-on cloud architecture experience on <b>Azure, AWS, or GCP</b>", and the corresponding responsibility reads "on Azure, AWS, <b>and/or</b> GCP" (<a href="https://www.tachyontech.com/jobs/ai-architect-2/">job description</a>). Under the house rule on reading "e.g. / or / preferably" generously, <b>his AWS depth satisfies that line as written</b>. Azure here is a ramp item, not a capability cap. Section 5 explains why the room around the seat is still likely to be Microsoft-flavoured even so.</p>
+</div>
+
+<h3>The infrastructure-as-code tools</h3>
+
+<dl class="context-grid">
+
+  <dt>Terraform</dt>
+  <dd>You write your cloud infrastructure — servers, networks, databases, permissions — as text files, and the tool makes the real cloud match the files. It works across clouds. "Infrastructure as code" means exactly that: the environment is defined in version-controlled text instead of assembled by hand in a web console.
+  <br /><span class="dim"><b>Closest in his record:</b> his, and confirmed twice over. Terraform is user-confirmed as hands-on, and it also sits in bullet 10 of the seventeen VoltusWave bullets, where it was adopted as a company-wide standard rather than merely used by him.</span></dd>
+
+  <dt>Bicep</dt>
+  <dd>Microsoft's infrastructure-as-code language for Azure only. It is a friendlier syntax on top of Azure's older JSON template format. Same idea as Terraform, single cloud.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing by that name, and it cannot be otherwise because it is Azure-only. Terraform is the transferable skill and the concepts carry over completely.</span></dd>
+
+  <dt>CloudFormation</dt>
+  <dd>Amazon's own infrastructure-as-code service, and the ancestor of this whole category on AWS. Same idea again, AWS only. Many AWS shops use Terraform instead of CloudFormation by choice.
+  <br /><span class="dim"><b>Closest in his record:</b> CloudFormation by name is not established in his material. Terraform on AWS is, which is the same job done with a different tool, and saying it that way is accurate.</span></dd>
+
+</dl>
+
+<h3>The enterprise platforms the AI has to plug into</h3>
+
+<p>This is the part of the job description most worth slowing down on, because it is where Tachyon's actual business lives. Their revenue does not come from building models. It comes from making these systems work for large companies.</p>
+
+<dl class="context-grid">
+
+  <dt>ERP — enterprise resource planning</dt>
+  <dd>The single large system a big company runs its <em>operations</em> in: finance and accounting, procurement, inventory, manufacturing, payroll. It is the system of record for what the business owns, owes and made.
+  <br /><span class="dim"><b>Closest in his record:</b> no ERP platform work. The honest bridge is that he has integrated many systems of record across organisational boundaries.</span></dd>
+
+  <dt>CRM — customer relationship management</dt>
+  <dd>The equivalent system for everything facing the <em>customer</em>: leads, opportunities, quotes, support cases, marketing campaigns.
+  <br /><span class="dim"><b>Closest in his record:</b> no CRM platform work by name.</span></dd>
+
+  <dt>SAP</dt>
+  <dd>The German company that makes the most widely deployed ERP software in large enterprises, and by extension the software itself. Names that will come up: <b>S/4HANA</b> is the current generation of the core ERP; <b>SuccessFactors</b> is the human-resources product; <b>Business Technology Platform (BTP)</b> is SAP's cloud platform for extending it; <b>IS-U</b> is the utilities-industry version and <b>FI-CA</b> its billing and receivables module.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing. This is genuinely new domain vocabulary, and it is the single largest piece of their published delivery work (see section 3).</span></dd>
+
+  <dt>Salesforce</dt>
+  <dd>The dominant cloud CRM. Sold as separate "clouds" — Sales Cloud, Service Cloud, Marketing Cloud, Financial Services Cloud — which are really configurations of one platform for different departments and industries.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing by name.</span></dd>
+
+  <dt>ServiceNow</dt>
+  <dd>The dominant platform for internal service management: information-technology tickets, incidents, change requests, and increasingly human-resources and facilities workflows too. When a company says "raise a ticket", this is very often the system.
+  <br /><span class="dim"><b>Closest in his record:</b> nothing by name. Worth noting it appears twice in this research — in the job description, and in Tachyon Aura's connector list (<a href="https://www.tachyontech.com/aura/">Aura page</a>).</span></dd>
+
+  <dt>Boomi, and "iPaaS"</dt>
+  <dd>Not in the job description, but it is the tool named in Tachyon's own published delivery work, so it matters. Boomi is an <b>integration platform as a service</b> (iPaaS): a hosted product for moving and transforming data between enterprise systems, so that Salesforce and SAP and a billing system stay in step. An older name for the same job is <b>enterprise service bus (ESB)</b>.
+  <br /><span class="dim"><b>Closest in his record:</b> <b>this is his best transferable card in the enterprise-integration half of the job.</b> Twenty-five hotel suppliers integrated through a MuleSoft enterprise service bus is user-confirmed and safe to claim. MuleSoft appeared <em>zero</em> times anywhere on Tachyon's site, and Boomi appeared once, in their energy-sales case study (<a href="https://www.tachyontech.com/case_study/from-slow-quotes-to-a-single-salesforce-platform-for-commercial-energy-sales/">case study</a>). So frame it as iPaaS and enterprise-service-bus integration experience, <em>not</em> as a MuleSoft-to-Boomi match.</span></dd>
+
+</dl>
+
+<h3>The data and retrieval vocabulary</h3>
+
+<dl class="context-grid">
+
+  <dt>Vector database</dt>
+  <dd>A database that stores text (or images) as long lists of numbers called embeddings, which capture meaning rather than exact words. Ask it for "the ten chunks most similar in meaning to this question" and it answers fast. It is the storage layer underneath most retrieval-augmented generation.
+  <br /><span class="dim"><b>Closest in his record:</b> careful here. A named vector store is <b>not</b> established anywhere in his material, so do not name one. What <em>is</em> documented is KQ1's stack table putting <b>Elasticsearch as the authoritative serving index</b>, with Amazon Neptune deliberately kept off the serving path. That is a real retrieval-architecture decision and it is the honest thing to talk about.</span></dd>
+
+  <dt>RAG — retrieval-augmented generation</dt>
+  <dd>Instead of hoping the model already knows your company's facts, you first <em>retrieve</em> the relevant documents from your own systems, then paste them into the prompt and ask the model to answer using only those. It is the standard way to make a general model answer questions about private data.
+  <br /><span class="dim"><b>Closest in his record:</b> his, and documented in the killer-query case studies. One correction to keep straight: the earlier bullet claiming retrieval ran over an Amazon Neptune context graph was <b>false and was corrected</b> — KQ1's own stack table names Elasticsearch as the serving index. Never let that one come back.</span></dd>
+
+  <dt>Enterprise search</dt>
+  <dd>Search across everything a company holds — documents, wikis, tickets, email, file shares — with each person's permissions respected, so results differ by who is asking. The permissions part is what makes it hard, not the searching.
+  <br /><span class="dim"><b>Closest in his record:</b> Elasticsearch as a serving index, plus tenant-scoped access work. KQ9's wording is a <b>"tenant-scoped traversal-source wrapper"</b>, which is how to say it.</span></dd>
+
+  <dt>Knowledge graph</dt>
+  <dd>Data stored as things and the relationships between them — patient, condition, medication, prescribed-by — rather than as rows in tables. It answers questions about connections and paths cheaply, which relational tables do badly.
+  <br /><span class="dim"><b>Closest in his record:</b> the Context Graph, plus Amazon Neptune, plus the graph neural network that he confirmed is real and which sits in word-position four of his headline. Expect to be asked to walk through it.</span></dd>
+
+</dl>
+
+<h3>The safety and governance vocabulary</h3>
+
+<dl class="context-grid">
+
+  <dt>Grounding</dt>
+  <dd>Tying every statement a model makes back to a specific retrieved source, so an answer can be checked rather than trusted. An ungrounded system says something plausible; a grounded one says something plausible <em>and shows the document it came from</em>.
+  <br /><span class="dim"><b>Closest in his record:</b> the killer-query case studies are built on this idea throughout — a query answers from the patient record, with the evidence attached.</span></dd>
+
+  <dt>Hallucination risk</dt>
+  <dd>The model states something false with complete confidence, because it is predicting plausible text rather than looking anything up. "Risk" here means the engineering question: how likely is it in this system, how would you detect it, and what does it cost when it happens.
+  <br /><span class="dim"><b>Closest in his record:</b> this is prep territory, not résumé territory. <b>Whether the large-language-model narrative guardrails actually shipped is an open confirm-or-reject item that only he settles</b>, and KQ9's narrator ships off by default. Be ready to describe the design; do not assert a shipped guardrail.</span></dd>
+
+  <dt>Human-in-the-loop</dt>
+  <dd>The system is deliberately built so a person approves, edits or vetoes before anything consequential happens. Common in regulated settings: the agent drafts the refund, prepares the order, proposes the clinical note, and a human presses the button.
+  <br /><span class="dim"><b>Closest in his record:</b> the design-review and adversarial-review discipline in the case studies, and the decision to ship a narrator off by default, are both this instinct in practice.</span></dd>
+
+  <dt>Responsible AI</dt>
+  <dd>The umbrella term for fairness, transparency, privacy, safety and accountability in an AI system, usually expressed as a checklist a company must pass before a system goes live. Each large vendor has its own branded version of the same idea.
+  <br /><span class="dim"><b>Closest in his record:</b> the closest genuine analogue is regulated-delivery work — the <b>HIPAA</b> (Health Insurance Portability and Accountability Act) certification requirement behind the chat platform's high-availability design, and <b>ISO 27001</b> at Deque. Keep those two apart out loud: different employers, different certifications, and a listener will merge them if you do not separate them.</span></dd>
+
+</dl>
+
+<h3>Words that collide, and will confuse a conversation if you let them</h3>
+
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Term</th><th>What it means here</th><th>What it is NOT</th></tr></thead>
+  <tbody>
+    <tr><td><b>Aura</b></td><td>Tachyon's own agentic AI platform, <a href="https://www.tachyontech.com/aura/">Tachyon Aura</a>.</td><td>Not Salesforce's "Aura" component framework, which is a completely unrelated piece of Salesforce front-end technology with the same name. Also not the consumer identity-protection company called Aura.</td></tr>
+    <tr><td><b>Tachyon</b></td><td>Tachyon Technologies, the Dallas–Fort Worth enterprise consultancy at <a href="https://www.tachyontech.com/about-us/">tachyontech.com</a>.</td><td>Not Tachyum (processors). Not Tachyon Networks (satellite). Not Tachyon Ventures (a Los Angeles life-sciences venture fund). Not "Tachyon, Inc.", a weapon-mounted-camera maker that was a patent defendant (<a href="https://law.justia.com/cases/federal/district-courts/texas/txsdce/4:2020cv01070/1774309/63/">Shotkam LLC v. Tachyon, Inc.</a>). Not Tachyon 9, an AI-infrastructure firm merging into a NASDAQ listing. <b>None of these is the employer and none of their news is theirs.</b></td></tr>
+    <tr><td><b>Oorwin</b></td><td>The applicant tracking system (ATS) — the software a company uses to receive and manage job applications — that Tachyon's apply button lands on, at <code>tachyonind.oorwin.ai</code>.</td><td>Not a job board. It is their private recruiting system, which is exactly what LinkedIn means by "responses managed off LinkedIn".</td></tr>
+    <tr><td><b>CMMI Level 3</b></td><td>Capability Maturity Model Integration, an externally appraised rating of how repeatable and documented a company's delivery process is. Level 3 means processes are defined organisation-wide rather than per project.</td><td>Not a security standard and not a quality certificate. ISO 27001 is the information-security one, ISO 9001 the quality-management one. Tachyon claims all three (<a href="https://www.tachyontech.com/about-us/">About page</a>).</td></tr>
+    <tr><td><b>"H-1B dependent"</b></td><td>A United States Department of Labor classification meaning H-1B visa holders are a high proportion of a firm's American workforce. It is the statistical signature of a staffing-led United States business.</td><td><b>Not a violation and not an accusation.</b> The same record shows "Willful Violator: No" and all petitions certified (<a href="https://www.myvisajobs.com/employer/tachyon-technologies/">MyVisaJobs employer record</a>).</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ================================================================
+     2. VERDICT
+     ================================================================ -->
+
+<h2 id="verdict">2. The verdict</h2>
+
+<div class="tldr">
+  <strong>Apply, and apply quickly.</strong>
+  <p>The seat verifies all the way down — it sits on the company's own website, in the company's own applicant tracking system, under its own requisition number TYI-4328, posted 19 September 2026 (<a href="https://tachyonind.oorwin.ai/#/careers/index.html/job/d341d25fa1807ef0cea6a335b8b2c9948d6d1ddf">live requisition</a>). It is in Hyderabad, where he already lives, against a real office rather than a paper address. The technology asked for maps onto his confirmed stack unusually closely: LangChain, LangGraph, Python, Kubernetes, Terraform, Model Context Protocol, microservices, event-driven architecture and retrieval-augmented generation are all named, and the cloud requirement is written with "or", so his AWS depth satisfies it as written.</p>
+  <p>The reservation is not about him and it is not about whether to apply. It is that <b>this is a services firm, and the single most consequential fact about the seat — whether it is an internal architecture role on their own platform or a billable architect placed on a client programme — is not stated anywhere and could not be established from outside.</b> That is a question for a call, asked early and asked plainly, not a reason to hold the application back. Applicant count moved from 36 to 41 within a day, so speed matters more than usual here.</p>
+</div>
+
+<div class="callout warn">
+  <p><b>One honest asymmetry worth naming to yourself before the call, though never volunteered in an outward-facing message.</b> The job description demands "a production GenAI or Agentic AI system you've personally architected and shipped — not a POC". Meanwhile all seventeen of Tachyon's published case studies are SAP, Salesforce or analytics work, and <b>not one of them is an AI project</b> (<a href="https://www.tachyontech.com/case-study/">case-study index</a>). The candidate is being asked for exactly the evidence the employer has not published. That is not a disqualifier and plenty of firms are in this position in 2026, but it does mean the questions in section 6 about where the AI work actually is are fair, expected, and the sort of thing a senior architect is supposed to ask.</p>
+</div>
+
+<!-- ================================================================
+     3. WHAT TACHYON ACTUALLY IS
+     ================================================================ -->
+
+<h2 id="company">3. What Tachyon Technologies actually is</h2>
+
+<h3>How we confirmed it is the right company</h3>
+
+<p>"Tachyon" is a physics word, and at least five unrelated companies use it. So before anything else, here is the chain that pins the employer down. Each link was fetched, not assumed.</p>
+
+<ol>
+  <li>The LinkedIn job identifier <code>4469298952</code> redirects to a slug that names the employer: <a href="https://in.linkedin.com/jobs/view/ai-architect-at-tachyon-technologies-4469298952">ai-architect-at-tachyon-technologies</a>.</li>
+  <li>That employer's <a href="https://www.linkedin.com/company/tachyon-technologies-inc">LinkedIn company page</a> gives its website as tachyontech.com.</li>
+  <li>That website's own jobs archive carries an "AI Architect" posting for Hyderabad, published 19 September 2026, whose text matches the pasted job description sentence for sentence (<a href="https://www.tachyontech.com/jobs/ai-architect-2/">posting</a>, <a href="https://www.tachyontech.com/jobs/">jobs archive</a>).</li>
+  <li>That posting's apply button resolves to their own applicant tracking system, carrying requisition <b>TYI-4328</b>, "AI Architect", Hyderabad, posted 19/09/2026 (<a href="https://tachyonind.oorwin.ai/#/careers/index.html/job/d341d25fa1807ef0cea6a335b8b2c9948d6d1ddf">requisition</a>).</li>
+</ol>
+
+<div class="insight">
+  <p><b>That is about as solid as outside verification of a job's existence gets, short of a recruiter replying.</b> A great many postings fail at step three. This one does not.</p>
+</div>
+
+<h3>The shape of the business</h3>
+
+<p>Tachyon Technologies describes itself as founded in 2011 in Southlake, Texas, "with a clear focus: deliver enterprise technology services with the rigor of a large consultancy and the responsiveness of a boutique" (<a href="https://www.tachyontech.com/about-us/">About Us</a>). Its own timeline runs: foundation 2011–2013, global expansion 2014–2016 including delivery into India, the United Kingdom and the Middle East, platform diversification 2017–2019, scaling 2020–2022, and then an era it labels "The AI-First Era" for 2023–2026.</p>
+
+<p>It sells nine service lines: artificial intelligence and generative AI, enterprise applications, digital transformation, testing services, data analytics and business intelligence, managed services, cloud services, <b>professional information-technology staffing and augmentation</b>, and the Internet of Things. Its technology practices are organised around SAP, Microsoft and Salesforce, with Snowflake, AWS, UiPath, Pyramid Analytics, Celonis and Databricks alongside (<a href="https://www.tachyontech.com/about-us/">About Us</a>). Industries claimed: utilities, banking and financial services and insurance, government, manufacturing, life sciences, oil and gas, retail, high technology, and professional services.</p>
+
+<div class="banner">
+  <p><b>The single most clarifying fact in this whole research pass.</b> Their own LinkedIn specialties list — which is the company's own older self-description, written before the AI rebrand — reads, verbatim: <em>"SAP ERP Solutions, Enterprise Mobility, Business Intelligence and Analytics, Project Management, <b>Staffing Solutions</b>, SAP Fiori, SAP HANA, SAP Lumira, Digital Transformation Consulting, and SAP S/4HANA"</em> (<a href="https://www.linkedin.com/company/tachyon-technologies-inc">LinkedIn</a>). <b>There is no artificial intelligence in that list at all.</b> This is an SAP-and-staffing business that has recently and genuinely pivoted toward AI, not an AI business with an SAP side.</p>
+</div>
+
+<p>Their own About page dates the pivot in their own words: in the 2023–2026 entry they write "Launched Tachyon Aura, a proprietary Agentic AI platform built for enterprise operations. <b>Rebranded from 'Digital Transformation Solutions' to 'Digital &amp; AI Solutions.'</b>" So the AI positioning is roughly two to three years old (<a href="https://www.tachyontech.com/about-us/">Our Story</a>). Their mission wording is worth reading slowly too: "combining deep platform expertise in SAP, Salesforce, and Data with AI-first delivery". SAP, Salesforce and data are the <em>expertise</em>; AI is the adjective on delivery.</p>
+
+<h3>What they have actually published as delivered work</h3>
+
+<p>Their case-study library holds <b>seventeen</b> entries. Ten are SAP SuccessFactors human-resources implementations. The rest are SAP Analytics Cloud and Business Warehouse reporting, SAP Ariba procurement, and two Salesforce platform rebuilds for energy retailers. <b>None is an artificial-intelligence project of any kind</b> (<a href="https://www.tachyontech.com/case-study/">case-study index</a>).</p>
+
+<p>The one case study their own AI practice page points at is not an AI project either. "From Slow Quotes to a Single Salesforce Platform for Commercial Energy Sales" is a Salesforce Sales Cloud consolidation with <b>Boomi orchestration into SAP and internal billing</b>, claiming a 40% operational cost reduction, ten million records and five million files migrated (<a href="https://www.tachyontech.com/case_study/from-slow-quotes-to-a-single-salesforce-platform-for-commercial-energy-sales/">case study</a>). No customer is named in it, and no customer is named in any of the other sixteen either.</p>
+
+<h3>Tachyon Aura, their AI product</h3>
+
+<p>Aura is marketed as "The Agentic Enterprise Platform", deploying "governed AI agents that execute enterprise workflows autonomously". Its described components are multi-agent orchestration, context engineering, a trust and observability layer, small-language-model optimisation, and the MCP Connector Framework reaching ServiceNow, Salesforce, Jira and Splunk. It is sold as staged engagements: a five-day Aura Sprint, a four-week proof of value, a twelve-week enterprise scale-up, with "$0 Setup Fee" and "$0 Until Go-Live" (<a href="https://www.tachyontech.com/aura/">Aura</a>, <a href="https://www.tachyontech.com/how-aura-operates/">how Aura operates</a>).</p>
+
+<div class="callout danger">
+  <p><b>Aura's headline numbers have no owner, and you should recognise the shape immediately because it is the same shape as KQ2's illustrative served-cell table in your own corpus.</b> The Aura page prints "65% faster MTTR" (mean time to resolution), "92% FCR" (first-contact resolution) and "3x velocity"; the operations page prints "Active Signals: 9,204" and "99.4% ACC" alongside confidence percentages. None carries a customer, a baseline, a case study, or a label saying whether it is achieved or targeted. No architecture, model choice or cloud is named anywhere on either page (<a href="https://www.tachyontech.com/aura/">Aura</a>, <a href="https://www.tachyontech.com/how-aura-operates/">how Aura operates</a>).</p>
+  <p>This is a forcing question, not a disqualification, and it is one he is unusually well placed to ask politely: <em>which customer produced the 65%, and over what baseline?</em> A firm that can answer that has a reference. A firm that cannot has a positioning page.</p>
+</div>
+
+<h3>The Hyderabad operation, and the entity question</h3>
+
+<p>The Hyderabad presence is real and independently reported. On <b>21 January 2025</b> Tachyon inaugurated a <b>35,000 square foot Global Delivery Centre in Hyderabad's Financial District</b>, opened by Telangana's Food and Civil Supplies Minister N. Uttam Kumar Reddy, with chief executive Venkat Kolli and vice-president Himanshu Ojah present. The company stated a plan to hire <b>500 professionals over the following year</b> across SAP, Salesforce, AI, software testing and data analytics, and named a ten-year ambition of one billion dollars in revenue (<a href="https://telanganatoday.com/tachyon-technologies-inaugurates-global-delivery-centre-in-hyderabad">Telangana Today</a>, <a href="https://www.thehansindia.com/business/tachyon-technologies-inaugurates-global-delivery-centre-in-hyderabad-938775">The Hans India</a>).</p>
+
+<p>Leadership named on their own About page: <b>Venkat Kolli</b> (chief executive officer), Krish Mujje (senior vice-president, digital), Himanshu Ojah (vice-president, services), Kishore Gundala (global SAP practice head), <b>Sujoe Bose (global head, artificial intelligence and data analytics)</b>, Harsh Kolli (director, digital transformation solutions), Amar Banerjee (practice director, Salesforce), Manu Subhashchandrabose (practice director, quality assurance), and Bart Thielbar (board advisor) (<a href="https://www.tachyontech.com/about-us/">leadership</a>). <b>Sujoe Bose is the named owner of the practice this seat would sit under</b>, which makes him the person to ask for by name.</p>
+
+<div class="warn">
+  <p><b>Which legal entity would actually employ him is not established, and nobody says so anywhere.</b> There is an active Indian company, <b>Tachyon IT Solutions Private Limited</b>, corporate identification number U72300TG2012PTC084681, incorporated 7 December 2012, Registrar of Companies Hyderabad, registered at Nandagiri Hills, Jubilee Hills, with directors Padmaja Yadlapati and Premchand Kolli (<a href="https://tracxn.com/d/legal-entities/india/tachyon-it-solutions-private-limited/__QEL5JKi5_fRKcZZIebTmnPwUDlnaYU46sOFqrsiVEwU">Tracxn legal-entity record</a>). The link to the American brand is <em>inferred</em> from four converging signals — the applicant-tracking subdomain <code>tachyonind</code> meaning Tachyon India, the requisition prefix <b>TYI</b>, a Great Place to Work India certificate held by the Indian entity while the American site advertises that certification (<a href="https://www.greatplacetowork.in/great/company/tachyon-it-solutions-private-limited/">Great Place to Work India</a>), and the shared Kolli surname across directors in both countries. <b>No document establishing a parent-and-subsidiary relationship was found, and neither party's website mentions the other.</b> Treat the structure as unestablished and ask.</p>
+</div>
+
+<div class="diagram">
+<pre class="tree"><span class="same">  solid ──  read off a page we fetched        dotted ╌╌  inferred, not documented
+</span>
+<span class="same">Tachyon Technologies LLC / Inc  (Southlake / Irving / Dallas-Fort Worth, Texas)</span>
+<span class="same">│   founded 2011 · privately held · no funding round found</span>
+<span class="same">│   tachyontech.com · LinkedIn "tachyon-technologies-inc"</span>
+<span class="same">│</span>
+<span class="same">├── Offices claimed on their own contact page</span>
+<span class="same">│     Dallas-Fort Worth · Columbus · Ontario CA · London · Dubai</span>
+<span class="same">│     Hyderabad · Gurgaon · Chennai        (no street address published)</span>
+<span class="same">│</span>
+<span class="edit">├╌╌ Tachyon IT Solutions Private Limited  (Hyderabad, CIN ...TG2012PTC084681)</span>
+<span class="edit">│     active since Dec 2012 · directors Padmaja Yadlapati, Premchand Kolli</span>
+<span class="edit">│     RELATIONSHIP NOT DOCUMENTED BY EITHER PARTY — inferred only</span>
+<span class="same">│</span>
+<span class="edit">└╌╌ Oorwin  (San Francisco · talent-intelligence / ATS software)</span>
+<span class="same">      hosts Tachyon's apply forms at tachyonind.oorwin.ai</span>
+<span class="edit">      one news article calls it Tachyon's product division; Oorwin's own</span>
+<span class="edit">      site does not mention Tachyon anywhere — STRUCTURE UNESTABLISHED</span>
+</pre>
+<p class="caption">Entity map — solid lines were read off a page, dotted lines were inferred</p>
+</div>
+
+<!-- ================================================================
+     4. FLAGS
+     ================================================================ -->
+
+<h2 id="flags">4. Green flags and red flags</h2>
+
+<h3>Green flags</h3>
+
+<ul class="checks">
+  <li><b>The seat verifies end to end.</b> Company website, own applicant tracking system, own requisition number TYI-4328, posted date matching LinkedIn. It is not a job-board ghost and not an agency repost (<a href="https://tachyonind.oorwin.ai/#/careers/index.html/job/d341d25fa1807ef0cea6a335b8b2c9948d6d1ddf">requisition</a>).</li>
+  <li><b>The location claim checks out against the company's own site and against two independent outlets.</b> Hyderabad is in the footer of every page they publish, and the 35,000 square foot delivery centre was reported by two Telangana papers (<a href="https://telanganatoday.com/tachyon-technologies-inaugurates-global-delivery-centre-in-hyderabad">Telangana Today</a>, <a href="https://www.thehansindia.com/business/tachyon-technologies-inaugurates-global-delivery-centre-in-hyderabad-938775">The Hans India</a>). This is not an American posting with a decorative India tag.</li>
+  <li><b>Hyderabad is a genuine build-out, not a token office.</b> Ten distinct engineering and architecture roles were published to Hyderabad in the six days from 14 to 19 September 2026, and their full job feed carries 75 open postings, 48 tagged India (<a href="https://www.tachyontech.com/jobs/">jobs archive</a>, <a href="https://www.tachyontech.com/wp-json/wp/v2/job?per_page=100">their own job feed</a>).</li>
+  <li><b>They are recruiting in Hyderabad openly and directly, corroborated off their own property.</b> A post on r/hyderabad five days before this research, from a Tachyon person, lists four Hyderabad full-time hybrid engineering openings with a named company email address and links back to their own job pages (<a href="https://www.reddit.com/r/hyderabad/comments/1wh4e16/multiple_openings_dont_dm/">r/hyderabad</a>).</li>
+  <li><b>The cloud requirement is written with "or".</b> "Azure, AWS, or GCP" and "Azure, AWS, and/or GCP". His AWS depth satisfies the line as written, which removes what looked beforehand like the material blocker (<a href="https://www.tachyontech.com/jobs/ai-architect-2/">job description</a>).</li>
+  <li><b>The technical ask maps unusually well onto his confirmed stack.</b> LangChain, LangGraph, Python, Kubernetes, containers and serverless, Terraform, microservices and REST, event-driven architecture, relational plus NoSQL plus vector data platforms, retrieval-augmented generation, tool and function calling, multi-agent orchestration, and <b>Model Context Protocol</b> — with Aura's own "MCP Connector Framework" making his MCP server work directly on point rather than adjacent (<a href="https://www.tachyontech.com/jobs/ai-architect-2/">requirements</a>, <a href="https://www.tachyontech.com/aura/">Aura</a>).</li>
+  <li><b>The job description was written by somebody who has done the work.</b> It names specific current frameworks rather than buzzwords, and it sets a production bar in plain words — "a production GenAI or Agentic AI system you've personally architected and shipped — not a POC" and "running in production at enterprise scale, not just in a slide deck". That is a real signal about the engineering leadership behind the seat.</li>
+  <li><b>It is an individual-contributor architecture seat.</b> It asks for mentoring of senior engineers and technical leads, and it notably <em>dropped</em> the squad-leadership framing its own vanished predecessor carried ("Lead a squad (3–5 engineers + data/platform)", "career feedback") (<a href="https://web.archive.org/web/20251116033741/https://www.tachyontech.com/jobs/ai-solution-architect-agentic-systems/">archived predecessor posting</a>).</li>
+  <li><b>Process maturity is credibly claimed and one part of it is externally appraised.</b> CMMI Level 3, ISO 27001 and ISO 9001 together, plus a Great Place to Work certificate held by the Indian entity specifically rather than only by the American parent (<a href="https://www.tachyontech.com/about-us/">certifications</a>, <a href="https://www.greatplacetowork.in/great/company/tachyon-it-solutions-private-limited/">Great Place to Work India</a>). His own Jenkins-to-GitHub-Actions work achieving ISO 27001 at Deque is directly relevant vocabulary here.</li>
+  <li><b>The practice has a named owner and the chief executive is publicly quoted.</b> Sujoe Bose runs artificial intelligence and data analytics; Venkat Kolli was quoted in press coverage. There are real people to ask for and to research before a call (<a href="https://www.tachyontech.com/about-us/">leadership</a>).</li>
+  <li><b>Applying is low-friction and lands in their real system.</b> A single-page form — résumé drag-and-drop, name, email, mobile, job title, years of experience, city, country, state, reference, comments — with no account registration required to reach it (<a href="https://tachyonind.oorwin.ai/#/careers/index.html/job/d341d25fa1807ef0cea6a335b8b2c9948d6d1ddf">Oorwin form</a>).</li>
+  <li><b>Employee sentiment is positive in aggregate, and Hyderabad specifically is the better half of it.</b> Glassdoor India shows <b>4.0 out of 5 across 100 reviews</b>, 82% would recommend, 86% approve of the chief executive; filtered to Hyderabad it is <b>4.3 across 48 reviews</b> with 87% would recommend (<a href="https://www.glassdoor.co.in/Reviews/Tachyon-Technologies-Reviews-E712907.htm">Glassdoor</a>, <a href="https://www.glassdoor.co.in/Reviews/Tachyon-Technologies-Hyderabad-Reviews-EI_IE712907.0,20_IL.21,30_IM1076.htm">Hyderabad reviews</a>). Section 4's red flags explain why that number needs reading carefully, but it is not a company people warn each other away from.</li>
+  <li><b>Reported working conditions cut against the usual services-firm fears.</b> On AmbitionBox, employees report "No travel" 87%, "Day shift" 71%, five-day week 90%; within the senior-software-engineer filter, no travel 100% and flexible timing 75% (<a href="https://www.ambitionbox.com/reviews/tachyon-technologies-reviews">AmbitionBox work policies</a>).</li>
+  <li><b>No reputational incident, lawsuit, layoff or enforcement action was found against the correct entity</b>, and the most dangerous adjacent story was checked specifically. Texas Attorney General Ken Paxton opened an H-1B visa fraud investigation into nearly thirty North Texas information-technology businesses in April 2026; <b>Tachyon is not among the firms named</b> in the coverage (<a href="https://www.keranews.org/immigration/2026-04-30/texas-attorney-general-ken-paxton-north-texas-h-1b-visa-fraud-investigation">KERA News</a>). Their United States Department of Labor record separately reads "Willful Violator: No" with all petitions certified (<a href="https://www.myvisajobs.com/employer/tachyon-technologies/">MyVisaJobs</a>). Their Better Business Bureau file shows zero complaints closed in three years (<a href="https://www.bbb.org/us/tx/irving/profile/information-technology-services/tachyontech-0875-91309869">Better Business Bureau</a>).</li>
+  <li><b>Bootstrapped, with no institutional investor and essentially no debt.</b> Tracxn records the company as unfunded with no acquisitions; the Indian entity carries one registered charge of ₹21.6 lakh with Axis Bank (<a href="https://tracxn.com/d/companies/tachyon-technologies/__eW_VGYPYnUbJnyAbGUgY3MQeyWFWVcYdI7ay5O57R8w">Tracxn</a>). No venture clock, no forced exit, no down-round risk — but equally no institutional capital behind the AI push.</li>
+  <li><b>Headcount is growing again after a contraction.</b> Revelio Labs, which models workforce size from public professional profiles, has the trough at 350 in the first quarter of 2024, recovering to 380, then 418, then 432 by the first quarter of 2026, and reports 44 active postings in 2026, up 182.6% on 2025 (<a href="https://www.reveliolabs.com/companies/tachyon/employees">Revelio Labs</a>).</li>
+</ul>
+
+<h3>Red flags</h3>
+
+<ul class="checks strikes">
+  <li><b>The job description's central promise is not backed by their own public record.</b> It demands a shipped production agentic system, "not a POC", and describes solutions running "in production at enterprise scale, not just in a slide deck" — while all seventeen published case studies are SAP, Salesforce or analytics, and none is AI (<a href="https://www.tachyontech.com/case-study/">case-study index</a>). This is the single most important absence in the whole research pass.</li>
+  <li><b>Tachyon Aura's numbers have no owner.</b> 65% faster mean time to resolution, 92% first-contact resolution, 3x velocity, "99.4% ACC", "Active Signals: 9,204" — no customer, no baseline, no case study, no label distinguishing achieved from targeted, and no architecture, model or cloud named anywhere (<a href="https://www.tachyontech.com/aura/">Aura</a>, <a href="https://www.tachyontech.com/how-aura-operates/">how Aura operates</a>). On the evidence available, Aura is being marketed before its first public reference.</li>
+  <li><b>"AI Architect" is also a staff-augmentation title at this company.</b> Their live <a href="https://www.tachyontech.com/jobs/ai-architect/">/jobs/ai-architect/</a> page is an explicitly "Contractual, Long-term" placement in Winchester, Virginia for an insurance and wealth-management client, applied through a <em>different</em> Oorwin tenant. The title exists on both sides of the house.</li>
+  <li><b>Staffing and augmentation is a first-class, openly sold revenue line</b> — staff augmentation, direct placement, project-based staffing and managed staffing, across "on-site, remote, hybrid, or global" delivery (<a href="https://www.tachyontech.com/professional-it-staffing-and-augmentation/">staffing page</a>), with "Staffing Solutions" in their own declared LinkedIn specialties. Their Hyderabad board itself mixes both kinds: the AI Architect is Full Time, while the Cloud Engineer (Azure &amp; Hybrid) seat is "CONTRACTUAL", industry "Oil and Gas", described as "an independent offshore resource" (<a href="https://www.tachyontech.com/explore-jobs/">explore jobs</a>).</li>
+  <li><b>The headcount claim does not reconcile, and their own number is the outlier on the high side.</b> Their About page says "1000+ professionals" and "150+ clients". LinkedIn's band says 501–1,000 while listing 361 employees. Revelio estimates about 432 worldwide. Tracxn gives 361, and 107 for the Indian entity as of 31 December 2024. Great Place to Work India lists 65 India-based employees. <b>Not one independent source supports 1,000+</b> (<a href="https://www.tachyontech.com/about-us/">About</a>, <a href="https://www.reveliolabs.com/companies/tachyon/employees">Revelio</a>, <a href="https://www.greatplacetowork.in/great/company/tachyon-it-solutions-private-limited/">Great Place to Work</a>). These sources count different populations and none is authoritative, so this is not proof of dishonesty — but their scale claims cannot be taken at face value in a room.</li>
+  <li><b>The January 2025 plan to hire 500 people in Hyderabad is not visible in any headcount data twenty months later.</b> Global net growth over the same window is roughly 52 people on Revelio's estimate. Net headcount hides churn and a modelled estimate can lag, but a 500-person plan and a +52 global net are not the same story (<a href="https://www.reveliolabs.com/companies/tachyon/employees">Revelio</a>).</li>
+  <li><b>The immediate predecessor seat vanished.</b> "AI Solution Architect, Agentic Systems", 12–18 years, same city, same practice, was live in November 2025 and now returns a 404 error; a separate LinkedIn "AI Architect (12–15 Years Exp)" posting has expired with a <code>trk=expired_jd_redirect</code> marker. Whether those were filled, abandoned, or lost with a client engagement that never closed cannot be known from outside — but this seat family has already churned at least once (<a href="https://web.archive.org/web/20251116033741/https://www.tachyontech.com/jobs/ai-solution-architect-agentic-systems/">archived posting</a>).</li>
+  <li><b>Job security is the weakest axis on every platform that measures it, and the reason given is always the same.</b> AmbitionBox rates it 3.3 out of 5, the lowest of its seven categories and the only one it tags "Critically rated for". Glassdoor's own summary of its reviewers reads "Job security is highly dependent on ongoing client projects and their requirements". Indeed rates job security and advancement 3.1 (<a href="https://www.ambitionbox.com/overview/tachyon-technologies-overview">AmbitionBox</a>, <a href="https://www.glassdoor.co.in/Reviews/Tachyon-Technologies-Reviews-E712907.htm">Glassdoor</a>, <a href="https://in.indeed.com/cmp/Tachyon-Technologies/reviews">Indeed</a>). This is bench risk, and it is the structural signature of a staffing-and-deployment model rather than a management failing.</li>
+  <li><b>The headline ratings mostly measure a recruiting business, not an engineering one.</b> Roughly 24 of the ~35 title-tagged Glassdoor reviews are recruiters, talent-acquisition specialists, account managers or bench-sales staff. The top five-star Hyderabad review is literally titled "The Best IT Recruitment Shop I've Worked At" (<a href="https://www.glassdoor.co.in/Reviews/Tachyon-Technologies-Hyderabad-Reviews-EI_IE712907.0,20_IL.21,30_IM1076.htm">Glassdoor Hyderabad</a>). A 4.0 built largely on recruiter sentiment says very little about life as an architect on a delivery account.</li>
+  <li><b>The one engineering-filtered sample that is negative is sharply negative — and the two engineering samples flatly contradict each other.</b> AmbitionBox's senior-software-engineer filter reads <b>2.1 out of 5 on 7 reviews</b>, with skill development 1.9 and promotions 1.9, against 3.8 company-wide (<a href="https://www.ambitionbox.com/reviews/tachyon-technologies-reviews/senior-soft-engineer">AmbitionBox</a>). Glassdoor's senior-software-engineer filter reads <b>4.3 out of 5 on 5 reviews</b> with 97% would recommend (<a href="https://www.glassdoor.co.in/Reviews/Tachyon-Technologies-Senior-Software-Engineer-Reviews-EI_IE712907.0,20_KO21,45.htm">Glassdoor</a>). Five reviews against seven, mostly from different years, pointing in opposite directions. <b>The honest read is that there is no usable engineering-side signal on this employer in either direction</b>, and neither number should be quoted as fact.</li>
+  <li><b>The rating distribution is barbell-shaped, not average.</b> AmbitionBox: 36 five-star and 13 one-star out of 82. A 3.8 that is really "44% love it, 26% rate it one or two stars" means the experience varies enormously by which part of the company you land in — which is precisely the open question about this seat (<a href="https://www.ambitionbox.com/overview/tachyon-technologies-overview">AmbitionBox</a>).</li>
+  <li><b>The engineering organisation around the seat is Microsoft-weighted even though the job description's cloud line is an "or".</b> Four of ten current Hyderabad roles are Azure-titled or Azure-primary, and the sibling Enterprise Solution Architect seat wants "strong Azure cloud platform knowledge" with "either C#/.NET or Java/Spring" (<a href="https://www.tachyontech.com/jobs/enterprise-solution-architect/">Enterprise Solution Architect</a>). He can meet the requirement on AWS; he should expect Azure to be in the room.</li>
+  <li><b>A sibling AI seat carries an afternoon-to-late-evening shift for American overlap</b> — "Remote – 2–11 PM (Flexible in working hours)" (<a href="https://www.tachyontech.com/jobs/lead-ai-engineer-agentic-ai-automation/">Lead AI Engineer</a>). This job description says nothing at all about hours.</li>
+  <li><b>No partner tier is claimed anywhere, for any of nine displayed partner logos.</b> SAP, Microsoft, Salesforce, AWS, Snowflake, Databricks, UiPath, Celonis and Pyramid Analytics are shown; the SAP page says only "a leading implementation partner", which is self-description (<a href="https://www.tachyontech.com/sap/">SAP page</a>). No tier could be corroborated in any vendor directory.</li>
+  <li><b>Growth recognition stopped in 2019, and was decelerating before it stopped.</b> Inc. 5000 ranks went 596 (2016), 840 (2017), 2091 (2018), 3716 (2019) — a worsening rank four years running, which means the growth <em>rate</em> was falling — with no listing since; yet "INC 5000" is still displayed as a current recognition with no year attached (<a href="https://www.inc.com/profile/tachyon-technologies">Inc. profile</a>). <span class="dim">Low confidence: Inc.com returned an HTTP 403 error and these year-by-year ranks come from search-result aggregation, not a page anyone retrieved.</span></li>
+  <li><b>Their website has visible hygiene defects on live recruiting pages.</b> The footer on their job pages carries an unreplaced template address, "Tachyon Technologies Inc, Roobchester, TN 30071-8345" — a place that does not exist, with a Georgia postcode on a Tennessee line. A superseded AI practice page is still live and indexed at <a href="https://www.tachyontech.com/old-ai-generative-ai/">/old-ai-generative-ai/</a> containing "Lorem ipsum" placeholder text. Neither is sinister; both are the kind of thing worth noticing on a site you are about to apply through.</li>
+  <li><b>The legal name and headquarters are stated three different ways.</b> "Tachyon Technologies LLC" in the site footer and the Texas vendor registry (<a href="https://dir.texas.gov/contracts/vendors/tachyon-technologies-llc">Texas DIR</a>), "Tachyon Technologies Inc" on the job pages and the LinkedIn slug; headquarters given variously as Southlake, Irving and Dallas. Dallas–Fort Worth covers all three, so this is probably sloppy drafting rather than misrepresentation — but there is no single authoritative street address anywhere on their own site, and their <a href="https://www.tachyontech.com/contact-us/">contact page</a> lists eight city names, a web form, and no address or phone number for any office including Hyderabad.</li>
+  <li><b>No named recruiter or hiring manager appears anywhere</b> — not in the job description, not in the requisition, not in LinkedIn's public render, and there is no contact email address on the job page. A submitted application has no human anchor behind it, which matters for follow-up.</li>
+  <li><b>The applicant count is climbing fast.</b> 36 within 22 hours at capture, 41 about a day after posting. A late application into an applicant-tracking pile at a services firm is easy to lose.</li>
+  <li><b>Their careers board appears to have been rebuilt around late June 2026</b> — nothing in the current 75-row feed predates 25 June, while the Internet Archive holds many now-vanished 2025 Tachyon job URLs. So "posted 19 September" tells you when this listing was created on the current board, not necessarily how long the underlying need has existed (<a href="http://web.archive.org/cdx/search/cdx?url=tachyontech.com/jobs/*&amp;output=text&amp;fl=timestamp,original,statuscode&amp;collapse=urlkey&amp;limit=400">Internet Archive index</a>).</li>
+  <li><b>Two passes read the Indian entity's filing history differently, and the conflict is unresolved.</b> Tracxn reports current Ministry of Corporate Affairs filings — Forms AOC-4, MGT-7 and CSR-2 submitted between 10 and 21 November 2025 (<a href="https://tracxn.com/d/legal-entities/india/tachyon-it-solutions-private-limited/__QEL5JKi5_fRKcZZIebTmnPwUDlnaYU46sOFqrsiVEwU">Tracxn</a>). ZaubaCorp's record, as at 13 July 2026, shows the last annual general meeting as 30 September 2022 and the last filed balance sheet as 31 March 2022 (<a href="https://www.zaubacorp.com/TACHYON-IT-SOLUTIONS-PRIVATE-LIMITED-U72300TG2012PTC084681">ZaubaCorp</a>). Registry aggregators are routinely stale rather than evidence of non-filing, and both readings came from third-party aggregators rather than the registry itself. <b>Recorded as a contradiction, not as a finding in either direction.</b></li>
+  <li><b>Margin direction is unfavourable where it is visible at all.</b> Tofler's free view shows total revenue up 41.88% with net profit down 27.1% for the year ending 31 March 2020; exact figures sit behind a paywall and nothing is published for the years since (<a href="https://www.tofler.in/tachyon-it-solutions-private-limited/company/U72300TG2012PTC084681">Tofler</a>).</li>
+  <li><b>Zero named clients across seventeen case studies and across every Aura page.</b> For a firm claiming 150+ clients, not one reference logo is unusual, and it makes client concentration impossible to assess from outside. Unknowable client concentration in a services firm is itself the risk.</li>
+</ul>
+
+<!-- ================================================================
+     5. THE SEAT
+     ================================================================ -->
+
+<h2 id="seat">5. The seat itself</h2>
+
+<h3>Where applying actually lands</h3>
+
+<p>LinkedIn's card says "responses managed off LinkedIn", which is vague. Here is what it concretely means, traced through.</p>
+
+<div class="diagram">
+<pre class="tree">  LinkedIn job 4469298952
+       │   apply control is tagged  public_jobs_apply-link-offsite
+       │   (NOT LinkedIn "Easy Apply" — the résumé does not stay on LinkedIn)
+       ▼
+  tachyontech.com/jobs/ai-architect-2/        ← the company's own posting
+       │   "Apply Job" button opens a popup containing an iframe
+       ▼
+  tachyonind.oorwin.ai  →  requisition TYI-4328
+       │
+       └── ONE PAGE FORM, no account registration observed:
+             résumé drag-and-drop or browse
+             First name · Last name · Email · Mobile
+             Job title · Years of experience
+             City · Country (pre-set India) · State
+             Reference · Comments · Attachments
+</pre>
+<p class="caption">The apply path, traced end to end on 20 September 2026</p>
+</div>
+
+<p>Two practical consequences. First, <b>the résumé lands in Tachyon's real applicant tracking system rather than a LinkedIn queue</b>, which is generally better: it is the same pile a recruiter actually works from. Second, whether LinkedIn's button jumps to the company page or straight to the Oorwin form could not be established, because that destination sits behind a LinkedIn sign-in — but both routes end at the same form, so it does not change what he submits.</p>
+
+<h3>In-house or agency</h3>
+
+<div class="callout good">
+  <p><b>In-house. There is no agency middleman anywhere in the chain.</b> The posting is on Tachyon's own domain, in Tachyon's own applicant-tracking tenant, under Tachyon's own requisition number. No third-party staffing intermediary appears at any step, and no third-party applicant tracking system appears in the page markup — no Greenhouse, Lever, Workday, SmartRecruiters, Zoho Recruit, Keka, Darwinbox, Jobvite, iCIMS, Bullhorn, Ceipal or JobDiva. Oorwin is the only one.</p>
+  <p><b>But hold one caveat alongside that.</b> "In-house" here means in-house <em>to a consulting-and-staffing firm</em>. Tachyon itself sells staffing as a named service line. So the absence of an agency in the application path does not by itself settle whether the seat is internal platform work or a placement — that is section 6's first four questions.</p>
+</div>
+
+<h3>The hybrid claim, which is weaker than it looks</h3>
+
+<div class="warn">
+  <p><b>"Hybrid" comes from the LinkedIn card and from nowhere else.</b> The words <em>hybrid</em>, <em>onsite</em>, <em>on-site</em>, <em>remote</em> and <em>relocation</em> appear <b>zero times</b> in the company's own job description text, zero times in the Oorwin requisition record, and zero times in LinkedIn's guest render of the job. The company's own website taxonomy tags the post <code>remote_status-no</code>.</p>
+  <p>This is not nitpicking, because <b>Tachyon plainly does use the word when it means it</b>. Their sibling Enterprise Solution Architect posting from two days earlier says, in its own body text, "LOCATION: Hyderabad, India – Hybrid" (<a href="https://www.tachyontech.com/jobs/enterprise-solution-architect/">Enterprise Solution Architect</a>). They know how to say hybrid, and on this seat they did not say it. <b>Treat work mode as an open question to ask, not as an arrangement to assume.</b></p>
+</div>
+
+<p>There is a second location ambiguity worth resolving on the same call. Three different Hyderabad micro-locations appear across sources: the <b>registered office at Nandagiri Hills, Jubilee Hills</b> (Registrar of Companies record), the <b>Global Delivery Centre in the Financial District</b> (January 2025 press coverage), and a <b>Madhapur address</b> — "3rd floor, Park View building, Gafoornagar, Madhapur" on LinkedIn, and a JustDial listing. Jubilee Hills, Madhapur and the Financial District are meaningfully different commutes from anywhere in the city.</p>
+
+<h3>One seat, or a wave</h3>
+
+<p><b>A wave, clearly.</b> Their own job feed returns <b>75 currently published postings — 48 tagged India, 27 tagged United States</b> (<a href="https://www.tachyontech.com/wp-json/wp/v2/job?per_page=100">job feed</a>). The September India cluster alone runs:</p>
+
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Posted</th><th>Role</th><th>Note</th></tr></thead>
+  <tbody>
+    <tr><td class="num">19 Sep</td><td><b>AI Architect</b></td><td>This seat. Full time, Hyderabad, 15–20 years.</td></tr>
+    <tr><td class="num">18 Sep</td><td>Cloud &amp; Infrastructure Practice Lead / Solution Architect (IMS)</td><td>Full time, Hyderabad.</td></tr>
+    <tr><td class="num">17 Sep</td><td>Enterprise Solution Architect</td><td>12–15+ years, and this one <em>does</em> say "Hyderabad, India – Hybrid". Azure plus C#/.NET or Java/Spring.</td></tr>
+    <tr><td class="num">14 Sep</td><td>Enterprise / Software Architect</td><td>Full time, Hyderabad.</td></tr>
+    <tr><td class="num">14 Sep</td><td>Lead AI / Python Engineer</td><td>Directly below this seat in the pyramid.</td></tr>
+    <tr><td class="num">14 Sep</td><td>Senior AI / Python Engineer</td><td>Directly below this seat in the pyramid.</td></tr>
+    <tr><td class="num">14 Sep</td><td>Python + AI/ML Graduate Intern</td><td>The bottom of the same pyramid.</td></tr>
+    <tr><td class="num">27 Aug</td><td>Data &amp; Advanced Analytics AI Practice Lead</td><td>Practice-level seat.</td></tr>
+    <tr><td class="num">26 Jun</td><td>Lead AI Engineer (Agentic AI &amp; Automation)</td><td>States "Remote – 2–11 PM (Flexible in working hours)".</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <p><b>Architect, lead, senior and intern all posted within days of each other is the shape of standing up a practice pyramid.</b> At a services firm that usually means billable client delivery is expected to fund it. That is not a criticism — it is how consultancies grow a capability — but it is the reason the first questions in section 6 are the ones they are. An architect arriving now would be <em>early</em> in this build-out rather than late, which cuts in his favour if the funding behind it is real.</p>
+</div>
+
+<!-- ================================================================
+     6. FORCING QUESTIONS
+     ================================================================ -->
+
+<h2 id="questions">6. Forcing questions for the call</h2>
+
+<p class="lede">These are ordered by how much they change the decision, not by how comfortable they are to ask. The first four resolve the single biggest unknown: whether this is an internal architecture seat on Tachyon's own platform, or a billable architect placed on a client programme. Question five resolves the cloud. Everything after that is important but secondary. Each question carries one line on why it matters and one line on what a bad answer sounds like, so the answer can be judged in the moment rather than replayed afterwards.</p>
+
+<h3>The four that decide what the job actually is</h3>
+
+<div class="qa">
+  <p class="qa-q">1. Over the first twelve months, whose system would I be the architect of — Tachyon Aura, or a named client's programme?</p>
+  <p class="qa-a"><b>Why it matters:</b> this is the whole question. Tachyon runs an internal agentic platform <em>and</em> an openly sold staffing line, and it uses the title "AI Architect" on both sides — the Winchester, Virginia contract placement proves that (<a href="https://www.tachyontech.com/jobs/ai-architect/">that posting</a>). Everything else about the seat follows from the answer.<br />
+  <b>A bad answer sounds like:</b> "both, depending on demand", "wherever the business needs you", or a long description of flexibility. A good answer names a system or names a client programme, and can say who else is on it.</p>
+
+  <p class="qa-q">2. Is this role billable to a client, partly billable, or carried as internal investment? And what happens between engagements?</p>
+  <p class="qa-a"><b>Why it matters:</b> job security is the lowest-rated axis on every platform that measures this employer, and the stated reason is always the same — Glassdoor's own summary of its reviewers reads "job security is highly dependent on ongoing client projects and their requirements" (<a href="https://www.glassdoor.co.in/Reviews/Tachyon-Technologies-Reviews-E712907.htm">Glassdoor</a>). Asking it directly is completely normal in Indian services hiring and nobody will find it rude.<br />
+  <b>A bad answer sounds like:</b> deflection, or "we always have work". A good answer describes the actual mechanism — a utilisation target, a bench policy, or an internal-investment budget line — without being asked twice.</p>
+
+  <p class="qa-q">3. Is this a newly created headcount or a backfill, and is it funded against a signed client programme or a pre-sales bet?</p>
+  <p class="qa-a"><b>Why it matters:</b> the near-identical predecessor seat, "AI Solution Architect, Agentic Systems", was live in November 2025 and now returns a 404 error, and a separate LinkedIn "AI Architect (12–15 Years Exp)" posting expired (<a href="https://web.archive.org/web/20251116033741/https://www.tachyontech.com/jobs/ai-solution-architect-agentic-systems/">archived posting</a>). The seat family has churned at least once and it is fair to ask why.<br />
+  <b>A bad answer sounds like:</b> not knowing, or "that was a different requirement" with no detail. A good answer says plainly whether it was filled, cancelled, or folded into this one.</p>
+
+  <p class="qa-q">4. Which Tachyon Aura deployment is furthest along today, and who is the customer behind the "65% faster MTTR" figure on the Aura page?</p>
+  <p class="qa-a"><b>Why it matters:</b> Aura's headline metrics carry no customer, no baseline and no label distinguishing achieved from targeted (<a href="https://www.tachyontech.com/aura/">Aura</a>). If the platform has a live reference, the seat has a real system to architect against. If it does not, the seat is earlier-stage than the posting implies. He is unusually well placed to ask this politely, because his own corpus contains exactly this distinction between an illustrative response shape and a measured result.<br />
+  <b>A bad answer sounds like:</b> repeating the marketing numbers back, or "those are from our internal benchmarks" with no baseline offered. A good answer names a deployment, even under a non-disclosure agreement, and describes the baseline.</p>
+</div>
+
+<h3>The cloud, and the technical reality</h3>
+
+<div class="qa">
+  <p class="qa-q">5. The posting reads "Azure, AWS, or GCP". In practice, which cloud do the AI engagements actually land on, and what proportion?</p>
+  <p class="qa-a"><b>Why it matters:</b> the requirement is genuinely an "or", so his AWS depth satisfies it as written — but four of ten current Hyderabad roles are Azure-titled or Azure-primary, and the sibling Enterprise Solution Architect wants "strong Azure cloud platform knowledge" (<a href="https://www.tachyontech.com/jobs/enterprise-solution-architect/">that posting</a>). Interestingly, their own Cloud Services page leads with AWS ahead of Azure (<a href="https://www.tachyontech.com/cloud-services/">Cloud Services</a>), so the picture is genuinely mixed rather than settled. He should know before day one whether he is ramping on Azure OpenAI or working in his own territory.<br />
+  <b>A bad answer sounds like:</b> "all three, we're cloud-agnostic". Every consultancy says that and it is almost never true of the actual engagement mix. A good answer gives a rough split and names which practice sits on which.</p>
+
+  <p class="qa-q">6. What does the architecture team look like today — how many architects, how many AI engineers, and who would I report to?</p>
+  <p class="qa-a"><b>Why it matters:</b> the posting says "mentor senior engineers and technical leads", which is mentorship, not line management, and it does not say which. The named practice owner is Sujoe Bose, global head of artificial intelligence and data analytics (<a href="https://www.tachyontech.com/about-us/">leadership page</a>), but nothing says the seat reports to him.<br />
+  <b>A bad answer sounds like:</b> "we're building that out" with no current number. A good answer gives a headcount today and a reporting line by name.</p>
+
+  <p class="qa-q">7. What has the AI practice actually shipped to production for a paying customer, and can you walk me through one of them?</p>
+  <p class="qa-a"><b>Why it matters:</b> the posting demands production work "not a POC", and none of their seventeen published case studies is an AI project (<a href="https://www.tachyontech.com/case-study/">case studies</a>). Asking an architect to describe a shipped system is the most normal question in the world, and the quality of the answer tells him more than any rating site could.<br />
+  <b>A bad answer sounds like:</b> pilots, proofs of concept, and the word "roadmap". A good answer describes a live system with its integration points and what broke in production.</p>
+</div>
+
+<h3>The working reality</h3>
+
+<div class="qa">
+  <p class="qa-q">8. What are the working hours for this seat, and is there an American or European overlap expectation?</p>
+  <p class="qa-a"><b>Why it matters:</b> this job description is silent on hours, but a sibling AI seat at the same firm states "Remote – 2–11 PM" outright (<a href="https://www.tachyontech.com/jobs/lead-ai-engineer-agentic-ai-automation/">Lead AI Engineer</a>), and the Why Tachyon section promises "direct exposure to customer stakeholders" at a firm whose customers are in North America, Europe and the Middle East. This is the single most important thing the posting does not say.<br />
+  <b>A bad answer sounds like:</b> "flexible", with no core hours named. A good answer states core hours and says how often a late call is genuinely required.</p>
+
+  <p class="qa-q">9. Is this seat hybrid, and which Hyderabad site would I actually report to?</p>
+  <p class="qa-a"><b>Why it matters:</b> "hybrid" appears only on LinkedIn's card and nowhere in the company's own text, while the sibling posting from two days earlier says "Hyderabad, India – Hybrid" outright. And three different micro-locations appear across sources — Jubilee Hills (registered office), the Financial District (the 2025 delivery centre) and Madhapur. Those are very different commutes.<br />
+  <b>A bad answer sounds like:</b> vagueness about days per week, or "we'll work it out". A good answer names the building and the expected days.</p>
+
+  <p class="qa-q">10. Is there travel to client sites, in India or abroad, and how often?</p>
+  <p class="qa-a"><b>Why it matters:</b> employees report "No travel" at 87% on AmbitionBox (<a href="https://www.ambitionbox.com/reviews/tachyon-technologies-reviews">AmbitionBox</a>), which is reassuring — but that review base is dominated by a recruiting desk, and a client-facing architect is a different job from a recruiter. The job description says nothing about travel at all.<br />
+  <b>A bad answer sounds like:</b> "as needed". A good answer gives a cadence, even a rough one.</p>
+
+  <p class="qa-q">11. Which legal entity issues the employment contract — Tachyon Technologies in the United States, or Tachyon IT Solutions Private Limited in Hyderabad?</p>
+  <p class="qa-a"><b>Why it matters:</b> no document anywhere establishes the relationship between the American brand and the Indian company, and neither party's website mentions the other. The applicant-tracking tenant is <code>tachyonind</code> and the requisition prefix is <b>TYI</b>, both pointing at an Indian entity, but that is inference (<a href="https://tracxn.com/d/legal-entities/india/tachyon-it-solutions-private-limited/__QEL5JKi5_fRKcZZIebTmnPwUDlnaYU46sOFqrsiVEwU">Tracxn record</a>). It is an ordinary administrative question and easy to ask without loading it.<br />
+  <b>A bad answer sounds like:</b> confusion, or not knowing. A good answer names the entity immediately, because human resources knows this by heart.</p>
+
+  <p class="qa-q">12. The posting asks for 15+ years, but the requisition record says 15–20. Is 20 a filter?</p>
+  <p class="qa-a"><b>Why it matters:</b> the live requisition TYI-4328 carries "Experience 15-20", narrower than the job description's open-ended "15+" (<a href="https://tachyonind.oorwin.ai/#/careers/index.html/job/d341d25fa1807ef0cea6a335b8b2c9948d6d1ddf">requisition</a>). A band in an applicant-tracking system is sometimes a screening rule rather than a description, and it is better to know than to guess.<br />
+  <b>A bad answer sounds like:</b> being unable to say. A good answer is simply "it is a guide" or "it is a filter" — either is fine, and he knows where he stands.</p>
+</div>
+
+<h3>Worth asking if the call has room</h3>
+
+<div class="qa">
+  <p class="qa-q">13. Which enterprise platforms do the AI integrations most often land on — SAP, Salesforce, ServiceNow — and which integration tooling do you standardise on?</p>
+  <p class="qa-a"><b>Why it matters:</b> their one published integration case study names <b>Boomi</b> orchestrating into SAP and internal billing (<a href="https://www.tachyontech.com/case_study/from-slow-quotes-to-a-single-salesforce-platform-for-commercial-energy-sales/">case study</a>), and MuleSoft appears nowhere on their site. This is where his 25-supplier enterprise-service-bus work is genuinely transferable — and where he needs to frame it as iPaaS experience rather than claiming a tool match he does not have.<br />
+  <b>A bad answer sounds like:</b> "it depends on the client" with nothing further. A good answer names a default and explains when they deviate.</p>
+
+  <p class="qa-q">14. How large is the Hyderabad centre now, and how did the 500-person plan announced in January 2025 land?</p>
+  <p class="qa-a"><b>Why it matters:</b> the plan was publicly announced with a state minister present (<a href="https://telanganatoday.com/tachyon-technologies-inaugurates-global-delivery-centre-in-hyderabad">Telangana Today</a>), and no independent headcount source shows growth on anything like that scale. It is entirely reasonable to ask how the build-out actually went, and the answer says a lot about how the firm talks about itself.<br />
+  <b>A bad answer sounds like:</b> repeating the 500 figure as though it happened, or quoting "1,000+ globally" — a figure no independent source supports. A good answer gives a real current number for Hyderabad.</p>
+
+  <p class="qa-q">15. Which industries would this seat serve most, and is there a utilities concentration?</p>
+  <p class="qa-a"><b>Why it matters:</b> the case studies, the DTECH 2026 dinner on "Agentic AI for utility transformation" covering SAP IS-U device management and FI-CA billing (<a href="https://www.tachyontech.com/dtech-2026/">DTECH 2026</a>), and Aura's utilities bundle all point the same way. If the answer is heavily utilities, his non-technical and functional score is low — which per the house rules is <b>informational only</b>, never a gate, and must not touch the technical score or the decision to apply.<br />
+  <b>A bad answer sounds like:</b> naming nine industries. A good answer names two or three where the AI work actually is.</p>
+
+  <p class="qa-q">16. Who would interview me, and could one round be with an engineer who has shipped one of these systems?</p>
+  <p class="qa-a"><b>Why it matters:</b> no recruiter or hiring-manager name appears anywhere in the posting, the requisition or LinkedIn's public view, so the application has no human anchor. Asking for a technical round with a practitioner is a normal request at this level, and it also answers question seven indirectly.<br />
+  <b>A bad answer sounds like:</b> a process with no engineer in it. A good answer names people.</p>
+</div>
+
+<div class="banner">
+  <p><b>Two discipline notes on using this list.</b> First, <b>compensation is not on it and must not be raised</b> — that conversation belongs to a later stage, when a company has responded and the process has actually reached it. Second, if this call happens because a <em>recruiter replied to him</em>, the recruiter-reply rule governs instead: answer exactly what was asked, in the order asked, then put a call on the table, and bring this list to the call rather than to the reply. Every extra question in a written reply is one more thing standing between him and a phone call.</p>
+</div>
+
+<!-- ================================================================
+     7. WHAT COULD NOT BE ESTABLISHED
+     ================================================================ -->
+
+<h2 id="unknowns">7. What could not be established</h2>
+
+<p class="lede">An absence is a finding, and it is presented as one here. This section exists so that nothing on this page gets quietly upgraded later from "we could not check" into "we checked and it was fine". Two categories: things nobody could determine, and specific sources that refused to load.</p>
+
+<h3>Open questions, in rough order of how much they matter</h3>
+
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Unknown</th><th>What we do and do not have</th></tr></thead>
+  <tbody>
+    <tr><td><b>Whether the seat is internal platform work or billable client placement</b></td><td>The job description does not say. It mentions "customer teams" and "customer stakeholders", which leans client-facing, and the posting is filed under category "Services" — but their staffing line makes both plausible and the same title is used for a contract placement elsewhere. <b>Unresolved, and it is the most consequential unknown on this page.</b></td></tr>
+    <tr><td><b>Whether architects specifically get benched between engagements</b></td><td>We established that Tachyon places architect-titled people on contract at American client sites, and that reviewers describe job security as project-dependent. We found <b>nothing either way</b> about how an in-house Hyderabad AI architect is staffed, utilised or protected.</td></tr>
+    <tr><td><b>Work mode, and which Hyderabad site</b></td><td>"Hybrid" appears only on LinkedIn's card. Zero occurrences in the company's own job text, the requisition, or LinkedIn's guest render. Three candidate micro-locations across sources.</td></tr>
+    <tr><td><b>Working hours and any overlap expectation</b></td><td>The job description is silent on shift, travel, on-call, overlap, timezone, rotation and days per week. A grep for all of those terms returned only LinkedIn's "Workplace type: Hybrid".</td></tr>
+    <tr><td><b>Which legal entity employs the role</b></td><td>Almost certainly the Indian company, on the strength of the <code>tachyonind</code> tenant and the <b>TYI</b> requisition prefix — but that is inference, and no page names an employer of record.</td></tr>
+    <tr><td><b>Whether Tachyon Aura has any production deployment at all</b></td><td>No customer named, no case study, no independent coverage anywhere outside their own domain. We could not establish that it is live anywhere, nor that it is not.</td></tr>
+    <tr><td><b>Aura's architecture, models and cloud</b></td><td>Nothing stated on either Aura page beyond four marketing component names.</td></tr>
+    <tr><td><b>Whether Aura's headline metrics are measured, targeted or illustrative</b></td><td>The pages do not say and nothing external clarifies it.</td></tr>
+    <tr><td><b>The relationship between the American brand and the Indian entity</b></td><td><b>Not stated anywhere by either party.</b> Inferred from four converging signals; no parent-and-subsidiary document found.</td></tr>
+    <tr><td><b>Whether Oorwin is a Tachyon division, a sister company, or a shared-executive vendor</b></td><td>One news article calls Oorwin Tachyon's product division (<a href="https://www.thehansindia.com/business/tachyon-technologies-inaugurates-global-delivery-centre-in-hyderabad-938775">The Hans India</a>, which spells it "Orwin"), and Crunchbase surfaced Venkat Kolli as Oorwin's chairman in search results. <a href="https://www.oorwin.com/">Oorwin's own site</a> does not mention Tachyon anywhere. <b>Corporate structure unestablished.</b></td></tr>
+    <tr><td><b>Actual current headcount, group and Hyderabad</b></td><td>Five sources disagree by more than ten times. The most recent India-specific figure (107) is from December 2024. No figure here should be quoted as fact.</td></tr>
+    <tr><td><b>Whether the 500-person Hyderabad hiring plan was achieved</b></td><td>No follow-up coverage of any kind was found. The shortfall in section 4 is <em>inferred</em> from two independent sources, not read anywhere.</td></tr>
+    <tr><td><b>Attrition and tenure</b></td><td>Revelio Labs holds attrition behind a paid unlock and no free source publishes one. <b>Not estimated.</b></td></tr>
+    <tr><td><b>Revenue for financial years 2024, 2025 or 2026</b></td><td>The only registry-grounded figure is a band — ₹50–100 crore for the Indian entity in the year to 31 March 2023. The American parent is a private limited liability company with no public filing obligation. <span class="dim">Recorded as company-scale context only; no personal compensation research was performed or recorded anywhere in this workspace.</span></td></tr>
+    <tr><td><b>Client concentration</b></td><td>Completely unestablished. Zero named clients, no revenue-by-account disclosure, no analyst coverage. Cannot say whether the largest client is 5% or 50%.</td></tr>
+    <tr><td><b>Ownership beyond "privately held"</b></td><td>No cap table, no private-equity sponsor, no funding round, no shareholder list. Whether it is wholly founder-owned could not be confirmed.</td></tr>
+    <tr><td><b>Whether CMMI Level 3, ISO 27001 and ISO 9001 are current</b></td><td>Claimed on their own site with no certificate numbers or expiry dates. No independent registry confirmation found.</td></tr>
+    <tr><td><b>Any partner tier with any of nine displayed vendors</b></td><td>Logos displayed; no tier stated on their site and none corroborated in any vendor directory.</td></tr>
+    <tr><td><b>Whether the vanished predecessor seat was filled, cancelled or merged</b></td><td>Unknown. The page 404s and the careers board was rebuilt in the interim.</td></tr>
+    <tr><td><b>Any engineering presence in open source or conference speaking</b></td><td>Their conference pages describe exhibiting and hosting dinners, not talks (<a href="https://www.tachyontech.com/dtech-2026/">DTECH 2026</a>, <a href="https://www.tachyontech.com/databricks-data-ai-summit-2026/">Databricks Summit 2026</a>). The <a href="https://github.com/tachyon-technologies">github.com/tachyon-technologies</a> organisation holds Laravel, AdminLTE, Arduino and healthcare-record repositories that do not match an SAP/Salesforce/AI consultancy and nothing links it to tachyontech.com — <b>treated as a different company, and this firm's open-source presence recorded as an absence rather than as that</b>.</td></tr>
+    <tr><td><b>Whether the London office maps to a live United Kingdom entity</b></td><td>A "TACHYON TECHNOLOGIES LTD" (company 09553774) was dissolved in June 2017 at a formation-agent address. No active Companies House entity clearly belongs to this group. This may simply mean the presence operates as a branch or under another name. <b>Unresolved, recorded as unresolved rather than as a flag.</b></td></tr>
+    <tr><td><b>Whether Tachyon holds an active Texas state information-technology contract</b></td><td>The vendor record exists (<a href="https://dir.texas.gov/contracts/vendors/tachyon-technologies-llc">Texas DIR</a>) and the page carries the standard notice that a vendor with no active contracts "is not permitted to sell through DIR". The contract table did not render. Since government is one of their nine advertised industries, this is a lead rather than a finding.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Sources that refused to load, and what that cost</h3>
+
+<p>These matter because each one is a claim nobody could verify first-hand. Where a number from one of these appears anywhere on this page, it is marked low confidence at the point of use.</p>
+
+<ul class="checks strikes">
+  <li><b>Crunchbase</b> (HTTP 403, blocked) — no funding, investor or ownership data could be retrieved first-hand, which is why no founder beyond the publicly named chief executive appears anywhere on this page.</li>
+  <li><b>Inc.com</b> (HTTP 403) — the Inc. 5000 year-by-year ranks come from search-result aggregation only. A "#552 on the 2015 Inc 5000" claim appeared in a search snippet and is <b>deliberately not recorded as a finding</b> because no page was retrieved.</li>
+  <li><b>ZoomInfo</b> (HTTP 403) — a snippet claimed about 336 employees as of April 2026; <b>deliberately not recorded</b>.</li>
+  <li><b>PitchBook</b> (not retrieved) — a "226 employees" figure appeared only as a search summary and is <b>not recorded as a number</b>, only as part of the headcount-inconsistency flag.</li>
+  <li><b>ZaubaCorp</b> (HTTP 403 in three of five passes, retrieved in one) — the Indian registry detail is therefore partly second-hand, and is the direct cause of the unresolved filing-history contradiction in section 4.</li>
+  <li><b>Glassdoor pagination</b> (bot detection after page one) — only 3 of 100 company-wide reviews and 3 of 48 Hyderabad reviews could be read in full. Everything else comes from Glassdoor's own aggregate summaries. One pass reached the pages directly and read 4.0 on 100; another pass, working from search snippets only, read 4.1 on 99. <b>The directly-fetched figure is the one used above.</b></li>
+  <li><b>AmbitionBox filtered and paginated views</b> — aggregate ratings rendered, review bodies did not. <b>We do not know what the seven negative senior-software-engineer reviews actually say.</b></li>
+  <li><b>Indeed India</b> (HTTP 403 in one pass, retrieved in another) — n=7 overall, four of the five visible reviews five or more years old. Too small to carry weight in either direction.</li>
+  <li><b>LinkedIn job page in a browser</b> (authwall) — the poster's name, any hiring-team panel, and the true apply destination could not be read.</li>
+  <li><b>MyVisaJobs</b> (HTTP 403 in one pass, retrieved in another) — the clean-record finding rests on the single pass that got through.</li>
+  <li><b>ZipRecruiter India</b> (HTTP 403) — this is the one source that names an Indian legal entity as the employer, and <b>nobody could read it</b>, so that attribution stays unestablished.</li>
+  <li><b>Oorwin's own careers index and list pages</b> — rendered completely empty; individual job URLs work. So their applicant-tracking requisition list could not be cross-checked against their website's feed.</li>
+  <li><b>Oorwin's About page</b> (HTTP 404) — no founder list or corporate-structure statement could be read.</li>
+  <li><b>The Texas Attorney General's own press release</b> listing all ~30 investigated firms (HTTP 402) — the KERA News article was used instead and names nine. <b>So the confirmation that Tachyon is absent covers the named subset, not necessarily the full thirty.</b> Scope that correctly if it ever comes up.</li>
+  <li><b>ClearlyRated</b> (HTTP 404) — would have indicated whether the firm is rated as a staffing provider.</li>
+  <li><b>Their own careers landing pages</b> (<code>/careers/</code> and <code>/explore-jobs/</code>) load jobs with JavaScript and show only "Loading jobs…" to a fetcher. The real inventory had to come from the <code>/jobs/</code> archive and the WordPress feed instead.</li>
+  <li><b>Blind, Quora and Reddit peer discussion</b> — <b>none exists.</b> A site-scoped search of Blind returned zero results; Quora returned zero; a direct Reddit search returned exactly one relevant item across the entire platform, and it was <a href="https://www.reddit.com/r/hyderabad/comments/1wh4e16/multiple_openings_dont_dm/">Tachyon's own recruiting post</a>. Searches scoped to r/developersIndia, r/india and r/cscareerquestionsIndia produced nothing. <b>There is no peer discussion of this employer anywhere, in either direction.</b></li>
+  <li><b>No independent press coverage after 21 January 2025.</b> The Hyderabad delivery-centre opening is the most recent independently reported event about this company, and it is twenty months old. Everything since is their own blog.</li>
+  <li><b>No AI case study, no named Aura customer, no analyst note on Aura, no partner tier, no conference talk, no attributable open-source repository.</b> Each of these was searched for specifically and each came back empty. Taken together they are the shape of a young AI practice that has not yet published a reference.</li>
+</ul>
+
+<div class="callout">
+  <p><b>One methodological caution, which the house rules insist on and which this page tries to honour.</b> Several numbers above were produced by tools that can be wrong in specific, known ways — a review-site aggregate that mostly samples a recruiting desk, a workforce model that undercounts contractors, a registry aggregator that goes stale. Where two passes disagreed, this page records the disagreement instead of picking a winner: the two engineering-review samples, the Indian filing history, and the Glassdoor headline figure are all written that way on purpose. <b>Check the measurement before trusting the measurement</b>, and do not let a number from this page harden into a fact on its way into a conversation.</p>
+</div>
+
+<p class="signoff">
+  research.html · Tachyon Technologies, AI Architect, Hyderabad · built 20 Sep 2026 from a five-angle research sweep ·
+  every factual claim on this page carries an inline link to the source it came from ·
+  no compensation research was performed, requested or recorded
+</p>
+
+</main>
+<script src="../../../static/copy.js"></script>
+</body>
+</html>

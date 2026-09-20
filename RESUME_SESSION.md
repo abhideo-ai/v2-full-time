@@ -43,9 +43,13 @@ automation/.venv/bin/python automation/verify_resume_docx.py [file] [--doc-key .
 psql -d jobs_tracker_v2 -c "select slug, company, status, fit_score, applied_at from applications order by fit_score desc nulls last;"
 ```
 
-**7 applied · 2 awaiting JD (Wipro, Aezion) · 1 withdrawn.** Newest: **Aezion, Inc. — inbound
-recruiter email, 31 Aug, no role named and so no score.** Last sent: **Nexifyr, Lead Engineer — FHIR,
-78, applied 28 Aug.**
+**7 applied · 1 BUILT AND UNSENT (Tachyon) · 2 awaiting JD (Wipro, Aezion) · 1 withdrawn.**
+Newest: **Tachyon Technologies, AI Architect — Hyderabad, hybrid, built 20 Sep, technical 90.32,
+tied top of the board with Keyloop.** Last sent: **Nexifyr, Lead Engineer — FHIR, 78, applied 28 Aug.**
+
+⚠ **The backlog gate is now at 1.** It was 0 this morning. The rule is a judgement call at roughly
+five — but the v1 failure was 23 built and unsent, so the number to watch is the trend, not the
+threshold.
 
 ---
 
@@ -71,6 +75,22 @@ VoltusWave Technologies                         Hyderabad   <- no band
 ---
 
 ## THE JOB WAITING FOR YOU
+
+0. **SEND TACHYON — it is built, verified and unsent.** `September-2026/20/tachyon-ai-architect/`.
+   Technical **90.32**, no hard caps. `.docx` verified **35 met / 0 failed**.
+   ⚠ **THREE THINGS BEFORE HE CLICKS APPLY:**
+   - **There are TWO different "AI Architect" pages on Tachyon's own site.** `/jobs/ai-architect/`
+     is a *"Contractual, Long-term"* staff-augmentation placement in **Winchester, Virginia** on
+     Salesforce Financial Services Cloud. The Hyderabad full-time seat is `/jobs/ai-architect-2/`.
+     Both return HTTP 200 and carry the **identical** page title. The main thread could NOT confirm
+     which is which (the content is JavaScript-rendered); the research pass made the attribution.
+     **Check the location on the page before applying.**
+   - **Open the `.docx` in Word and check it is ≤3 pages.** NOT checkable here — no LibreOffice.
+     The seat carries **66 experience bullets** against the master's 64, and the headline grew from
+     27 to 32 words, so it may wrap. Cheapest cuts if it spills: the Routed serverless bullet
+     (weakest number on the résumé), then "Graph + GNN" from the headline.
+   - Apply lands in **Oorwin** (`tachyonind.oorwin.ai`), requisition **TYI-4328**. Single-page form,
+     no account needed.
 
 1. **Send the Aezion reply.** `August-2026/31/aezion-inbound-sravan/reply.html`, one copy button,
    70 words. Sravan K Chelimalla emailed cold on 31 Aug naming **no role, no level, no location and
@@ -100,6 +120,37 @@ VoltusWave Technologies                         Hyderabad   <- no band
 
 ⚠ **`source-ic` is still on the board and CONTRADICTS CLAUDE.md**, which says *"Do not source seats…
 Wait for the paste."* Left in place deliberately — resolving it is his call, not ours.
+
+---
+
+## NEW SINCE 28 AUG — per-seat résumés now have a re-runnable path
+
+**`db/operations/clone_seat_resume.sql`** starts a per-seat résumé as a **selection with edits** off
+the master: it copies every master row into `doc_key='seat:<slug>'` across `resume_documents`,
+`resume_roles`, `resume_sections`, `resume_blocks`, `resume_education`, `resume_certifications` and
+`resume_profile`. The Nexifyr seat document was created ad hoc and left no record of how; this closes
+that. **All three refusals are proven**: re-cloning an existing seat, an unknown slug, and — the one
+that matters — **a seat whose application has already been sent**. That last one closes part of the
+freeze gap for the clone path, though `resume_db.py load` is still unguarded.
+
+**`db/seats/<slug>.sql`** then carries that seat's Rule 7 tailoring as reviewable, re-runnable SQL,
+with the rationale and the source quote for every edit in its header comment. It refuses if the seat
+document does not exist or if the application has already been sent, and it **proves itself before
+committing** — 0 duplicate leading verbs, 0 bullets over 25 words, 0 `orchestrat` stem collisions.
+
+Two gotchas both scripts now handle, learned the hard way:
+- `resume_profile.value_text` is a **generated column** — never insert into it.
+- `ord` is part of `resume_blocks`' primary key, so a re-order must **shift the whole section clear
+  of the target range first**; assigning 1..N directly collides with rows still holding those ords.
+
+⚠ **`resume_docx.py` refuses unknown HTML entities** (`&middot;` was rejected). The master uses the
+literal `·` character. That refusal is correct behaviour, not a bug.
+
+⚠ **`August-2026/27/nexifyr-lead-engineer-fhir/score.json` names the WRONG SEAT inside it** —
+`"slug": "adhd-autism-founding-engineer"`. Checked all nine `score.json` files: the other seven
+simply **omit** the `slug` key, which is the normal shape, so Nexifyr is the only wrong one.
+It is **cosmetic, not functional** — `jobs_sync.py` keys off the directory, and Nexifyr's 78 synced
+correctly. Pre-existing, not touched, flagged for him.
 
 ---
 
