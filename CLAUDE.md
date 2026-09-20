@@ -835,6 +835,31 @@ no code change.
 
 ## Execution model — workflows and subagents do the work
 
+### ⛔ AGENT BUDGET — MAX 5. Set by him 2026-09-20. This bounds everything below it.
+
+**No workflow spawns more than 5 agents, and no turn spawns more than 5 standalone Agent calls.**
+For job search and artefact building, five is enough. This rule comes FIRST and the
+"offload everything" rule below operates inside it, never around it.
+
+- **Every fan-out is explicitly bounded.** `items.slice(0, 5)`, never a bare `parallel(items.map(...))`
+  over a list whose length is data-dependent. If the list is longer than five, pick the five that
+  matter and **`log()` what was dropped** — silent truncation reads as "covered everything".
+- **⛔ NEVER nest `parallel()` inside a `pipeline()` stage. That MULTIPLIES.**
+  `pipeline(edits, e => parallel(LENSES.map(...)))` over 22 edits with 3 lenses is **66 agents**, and
+  that is exactly what happened on **2026-09-20** — 70 in one workflow, ~89 across the session, on a
+  task where ~17 was the right size. He called it out: *"70 agents for this task? that's a bit much."*
+- **Verification depth scales with RISK, not uniformly.** The 2026-09-20 blowup applied the same
+  three-lens adversarial treatment to a one-word skills-label tweak as to a new technical claim.
+  Triage first: only edits asserting new substance need adversarial verification.
+- **Deterministic checks are SCRIPTS, never agents.** Word count, bolded fact, trailing period,
+  leading-verb stem collisions, acronym expansion — these are `psql` queries and
+  `verify_resume_docx.py`, which already exist. Using a language model to count words is both
+  wasteful and *less reliable*; the Measurement traps section above says so in its own words.
+- **Ultracode's "token cost is not a constraint" is NOT a licence to skip proportionality.**
+  Cheap and warranted are different questions. This budget holds regardless of ultracode.
+
+**If a task genuinely needs more than five, say so and ask** — do not spend it and explain afterwards.
+
 **If it CAN be offloaded to a subagent or workflow, it IS.** Set by him 2026-08-25 and it is the
 default, not a preference — research, résumé drafting, JD scoring, workspace artefacts, extraction,
 audits, drafting of any kind. Read each phase's results before choosing the next phase.

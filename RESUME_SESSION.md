@@ -166,6 +166,9 @@ correctly. Pre-existing, not touched, flagged for him.
   Amura names no broker; the Kinesis/HA work is the chat platform.
 - **UNVERIFIED stays, FALSE comes off.** Say which before proposing any removal.
 - **Every pasted JD gets the full build**, no re-asking. **Always ask for the URL.**
+- **⛔ MAX 5 AGENTS** per workflow and per turn — set by him 2026-09-20 after a 70-agent workflow.
+  Slice every fan-out; **never nest `parallel()` inside a `pipeline()` stage** (that multiplies);
+  deterministic checks are scripts, not agents. Full rule at the top of CLAUDE.md's *Execution model*.
 
 ---
 
