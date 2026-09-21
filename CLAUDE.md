@@ -88,9 +88,26 @@ now accepts both shapes. See `master/README.md` for the ten-section contract.
 If it is not in the journey document and not user-confirmed, do not write it. A missing
 metric is `[fill in metric]`, never an invented number.
 
-**Never claim:** Kafka (he has **Amazon Kinesis**, confirmed in production), MongoDB,
-ClickHouse, Azure, Google Cloud Platform, SOC 2, Spring Cloud, Spring WebFlux,
-Spring Batch. Only **Spring Boot** is his.
+**Never claim:** Kafka (he has **Amazon Kinesis**, confirmed in production), **NATS**, MongoDB,
+ClickHouse, Azure, Google Cloud Platform, SOC 2, Spring Cloud, Spring WebFlux, Spring Batch,
+**Grafana**, **Prometheus**, **Hazelcast**, and **FHIR / HL7 / DICOM**. Verified 2026-09-21:
+the last seven are **zero across the journey documents, the master résumé and all ~198,000 words
+of the case studies**.
+
+**Two duration facts, and no rewrite closes either:**
+
+- Only **Spring Boot** is his — **about six years across TWO employers with a five-month gap.
+  Never "six continuous".** Two files once carried that exact false phrasing and the adversarial
+  pass missed both (see *Measurement traps*).
+- **Production Python is ~14 MONTHS.** Django, FastAPI, LangChain, LangGraph and real Model
+  Context Protocol servers are genuinely his; the *duration* is not negotiable, and a JD asking
+  for 5+ years of production Python is not cleared by any wording.
+
+⚠ **These belong HERE, not in `RESUME_SESSION.md`.** Seven of the bans above and both duration
+facts lived only in that handoff file until 2026-09-21 — a file whose own instruction is
+*"Overwrite it wholesale."* A durable honesty ban sitting in a file the rules say to overwrite is
+one routine rewrite away from vanishing. **Durable rules live in this file; only current state
+lives in the handoff.**
 
 **Redis was removed from that list on 2026-08-25, by him.** The Amura case studies place it
 in the production request path of systems he owned — KQ4's per-tenant-namespaced risk cache
