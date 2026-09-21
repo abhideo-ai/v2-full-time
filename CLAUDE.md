@@ -52,9 +52,9 @@ So:
   produced the assets that actually worked. But finish the loop.
 
 **A full workspace is:** `jd.md` / `jd.html` + card screenshots · weighted-rubric `index.html` ·
-`resume_changes_for_<N>pct_match.html` · `bullets_for_upgrad.html` · `upgrad_resume.html` ·
-cited `research.html` (verdict, red/green flags, comp reality, forcing questions) · then the
-exported **and verified** `Abhisheik_Deo_Resume.pdf`.
+`resume_changes_for_<N>pct_match.html` · cited `research.html` (verdict, red/green flags,
+forcing questions — **never compensation**) · `score.json` · then the generated **and verified**
+per-seat `.docx`.
 
 ---
 
@@ -405,85 +405,77 @@ tomorrow** — the gap is where his read forms.
 
 ## Layout & automation
 
-- Workspaces: `Month-YYYY/DD/<slug>/` → repo root is `../../../`. Raw inputs:
+- Workspaces: `Month-YYYY/DD/<slug>/` → repo root `../../../`. Raw inputs:
   `job-applications/Month-YYYY/DD/`.
 - **No per-file `<style>` blocks.** Shared classes live in `style.css`.
+- **All SQL in this repo lives in `db/`** (`db/migrations/`, `db/schema.sql`, `db/README.md`), so
+  every schema and data change is re-runnable and verifiable later.
 
-**⚠ TWO upGrad-NAMED SCRIPTS THAT ARE NOT RETIRED.** Hoisted here on 2026-09-21 when the retired
-pipeline moved to `docs/RETIRED-upgrad-pipeline.md`, because both govern CURRENT behaviour and
-would otherwise have been lost with it:
+**⚠ TWO upGrad-NAMED SCRIPTS ARE NOT RETIRED** — hoisted here 2026-09-21 when the rest moved to
+`docs/RETIRED-upgrad-pipeline.md`; both govern CURRENT behaviour and would have gone with it.
 
-- **⛔ `automation/upgrad_resume_paste.py` IS NOT PART OF THE RETIRED PIPELINE.** Despite the name
-  it is the shared résumé **parser**, imported by `resume_db.py`, `jobs_sync.py`, `daily.py`,
-  `resume.py` and `workspace_favicon.py`. It is **load-bearing for the current path** and is
-  deliberately **NOT** guarded by `upgrad_retired.py`. Do not "clean it up" with the others.
-- **⛔ `automation/cleanup_cards.py` IS STILL NEVER RUN.** Not after an export, not after a
-  submission, not as tidy-up. He asks for a specific card by name, or it does not run. A bare
-  slug-less run deletes every temp card. Tailored `<slug>_ats_resume` cards accumulating is the
-  intended state, not a mess to clean.
+- **⛔ `automation/upgrad_resume_paste.py` IS THE SHARED RÉSUMÉ PARSER**, despite the name —
+  imported by `resume_db.py`, `jobs_sync.py`, `daily.py`, `resume.py`, `workspace_favicon.py`.
+  **Load-bearing for the current path, deliberately NOT guarded** by `upgrad_retired.py`. Never
+  "clean it up" with the others.
+- **⛔ `automation/cleanup_cards.py` IS STILL NEVER RUN** — not after an export, not after a
+  submission, not as tidy-up. He names a specific card or it does not run; a bare slug-less run
+  deletes every temp card. Accumulating `<slug>_ats_resume` cards is intended, not mess.
 
 ### The launcher renders from the database
 
-`index.html`'s Applications list comes from `jobs_tracker_v2` via `GET /api/jobs`, not from
-markup. **Never hand-write a row into `#app-list`** — a row added by hand is a row no query
-can see, which is exactly how the page came to show 4 applications while the database held 92.
+`index.html`'s Applications list renders from `jobs_tracker_v2` via `GET /api/jobs`. **Never
+hand-write a row into `#app-list`** — no query can see it; that is how the page showed
+4 applications over 92 database rows.
 
-- **One row per slug, grouped by intake date**, in v1's shape (set by him 2026-08-26 against
-  v1's launcher): underlined text tabs with count badges, a right-aligned search box, a
-  `COMPANY · TITLE · TECH · NON-TECH` strip per group, and an expandable detail row.
-- **v1 AND v2 ARE SEPARATE DATABASES — set by him 2026-08-26.** His words: *"let's use a
-  different database? like `jobs_tracker_v2`? this way we DO NOT interfere with v1 jobs?"*
-  `jobs_tracker` is v1's record — **92 seats, frozen, nothing in v2 opens it**.
-  `jobs_tracker_v2` holds v2's seats and only v2's seats. **All SQL lives in `db/`**:
-  `db/migrations/` (004 creates the database, 005 moves the seats, 006 reverses the archive),
-  `db/schema.sql` for `v2_daily`, and `db/README.md` explaining which applies to which.
-  Verify all three databases read-only with `psql -d postgres -f db/verify.sql`.
+- **One row per slug, grouped by intake date**, v1's shape: underlined text tabs with count badges,
+  right-aligned search box, `COMPANY · TITLE · TECH · NON-TECH` strip per group, expandable detail row.
+- **v1 AND v2 ARE SEPARATE DATABASES** — *"let's use a different database? like `jobs_tracker_v2`?
+  this way we DO NOT interfere with v1 jobs?"* `jobs_tracker` is v1's record, **92 seats, frozen,
+  nothing in v2 opens it**; `jobs_tracker_v2` holds v2's seats only. `db/migrations/` 004 creates
+  it, 005 moves the seats, 006 reverses the archive. Verify all three databases read-only:
+  `psql -d postgres -f db/verify.sql`.
 - `automation/jobs_db.py` — read-only queries (`JOBS_TRACKER_DSN`, default `dbname=jobs_tracker_v2`).
-- `automation/jobs_sync.py` — registers a seat, and re-reads every workspace's `score.json` to
-  refresh its technical score. Idempotent; re-run it after any re-scoring.
-- **Six tabs over eleven statuses, and deliberately no `all`** — `Ready to apply · Applied ·
-  No longer available · Heard back · Not selected · Other`. That is v1's tab set exactly. The
-  mapping and the two-score derivation are documented in `automation/README.md`.
-  `recommended_skip` → **Other** is deliberate: those rows must not drag on the ready-and-unsent
-  backlog gate.
-- **⛔ THERE IS NO `archived` TAB AND NO ARCHIVE CONCEPT.** There was one, for a day —
-  `db/migrations/003` archived v1's 92 rows in place. `db/migrations/006` reversed it when the
-  separate database replaced it. A row that must be filtered out of every view is a row in the
-  wrong database. `archived` is not in `TAB_FOR_STATUS`, not in `TABS`, and not in
-  `jobs_tracker_v2`'s enum. **Do not re-run 003.** (The one thing 006 could not undo: PostgreSQL
-  has no `DROP VALUE`, so `archived` remains in `jobs_tracker`'s enum, on zero rows, inert.)
-- **A v1-rubric row's scores read `v1`, not a number.** They come off v1's five-axis triage
-  rubric; `technical 20` beside `technical 88.4` invites a ranking that does not exist. No such
-  row is served any more, but the rendering stays: `jobs_sync.py` still refuses to overwrite a
-  five-axis breakdown, so the two rubrics can never be silently merged.
-- **Intake-date group headers say `<date> — N seats` and nothing more.** Any clause after that
-  is hand-authored in `automation/intake_notes.json`, which ships empty. The date and the count
-  are derived; a sentence characterising a group of seats is not, and is never composed.
-- ⛔ `applications.salary` is never selected or rendered — compensation is deferred.
-- Served by plain `http.server` there is no API, and the page **says the list is unavailable**
-  rather than rendering an empty grid.
-- **Counts are derived from the rows in the DOM**, and `static/tabs.js` re-derives them from a
-  `MutationObserver` on `#app-list`. Counting only on `DOMContentLoaded` showed every tab
-  reading 0 above a full list, because the rows arrive from `/api/jobs` long afterwards.
+  `automation/jobs_sync.py` — registers a seat, refreshes technical scores from each workspace's
+  `score.json`; idempotent, re-run after any re-scoring.
+- **Six tabs over eleven statuses, deliberately no `all`** — `Ready to apply · Applied · No longer
+  available · Heard back · Not selected · Other`, v1's set exactly; mapping and two-score derivation
+  in `automation/README.md`. `recommended_skip` → **Other**, so those rows never drag on the
+  ready-and-unsent backlog gate.
+- **⛔ NO `archived` TAB, NO ARCHIVE CONCEPT.** `db/migrations/003` archived v1's 92 rows in place
+  for a day; `006` reversed it. A row that must be filtered out of every view belongs in the other
+  database. Not in `TAB_FOR_STATUS`, `TABS`, or `jobs_tracker_v2`'s enum. **Never re-run 003.**
+  (No `DROP VALUE` in PostgreSQL, so `archived` survives inert in `jobs_tracker`'s enum.)
+- **A v1-rubric row's scores read `v1`, not a number** — five-axis triage rubric, and `technical 20`
+  beside `technical 88.4` implies a ranking that does not exist. `jobs_sync.py` refuses to overwrite
+  a five-axis breakdown, so the two rubrics can never silently merge.
+- **Group headers: `<date> — N seats`, nothing more** — date and count are derived; a sentence
+  characterising a group of seats is not, and is never composed. Extra clauses are hand-authored in
+  `automation/intake_notes.json`, which ships empty.
+- **⛔ `applications.salary` is never selected or rendered** — compensation is deferred.
+- Under plain `http.server` there is no API: the page **says the list is unavailable**, never an
+  empty grid.
+- **Counts derive from the DOM rows** — `static/tabs.js` re-derives on a `MutationObserver` over
+  `#app-list`; `DOMContentLoaded` alone read 0 on every tab above a full list, because rows arrive
+  from `/api/jobs` long afterwards.
 
 ### Capture the history — `application_events`
 
-**Set by him 2026-08-26: *"we should capture our history properly."*** `status_events` records that
-a row moved `resume_drafted → applied`. It cannot record that a recruiter sent an InMail, that he
-replied, that two job descriptions came back four hours later, or that a CV was requested. Those
-are what a process is actually made of, and they are what **v1 never had** — one process ended in an
-unexplained rejection with no recording, another produced no debrief at all.
-
+*"we should capture our history properly."* `status_events` records only `resume_drafted → applied`
+— not an InMail arriving, a reply going out, two JDs back four hours later, a CV requested. **v1 had
+none of it**; two processes closed with nothing recorded.
 `db/migrations/009_application_events.sql` creates the timeline. Six kinds: `inbound` · `outbound` ·
 `document` · `call` · `status` · `note`.
 
-- **`actor` is REQUIRED.** *"Someone sent a JD"* is the shape of a record you cannot use later.
-  A named human for their side, `Abhisheik` for his.
-- **`detail` holds the message VERBATIM** where one exists. A paraphrase six weeks later is not
+- **`actor` is REQUIRED** — *"Someone sent a JD"* is a record you cannot use later. A named human
+  for their side, `Abhisheik` for his.
+- **`detail` is the message VERBATIM** where one exists; a paraphrase six weeks later is not
   evidence of what was said. Paul Abbott's two messages and Harisri Parthasarathi's InMail are
   stored in full.
-- **`artefact`** is the repo-relative path when a file changed hands — a JD PDF, an exported résumé.
-- Append-only in spirit: **correct by adding an event, never by editing one.**
+- **`artefact`** is the repo-relative path when a file changed hands (a JD PDF, an exported résumé).
+- **Append-only: correct by adding an event, never by editing one.**
+- **Log one every time anything happens** — InMail in, reply out, document exchanged, call
+  scheduled or held. One command, against the v1 lesson.
 
 ```
 psql -d jobs_tracker_v2 -v ON_ERROR_STOP=1 -c "select
@@ -493,127 +485,98 @@ psql -d jobs_tracker_v2 -v ON_ERROR_STOP=1 -c "select
   -f db/operations/log_event.sql
 ```
 
-**Log an event every time something happens** — an InMail arrives, a reply goes out, a document
-changes hands, a call is scheduled or held. The cost is one command; the cost of not having it is
-the v1 lesson.
-
 ### The daily log
 
-`daily/index.html` — what is due, what is blocked, what is next. **Generated, never authored:**
-`daily/days.json` is the source and `automation/daily.py` owns the markup.
+`daily/index.html` — due, blocked, next. **Generated, never authored:** `daily/days.json` is the
+source, `automation/daily.py` owns the markup.
 
 ```
-automation/.venv/bin/python automation/serve.py     # replaces `python3 -m http.server 8006`
-automation/.venv/bin/python automation/daily.py     # regenerate the page from days.json
-./todo                                              # what's due, from the terminal
-./todo backlog                                      # what's moved out, and what can come back
+automation/.venv/bin/python automation/serve.py   # NOT `python3 -m http.server 8006`
+automation/.venv/bin/python automation/daily.py   # regenerate the page from days.json
+./todo   # what's due, from the terminal   ./todo backlog   # what moved out, what can come back
 ```
 
-- **State lives in PostgreSQL** (`v2_daily`), not in the HTML and not in the browser.
-  `task_state` is what the page renders; `task_event` is append-only history — every tick,
-  park, push and drop with its reasons and timestamp. Schema: `db/schema.sql`;
-  migrations in `db/migrations/`. **All SQL in this repo lives in `db/`** — set by him
-  2026-08-26, so every schema and data change is re-runnable and verifiable later.
-- **`serve.py`, not `http.server`.** Same port 8006 so a pinned tab keeps working. It adds the
-  state API, sends `no-store` so a refresh really refreshes, and binds `127.0.0.1` because it
-  writes to a database. Against plain `http.server` the page falls back to localStorage and
-  says so in the banner.
-- **Each task carries a priority and dependencies.** A task whose prerequisites are unticked is
-  marked *waiting* but never disabled — doing things out of order is legitimate.
-- **Unfinished tasks roll over automatically.** Never duplicate a task in `days.json` to carry
-  it forward.
-- **Moving a task out always needs at least one reason**, and reasons decide whether it can
-  come back: a task is revivable only if **every** reason it carries is revivable
-  (`revivable` in `days.json`). One terminal reason — the posting is gone — closes it.
-  The CLI refuses to move a task out with no reason and no terminal to ask on, rather than
-  inventing one. That refusal is deliberate: an agent has to come back and ask.
+- **State lives in PostgreSQL (`v2_daily`)**, not the HTML, not the browser: `task_state` is what
+  the page renders, `task_event` is append-only history — every tick, park, push and drop with its
+  reasons and timestamp.
+- **`serve.py`, not `http.server`** — same port 8006 so a pinned tab keeps working; adds the state
+  API, sends `no-store` so a refresh really refreshes, binds `127.0.0.1` because it writes to a
+  database. Under plain `http.server` the page falls back to localStorage and says so in the banner.
+- **Each task carries a priority and dependencies**; unticked prerequisites mark it *waiting*, never
+  disabled — out of order is legitimate.
+- **Unfinished tasks roll over automatically** — never duplicate one in `days.json` to carry it forward.
+- **Moving a task out always needs at least one reason**, and the reasons decide revival: revivable
+  only if **every** reason it carries is `revivable` in `days.json`; one terminal reason — the
+  posting is gone — closes it. With no reason and no terminal to ask on, the CLI refuses rather than
+  inventing one. Deliberate: an agent has to come back and ask.
 - Tests: `bash automation/tests/run.sh` (the page suite needs `npm install jsdom`).
 
 ### Making a résumé, and its paste sheet
 
 ```
-automation/.venv/bin/python automation/resume.py new   --slug <slug> [--company X --role Y]
+automation/.venv/bin/python automation/resume.py new   --slug <slug> --url <posting URL> [--company X --role Y]
 automation/.venv/bin/python automation/resume.py sheet [--slug <slug>] [--since <git-ref>]
 ```
 
-- **`new`** scaffolds a whole job workspace: the dated directory, `upgrad_resume.html` copied
-  from the master, an empty `paste_notes.json`, a `jd.md` to paste into, a per-workspace favicon,
-  and a row in `jobs_tracker_v2` as `resume_drafted`, which the launcher shows under *building*.
-  Everything repeated 15–20 times a night.
-- **`sheet`** emits `<workspace>/paste_sheet.html` — every section as ONE copy block, generated
-  **from** the résumé so it cannot disagree with what the bot writes. Which sections changed is
-  derived by diffing against git; `--since <ref>` is needed when the change is already committed,
-  because diffing a committed file against HEAD correctly reports nothing changed.
-- The *reason* a section changed cannot be derived — it comes from `paste_notes.json`
-  (`{"quick-summary": {"why": …, "heads_up": …, "hygiene": …}}`). A changed section with no note
-  says so rather than inventing one.
-- `automation/add_breadcrumbs.py` and `automation/expand_acronyms.py` — both idempotent, both
-  safe to re-run when new pages land.
+- **`new`** scaffolds the workspace: dated directory, `upgrad_resume.html` copied from the master,
+  empty `paste_notes.json`, a `jd.md` to paste into, a per-workspace favicon, and a `resume_drafted`
+  row in `jobs_tracker_v2` the launcher shows under *building*. 15–20 times a night. **Refuses without a
+  posting URL**: pass `--url <posting URL>`, or `--no-url "<reason>"` when the seat genuinely has
+  none (see *Intake flow*).
+- **`sheet`** emits `<workspace>/paste_sheet.html` — each section as ONE copy block, generated
+  **from** the résumé so it cannot disagree with it. Changed sections come from a git diff;
+  `--since <ref>` is needed once the change is committed, because diffing a committed file against
+  HEAD correctly reports nothing changed. The *reason* a section changed cannot be derived — it
+  comes from `paste_notes.json` (`{"quick-summary": {"why": …, "heads_up": …, "hygiene": …}}`), and
+  a changed section with no note says so rather than inventing one.
+- `automation/add_breadcrumbs.py`, `automation/expand_acronyms.py` — idempotent, safe to re-run when
+  new pages land.
 
 ### Case studies — VoltusWave · Amura
 
-`killer-query-case-studies/` is **v1**, complete and committed (46227bd). Ten killer-query case
-studies plus Q&A companions, ~198,000 words: what was implemented for Amura, a chronic-care
-platform covering 80+ conditions.
+`killer-query-case-studies/` is **v1**: ten killer-query case studies plus Q&A companions,
+~198,000 words on Amura, a chronic-care platform covering 80+ conditions. Complete, committed
+(46227bd), verified against the corpus 2026-08-25.
 
-**Everything in v1 SHIPPED — he confirmed it 2026-08-25.** Do not let an extraction downgrade
-it. The documents say *"the contract was signed and the query is live"*; what several pages
-record as *"approval pending"* is an internal **design-review sign-off**, not deployment
-status. Shipped and approved are different things and the source keeps them apart correctly —
-a first extraction pass misread the governance state as delivery state and under-claimed.
+- **All of v1 SHIPPED — he confirmed it.** Never let an extraction downgrade it: the source says
+  *"the contract was signed and the query is live"*, and *"approval pending"* is an internal
+  **design-review sign-off**, not deployment status — a first pass misread the two and under-claimed.
+- **⚠ He has NO outcome numbers** (he left VoltusWave before capturing them). Latency achieved,
+  adoption, error reduction, cost saved: `[fill in metric]` or absent — never invent one, and never
+  ask him again for a number he has already said he does not have. Amura bullets carry **design and
+  scale markers only**: 80+ conditions, a 6-hour cache TTL, a 90-day outcome-maturity window,
+  twenty adversarial-review findings absorbed into a hardened v2, 13 of 13 local findings closed,
+  and — user-supplied, safe to claim — **9–10 years of patient history**. That last is load-bearing,
+  not decorative: as-of featurisation, leakage-safe labelling, 90-day outcome maturity and sequence
+  mining mean nothing without years of longitudinal data behind them.
+- **⚠ THE WORST HONESTY LANDMINE IN THE CORPUS — KQ2's illustrative served-cell table.**
+  `kq2-outcome-correlation.html` prints `Metformin + concurrent nutrition | 412 | 0.58 |
+  [0.53, 0.63]` against `Metformin alone | 217 | 0.34 | [0.28, 0.41]`, `+24 percentage points` and
+  `max SMD 0.08` over eight covariates — formatted exactly like a measured result. Its own label,
+  which the prep page says to speak aloud: *"**Illustrative response shape, not a production
+  measurement.**"* **None of 412, 217, 0.58, 0.34, +24pp or 0.08 may ever appear on a résumé or in a
+  room as an outcome.** Same class: KQ1's *"300 patients in India on protocol A"* — an illustrative
+  example, not a cohort size.
+- **⚠ Amura names NO message broker** — `Kafka` 0 hits and `Kinesis` 0 hits corpus-wide; the source
+  deliberately says only *"its streaming transport"*. **The master's Kinesis bullet is the CHAT
+  PLATFORM, a different system** — keep them apart, never cite Amura as Kinesis evidence. (Kinesis
+  stays confirmed in production for the chat platform.)
+- **The 6-hour cache TTL is KQ4's, not KQ1's**: `kq1-precedent-search.html` is **TTL 1h**,
+  `kq4-early-signal-detection.html` **TTL 6h** — both safe markers, each on the right query.
+  **`TraversalSource` is corroborated in substance but not by that name**: KQ9 says *"tenant-scoped
+  traversal-source wrapper"*, which is how to write it.
+- **Do NOT wait for v2** — build bullets, workspaces and prep artefacts off v1 now; v2 is
+  **days-to-weeks away** and holding work back for it is the build-instead-of-send failure in a
+  different hat. It lands in `killer-query-case-studies-v2/`, **never overwriting v1**
+  (`professional-journey-original.md` line 231 and the launcher link point at v1 and stay valid, and
+  side by side is what makes the diff possible). Then extract v2, diff it against v1, revise only
+  what moved — **honesty work, not bookkeeping**: a claim moving *shipped* → *designed* between his
+  own two versions must never reach a résumé as shipped. Any downgrade binds.
+- **Status vocabulary, from the source and never upgraded:** `shipped-production` ·
+  `shipped-ci-only` · `designed-reviewed` · `designed-only` · `unclear` — the material draws the
+  line itself (*"components landing does not by itself convert a review verdict"*), and anything
+  derived from it inherits that precision.
 
-**⚠ He does NOT have the outcome numbers. He left VoltusWave before he could capture them.**
-So Amura bullets carry **design and scale markers**, never impact metrics: 80+ conditions,
-a 6-hour cache TTL, a 90-day outcome-maturity window, twenty adversarial-review findings
-absorbed into a hardened v2, 13 of 13 local findings closed. Those are facts from his own
-documents. **Add one more, user-supplied and safe to claim: the platform held 9–10 years of
-patient history**, which is why any killer query needing historical data could actually be
-answered. That figure is load-bearing rather than decorative — as-of featurisation,
-leakage-safe labelling, 90-day outcome maturity and sequence mining are only meaningful with
-years of longitudinal data behind them, so it is the number that makes the rest credible.
-
-**⚠ THE SINGLE WORST HONESTY LANDMINE IN THE CORPUS — KQ2's illustrative served-cell table.**
-`kq2-outcome-correlation.html` prints `Metformin + concurrent nutrition | 412 | 0.58 |
-[0.53, 0.63]` against `Metformin alone | 217 | 0.34 | [0.28, 0.41]`, a `+24 percentage points`
-difference and `max SMD 0.08` across eight covariates. It is formatted exactly like a measured
-result. The page labels it in its own words: *"**Illustrative response shape, not a production
-measurement.**"* The prep page instructs saying the word aloud. **None of 412, 217, 0.58, 0.34,
-+24pp or 0.08 may ever appear on a résumé or in a room as an outcome.** Same class: KQ1's
-*"300 patients in India on protocol A"* is an illustrative example, not a cohort size. Of
-198,000 words this is the block most likely to be mistaken for the impact metrics he does not
-have. Verified directly 2026-08-25.
-
-**⚠ Amura names NO message broker — verified 2026-08-25: `Kafka` 0 hits and `Kinesis` 0 hits
-across the entire corpus.** The source deliberately says only *"its streaming transport"*. **The
-master's Kinesis bullet is the CHAT PLATFORM, a different system.** Keep them apart, and never
-cite Amura as Kinesis evidence. (Kinesis remains confirmed in production for the chat platform.)
-
-**The 6-hour cache TTL belongs to KQ4, not KQ1.** Verified 2026-08-25: `kq1-precedent-search.html`
-is **TTL 1h**; `kq4-early-signal-detection.html` is **TTL 6h**. Both are safe markers — attach
-each to the right query. `TraversalSource` is corroborated **in substance but not by that name**;
-KQ9 words it *"tenant-scoped traversal-source wrapper"*, which is how to write it.
-
-**Latency achieved, adoption, error reduction, cost saved — he cannot supply these,
-so they are `[fill in metric]` or absent. Never invent one, and never ask him again for a
-number he has already said he does not have.**
-
-**Do NOT wait for v2. Finish everything on v1.** Bullets, workspaces, prep artefacts — all of it
-gets built from v1 now. v2 needs a few more points and is **days-to-weeks away**; holding work
-back for it is the build-instead-of-send failure wearing a different hat.
-
-When v2 lands it goes in `killer-query-case-studies-v2/` — **never overwrite v1 in place.**
-`professional-journey-original.md` line 231 and the launcher link both point at v1 and stay
-valid, and keeping both side by side is what makes the diff possible. At that point: extract v2,
-diff it against v1, and revise only what actually moved.
-
-**The v1↔v2 diff is honesty work, not bookkeeping.** A claim that moves from *shipped* to
-*designed* between his own two versions must never reach a résumé as shipped. Extract both,
-diff them, and treat any downgrade as binding.
-
-**Status vocabulary, preserved from the source and never upgraded:** `shipped-production` ·
-`shipped-ci-only` · `designed-reviewed` · `designed-only` · `unclear`. The material draws this
-line itself — *"components landing does not by itself convert a review verdict"* is its own
-wording. Anything derived from it inherits that precision.
 
 > ## ⛔ THE upGrad / HIRATION PIPELINE IS RETIRED — moved out of this file 2026-09-21
 >
@@ -679,95 +642,53 @@ no code change.
 
 ## Execution model — workflows and subagents do the work
 
-### ⛔ AGENT BUDGET — MAX 5. Set by him 2026-09-20. This bounds everything below it.
+*Every rule here is his, on the date given; italic quotes are his words verbatim.*
 
-**No workflow spawns more than 5 agents, and no turn spawns more than 5 standalone Agent calls.**
-For job search and artefact building, five is enough. This rule comes FIRST and the
-"offload everything" rule below operates inside it, never around it.
+### ⛔ AGENT BUDGET — MAX 5 (2026-09-20). This bounds everything below it.
 
-- **Every fan-out is explicitly bounded.** `items.slice(0, 5)`, never a bare `parallel(items.map(...))`
-  over a list whose length is data-dependent. If the list is longer than five, pick the five that
-  matter and **`log()` what was dropped** — silent truncation reads as "covered everything".
-- **⛔ NEVER nest `parallel()` inside a `pipeline()` stage. That MULTIPLIES.**
-  `pipeline(edits, e => parallel(LENSES.map(...)))` over 22 edits with 3 lenses is **66 agents**, and
-  that is exactly what happened on **2026-09-20** — 70 in one workflow, ~89 across the session, on a
-  task where ~17 was the right size. He called it out: *"70 agents for this task? that's a bit much."*
-- **Verification depth scales with RISK, not uniformly.** The 2026-09-20 blowup applied the same
-  three-lens adversarial treatment to a one-word skills-label tweak as to a new technical claim.
-  Triage first: only edits asserting new substance need adversarial verification.
-- **Deterministic checks are SCRIPTS, never agents.** Word count, bolded fact, trailing period,
-  leading-verb stem collisions, acronym expansion — these are `psql` queries and
-  `verify_resume_docx.py`, which already exist. Using a language model to count words is both
-  wasteful and *less reliable*; the Measurement traps section above says so in its own words.
-- **Ultracode's "token cost is not a constraint" is NOT a licence to skip proportionality.**
-  Cheap and warranted are different questions. This budget holds regardless of ultracode.
+**No workflow spawns more than 5 agents; no turn spawns more than 5 standalone Agent calls.** Five
+is enough here, and this rule comes FIRST — "offload everything" operates inside it, never around
+it. **If a task genuinely needs more, say so and ask**; never spend it and explain afterwards.
 
-**If a task genuinely needs more than five, say so and ask** — do not spend it and explain afterwards.
-
-**If it CAN be offloaded to a subagent or workflow, it IS.** Set by him 2026-08-25 and it is the
-default, not a preference — research, résumé drafting, JD scoring, workspace artefacts, extraction,
-audits, drafting of any kind. Read each phase's results before choosing the next phase.
-
-**The reason is to keep the main session FREE.** His words, 2026-08-25. Work that runs in the
-main thread blocks it: he cannot paste the next job description, redirect, or ask something else
-while it grinds. Work that runs in a subagent runs in the background and the session stays
-answerable. With ~20 workspaces in a night, availability matters more than any single artefact.
-
-**The test is not "is this hard enough to delegate" — it is "does this have to be me".** Almost
-nothing does. When it feels faster to write it myself than to brief an agent, that is precisely
-the instinct that blocks the session for the next twenty minutes.
-
-**What genuinely has to stay in the main thread:**
-
-- **Adjudicating** what comes back, and the **adversarial verify pass** against
-  `professional-journey.md` — delegation is only safe because this happens.
-- **His decisions** — the confirm-or-reject list, what to send, what to trim.
-- **Coordination** — deciding the next phase, and status changes through `./todo`.
-- Conversational turns, and running a command that already exists.
-
-Everything else goes wide.
-
-**Research a job → workflow.** A multi-modal sweep, one agent per angle: the company's own
-site, comp signals, the seat's legitimacy and whether it is even open, red and green flags,
-forcing questions. Then a synthesis pass into cited `research.html`. Postings lie about
-location, title and openness — every JD claim gets checked against the company's own site.
-
-**Build a résumé → workflow.** Fan the draft out per section — headline, summary, the three
-skills blocks, the five experience roles — each agent working from `professional-journey.md`.
-Then Rule 7 re-vectoring per job, fanned out the same way.
-
-**EVERY workspace artefact is built by a subagent or workflow — no exceptions.** Set by him
-2026-08-25. That means the whole build, not just the parts that look hard: `jd.md` and `jd.html`,
-the weighted-rubric `index.html`, `resume_changes_for_<N>pct_match.html`, `bullets_for_upgrad.html`,
-the re-vectored `upgrad_resume.html`, and cited `research.html`. Scaffolding with `resume.py new`
-is a command, not authoring — but the moment content is being written into a workspace, it is
-delegated.
-
-**What stays in the main thread:** adjudicating what comes back, the adversarial verify pass, and
-status changes through `./todo`. Coordination and judgement, never production.
+- **Bound every fan-out:** `items.slice(0, 5)`, never a bare `parallel(items.map(...))` over a
+  data-dependent list. Over five, pick the five that matter and **`log()` what was dropped** —
+  silent truncation reads as "covered everything".
+- **⛔ NEVER nest `parallel()` inside a `pipeline()` stage — that MULTIPLIES.**
+  `pipeline(edits, e => parallel(LENSES.map(...)))` over 22 edits × 3 lenses is **66 agents**; on
+  **2026-09-20** it was 70 in one workflow, ~89 across the session, where ~17 was right —
+  *"70 agents for this task? that's a bit much."*
+- **Verification depth scales with RISK, not uniformly.** That same blowup gave a one-word
+  skills-label tweak the full three-lens adversarial treatment. Triage: only edits asserting new
+  substance need it.
+- **Deterministic checks are SCRIPTS, never agents** — word count, bolded fact, trailing period,
+  leading-verb stem collisions, acronym expansion are `psql` queries and `verify_resume_docx.py`,
+  already written. A model counting words is wasteful *and less reliable*; see *Measurement traps*.
+- **Ultracode's "token cost is not a constraint" is NOT a licence to skip proportionality.** Cheap
+  and warranted are different questions; the budget holds regardless.
 
 ### ⛔ THE REAL GOAL: KEEP THIS CLI ANSWERABLE. Restated by him 2026-09-21.
 
-His words: *"The real goal: Keep this main CLI ready for accepting tasks/answering questions."*
-**That is WHY workspaces are delegated — not because agents write better.** A main thread busy
-producing is a main thread that cannot take the next pasted job description, a redirect, or a
-question. With ~20 workspaces in a night, availability beats any single artefact.
+*"The real goal: Keep this main CLI ready for accepting tasks/answering questions."* **That is WHY
+work is delegated — not because agents write better.** A thread busy producing cannot take the next
+pasted JD, a redirect or a question; at ~20 workspaces a night, availability beats any single
+artefact. Hence (2026-08-25, default not preference): **if it CAN be offloaded to a subagent or
+workflow, it IS** — research, résumé drafting, JD scoring, workspace artefacts, extraction, audits,
+drafting of any kind. **The test is not "is this hard enough to delegate" — it is "does this have
+to be me".** Almost nothing does; feeling it faster to write than to brief is the instinct that
+blocks the thread for twenty minutes.
 
-Three consequences, all of which were violated on 2026-09-20:
+Three consequences, all violated on 2026-09-20:
 
-- **"It's only mechanical" is not an exemption.** Transcribing a pasted job description into
-  `jd.md`, hand-writing `score.json`, composing bullet text — each felt faster to do directly, and
-  each one blocked the thread. **If content is landing in a workspace, it is delegated.** The only
-  things typed here are commands that already exist, and judgement.
-- **Launch in the background, then TALK TO HIM.** Do not sit polling a running workflow with status
-  commands — that is the blocked thread wearing a disguise. Launch, report what is running in one
-  line, and stay available. The completion notification will arrive on its own.
-- **Adjudication is main-thread work and stays here.** Reading what came back, the adversarial
-  verify pass, and deciding what to apply are exactly what this thread is for. Those are quick and
-  they are the thing only this thread can do.
+- **"It's only mechanical" is not an exemption.** Transcribing a JD into `jd.md`, hand-writing
+  `score.json`, composing bullet text — each felt faster, each blocked the thread. **Content
+  landing in a workspace is delegated;** only existing commands and judgement are typed here.
+- **Launch in the background, then TALK TO HIM.** Polling a running workflow is the blocked thread
+  in disguise: launch, report it in one line, stay available — the completion notification arrives
+  on its own.
+- **Adjudication stays here** — quick, and the one thing only this thread can do.
 
-**How this squares with the 5-agent budget above.** The cap is **per workflow**, so a full workspace
-is **three or four sequential background workflows of at most five agents each**, not one big fan-out:
+**How this squares with the 5-agent budget: the cap is PER WORKFLOW**, so a full workspace is three
+or four sequential background workflows of ≤5 agents each, never one big fan-out:
 
 ```
 phase 1  scoring + research          -> <=5 agents, background
@@ -775,103 +696,86 @@ phase 2  re-vectoring + verification -> <=5 agents, background
 phase 3  the page artefacts          -> <=5 agents, background
 ```
 
-Between phases the thread is free and he can interrupt, redirect or paste the next seat. That is the
-point. **Read each phase's results before choosing the next** — which the execution model already
-required, and which sequential phases make natural rather than optional.
+Between phases the thread is free for an interrupt, a redirect or the next seat — that is the
+point. **Read each phase's results before choosing the next.**
 
-**Score a JD → subagents, one per rubric criterion.** The **technical score is the one that
-matters, and the target is 95+.** Give each criterion its own agent: weight, score out of ten,
-and the evidence quoted from `professional-journey.md`. A separate agent names the **binding
-constraint and the smallest honest lift** — which is almost always Rule 7 re-vectoring of real
-work, never a new claim.
+**Main thread only — coordination and judgement, never production:** **adjudicating** what comes
+back and the **adversarial verify pass** against `professional-journey.md`, which is the only
+reason delegation is safe · **his decisions** — the confirm-or-reject list, what to send, what to
+trim · **coordination** — the next phase, and status changes through `./todo` · conversational
+turns, and running a command that already exists. Everything else goes wide.
 
-**Never fabricate to reach 95.** If honest evidence caps the score below 95, say so and name
-exactly what is missing and what would close it. A 95 built on an invented claim is worse than
-an honest 88, because the invented one gets found in the room. Read "e.g. / or / preferably"
-generously — a specific named tool he has not used is a ramp item, not a capability cap — and
-keep the non-technical score out of it entirely: informational, never a gate, never a drag on
-the technical number.
+**EVERY workspace artefact is built by a subagent or workflow — no exceptions** (2026-08-25):
+`jd.md`, `jd.html`, the weighted-rubric `index.html`, `resume_changes_for_<N>pct_match.html`,
+cited `research.html`, and the per-seat `.docx`. Scaffolding
+with `resume.py new` is a command, not authoring — but the moment content lands in a workspace, it
+is delegated.
 
-**The verification phase is not optional, and it is what makes delegation safe.** Subagent
-output runs roughly one factual error per ten claims, and this is a document where an invented
-number is the cardinal sin. Every résumé workflow ends with adversarial agents checking each
-claim back against the journey doc and the honesty rules above — anything unsupported is
-**cut, not softened** — and you adjudicate the survivors yourself before a word reaches a file
-he will paste. A claim that survives because no one checked it is a defect, not a result.
+- **Research a job → workflow.** One agent per angle — the company's own site, comp signals, the
+  seat's legitimacy and whether it is even open, red and green flags, forcing questions — then
+  synthesis into cited `research.html`. Postings lie about location, title and openness — every JD
+  claim gets checked against the company's own site.
+- **Build a résumé → workflow.** Fan the draft per section — headline, summary, the three skills
+  blocks, the five experience roles — each agent from `professional-journey.md`; then Rule 7
+  re-vectoring per job, fanned the same way.
+- **Score a JD → subagents, one per rubric criterion.** **Technical score is the one that matters,
+  target 95+**: each criterion gets its own agent (weight, score out of ten, evidence quoted from
+  `professional-journey.md`), plus one naming the **binding constraint and the smallest honest
+  lift** — almost always Rule 7 re-vectoring of real work, never a new claim.
 
-**Never delegate the open claims.** The confirm-or-reject list is his call alone. No agent
-resolves the graph neural network, the four Rocket metrics, the 70–80% consolidation, the
-27 ms / P95 16 ms pairing or the 100,000-concurrent wording. Surface them in every prep
-artefact and leave the résumé wording alone.
+**Never fabricate to reach 95.** Read "e.g. / or / preferably" generously, treat a named tool he
+has not used as a ramp item and not a capability cap, and keep the non-technical score out
+entirely — informational, never a gate, never a drag (detail in *JD match scoring*). If honest
+evidence caps the score lower, say so and name what is missing and what would close it: a 95 on an
+invented claim is worse than an honest 88, because the invented one gets found in the room.
 
-**⚠ .docx IS THE OUTPUT FORM — set by him 2026-08-27.** His words: *"for resumes, we can create
-docx. right? wouldn't that be easier?"* · *"we create .docx file(s) that I can also edit easily."* ·
-*"that's going to be our form now."* · *"No need of a HTML page or anything."*
+**The verification phase is not optional; it is what makes delegation safe.** Subagent output runs
+roughly one factual error per ten claims and an invented number is the cardinal sin here, so every
+résumé workflow ends with adversarial agents checking each claim against the journey doc and the
+honesty rules — anything unsupported is **cut, not softened** — and you adjudicate the survivors
+before a word reaches a file he will paste. A claim that survives unchecked is a defect, not a
+result.
+
+**Never delegate the open claims** — the confirm-or-reject list is his alone. No agent resolves the
+graph neural network, the four Rocket metrics, the 70–80% consolidation, the 27 ms / P95 16 ms
+pairing or the 100,000-concurrent wording. Surface them in every prep artefact; leave the résumé
+wording alone.
+
+**⚠ .docx IS THE OUTPUT FORM — 2026-08-27.** *"for resumes, we can create docx. right? wouldn't
+that be easier?"* · *"we create .docx file(s) that I can also edit easily."* · *"that's going to be
+our form now."* · *"No need of a HTML page or anything."*
 
 ```
 automation/.venv/bin/python automation/resume_docx.py generate   # DB -> master/Abhisheik_Deo_Resume.docx
 automation/.venv/bin/python automation/resume_docx.py verify     # re-open it and prove fidelity
 ```
 
-- **The pipeline is `jobs_tracker_v2` → `.docx` → he edits in Word.** No HTML in the delivery path,
-  no copy/paste sheet, no card. `master/upgrad_resume.html` survives ONLY as the round-trip
-  verification artefact that proves a parse did not silently drop a `<strong>` — `resume_docx.py`
-  refuses to write to it.
-- **It REFUSES rather than emitting a quietly-wrong document.** A missing block, an absent section,
-  or one `<strong>` that failed to become a bold run is a refusal, not a warning.
-- **The bold gate counts OCCURRENCES, not membership.** 209 database spans are only 182 distinct;
-  a membership test let bold vanish from three of the four `Java and Spring Boot` spans and still
-  passed. `resume-issues-to-avoid/` rule 9 is exactly that failure, so its only detector must not be
-  blind to repeats.
-- **Never `run.bold = False`.** It writes an explicit `<w:b w:val="0"/>`, and direct formatting
-  outranks the style — 299 of them meant editing *List Bullet* in Word's style pane did nothing.
-  Bold is set only when true, so the document stays restyleable.
+- **`jobs_tracker_v2` → `.docx` → he edits in Word.** No HTML in the delivery path, no copy/paste
+  sheet, no card. `master/upgrad_resume.html` survives ONLY as the round-trip verification artefact
+  proving a parse did not drop a `<strong>`; `resume_docx.py` refuses to write to it.
+- **It REFUSES rather than emit a quietly-wrong document** — a missing block, an absent section or
+  one `<strong>` that failed to become a bold run is a refusal, not a warning. Its **bold gate
+  counts OCCURRENCES, not membership**: 209 database spans are only 182 distinct, and a membership
+  test let bold vanish from three of four `Java and Spring Boot` spans and still pass
+  (`resume-issues-to-avoid/` rule 9 exactly), so the only detector must not be blind to repeats.
+  And **never `run.bold = False`** — it writes an explicit `<w:b w:val="0"/>`, direct formatting
+  outranks the style, and 299 of them meant editing *List Bullet* in Word's style pane did nothing;
+  bold only when true, so the document stays restyleable.
 
-**⛔ SCOPE — per-seat résumés, set by him 2026-08-27: `.docx` for NEW JOBS ONLY.** His words:
-*"similar path for workspace specific resumes as well"* · *"new jobs that is"* · **_"ones we've
-already applied to - do NOT change them."_**
+**⛔ SCOPE — per-seat résumés, 2026-08-27: `.docx` for NEW JOBS ONLY.** *"similar path for workspace
+specific resumes as well"* · *"new jobs that is"* · **_"ones we've already applied to - do NOT
+change them."_** **Every seat past a pre-send state is frozen** (query `jobs_tracker_v2`; never carry the count here) — no `.docx`, regeneration, migration
+or edits; the sent PDFs are the record, and migration 011's trigger makes editing a sent version
+raise, so it is enforced rather than remembered. **Wipro is the first real selection**, and every
+new seat after it. **A per-seat résumé is a selection with edits** in `resume_versions` /
+`resume_version_bullets`, never a copied file: copying is the bug — eight workspace copies of his
+career exist (six by an earlier count), all diverged, every one stale silently when the master
+changed, the master-level duplication recreated one level down.
 
-- **The seven sent/withdrawn seats are frozen.** No `.docx`, no regeneration, no migration, no
-  edits. The PDFs already sent are the record. Migration 011's trigger makes editing a sent version
-  raise, so this is enforced rather than remembered.
-- **Wipro is the first real selection**, and every new seat after it. A per-seat résumé is a
-  **selection with edits** in `resume_versions` / `resume_version_bullets` — never a copied file.
-  The copying is the bug: eight workspace copies of his whole career already exist and every one
-  went stale silently when the master changed.
-
-**⚠ ARCHITECTURE — THE DATABASE IS THE SOURCE, HTML IS A VIEW.**
-
-**✅ NO LONGER DEFERRED. He started it on 2026-08-27**, in his own words: *"remember, you SHOULD be
-using a DB to store the information"* · *"AND prepare the HTML from that DB"* · *"starting now, we
-do that"* · *"from the master resume"* · **_"DB is the source. No more grepping, etc etc"_**.
-
-**What this means in practice, and it is a hard change of habit:**
-
-- **The database is where résumé content LIVES.** Bullets, skills, the headline, the summary, role
-  metadata, education, certifications and personal information. Not the file.
-- **`master/upgrad_resume.html` is a GENERATED ARTEFACT.** Regenerate it; never hand-edit it. An
-  edit made in the file is lost on the next generate, exactly the way an `UPDATE` against a derived
-  table used to be lost on the next sync — the direction has simply reversed.
-- **⛔ STOP GREPPING THE RÉSUMÉ FILES. Query the database.** *"No more grepping, etc etc"* is his
-  instruction and it is the point of the whole change. Which bullets carry a number, which leading
-  verbs are taken, what a role claimed for a given seat, where a metric appears — these are `SELECT`s
-  now, not `grep -o` piped to `wc -l`. Every measurement trap this file records under
-  *Measurement traps* came from parsing minified HTML with regexes. A query cannot mis-count a line,
-  cannot match `p-e**lpa**so` for "LPA", and cannot mistake a Mermaid node id for Amazon S3.
-- **Scope, stated precisely so the boundary is never guessed: the MASTER résumé only.** The eight
-  per-seat workspace résumés are NOT migrated. Until they are, they remain files, and a sent one is
-  never edited at all.
-
-**⛔ THE GATE IS THE ROUND TRIP, AND IT IS NOT OPTIONAL.** Load the master into the database,
-regenerate the HTML, and diff. **Byte-identical, or every difference enumerated and justified.** A
-parse that silently drops a `<strong>` corrupts the master and would not surface until an exported
-PDF lost its bold. **A lossy migration is the worst outcome available; stop rather than proceed.**
-Until that proof passes for a given source, the FILE remains authoritative for it.
-
-Do not half-migrate. A master résumé caught mid-migration across a session boundary is the worst
-state to inherit.
-
-The shape he set out, in his own words:
+**⚠ ARCHITECTURE — THE DATABASE IS THE SOURCE, HTML IS A VIEW. ✅ Started by him 2026-08-27:**
+*"remember, you SHOULD be using a DB to store the information"* · *"AND prepare the HTML from that
+DB"* · *"starting now, we do that"* · *"from the master resume"* · **_"DB is the source. No more
+grepping, etc etc"_**. The shape he set out:
 
 > 1. master resume has it's own bullets in a table · 2. you retrieve them, compare them to the JD ·
 > 3. score & improve · 4. new bullets are stored in the DB again · 5. using these DB bullets, you
@@ -879,39 +783,44 @@ The shape he set out, in his own words:
 > make those changes to the DB** · 7. a HTML page that helps us with comparison, all running from
 > the DB · 8. **HTML is no longer static. it's dynamic.**
 
-**What he supplies is the MATERIAL, not the markup** — *"i give you the details of master resume,
-which I've already done."* The journey document, the 17 VoltusWave bullets, the confirmations
-(Kubernetes, Terraform, HIPAA, load balancing, high availability), and the corrections. He
-adjudicates; he does not hand-author HTML. **His review surface is the exported PDF.**
+A hard change of habit:
 
-**The collision, and how it resolves.** `upgrad_apply.py` parses `<workspace>/upgrad_resume.html`
-by section id and pastes via `_paste_html`, which is still the only path carrying both bold and
-bullets into the card. So the file is **generated from the database immediately before export** and
-becomes a build artefact — regenerated on demand, never authored, never edited by hand. **The
-exporter does not change.**
+- **The database is where résumé content LIVES** — bullets, skills, headline, summary, role
+  metadata, education, certifications, personal information. Not the file. So
+  **`master/upgrad_resume.html` is a GENERATED ARTEFACT** — regenerated on demand, never authored
+  or hand-edited; an edit in the file is lost on the next generate. *(It was also what
+  `upgrad_apply.py` parsed by section id and pasted via `_paste_html` before export; upGrad is
+  retired.)*
+- **⛔ STOP GREPPING THE RÉSUMÉ FILES. Query the database** — *"No more grepping, etc etc"*. Which
+  bullets carry a number, which leading verbs are taken, what a role claimed for a seat, where a
+  metric appears: `SELECT`s, not `grep -o` piped to `wc -l`. Every *Measurement traps* entry came
+  from regexing minified HTML; a query cannot mis-count a line, match `p-e**lpa**so` for "LPA", or
+  mistake a Mermaid node id for Amazon S3.
+- **Scope, so the boundary is never guessed: the MASTER résumé only** — the eight per-seat
+  workspace résumés are NOT migrated and stay files until they are; a sent one is never edited.
+- **He supplies the MATERIAL, not the markup** — *"i give you the details of master resume, which
+  I've already done."* The journey document, the 17 VoltusWave bullets, the confirmations
+  (Kubernetes, Terraform, HIPAA, load balancing, high availability), the corrections. He never
+  hand-authors HTML; **his review surface is the exported PDF.** ~~He still writes the master by
+  hand.~~ *(Superseded.)* Workflows draft, verify and stage paste-ready content; they do not ship
+  on his behalf and never touch the Hiration card.
+- **This makes the hygiene rules enforceable rather than advisory** — leading-verb uniqueness
+  across all ten roles, ≤25 words, at least one bolded fact, no trailing period — and the verb list
+  that *"has been wrong before — never trust it, regenerate from the file"* becomes a constraint.
 
-**Why this was needed.** Six full copies of his career existed across workspaces, all diverged, and
-every one went stale silently when the master changed — the same duplication CLAUDE.md records
-removing at the master level, recreated one level down. A per-seat résumé is a **selection with
-edits**, not a copy.
+**⛔ THE GATE IS THE ROUND TRIP, AND IT IS NOT OPTIONAL.** Load the master into the database,
+regenerate the HTML, diff: **byte-identical, or every difference enumerated and justified.** A parse
+that silently drops a `<strong>` corrupts the master and would not surface until an exported PDF
+lost its bold. **A lossy migration is the worst outcome available; stop rather than proceed** —
+until that proof passes for a given source, the FILE stays authoritative for it. **Do not
+half-migrate:** a master caught mid-migration across a session boundary is the worst state to
+inherit.
 
-**⛔ The migration's safety gate: it must ROUND-TRIP.** Parse the master into the table, regenerate
-the HTML, and diff. Byte-identical, or every difference enumerated and justified. A parse that
-silently drops a `<strong>` corrupts the master and would not surface until an exported PDF lost its
-bold. **A lossy migration is the worst outcome available; stop rather than proceed.**
+**`./todo` coordinates, it never executes.** It answers what is due, blocked and next, and records
+status changes with reasons; do not grow it into a task runner. A workflow may finish a task and
+report it, but marking it `done` / `parked` / `pushed` / `dropped` goes through `./todo`, and
+moving a task out always needs at least one reason.
 
-**What this makes enforceable rather than advisory:** leading-verb uniqueness across all ten roles,
-≤25 words, at least one bolded fact, no trailing period. The verb list *"has been wrong before —
-never trust it, regenerate from the file"* becomes a constraint instead of a warning.
-
-~~**He still writes the master by hand.**~~ *(Superseded. He supplies the material and approves the
-PDF; the markup is generated.)* The rest stands: Workflows draft, verify and stage paste-ready content;
-they do not ship on his behalf, and they never touch the Hiration card.
-
-**`./todo` coordinates, it never executes.** It answers what is due, what is blocked and what
-is next, and records status changes with reasons. Do not grow it into a task runner. A workflow
-may finish a task and report it; marking it `done` / `parked` / `pushed` / `dropped` goes
-through `./todo`, and moving a task out always needs at least one reason.
 
 ## Measurement traps — every one of these cost real time on 2026-08-26
 
