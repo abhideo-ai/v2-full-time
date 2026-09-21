@@ -166,6 +166,11 @@ correctly. Pre-existing, not touched, flagged for him.
   Amura names no broker; the Kinesis/HA work is the chat platform.
 - **UNVERIFIED stays, FALSE comes off.** Say which before proposing any removal.
 - **Every pasted JD gets the full build**, no re-asking. **Always ask for the URL.**
+- **⛔ KEEP THE CLI ANSWERABLE** — set by him 2026-09-21. Workspaces are delegated so the main
+  thread stays free for the next pasted seat, NOT because agents write better. *"It's only
+  mechanical"* is not an exemption: `jd.md`, `score.json` and bullet text are all delegated.
+  Launch in the background and report in one line — **never poll a running workflow**.
+  A full workspace is 3-4 sequential workflows of ≤5 agents, not one fan-out.
 - **⛔ MAX 5 AGENTS** per workflow and per turn — set by him 2026-09-20 after a 70-agent workflow.
   Slice every fan-out; **never nest `parallel()` inside a `pipeline()` stage** (that multiplies);
   deterministic checks are scripts, not agents. Full rule at the top of CLAUDE.md's *Execution model*.

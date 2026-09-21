@@ -902,6 +902,39 @@ delegated.
 **What stays in the main thread:** adjudicating what comes back, the adversarial verify pass, and
 status changes through `./todo`. Coordination and judgement, never production.
 
+### ⛔ THE REAL GOAL: KEEP THIS CLI ANSWERABLE. Restated by him 2026-09-21.
+
+His words: *"The real goal: Keep this main CLI ready for accepting tasks/answering questions."*
+**That is WHY workspaces are delegated — not because agents write better.** A main thread busy
+producing is a main thread that cannot take the next pasted job description, a redirect, or a
+question. With ~20 workspaces in a night, availability beats any single artefact.
+
+Three consequences, all of which were violated on 2026-09-20:
+
+- **"It's only mechanical" is not an exemption.** Transcribing a pasted job description into
+  `jd.md`, hand-writing `score.json`, composing bullet text — each felt faster to do directly, and
+  each one blocked the thread. **If content is landing in a workspace, it is delegated.** The only
+  things typed here are commands that already exist, and judgement.
+- **Launch in the background, then TALK TO HIM.** Do not sit polling a running workflow with status
+  commands — that is the blocked thread wearing a disguise. Launch, report what is running in one
+  line, and stay available. The completion notification will arrive on its own.
+- **Adjudication is main-thread work and stays here.** Reading what came back, the adversarial
+  verify pass, and deciding what to apply are exactly what this thread is for. Those are quick and
+  they are the thing only this thread can do.
+
+**How this squares with the 5-agent budget above.** The cap is **per workflow**, so a full workspace
+is **three or four sequential background workflows of at most five agents each**, not one big fan-out:
+
+```
+phase 1  scoring + research          -> <=5 agents, background
+phase 2  re-vectoring + verification -> <=5 agents, background
+phase 3  the page artefacts          -> <=5 agents, background
+```
+
+Between phases the thread is free and he can interrupt, redirect or paste the next seat. That is the
+point. **Read each phase's results before choosing the next** — which the execution model already
+required, and which sequential phases make natural rather than optional.
+
 **Score a JD → subagents, one per rubric criterion.** The **technical score is the one that
 matters, and the target is 95+.** Give each criterion its own agent: weight, score out of ten,
 and the evidence quoted from `professional-journey.md`. A separate agent names the **binding
