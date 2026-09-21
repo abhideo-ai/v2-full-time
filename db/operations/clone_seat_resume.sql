@@ -45,9 +45,17 @@ BEGIN
 
     -- A sent résumé is history. Migration 011 guards resume_version_bullets; the .docx
     -- path runs through resume_blocks, so the same freeze has to be stated here too.
-    IF v_status IN ('applied', 'heard_back', 'not_selected', 'withdrawn') THEN
+    --
+    -- ⚠ ALLOW-LIST, NOT A DENY-LIST, and that is deliberate. The first version of this
+    -- guard denied ('applied','heard_back','not_selected','withdrawn'). 'not_selected' is
+    -- NOT a value of application_status -- the real one is 'rejected' -- so the guard was
+    -- comparing against a string that can never match, and it silently let 'rejected',
+    -- 'interviewing' and 'offer' through: three post-send states where regenerating the
+    -- résumé would replace the document a recruiter is holding. Listing the PRE-send
+    -- states instead means any status added to the enum later is frozen by default.
+    IF v_status NOT IN ('new','recommended_apply','recommended_skip','resume_drafted','resume_finalized') THEN
         RAISE EXCEPTION
-          'REFUSING: % is already % -- a sent résumé is never regenerated', v_slug, v_status;
+          'REFUSING: % is % -- anything past a pre-send state is frozen', v_slug, v_status;
     END IF;
 
     IF EXISTS (SELECT 1 FROM resume_documents WHERE doc_key = v_doc) THEN

@@ -36,9 +36,12 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM resume_documents WHERE doc_key = v_doc) THEN
     RAISE EXCEPTION 'REFUSING: % does not exist - run db/operations/clone_seat_resume.sql first', v_doc;
   END IF;
+  -- Allow-list of PRE-send states, not a deny-list: the original deny-list named
+  -- 'not_selected', which is not a value of application_status ('rejected' is), so it
+  -- silently let rejected / interviewing / offer through. See clone_seat_resume.sql.
   IF (SELECT status::text FROM applications WHERE slug = 'tachyon-ai-architect')
-     IN ('applied','heard_back','not_selected','withdrawn') THEN
-    RAISE EXCEPTION 'REFUSING: this seat has already been sent - a sent resume is never edited';
+     NOT IN ('new','recommended_apply','recommended_skip','resume_drafted','resume_finalized') THEN
+    RAISE EXCEPTION 'REFUSING: this seat is past a pre-send state - a sent resume is never edited';
   END IF;
 END $$;
 
