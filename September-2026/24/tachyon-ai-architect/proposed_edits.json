@@ -1,0 +1,536 @@
+[
+  {
+    "id": "vp-01",
+    "section_id": "quick-vp",
+    "ord": 10,
+    "action": "edit",
+    "old_text": "Assembled a 10-query decision-intelligence platform on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal — on Amazon Neptune",
+    "new_html": "Assembled a <strong>10-query</strong> decision-intelligence platform in <strong>Python (FastAPI, LangChain, LangGraph)</strong> on <strong>4 reusable archetypes</strong> — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal",
+    "new_text": "Assembled a 10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal",
+    "leading_verb": "Assembled",
+    "word_count": 21,
+    "jd_phrases_covered": [
+      "hands-on programming, preferably Python",
+      "AI frameworks such as LangChain, LangGraph",
+      "reusable components",
+      "reference patterns"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 678,
+        "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 292,
+        "quote": "This query is the capstone of a four-archetype system"
+      }
+    ],
+    "risk": "low",
+    "note": "'on Amazon Neptune' trimmed from the tail for length; Neptune survives in Pioneered, Sealed, Engineered and the new Projected bullet."
+  },
+  {
+    "id": "vp-02",
+    "section_id": "quick-vp",
+    "ord": null,
+    "action": "add",
+    "old_text": null,
+    "new_html": "Choreographed a deterministic <strong>multi-agent LangGraph</strong> state graph live in production — <strong>3</strong> blind parallel finder agents behind a barrier that rejects hallucinated candidates",
+    "new_text": "Choreographed a deterministic multi-agent LangGraph state graph live in production — 3 blind parallel finder agents behind a barrier that rejects hallucinated candidates",
+    "leading_verb": "Choreographed",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "multi-agent orchestration",
+      "A production GenAI or Agentic AI system you've personally architected and shipped — not a POC",
+      "hallucination risk",
+      "LangGraph"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 444,
+        "quote": "Parallel blind finders — three finder agents (finance, adherence, ops) fan out from the start and run concurrently"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 486,
+        "quote": "it re-verifies every proposed patient id against the frozen snapshot and the overlap-window predicate before that id is allowed to count, which is why a finder that hallucinates a patient cannot smuggle one into the cohort"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 262,
+        "quote": "Status: Live in production"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 259,
+        "quote": "Role: Sole owner — design through production"
+      }
+    ],
+    "risk": "new-substance",
+    "note": "Suggested position: right after Assembled. Stem 'choreograph' has zero hits in the seat document. 'orchestrat' is burnt (Deque Orchestrated), hence the verb."
+  },
+  {
+    "id": "vp-03",
+    "section_id": "quick-vp",
+    "ord": 7,
+    "action": "edit",
+    "old_text": "Engineered a retrieval-augmented generation (RAG) pipeline on Elasticsearch dense_vector filtered nearest-neighbour search across 80+ chronic conditions, keeping Amazon Neptune off the serving path",
+    "new_html": "Engineered a production retrieval-augmented generation (RAG) service on <strong>Elasticsearch dense_vector</strong> filtered nearest-neighbour search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path",
+    "new_text": "Engineered a production retrieval-augmented generation (RAG) service on Elasticsearch dense_vector filtered nearest-neighbour search across 80+ chronic conditions, keeping Amazon Neptune off the serving path",
+    "leading_verb": "Engineered",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "production GenAI system ... not a POC",
+      "RAG",
+      "enterprise search",
+      "vector databases",
+      "Evaluate and select ... vector databases"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 260,
+        "quote": "Deliverables: Production retrieval service, live in-VPC"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 261,
+        "quote": "Status: Live in production"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 832,
+        "quote": "the retrieval service live on the design's self-hosted, in-VPC target, serving the clinician panel. Shipped after executive sign-off on the design."
+      }
+    ],
+    "risk": "low",
+    "note": "Two-word change: 'pipeline' -> 'production ... service'. Corrects an under-claim; CLAUDE.md: all of v1 SHIPPED."
+  },
+  {
+    "id": "vp-04",
+    "section_id": "quick-vp",
+    "ord": null,
+    "action": "add",
+    "old_text": null,
+    "new_html": "Routed precedent-search model calls between self-hosted <strong>Llama 3.1 8B</strong> and <strong>70B</strong> escalation, pausing gate-suppressed queries for durable <strong>human-in-the-loop</strong> review through LangGraph interrupts",
+    "new_text": "Routed precedent-search model calls between self-hosted Llama 3.1 8B and 70B escalation, pausing gate-suppressed queries for durable human-in-the-loop review through LangGraph interrupts",
+    "leading_verb": "Routed",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "Evaluate and select models ... against performance, and cost",
+      "human-in-the-loop controls",
+      "LangGraph"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 742,
+        "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 759,
+        "quote": "interrupt() / Command(resume=…) with a Postgres checkpointer for"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 760,
+        "quote": "durable human-in-the-loop pauses (e.g. reviewing gate-suppressed queries)."
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 686,
+        "quote": "ROUTE -- easy --> SMALL[Llama 3.1 8B ...] / ROUTE -- hard --> BIG[Llama 3.1 70B · escalation tier]"
+      }
+    ],
+    "risk": "new-substance",
+    "note": "Both clauses are KQ1 (one system, not welded); KQ10 corroborates the 8B/70B cascade. Stem 'rout' has zero hits. 'Tiered' was rejected: 'tier' already sits mid-bullet in Sealed and innRoad Underpinned."
+  },
+  {
+    "id": "vp-05",
+    "section_id": "quick-vp",
+    "ord": null,
+    "action": "add",
+    "old_text": null,
+    "new_html": "Instrumented self-hosted <strong>LangSmith</strong> tracing and an offline evaluation harness against <strong>100+ clinician-graded golden queries</strong>, version-pinning every score to its dataset and model",
+    "new_text": "Instrumented self-hosted LangSmith tracing and an offline evaluation harness against 100+ clinician-graded golden queries, version-pinning every score to its dataset and model",
+    "leading_verb": "Instrumented",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "Define AI evaluation and observability approaches — grounding, accuracy",
+      "production support practices"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 764,
+        "quote": "LangSmith · self-hosted, in-VPC — Deployed inside the VPC, so production tracing and evaluation datasets run without PHI ever leaving the network."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 776,
+        "quote": "clinician-graded golden queries (a stratified set of 100+, each labelled independently by two clinicians on a 0–3 rubric"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 793,
+        "quote": "These are the pre-registered acceptance floors ... declared in the design, wired into an offline harness, and version-pinned so a score can never be quoted without the exact data and model that produced it."
+      }
+    ],
+    "risk": "new-substance",
+    "note": "Claims the harness and the golden set, never a score achieved. KQ1 line 776 frames the golden set as 'an evaluation contract' the design ships with — he should confirm the 100+ set was actually labelled, not only specified. Deliberately NOT built on KQ10's narrative citation-faithfulness gate, because whether the LLM narrative guardrails shipped is an open claim (journey line 684)."
+  },
+  {
+    "id": "vp-06",
+    "section_id": "quick-vp",
+    "ord": 13,
+    "action": "edit",
+    "old_text": "Secured protected health information inside the client virtual private cloud by self-hosting embeddings and Llama 3.1 for every model call",
+    "new_html": "Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1 on Ollama</strong> for every model call",
+    "new_text": "Secured protected health information inside the client virtual private cloud by self-hosting embeddings and Llama 3.1 on Ollama for every model call",
+    "leading_verb": "Secured",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "Establish guardrails ... identity and access models",
+      "Evaluate and select models ... against security"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 742,
+        "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 762,
+        "quote": "langgraph build → an in-VPC stack (API server + Postgres 16 + Redis 7 + Ollama)"
+      }
+    ],
+    "risk": "low",
+    "note": "Adds only the runtime name. LangSmith deliberately NOT added here: 'for every model call' would then govern tracing, which is one async trace per request (the correction made on 2026-09-20). LangSmith lives in vp-05 instead."
+  },
+  {
+    "id": "vp-07",
+    "section_id": "quick-vp",
+    "ord": 4,
+    "action": "edit",
+    "old_text": "Reimagined the data layer across DynamoDB, PostgreSQL and OpenSearch with partition-key and indexing design holding P95 under 30 ms at 100,000-user load",
+    "new_html": "Reimagined the data layer across relational <strong>PostgreSQL</strong>, NoSQL <strong>DynamoDB</strong> and <strong>OpenSearch</strong> with partition-key and indexing design holding <strong>P95 under 30 ms</strong> at 100,000-user load",
+    "new_text": "Reimagined the data layer across relational PostgreSQL, NoSQL DynamoDB and OpenSearch with partition-key and indexing design holding P95 under 30 ms at 100,000-user load",
+    "leading_verb": "Reimagined",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Experience with relational, NoSQL, and vector data platforms"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 80,
+        "quote": "DynamoDB + OpenSearch (Voltuswave 2nd stint)"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 643,
+        "quote": "inserting into `pms-chat` dynamodb table"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 644,
+        "quote": "checking `pms-user-rooms` open search for room membership"
+      }
+    ],
+    "risk": "low",
+    "note": "Adds two definitional adjectives and swaps order to match the JD. The tail 'P95 under 30 ms at 100,000-user load' is carried byte-for-byte: the 100,000 wording is on the open confirm-or-reject list and is not reworded. PostgreSQL for this role is master-sourced; the journey doc names only DynamoDB + OpenSearch here — worth a glance."
+  },
+  {
+    "id": "vp-08",
+    "section_id": "quick-vp",
+    "ord": 15,
+    "action": "edit",
+    "old_text": "Formalised a Health Insurance Portability and Accountability Act (HIPAA) control framework across 10 production pipelines — data protection, access governance, audit trails for clinical workflows",
+    "new_html": "Formalised a <strong>Health Insurance Portability and Accountability Act (HIPAA)</strong> control framework across <strong>10 production pipelines</strong> — data protection, role-based access governance, audit trails for clinical workflows",
+    "new_text": "Formalised a Health Insurance Portability and Accountability Act (HIPAA) control framework across 10 production pipelines — data protection, role-based access governance, audit trails for clinical workflows",
+    "leading_verb": "Formalised",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "identity and access models",
+      "Responsible AI practices"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 679,
+        "quote": "HIPAA framework across 10 production pipelines"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 526,
+        "quote": "deterministic chain service — audit first, RBAC narrowed to clinical-ops need-to-know"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 848,
+        "quote": "The analytics service: role-resolved views, audit-first serving ... and a tenant assertion on every row."
+      }
+    ],
+    "risk": "new-substance",
+    "note": "One word added ('role-based'). RBAC appears in 7 of the 10 KQ pages (KQ3, KQ4, KQ5, KQ6, KQ7, KQ9, KQ10), not all 10 — the claim is on the framework, which spans 10, but a sharp reader could ask."
+  },
+  {
+    "id": "vp-09",
+    "section_id": "quick-vp",
+    "ord": null,
+    "action": "add",
+    "old_text": null,
+    "new_html": "Projected an append-only <strong>DynamoDB</strong> event spine, hydrated with <strong>9–10 years of patient history</strong>, through serverless <strong>AWS Lambda</strong> into an <strong>Amazon Neptune</strong> decision graph",
+    "new_text": "Projected an append-only DynamoDB event spine, hydrated with 9–10 years of patient history, through serverless AWS Lambda into an Amazon Neptune decision graph",
+    "leading_verb": "Projected",
+    "word_count": 23,
+    "jd_phrases_covered": [
+      "serverless patterns",
+      "event-driven architecture",
+      "knowledge graphs",
+      "designing data/knowledge access patterns for AI"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 218,
+        "quote": "We built an event spine, projected it through Lambda into Amazon Neptune, used dense vectors and a retrieval pipeline"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 88,
+        "quote": "event spine projected via Lambda into Amazon Neptune"
+      },
+      {
+        "file": "killer-query-case-studies/kq9-causal-path.html",
+        "line": 325,
+        "quote": "graph, which a projection Lambda maintains off the append-only event spine and stamps with a projection"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 981,
+        "quote": "The platform served roughly 10,000 patients, over about nine years of history hydrated into the event spine."
+      }
+    ],
+    "risk": "new-substance",
+    "note": "Replaces the 2026-09-20 'Routed every chat message through serverless SQS/Lambda/S3' bullet, which is NOT reused: journey line 647 sits under 'Initial Situation / About the platform' — it describes the chat platform as he found it, not something he built. '9–10 years' is CLAUDE.md's user-supplied, safe-to-claim figure (KQ10 says 'about nine')."
+  },
+  {
+    "id": "vp-10",
+    "section_id": "quick-vp",
+    "ord": null,
+    "action": "add",
+    "old_text": null,
+    "new_html": "Facilitated AI discovery with the client's chief executive, defining the <strong>killer queries</strong> that separated production AI from a demo across <strong>80+ chronic conditions</strong>",
+    "new_text": "Facilitated AI discovery with the client's chief executive, defining the killer queries that separated production AI from a demo across 80+ chronic conditions",
+    "leading_verb": "Facilitated",
+    "word_count": 23,
+    "jd_phrases_covered": [
+      "Lead technical discovery, architecture workshops",
+      "Background in customer-facing architecture, solutioning",
+      "comfortable with ... business/technology leaders"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 218,
+        "quote": "We sat down with the client's chief executive and defined what we called killer queries — the questions that, if we could answer them properly, meant the AI was real rather than a demo."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 618,
+        "quote": "Embedded client engagement at Amura Health, Chennai"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 236,
+        "quote": "For a chronic-care platform covering 80+ conditions"
+      }
+    ],
+    "risk": "new-substance",
+    "note": "Deliberately says 'discovery', not 'workshops' — the source says 'sat down with'. CEO written out. Stem 'facilitat' has zero hits."
+  },
+  {
+    "id": "deque-01",
+    "section_id": "quick-deque",
+    "ord": 3,
+    "action": "edit",
+    "old_text": "Forged central authentication in Java and Spring Boot, migrating every instance from Keycloak to Red Hat single sign-on — users, roles, client registrations, groups, zero disruption",
+    "new_html": "Forged central identity in <strong>Spring Boot</strong>, moving every instance from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong> over <strong>OpenID Connect and OAuth 2.0</strong>, zero disruption",
+    "new_text": "Forged central identity in Spring Boot, moving every instance from Keycloak to Red Hat single sign-on over OpenID Connect and OAuth 2.0, zero disruption",
+    "leading_verb": "Forged",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "identity and access models",
+      "microservices"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 567,
+        "quote": "Auth service — written in Java / Spring Boot ... migrated from isolated Keycloak to central Red Hat single sign-on with zero end-user disruption. OpenID Connect and OAuth 2.0 flows configured across realms, clients, roles and groups."
+      },
+      {
+        "file": "professional-journey-original.md",
+        "line": 164,
+        "quote": "moved to a centralized auth service for ALL products across ALL enterprises."
+      }
+    ],
+    "risk": "low",
+    "note": "Trade: drops 'Java and' and the 'users, roles, client registrations, groups' list to fit OpenID Connect and OAuth 2.0. Java stays on Steered and Productized in the same role."
+  },
+  {
+    "id": "deque-02",
+    "section_id": "quick-deque",
+    "ord": 7,
+    "action": "edit",
+    "old_text": "Championed decomposition of a monolith into 10–15 services, splitting on independent scaling and database ownership rather than on team boundaries",
+    "new_html": "Championed decomposition of a monolith into <strong>10–15 microservices</strong>, splitting on independent scaling and database ownership rather than on team boundaries",
+    "new_text": "Championed decomposition of a monolith into 10–15 microservices, splitting on independent scaling and database ownership rather than on team boundaries",
+    "leading_verb": "Championed",
+    "word_count": 20,
+    "jd_phrases_covered": [
+      "microservices"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 570,
+        "quote": "Roughly 10–15 services by the time you left, starting from a monolith."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 600,
+        "quote": "a component became a microservice if it needed to scale independently or needed its own database."
+      }
+    ],
+    "risk": "low",
+    "note": "One word: 'services' -> 'microservices'."
+  },
+  {
+    "id": "rocket-01",
+    "section_id": "quick-rocket",
+    "ord": 1,
+    "action": "edit",
+    "old_text": "Anchored decomposition of the IBM Db2 Configuration Manager monolith into Java and Spring Boot microservices, defining boundaries across z/OS mainframe and distributed platforms",
+    "new_html": "Anchored decomposition of the <strong>IBM Db2 Configuration Manager</strong> enterprise monolith into <strong>Java and Spring Boot</strong> microservices, defining service boundaries across <strong>z/OS mainframe</strong> and distributed platforms",
+    "new_text": "Anchored decomposition of the IBM Db2 Configuration Manager enterprise monolith into Java and Spring Boot microservices, defining service boundaries across z/OS mainframe and distributed platforms",
+    "leading_verb": "Anchored",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "microservices",
+      "enterprise architecture"
+    ],
+    "source": [
+      {
+        "file": "professional-journey-original.md",
+        "line": 112,
+        "quote": "decomposing the existing monolith into microservices by defining the boundaries"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 499,
+        "quote": "IBM Db2 Configuration Manager for z/OS ... provides centralised management of database and client configurations"
+      }
+    ],
+    "risk": "low",
+    "note": "Marginal lift (+2 words). Rocket bullets 2–4 carry the four open Rocket metrics (5-engineer, bugs over 50%, sales/adoption over 20%) and are deliberately untouched."
+  },
+  {
+    "id": "cofounder-01",
+    "section_id": "quick-voltuswave-cofounder",
+    "ord": 3,
+    "action": "edit",
+    "old_text": "Helmed end-to-end development, deployment and operations on Amazon Elastic Container Service, setting the architectural roadmap every subsequent product worked from",
+    "new_html": "Helmed end-to-end development, deployment and operations on containerised <strong>Amazon Elastic Container Service</strong>, setting the architectural roadmap <strong>every subsequent product</strong> worked from",
+    "new_text": "Helmed end-to-end development, deployment and operations on containerised Amazon Elastic Container Service, setting the architectural roadmap every subsequent product worked from",
+    "leading_verb": "Helmed",
+    "word_count": 21,
+    "jd_phrases_covered": [
+      "containers",
+      "architecture blueprints ... technical standards"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 468,
+        "quote": "delivered end-to-end development, deployment and operations on AWS Elastic Container Service"
+      },
+      {
+        "file": "professional-journey-original.md",
+        "line": 102,
+        "quote": "gave the architectural roadmap for the subsequent products to work from"
+      }
+    ],
+    "risk": "low",
+    "note": "One definitional word ('containerised'). Mentoring is already covered by Mobilized ('mentoring freshers and senior engineers'), so no edit there."
+  },
+  {
+    "id": "teletext-01",
+    "section_id": "quick-teletext",
+    "ord": 1,
+    "action": "edit",
+    "old_text": "Codified a parallel scatter-gather across 25 hotel suppliers on a MuleSoft enterprise service bus, superseding a .NET 2.0 stack a prior team could not upgrade",
+    "new_html": "Codified parallel <strong>scatter-gather integration</strong> across <strong>25 hotel supplier APIs</strong> on a <strong>MuleSoft enterprise service bus</strong>, superseding <strong>.NET 2.0</strong> a prior team could not upgrade",
+    "new_text": "Codified parallel scatter-gather integration across 25 hotel supplier APIs on a MuleSoft enterprise service bus, superseding .NET 2.0 a prior team could not upgrade",
+    "leading_verb": "Codified",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "enterprise integration patterns",
+      "external APIs",
+      "Design integrations between AI solutions and enterprise platforms"
+    ],
+    "source": [
+      {
+        "file": "professional-journey-original.md",
+        "line": 73,
+        "quote": "Implemented Scatter Gather pattern to parallely call the configured suppliers and get the prices"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 423,
+        "quote": "we call the supplier's endpoint and serve it to the users & cache it"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 409,
+        "quote": "written in .NET 2.0 but the previous team failed to update this to .NET 4.0."
+      }
+    ],
+    "risk": "low",
+    "note": "'25' is the master's figure; journey line 415 still carries 25 vs 25–30 as OPEN — unchanged here. APIs is expanded earlier in reading order (Key Skills)."
+  },
+  {
+    "id": "teletext-02",
+    "section_id": "quick-teletext",
+    "ord": 3,
+    "action": "edit",
+    "old_text": "Reconciled per-supplier hotel identifiers onto licensed GIATA MultiCodes, automating the pipeline on AWS Lambda with human approval retained, growing revenue 8% month over month",
+    "new_html": "Reconciled per-supplier hotel identifiers onto licensed <strong>GIATA MultiCodes</strong>, automating the pipeline on serverless <strong>AWS Lambda</strong> with <strong>human-in-the-loop approval</strong> retained, growing revenue <strong>8% month over month</strong>",
+    "new_text": "Reconciled per-supplier hotel identifiers onto licensed GIATA MultiCodes, automating the pipeline on serverless AWS Lambda with human-in-the-loop approval retained, growing revenue 8% month over month",
+    "leading_verb": "Reconciled",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "human-in-the-loop controls",
+      "serverless patterns"
+    ],
+    "source": [
+      {
+        "file": "professional-journey-original.md",
+        "line": 94,
+        "quote": "automated the same using AWS Lambda. Approval was still with me"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 440,
+        "quote": "an architect-grade data problem (identity reconciliation, human-in-the-loop approval, then automation)"
+      }
+    ],
+    "risk": "low",
+    "note": "The 8% month-over-month figure is carried unchanged (journey line 452 has it OPEN as sustained vs one-time — his call)."
+  }
+]

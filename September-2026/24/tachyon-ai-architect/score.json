@@ -1,0 +1,62 @@
+{
+  "slug": "tachyon-ai-architect",
+  "scored_at": "2026-09-24",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 91.18,
+  "weighted_total_basis": "capability as evidenced in professional-journey.md and the killer-query case studies; this is what an honestly re-vectored seat resume can show",
+  "technical_capability": 91.18,
+  "technical_resume_surface": 81.42,
+  "resume_surface_basis": "master resume (resume_blocks doc_key='master', retired_at is null) as it stands on 2026-09-24, before any seat re-vectoring",
+  "target": 95,
+  "ceiling_is_honest": true,
+  "honest_ceiling": 92.0,
+  "prior_score_reference": "2026-09-20 scoring of the same posting (commit 3087531) = 90.32, measured on a re-vectored seat resume that was later deleted. Consistent with today's capability number.",
+  "binding_constraint": "A resume-surface gap, not a capability gap. KQ10 is a shipped, sole-owned deterministic multi-agent LangGraph orchestrator ('Status: Live in production', kq10-cross-domain.html:262; 'Sole owner - design through production', :259), which answers the JD's hardest bar. But in the master's experience bullets the words agent, multi-agent, LangGraph, LangChain, Python, FastAPI, serverless, human-in-the-loop, hallucination and evaluation appear ZERO times; they live only in skills labels (quick-skills-ee 11, 13). That is the top-of-resume-only shape CLAUDE.md records as producing zero calls. The residual that no wording fixes: no measured production outcomes exist for any Amura service (kq10-cross-domain.html:980-981, pre-registered targets only), no Salesforce/SAP/ServiceNow/ERP/CRM integration anywhere in the record, and no Azure/GCP (AWS satisfies the 'or', but multi-cloud 'strong plus' is unmet).",
+  "smallest_honest_lift": "Rule 7 re-vectoring of real work already in the record, no new claim: (1) surface the KQ10 multi-agent LangGraph orchestrator in quick-vp (parallel finder agents, barrier, gated reduce, citation-validation cycle); (2) name Python/FastAPI/LangChain/LangGraph on the decision-intelligence bullet (quick-vp 10); (3) name hallucination/grounding evaluation (citation faithfulness 1.0 hard gate, re-prompt-once then suppress; LangSmith evaluation datasets in-VPC) on quick-vp 14 or a new bullet; (4) name human-in-the-loop (LangGraph interrupt + Postgres checkpointer) and the 8B/70B, cheap/strong model-tiering decision; (5) name Lambda/SQS work as serverless and event-driven. Moves the surface from ~81 to ~91. 95 is NOT honestly reachable: the remaining points sit on enterprise-platform integrations, multi-cloud, and measured outcomes that do not exist.",
+  "non_technical": {
+    "note": "INFORMATIONAL ONLY - never a gate, never a drag on the technical score (CLAUDE.md).",
+    "score": 72,
+    "domain_fit": "partial - he is a product/platform architect; Tachyon is an enterprise consultancy/services firm whose JD centres on enterprise platforms (Salesforce, SAP, ServiceNow) and customer-facing solutioning. His customer-facing evidence is real but product-side (Amura client embed, Deque enterprise onboarding, Teletext sales-rep tooling).",
+    "location_fit": "Hyderabad, hybrid - where he is based.",
+    "track": "individual-contributor architecture seat; 'mentor senior engineers and technical leads' is mentoring, not people management. Matches the v2 IC-only rule.",
+    "experience_band": "JD asks 15+; he has 19+ (Apr 2007 - Apr 2026).",
+    "compensation": "DEFERRED - not researched, not surfaced, not gated on."
+  },
+  "open_claims_not_to_touch": [
+    "Graph neural network (quick-headline, quick-summary, quick-vp 9, quick-skills-ee 8): journey doc line 682 says it may have been in training and never shipped. His call only; not used as evidence in this rubric.",
+    "100,000 concurrent wording (quick-vp 2, 3): burst test, not sustained load (journey 692-694). Not used as evidence here."
+  ],
+  "measurement_notes": [
+    "Resume-surface checks are SQL over resume_blocks (doc_key='master', retired_at is null), not greps of files.",
+    "Case-study term counts are occurrence counts with tags stripped across killer-query-case-studies/*.html: LangGraph 36, LangChain 39, multi-agent 15, LangSmith 29, Pydantic 20, FastAPI 46, Ollama 15, nDCG 14, human-in-the-loop 1.",
+    "Verified ZERO across the case studies: tool call, function call, Bedrock, Azure, serverless, MCP/Model Context, Kubernetes, Terraform. Kubernetes/Terraform are evidenced on the resume (quick-vp 23) and confirmed by him per CLAUDE.md, not by the case studies.",
+    "Structured output via LangChain .with_structured_output() + Pydantic v2 (kq1-precedent-search.html:744) is adjacent to function calling but is NOT a function-calling claim. The JD bar is 'LLMs, RAG, tool/function calling, OR multi-agent orchestration' - RAG plus multi-agent satisfy it without it.",
+    "A seat document seat:tachyon-ai-architect (91 blocks, created 2026-09-24 15:17) already exists in resume_blocks; not read or modified by this scoring."
+  ],
+  "scores": [
+    {"criterion": "production-genai-agentic-system-shipped-not-a-poc", "weight": 0.17, "score_out_of_10": 9.2, "surface_score_out_of_10": 7.0, "ramp_or_cap": "residual-structural (no measured outcomes)", "contribution": 15.64, "surface_contribution": 11.9,
+     "evidence": "kq10-cross-domain.html:238 'answered by a deterministic multi-agent orchestrator ... took it to production'; :262 'Status Live in production'; :259 'Sole owner - design through production'; kq1-precedent-search.html:833 'Shipped after executive sign-off'; journey 88, 218 (event spine, Neptune, dense vectors, retrieval in front of real doctors). Surface: quick-vp 7 (RAG), 13, 14 only; no agent/multi-agent bullet."},
+    {"criterion": "cloud-native-architecture-aws-containers-kubernetes-serverless", "weight": 0.13, "score_out_of_10": 9.2, "surface_score_out_of_10": 8.8, "ramp_or_cap": "ramp-item (Azure, GCP, Bedrock; multi-cloud plus unmet)", "contribution": 11.96, "surface_contribution": 11.44,
+     "evidence": "journey 647 (SQS invokes Lambda appending to S3), 88 (Lambda into Amazon Neptune), 438 (Teletext automation on AWS Lambda), 696 (Kinesis in production); resume quick-vp 1, 23 (Kubernetes, Terraform, ECS Fargate 70% Spot), quick-vp 19 (SageMaker), quick-voltuswave-cofounder 3 (ECS). 'serverless' appears in no bullet."},
+    {"criterion": "ai-frameworks-langchain-langgraph", "weight": 0.10, "score_out_of_10": 9.5, "surface_score_out_of_10": 7.0, "ramp_or_cap": "ramp-item (Semantic Kernel, AutoGen, CrewAI)", "contribution": 9.5, "surface_contribution": 7.0,
+     "evidence": "journey 678 'Python (FastAPI, LangChain, LangGraph)'; kq1-precedent-search.html:741-765 (LangChain model seam, structured output, retries/fallbacks, callbacks; LangGraph StateGraph, interrupts, langgraph build; LangSmith self-hosted); kq10-cross-domain.html:439-441 'declared, deterministic LangGraph state graph'. Surface: quick-skills-ee 11 label only."},
+    {"criterion": "15-plus-years-recent-hands-on", "weight": 0.06, "score_out_of_10": 9.6, "surface_score_out_of_10": 9.5, "ramp_or_cap": "none", "contribution": 5.76, "surface_contribution": 5.7,
+     "evidence": "journey 38 '19+ years, Apr 2007 - Apr 2026'; kq10-cross-domain.html:260 'runnable prototype · production rollout'; quick-summary 1 'Hands-on principal architect, 19+ years'."},
+    {"criterion": "hands-on-programming-preferably-python-and-implementation-review", "weight": 0.08, "score_out_of_10": 8.8, "surface_score_out_of_10": 7.5, "ramp_or_cap": "residual (Python depth is recent; career weight is Java/Go/Node)", "contribution": 7.04, "surface_contribution": 6.0,
+     "evidence": "journey 678 (Python platform), kq1-precedent-search.html:690 'Retrieval API FastAPI', :744 Pydantic v2; journey 64-70 (~11 years Java), 660 (Go rewrite); quick-vp 16 (adversarial self-review), quick-vp 24 (first-cut implementation under review). 'Python' appears in no experience bullet."},
+    {"criterion": "microservices-rest-event-driven-enterprise-integration-patterns", "weight": 0.10, "score_out_of_10": 9.4, "surface_score_out_of_10": 9.2, "ramp_or_cap": "none", "contribution": 9.4, "surface_contribution": 9.2,
+     "evidence": "journey 411 (MuleSoft Anypoint scatter-gather), 570 (10-15 services), 600 (service split rule), 647, 662 (two-stream Kinesis); quick-teletext 1, quick-deque 7, quick-rocket 1, 3 (REST), quick-vp 1, 11 (event sourcing)."},
+    {"criterion": "relational-nosql-vector-and-knowledge-access-patterns-for-ai", "weight": 0.10, "score_out_of_10": 9.5, "surface_score_out_of_10": 9.3, "ramp_or_cap": "ramp-item (named vector DBs such as Pinecone)", "contribution": 9.5, "surface_contribution": 9.3,
+     "evidence": "journey 80 (SQL Server, PostgreSQL to Aurora, DynamoDB + OpenSearch), 88 (Neptune, dense vectors), 677 (DynamoDB single-table event sourcing); quick-vp 4, 7, 8, 10, 11, quick-deque 5, quick-skills-ee 6."},
+    {"criterion": "evaluate-select-models-frameworks-vector-dbs-vs-security-performance-cost", "weight": 0.05, "score_out_of_10": 9.0, "surface_score_out_of_10": 8.0, "ramp_or_cap": "none", "contribution": 4.5, "surface_contribution": 4.0,
+     "evidence": "kq1-precedent-search.html:591-593 'Llama 3.1 (8B workhorse, 70B escalation) inside the VPC - patient data never leaves the network'; :741 one provider door (mock, Anthropic, OpenAI, Ollama); kq10-cross-domain.html:464-466 finder agents on 'cheap tier', synthesis on strong tier; quick-vp 7 'keeping Amazon Neptune off the serving path', quick-vp 13."},
+    {"criterion": "enterprise-platform-integrations-salesforce-sap-servicenow-erp-crm-external-apis", "weight": 0.05, "score_out_of_10": 6.5, "surface_score_out_of_10": 6.5, "ramp_or_cap": "ramp-item (no Salesforce/SAP/ServiceNow/ERP/CRM in the record)", "contribution": 3.25, "surface_contribution": 3.25,
+     "evidence": "journey 408-411 (25-30 supplier APIs via MuleSoft ESB), 437-438 (GIATA MultiCodes integration); quick-deque 13 (Jira integration, versioned APIs). No named enterprise platform anywhere."},
+    {"criterion": "ai-evaluation-observability-grounding-hallucination-latency-cost-safety", "weight": 0.06, "score_out_of_10": 9.3, "surface_score_out_of_10": 8.3, "ramp_or_cap": "none", "contribution": 5.58, "surface_contribution": 4.98,
+     "evidence": "kq10-cross-domain.html:252 'Synthesis-citation faithfulness 1.0 - a hard gate'; :455 'hallucinated citation is caught by output validation and the node re-prompts once'; :488; kq1-precedent-search.html:669 pre-registered NDCG@10 and Recall@10, :765 LangSmith evaluation datasets in-VPC; journey 658 Datadog. Surface: quick-vp 5, 8, 14; 'hallucination' and 'evaluation' named nowhere."},
+    {"criterion": "guardrails-human-in-the-loop-identity-access-responsible-ai", "weight": 0.05, "score_out_of_10": 9.3, "surface_score_out_of_10": 8.8, "ramp_or_cap": "none", "contribution": 4.65, "surface_contribution": 4.4,
+     "evidence": "kq1-precedent-search.html:760 'durable human-in-the-loop pauses'; kq10-cross-domain.html:315, 526 (RBAC, audit, tenant assertion); journey 438, 567, 680; quick-vp 12, 14, 15, quick-deque 3, quick-teletext 3 (human approval retained). 'human-in-the-loop' for the AI system is not on the resume."},
+    {"criterion": "blueprints-reference-patterns-standards-discovery-mentoring", "weight": 0.05, "score_out_of_10": 8.8, "surface_score_out_of_10": 8.5, "ramp_or_cap": "none", "contribution": 4.4, "surface_contribution": 4.25,
+     "evidence": "journey 678 '4 reusable archetypes', 218 'sat down with the client's chief executive and defined what we called killer queries', 466 'architectural roadmap', 104 (team building); quick-vp 10, 21, quick-voltuswave-cofounder 2, 3. The discovery-with-client-CEO work is not on the resume."}
+  ]
+}

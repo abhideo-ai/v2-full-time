@@ -14,13 +14,21 @@
 --     -> CASCADE: 15 sections, 95 blocks, 10 roles, 4 profile, 2 education rows
 --
 -- Idempotent: a second run deletes nothing.
+--
+-- ⚠ PINNED TO THE OLD ROWS. He re-pasted the same posting the same day and the
+-- seat was rebuilt under the SAME slug, so matching on slug alone would delete
+-- the new build on a re-run. The application is pinned to id 115 and the seat
+-- document to its 2026-09-20 timestamp.
 
 begin;
 
-delete from resume_documents where doc_key = 'seat:tachyon-ai-architect';
+delete from resume_documents
+ where doc_key = 'seat:tachyon-ai-architect'
+   and updated_at < '2026-09-24';
 
 delete from applications
- where slug = 'tachyon-ai-architect'
+ where id = 115
+   and slug = 'tachyon-ai-architect'
    and status = 'resume_drafted'
    and applied_at is null;
 
