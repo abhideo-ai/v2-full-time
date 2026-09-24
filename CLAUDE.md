@@ -87,8 +87,9 @@ now accepts both shapes. See `master/README.md` for the ten-section contract.
 
 - base resume is the master resume at `/Users/adeo/Documents/v2-full-time/master/Abhisheik_Deo_Resume.docx`
 - for every job description, give me a new version of the master resume in the company's slug that'll match the JD at 95+%.
-- the points will need to be added in the last 5 company sections.
-- You'll have to give me a HTML page as well that'll allow me to verify and if needed to copy/paste.
+- the points will need to be added in the last 5 companies namely: (i) Voltuswave (Principal Software Architect), (ii) Deque Software, (iii) Rocket 
+  Software, (iv) Voltuswave (Co-Founder & VP of Technology) & (v) Teletext India.
+- You'll have to give me a HTML page as well that'll allow me to verify and if needed to copy/paste for each of the 5 organizations.
 
 For every job description, change the "master resume" present in `/Users/adeo/Documents/v2-full-time/master/Abhisheik_Deo_Resume.docx` 
 ---
