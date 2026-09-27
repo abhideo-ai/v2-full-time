@@ -472,8 +472,8 @@ no code change.
 ### ⛔ AGENT BUDGET — MAX 3 PER JOB (2026-09-28). This bounds everything below it.
 
 **No job gets more than 3 agents in total** — across every turn, phase and workflow, counting
-researchers, writers, checkers and fix passes, and counting that job's interview-prep pages in
-`~/Documents/interview-prep/`. His words, 28 Sep 2026: *"update CLAUDE.md to cap agents per job at
+researchers, writers, checkers and fix passes, and counting any interview preparation made for
+that job. His words, 28 Sep 2026: *"update CLAUDE.md to cap agents per job at
 5"*, then *"Perhaps cap it at 3."* · *"3 is sufficient."* **Count per job, not per turn:** spawns
 spread across several turns still add up. This rule comes FIRST — "offload everything" operates
 inside it, never around it. **If a job genuinely needs more, say so and ask first**; never spend it
@@ -722,9 +722,12 @@ because nobody checked the checker is still a defect.
   never ding a score for schedule density. Travel cadence and 24/7 on-call are separate
   axes worth surfacing.
 
-**Interview prep lives in a different repo:** `~/Documents/interview-prep/`. This
-workspace curates **jobs**; that one prepares for **rooms**. Prep material goes there,
-résumé-creation material stays here, dual-purpose material gets copied to both.
+**⛔ Interview prep lives in THIS repo — never add anything to `~/Documents/interview-prep/`.**
+His words, 28 Sep 2026: *"going forward, I want you to NOT add anything to the 'interview-prep'
+repository"* · *"Keep the interview prep in this repo itself."* A job's prep pages go in that job's
+own workspace, beside its `research.html`. Reading the other repo is fine — its honesty ledger
+(`~/Documents/interview-prep/CLAUDE.md`, "The honesty ledger") is still the reference for what he
+may claim — but no file there is created, edited or committed. What is already there stays as it is.
 
 **The v1 lesson on rooms.** Be precise about what actually happened, because the record
 forbids guessing: one process ended in an **unexplained rejection with no recording** (EVA — no

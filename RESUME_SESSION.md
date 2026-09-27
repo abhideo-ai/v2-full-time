@@ -40,8 +40,11 @@ psql -d jobs_tracker_v2 -c "select id, slug, status, fit_score, applied_at from 
   - Prep: `~/Documents/interview-prep/study-plans/delta-technology-referral/` —
     `understanding_kim_and_delta.html` (55 diagrams), `your_stories_for_kim.html` (56 diagrams),
     `index.html`, one link in that repo's root `index.html`. The stories page was checked by three
-    adversarial checkers and had 47 rulings applied. **He chose "finish, then stop": no more checking
-    rounds.** Commit and push that repo once the fix pass has landed; **never deploy it**.
+    adversarial checkers and had 47 rulings applied. Committed and pushed there (`c1697b2`), not
+    deployed. About a dozen sentences on the Kim page still word the Chebrolu name match, Kim's
+    part-ownership of Largo and the "Delta" name a little firmly — left as they are.
+  - **⛔ From 28 Sep: never add anything to `~/Documents/interview-prep/`.** Interview prep now
+    lives in the job's own workspace in THIS repo (see `CLAUDE.md`). Existing files there stay.
   - Raw inputs: `job-applications/September-2026/27/delta-technology-referral-*`. Event 45 = his referral note.
 - **Harshita Vishnavam (121) — APPLIED 27 Sep via her Microsoft Form** (event 44). A short follow-up
   reply is staged in `reply.html` (form submitted, available immediately, call anytime) — **NOT SENT**.
