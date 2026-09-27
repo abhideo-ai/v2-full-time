@@ -3,182 +3,95 @@
 **READ THIS FIRST.** What was in flight when the last context cleared, and what to pick up.
 Rewrite it whenever the picture changes materially. Overwrite freely — git carries the history.
 
-**Last rewritten: 2026-08-28 ~00:30.**
+**Last rewritten: 2026-09-27**, just before he restarted the terminal for a Claude Code update.
 
-**Also read:** `CLAUDE.md` (the rulebook — heavily updated 27 Aug) · `PENDING.md` (the internal
-verification record and workflow run IDs) · `db/README.md`.
+**Also read:** `CLAUDE.md` (the rulebook) · `PENDING.md` · `db/README.md`.
 
 ---
 
-## ⚠ THE PIPELINE CHANGED COMPLETELY ON 27 AUGUST. DISCARD OLDER MEMORY.
+## FIRST THING: start the server — it was stopped on purpose
 
-```
-jobs_tracker_v2  ->  automation/resume_docx.py  ->  .docx  ->  he edits in Word
-```
+`automation/serve.py` was running inside the previous Claude session's shell. He asked for it to be
+shut down before the restart, and it was (port 8006 confirmed free). Start it again:
 
 ```bash
-automation/.venv/bin/python automation/resume_db.py    load|generate|verify
-automation/.venv/bin/python automation/resume_docx.py  generate [--slug <seat>]
-automation/.venv/bin/python automation/verify_resume_docx.py [file] [--doc-key ...]
+lsof -nP -iTCP:8006 -sTCP:LISTEN          # anything listening?
+automation/.venv/bin/python automation/serve.py   # http://127.0.0.1:8006/
 ```
 
-- **upGrad is RETIRED — his access was revoked.** All eight entry points refuse with exit 3
-  (`automation/upgrad_retired.py`). **The files stay on disk**, by his instruction. `cleanup_cards.py`
-  still never runs. Do not try to revive it; do not diagnose the refusal as a bug.
-- **`.docx` is the output form.** No HTML in the delivery path, no paste sheet, no card.
-- **`master/upgrad_resume.html` is NOT a deliverable** — it is the round-trip verification artefact.
-  `resume_docx.py` refuses to write to it.
-- **The DB is the source for the MASTER ONLY.** The eight per-seat résumés are still files.
-- **`.docx` for NEW JOBS ONLY** — *"ones we've already applied to - do NOT change them."*
-- ⚠ `master/Abhisheik_Deo_Resume.SUPERSEDED-2026-08-25.pdf` is the last upGrad export and is **WRONG**
-  (Knockout.js, 300, no AngularJS/280/Kubernetes). **Never send it.**
-- **Always run `verify_resume_docx.py` before handing him a .docx**, and **pass `--doc-key` for a
-  per-seat file** or it compares against master's blocks and reports a false pass.
+He said it is fine for the server to run in Claude's shell.
 
 ---
 
-## THE BOARD — query it, never read it off filenames
+## THE BOARD — query it, never read it off this file
 
 ```sql
-psql -d jobs_tracker_v2 -c "select slug, company, status, fit_score, applied_at from applications order by fit_score desc nulls last;"
+psql -d jobs_tracker_v2 -c "select id, slug, status, fit_score, applied_at from applications order by id;"
 ```
 
-**7 applied · 1 BUILT AND UNSENT (Tachyon) · 2 awaiting JD (Wipro, Aezion) · 1 withdrawn.**
-Newest: **Tachyon Technologies, AI Architect — Hyderabad, hybrid, built 20 Sep, technical 90.32,
-tied top of the board with Keyloop.** Last sent: **Nexifyr, Lead Engineer — FHIR, 78, applied 28 Aug.**
+As of 27 Sep: **8 applied · 3 awaiting a JD (Wipro 99, Aezion 114, Harshita 121) · 1 withdrawn.**
+**Ready-and-unsent backlog: 0.**
 
-⚠ **The backlog gate is now at 1.** It was 0 this morning. The rule is a judgement call at roughly
-five — but the v1 failure was 23 built and unsent, so the number to watch is the trend, not the
-threshold.
-
----
-
-## THE MASTER — rewritten 27 Aug, 39 → 64 bullets
-
-Sourced from `professional-journey-original.md`. 64 distinct leading verbs, zero collisions, zero
-bullets over 25 words. Formatted to the reference he supplied: A4, ~0.26in margins, `#328EF7`
-accent, `#EBF4FE` bands, **two-line role entries** with a right tab stop:
-
-```
-Principal Software Architect            Mar '25 - Apr '26   <- band
-VoltusWave Technologies                         Hyderabad   <- no band
-```
-
-**Three open claims HE settled on 27 Aug — do not re-ask, do not re-flag:**
-- **innRoad = AngularJS**, not Angular. ⚠ AngularJS 1.x is NOT modern Angular; this does not close
-  the Angular gaps that docked earlier seats.
-- **axe Monitor = 280 clients**, plus ~50 internal instances OUTSIDE the 280. `300+` was FALSE.
-  ⚠ **He has NOT stated a total.** 280 + ~50 implies ~330, *higher* than the ~300 he told CBRE —
-  so ~300 may have been the instance figure all along. **Ask; never guess.**
-- **Aurora PostgreSQL** — settled the platform without needing an edit.
+- **Tachyon Technologies, AI Architect (116) — APPLIED 24 Sep.** Frozen now: never edit, regenerate
+  or re-clone. The 20 Sep build (application 115) was deleted by him with its workspace;
+  `db/migrations/013` removed the rows and is pinned to id 115 so a re-run cannot touch 116.
+  Rebuilt workspace: `September-2026/24/tachyon-ai-architect/`, technical **91.18** (honest ceiling
+  ~92 — Salesforce/SAP/ServiceNow, Azure/GCP and measured outcomes are absent), `.docx` 35/35.
+- **Harshita Vishnavam InMail (121) — AI Lead / Architect, Hyderabad, company NOT named.**
+  Placeholder slug `harshita-vishnavam-ai-lead-architect` (he asked for the recruiter's name in it).
+  `September-2026/27/.../reply.html` stages the reply (available immediately, asks for company + JD,
+  proposes **Tue 29 Sep** 11am–1pm or 4–6pm) and the Microsoft Form answers (current city and
+  current CTC left for him). **Not yet sent, form not yet filled.** When he says either happened,
+  log an `outbound` event. When the JD arrives → full build, same slug unless he renames it.
+- **Aezion (114)** — `./todo` still shows *Send the reply to Sravan*, 27 days overdue. Never logged
+  as sent. Ask him whether it went, rather than assuming.
+- **Wipro (99)** — InMail 25 Aug, still no JD.
 
 ---
 
-## THE JOB WAITING FOR YOU
+## HOW A SEAT IS BUILT NOW (worked on 24 Sep, repeat it)
 
-0. **SEND TACHYON — it is built, verified and unsent.** `September-2026/20/tachyon-ai-architect/`.
-   Technical **90.32**, no hard caps. `.docx` verified **35 met / 0 failed**.
-   ⚠ **THREE THINGS BEFORE HE CLICKS APPLY:**
-   - **There are TWO different "AI Architect" pages on Tachyon's own site.** `/jobs/ai-architect/`
-     is a *"Contractual, Long-term"* staff-augmentation placement in **Winchester, Virginia** on
-     Salesforce Financial Services Cloud. The Hyderabad full-time seat is `/jobs/ai-architect-2/`.
-     Both return HTTP 200 and carry the **identical** page title. The main thread could NOT confirm
-     which is which (the content is JavaScript-rendered); the research pass made the attribution.
-     **Check the location on the page before applying.**
-   - **Open the `.docx` in Word and check it is ≤3 pages.** NOT checkable here — no LibreOffice.
-     The seat carries **66 experience bullets** against the master's 64, and the headline grew from
-     27 to 32 words, so it may wrap. Cheapest cuts if it spills: the Routed serverless bullet
-     (weakest number on the résumé), then "Graph + GNN" from the headline.
-   - Apply lands in **Oorwin** (`tachyonind.oorwin.ai`), requisition **TYI-4328**. Single-page form,
-     no account needed.
+CLAUDE.md **"Resume Writing Points"** (his, 24 Sep): a per-seat `.docx` from the master, edits
+**only in the last five roles** (VoltusWave Principal · Deque · Rocket · VoltusWave Co-Founder ·
+Teletext), and an HTML page with **one copy block per organisation**.
 
-1. **Send the Aezion reply.** `August-2026/31/aezion-inbound-sravan/reply.html`, one copy button,
-   70 words. Sravan K Chelimalla emailed cold on 31 Aug naming **no role, no level, no location and
-   no stack** — so there is **no technical score**, and that is a recorded absence, not an oversight.
-   The reply deliberately **asks him nothing**, not even for the job description: he had already read
-   the LinkedIn profile and quoted it back, so the evidence recitation was cut and everything moved to
-   the call. Offers **Wed 2 Sep**, 11am–6pm IST, with the number. `research.html` carries the verdict,
-   the flags and thirteen forcing questions.
-   ⚠ **Two things from that research to carry into the room.** Aezion sells **dedicated offshore
-   teams and build-operate-transfer** (its Global Capability Centers line), so "architect" there may
-   mean an *engagement* architect on a client account — ask which in the first eight minutes. And
-   **Spring Boot appears nowhere on their site**; their only genuinely senior seat is a .NET architect
-   role naming Azure and Kafka, both never-claim items.
-2. **He opens the .docx in Word.** Three things no gate here can see: **the page count** (never
-   verified at 64 bullets; no LibreOffice on this machine), the **band running continuous across the
-   tab gap**, and **bold rendering heavier**. If it spills past 3 pages, the ranked cut list is in
-   `PENDING.md` — vp#2 and the second statistics bullet are the two free ones.
-3. **The freeze gap — real exposure, 7 seats sent.** Migration 011's trigger guards
-   `resume_version_bullets`, but the `.docx` path uses `resume_documents`/`resume_blocks` and
-   `resume_versions` holds **zero rows**. Nothing stops `resume_db.py load --slug <a-sent-seat>`
-   overwriting a résumé that has gone out. On the board as `freeze-sent-resumes`.
-4. **Four structural findings on the master, his call, none acted on:** the **VoltusWave return is
-   never explained** (he appears to go Co-Founder & VP → Principal Architect at the same company —
-   six words in the summary closes it) · the screener's window is all chat platform while Kubernetes
-   sits at bullet 23 · **Deque reads as generic SaaS** — `accessib` appears once in five years ·
-   the summary's first eight words restate the headline.
-
-⚠ **`source-ic` is still on the board and CONTRADICTS CLAUDE.md**, which says *"Do not source seats…
-Wait for the paste."* Left in place deliberately — resolving it is his call, not ours.
+1. `resume.py new --slug … --url …` (or `--no-url "<reason>"`), save raw JD + card to `job-applications/`,
+   log the `inbound` event.
+2. `db/operations/clone_seat_resume.sql` → `seat:<slug>`.
+3. Phase 1, 4 background agents: `jd.md`/`jd.html` · `research.html` · `score.json` · `proposed_edits.json`.
+4. Phase 2, 2 adversarial checkers (quick-vp; the other four roles). Adjudicate here.
+5. Write `db/seats/<slug>.sql` from the adjudicated JSON (every UPDATE pinned to the old text and
+   RAISES unless it hits exactly 1 row), dry-run with ROLLBACK, apply,
+   `resume_docx.py generate --slug`, `verify_resume_docx.py <file> --doc-key seat:<slug>`, `jobs_sync.py`.
+6. Phase 3, 2 agents: `index.html` rubric · `resume_changes_for_<N>pct_match.html` (copy blocks
+   counted against the DB: bullets and `<strong>` per section).
+7. `mark_applied.sql` when he says it went.
 
 ---
 
-## NEW SINCE 28 AUG — per-seat résumés now have a re-runnable path
+## OPEN — his call, surfaced, not acted on
 
-**`db/operations/clone_seat_resume.sql`** starts a per-seat résumé as a **selection with edits** off
-the master: it copies every master row into `doc_key='seat:<slug>'` across `resume_documents`,
-`resume_roles`, `resume_sections`, `resume_blocks`, `resume_education`, `resume_certifications` and
-`resume_profile`. The Nexifyr seat document was created ad hoc and left no record of how; this closes
-that. **All three refusals are proven**: re-cloning an existing seat, an unknown slug, and — the one
-that matters — **a seat whose application has already been sent**. That last one closes part of the
-freeze gap for the clone path, though `resume_db.py load` is still unguarded.
-
-**`db/seats/<slug>.sql`** then carries that seat's Rule 7 tailoring as reviewable, re-runnable SQL,
-with the rationale and the source quote for every edit in its header comment. It refuses if the seat
-document does not exist or if the application has already been sent, and it **proves itself before
-committing** — 0 duplicate leading verbs, 0 bullets over 25 words, 0 `orchestrat` stem collisions.
-
-Two gotchas both scripts now handle, learned the hard way:
-- `resume_profile.value_text` is a **generated column** — never insert into it.
-- `ord` is part of `resume_blocks`' primary key, so a re-order must **shift the whole section clear
-  of the target range first**; assigning 1..N directly collides with rows still holding those ords.
-
-⚠ **`resume_docx.py` refuses unknown HTML entities** (`&middot;` was rejected). The master uses the
-literal `·` character. That refusal is correct behaviour, not a bug.
-
-⚠ **`August-2026/27/nexifyr-lead-engineer-fhir/score.json` names the WRONG SEAT inside it** —
-`"slug": "adhd-autism-founding-engineer"`. Checked all nine `score.json` files: the other seven
-simply **omit** the `slug` key, which is the normal shape, so Nexifyr is the only wrong one.
-It is **cosmetic, not functional** — `jobs_sync.py` keys off the directory, and Nexifyr's 78 synced
-correctly. Pre-existing, not touched, flagged for him.
+- **Master "Reimagined" bullet** claims **PostgreSQL** and **"P95 under 30 ms"** for VoltusWave;
+  `professional-journey.md:80` names only DynamoDB + OpenSearch and "30 ms" has zero hits. Confirm or correct.
+- **"ELK" is never expanded** in the master — first use is the skills block (quick-skills-ee 16).
+- Tachyon questions that carry to future seats: were the **100+ golden queries** actually
+  clinician-graded (Instrumented bullet says "built to a contract")? Did he **lead** the
+  killer-query sessions with the client's chief executive ("Co-defined" vs "Facilitated")?
+- **`db/operations/mark_applied.sql` usage comment is wrong**: it says `-v slug=…` but the script
+  reads `current_setting('mark_applied.slug')`. Working call:
+  `psql -d jobs_tracker_v2 -v ON_ERROR_STOP=1 -c "select set_config('mark_applied.slug','<slug>',false)" -f db/operations/mark_applied.sql`.
+  He has not said whether to fix the comment.
+- `./todo` still carries `journey-doc` (33 days overdue) and the two Aezion tasks.
 
 ---
 
-## RULES — they live in CLAUDE.md, not here
+## NOTES THAT ARE ABOUT RUNNING THINGS
 
-**⛔ THIS FILE CARRIES STATE, NOT RULES.** It says *"Overwrite it wholesale"* at the top, so any
-durable rule written here is one routine rewrite from deletion. That nearly happened: until
-2026-09-21 **seven never-claim technologies (NATS, Grafana, Prometheus, Hazelcast, FHIR, HL7,
-DICOM) and both duration facts existed ONLY in this file.** They are now in CLAUDE.md's *Honesty*
-section, where they belong.
-
-Read CLAUDE.md for: the never-claim list · the two duration facts (Spring Boot is six years across
-two employers, never "six continuous"; production Python is ~14 months) · compensation deferral ·
-UNVERIFIED-stays-FALSE-comes-off · every pasted JD gets the full build and always ask for the URL ·
-the 5-agent budget · keep-the-CLI-answerable · the measurement traps.
-
-**If you are about to write a rule here, write it in CLAUDE.md instead and leave a pointer.**
-
-The one gotcha that is genuinely about *running* things, so it stays: **always pass `--doc-key` to
-`verify_resume_docx.py` for a per-seat file**, or it compares against master's blocks and reports a
-false pass.
-
----
-
-## MEASUREMENT TRAPS — every one cost real time
-
-`grep -c` counts LINES, not occurrences, and these files are minified — use `grep -o | wc -l`. A
-word counter must ignore punctuation tokens. **Check the tool before believing the finding:** on
-27 Aug my own bullet-list check flagged a *correct* file as broken, my hygiene checker reported 1
-failure where there were 18, and a `.docx` bold gate counted membership instead of occurrences so 27
-bold spans were invisible to it. **Adjudicate the verifier too.**
+- **The "Honesty — load-bearing" section was removed from CLAUDE.md by him on 24 Sep,
+  intentionally** ("that was intentional, leave it"). Do not restore it or re-flag its absence.
+- `add_breadcrumbs.py` and `expand_acronyms.py` only scan `killer-query-case-studies/`; they never
+  check workspace pages. Acronyms on workspace pages depend on the agent that writes them.
+- `ord` is part of `resume_blocks`' primary key: shift a section clear (ord + 1000) before renumbering.
+- Always pass `--doc-key` to `verify_resume_docx.py` for a per-seat file, or it reports a false pass.
+- Page count of a `.docx` is not checkable here (no LibreOffice); he checks it in Word.
+- He asks "commit & push ALL" after each piece of work; branch is `qa`.
