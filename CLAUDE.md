@@ -729,6 +729,12 @@ own workspace, beside its `research.html`. Reading the other repo is fine — it
 (`~/Documents/interview-prep/CLAUDE.md`, "The honesty ledger") is still the reference for what he
 may claim — but no file there is created, edited or committed. What is already there stays as it is.
 
+**Suggest, never write.** When a job he has applied to asks for a topic that `interview-prep` has no
+material on yet — *"a new topic like 'C#', 'ASP.NET core', etc"* (his words, 28 Sep 2026) — tell
+him: the topic, where the job description asks for it, and what the prep repo is missing (search
+it read-only first). He decides whether and how it gets added. *"just suggestions. nothing else."* —
+a line in the conversation, never a draft or a file, in either repo.
+
 **The v1 lesson on rooms.** Be precise about what actually happened, because the record
 forbids guessing: one process ended in an **unexplained rejection with no recording** (EVA — no
 reason given, expressly un-attributable), and the other he **withdrew from on his own read**,
