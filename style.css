@@ -135,6 +135,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 32px 0; }
 }
 .page.narrow, .wrap.narrow { max-width: 760px; }
 .page.wide, .wrap.wide { max-width: 1160px; }
+.page.full, .wrap.full { max-width: none; }
+/* .page.full also lifts the prose caps (--measure 82ch, .lede 70ch) so every block spans the page. */
+.page.full > p,
+.page.full > ul,
+.page.full > ol,
+.page.full > blockquote,
+.page.full > .tldr,
+.page.full > .callout,
+.page.full > .note,
+.page.full > .warn,
+.page.full > header,
+.page.full .lede { max-width: none; }
 
 .spacer { flex: 1; }
 

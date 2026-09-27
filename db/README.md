@@ -96,13 +96,14 @@ six per-seat workspaces are untouched and stay hand-authored.
 
 ## Operations — the ones you run again tomorrow
 
-All five take `jobs_tracker_v2`. Every one writes **both** the row and its history;
+All six take `jobs_tracker_v2`. Every one writes **both** the row and its history;
 that pairing is the whole point of the directory.
 
 | operation | when | writes |
 |---|---|---|
 | `mark_applied.sql` | a seat is sent | `applications.status` + `applied_at` + a `status_events` row |
 | `withdraw.sql` | he steps away, with a reason | status + `status_events` + a timeline event |
+| `set_status.sql` | any other status move (interviewing, rejected, …), with a note | status + a `status_events` row |
 | `set_source_url.sql` | a posting URL arrives or is cleared | `applications.source_url` |
 | `log_event.sql` | anything happens — InMail, reply, document, call | one `application_events` row |
 | `backfill_status_events.sql` | repair only | missing `status_events` rows |
