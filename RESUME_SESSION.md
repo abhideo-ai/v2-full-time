@@ -7,17 +7,10 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-28**, after the De
 `lsof -nP -iTCP:8006 -sTCP:LISTEN` — if nothing is listening, run
 `automation/.venv/bin/python automation/serve.py` (it runs in Claude's shell; he is fine with that).
 
-## Board — query it: `psql -d jobs_tracker_v2 -c "select id, slug, status, fit_score, applied_at from applications order by id;"`
-- **Delta Technology (122)** — referral, role to be created, `interviewing`. Interview with Kim
-  Batcheler (UK) not booked; the referring friend is not named. Delta is rebranding as Enhansd (its
-  AI arm, "Studio", is not live yet). Workspace done: `September-2026/27/delta-technology-referral/`.
-  Its prep pages sit in `~/Documents/interview-prep/study-plans/delta-technology-referral/`,
-  committed there before the 28 Sep rule — leave them.
-- **Harshita Vishnavam (121)** — applied 27 Sep through her form. A short follow-up reply is staged
-  in `reply.html`, **not sent**; log an `outbound` event when he sends it.
-- **Tachyon (116)** — applied 24 Sep, frozen.
-- **Aezion (114)** — ask him whether the Sravan reply went; never assume.
-- **Wipro (99)** — no JD since the 25 Aug InMail.
+## Waiting on him (job status itself: query the database — see `CLAUDE.md`)
+- **Harshita (121):** her follow-up reply is staged in `reply.html`, **not sent**. When he sends it,
+  log an `outbound` event with the text.
+- **Aezion (114):** ask whether the Sravan reply went; never assume.
 
 ## Open — his call, not acted on
 - Harshita: if a JD arrives, does an applied (frozen) seat still get a tailored résumé?
