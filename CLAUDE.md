@@ -160,7 +160,7 @@ moved together. The rule is a direct user directive and stands regardless.
 ## JD match scoring — two scores
 
 **(1) TECHNICAL — target 95+. This is the score he cares about**, and getting it close to a
-95% match is the job. Score it with **subagents, one per rubric criterion** (see *Execution
+95% match is the job. Score it with **one subagent covering every rubric criterion** (see *Execution
 model*). Engineering capability. Read "e.g. / or / preferably"
 qualifiers generously: Python satisfies "e.g. Python, C++, or Rust"; LangChain satisfies
 "e.g. LangChain, LlamaIndex". A specific named tool he has not used (MongoDB vs his
@@ -469,15 +469,30 @@ no code change.
 
 *Every rule here is his, on the date given; italic quotes are his words verbatim.*
 
-### ⛔ AGENT BUDGET — MAX 5 (2026-09-20). This bounds everything below it.
+### ⛔ AGENT BUDGET — MAX 3 PER JOB (2026-09-28). This bounds everything below it.
 
-**No workflow spawns more than 5 agents; no turn spawns more than 5 standalone Agent calls.** Five
-is enough here, and this rule comes FIRST — "offload everything" operates inside it, never around
-it. **If a task genuinely needs more, say so and ask**; never spend it and explain afterwards.
+**No job gets more than 3 agents in total** — across every turn, phase and workflow, counting
+researchers, writers, checkers and fix passes, and counting that job's interview-prep pages in
+`~/Documents/interview-prep/`. His words, 28 Sep 2026: *"update CLAUDE.md to cap agents per job at
+5"*, then *"Perhaps cap it at 3."* · *"3 is sufficient."* **Count per job, not per turn:** spawns
+spread across several turns still add up. This rule comes FIRST — "offload everything" operates
+inside it, never around it. **If a job genuinely needs more, say so and ask first**; never spend it
+and explain afterwards.
 
-- **Bound every fan-out:** `items.slice(0, 5)`, never a bare `parallel(items.map(...))` over a
-  data-dependent list. Over five, pick the five that matter and **`log()` what was dropped** —
-  silent truncation reads as "covered everything".
+*Why:* the Delta referral (27 Sep 2026, no job description) got **15 agents** over about 2.5 hours —
+three researchers, a status script, two workspace pages, a width tweak, two prep pages, four
+checkers, two fix passes — while no single turn passed the old per-turn cap. *"How many agents have
+you run … are they needed? What instruction caused that?"* About five would have done.
+
+- **"One agent per angle / criterion / section" is work to cover, never a head-count.** Inside the
+  three, one agent takes every research angle, every rubric criterion, every résumé section.
+- **Batch small edits into one pass.** A 12-line stylesheet change never gets its own agent.
+- **Size the output so one checker can verify it.** A page too big for one checker is too big.
+- **Outside a job** — tooling, migrations, audits — the 2026-09-20 rule still holds: no workflow
+  spawns more than 5 agents, and no turn more than 5 standalone Agent calls.
+- **Bound every fan-out** to the cap (`items.slice(0, 3)` for a job), never a bare
+  `parallel(items.map(...))` over a data-dependent list. Over the cap, pick what matters and
+  **`log()` what was dropped** — silent truncation reads as "covered everything".
 - **⛔ NEVER nest `parallel()` inside a `pipeline()` stage — that MULTIPLIES.**
   `pipeline(edits, e => parallel(LENSES.map(...)))` over 22 edits × 3 lenses is **66 agents**; on
   **2026-09-20** it was 70 in one workflow, ~89 across the session, where ~17 was right —
@@ -512,17 +527,19 @@ Three consequences, all violated on 2026-09-20:
   on its own.
 - **Adjudication stays here** — quick, and the one thing only this thread can do.
 
-**How this squares with the 5-agent budget: the cap is PER WORKFLOW**, so a full workspace is three
-or four sequential background workflows of ≤5 agents each, never one big fan-out:
+**How this squares with the budget: the three agents are for the WHOLE job**, shared across its
+phases, never one big fan-out:
 
 ```
-phase 1  scoring + research          -> <=5 agents, background
-phase 2  re-vectoring + verification -> <=5 agents, background
-phase 3  the page artefacts          -> <=5 agents, background
+agent 1  research + JD pages     -> jd.md, jd.html, cited research.html            (background)
+agent 2  scoring + résumé edits  -> score.json and proposed edits; after adjudication, the
+                                    rubric index.html and resume_changes page — resume
+                                    this agent with SendMessage, never spawn a new one
+agent 3  verification            -> one adversarial check of every proposed claim  (background)
 ```
 
-Between phases the thread is free for an interrupt, a redirect or the next seat — that is the
-point. **Read each phase's results before choosing the next.**
+Between agents the thread is free for an interrupt, a redirect or the next seat — that is the
+point. **Read each agent's results before starting the next.**
 
 **Main thread only — coordination and judgement, never production:** **adjudicating** what comes
 back and the **adversarial verify pass** against `professional-journey.md`, which is the only
@@ -536,17 +553,17 @@ cited `research.html`, and the per-seat `.docx`. Scaffolding
 with `resume.py new` is a command, not authoring — but the moment content lands in a workspace, it
 is delegated.
 
-- **Research a job → workflow.** One agent per angle — the company's own site, comp signals, the
-  seat's legitimacy and whether it is even open, red and green flags, forcing questions — then
-  synthesis into cited `research.html`. Postings lie about location, title and openness — every JD
+- **Research a job → one agent** covering every angle — the company's own site, comp signals, the
+  seat's legitimacy and whether it is even open, red and green flags, forcing questions — and
+  writing the cited `research.html`. Postings lie about location, title and openness — every JD
   claim gets checked against the company's own site.
-- **Build a résumé → workflow.** Fan the draft per section — headline, summary, the three skills
-  blocks, the five experience roles — each agent from `professional-journey.md`; then Rule 7
-  re-vectoring per job, fanned the same way.
-- **Score a JD → subagents, one per rubric criterion.** **Technical score is the one that matters,
-  target 95+**: each criterion gets its own agent (weight, score out of ten, evidence quoted from
-  `professional-journey.md`), plus one naming the **binding constraint and the smallest honest
-  lift** — almost always Rule 7 re-vectoring of real work, never a new claim.
+- **Build a résumé → one agent** drafts every section — headline, summary, the three skills
+  blocks, the five experience roles — from `professional-journey.md`, then does Rule 7
+  re-vectoring per job in the same pass.
+- **Score a JD → one agent covering every rubric criterion.** **Technical score is the one that
+  matters, target 95+**: each criterion gets its weight, a score out of ten and evidence quoted from
+  `professional-journey.md`, and the same agent names the **binding constraint and the smallest
+  honest lift** — almost always Rule 7 re-vectoring of real work, never a new claim.
 
 **Never fabricate to reach 95.** Read "e.g. / or / preferably" generously, treat a named tool he
 has not used as a ramp item and not a capability cap, and keep the non-technical score out
@@ -556,7 +573,7 @@ invented claim is worse than an honest 88, because the invented one gets found i
 
 **The verification phase is not optional; it is what makes delegation safe.** Subagent output runs
 roughly one factual error per ten claims and an invented number is the cardinal sin here, so every
-résumé workflow ends with adversarial agents checking each claim against the journey doc and the
+résumé build ends with one adversarial agent checking each claim against the journey doc and the
 honesty rules — anything unsupported is **cut, not softened** — and you adjudicate the survivors
 before a word reaches a file he will paste. A claim that survives unchecked is a defect, not a
 result.
