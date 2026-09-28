@@ -3,6 +3,22 @@
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
 Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-28**, after the Delta build.
 
+## NEXT ACTION — build the approved workspace-page plan
+Plan (approved 28 Sep 2026): `~/.claude/plans/why-is-claude-md-17kb-clever-rabbit.md`. Read it
+first, including its **Amendment** section.
+- Every workspace's `index.html` becomes a thin shell: `workspace.json` (manifest) + `tabs/<id>.html`
+  (one fragment per tab, folds as `<details>`), assembled in the browser by a new
+  `static/workspace.js`; switching stays in `static/page-tabs.js`.
+- Static tabs: Overview · Job description · Tech score gaps · Résumé changes · Research · Open
+  questions (Files and Glossary are folds in Overview). Dynamic tabs from the manifest, after Research.
+  Delta's dynamic tabs: **Kim** and **Enhansd**.
+- **`research.html` stays its own file**, reformatted to be easily consumed (tabs and/or folds), and
+  the Research tab **renders it** — his words: *"can you not render research.html in index.html? This
+  way index.html is not bloated?"* Settle first: nested tabs (scope `page-tabs.js` per group, or folds
+  only in research) and whether Kim / Enhansd reuse research sections rather than duplicate them.
+- Status and score come from the database: add `?slug=` to `/api/jobs` beside `?month=` / `?date=`.
+- Pilot on Delta only; applied seats stay frozen. No agents. Tests on their own — never `run.sh`.
+
 ## First: is the server running?
 `lsof -nP -iTCP:8006 -sTCP:LISTEN` — if nothing is listening, run
 `automation/.venv/bin/python automation/serve.py` (it runs in Claude's shell; he is fine with that).
