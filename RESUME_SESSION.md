@@ -3,13 +3,20 @@
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
 Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-28**, after the workspace-page build.
 
-## NEXT ACTION — wait for his go on `jd-list/sept-28-2026_1.md`
-He was writing it on 28 Sep (staged, still being edited; not ours to commit). Its goal line:
-*"creating new workspaces for the JD's mentioned in this file"*. First entry: The Nielsen Company
-(Gracenote), LinkedIn job 4466271472, found by him after a recruiter email and a call from Deepti
-Adlakha. When he says go: `CLAUDE.md`'s "When he pastes a job", building from `templates/workspace/`.
+## NEXT ACTION — Nielsen is built; waiting on him
+`September-2026/28/nielsen-principal-member-technical-staff/` (Principal Member Technical Staff,
+Mumbai; tracker `heard_back`, technical 86.39). No résumé: recruiter Deepti Adlakha is using his
+Naukri profile (her call, 28 Sep 2026). His to do: check the consent email's sender domain, and
+consent within 30 days or the profile is deleted; ask her which listing it is (a Bengaluru one
+exists too); settle Kubernetes before any call. Interview prep only when he asks.
+- Offered, not answered: a slim `score.json` (the tracker reads only `weighted_total`). He set
+  `/effort high` as his default on 28 Sep, which answers the other half.
 
-## Done 28 Sep 2026 — the workspace page (plan: `~/.claude/plans/why-is-claude-md-17kb-clever-rabbit.md`)
+## Done 28 Sep 2026 — the workspace page, then Nielsen on it
+- Nielsen built with one workflow (3 agents, run `wf_37031923-139` in `PENDING.md`); every new
+  workspace is checked with `node automation/check_workspace.js <Month-YYYY/DD/slug>`.
+
+### The workspace page (plan: `~/.claude/plans/why-is-claude-md-17kb-clever-rabbit.md`)
 - Every workspace's `index.html` is one shell, the same file everywhere (`templates/workspace/`);
   `workspace.json` names the seat and its own tabs; each tab is a standalone page shown inside it
   by `static/workspace.js`; `static/page-tabs.js` switches. Status and score come from

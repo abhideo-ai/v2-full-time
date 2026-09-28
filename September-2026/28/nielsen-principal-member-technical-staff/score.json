@@ -1,0 +1,160 @@
+{
+  "slug": "nielsen-principal-member-technical-staff",
+  "scored_at": "2026-09-28",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 86.39,
+  "weighted_total_basis": "capability as evidenced in professional-journey.md and the killer-query case studies only; open claims and résumé-only wording are named and left out. No résumé is tailored for this seat: his Naukri profile is what went forward (his call), so there is no résumé-surface score.",
+  "jd_source": "jd.md below its marked line: the LinkedIn posting he found (linkedin.com/jobs/view/4466271472). Nielsen sent no job description; that this posting is the role the recruiter called about is his reading, not confirmed.",
+  "target": 95,
+  "ceiling_is_honest": true,
+  "honest_ceiling": 88.1,
+  "honest_ceiling_basis": "What-if only: if professional-journey.md came to carry the résumé-only items (the Jenkins to GitHub Actions move and the Puppeteer suite; Elastic Container Service Fargate and Terraform; high availability), the containers, CI/CD, cloud and distributed-systems rows would rise by about 1.7 points together. 95 is not reachable honestly: test-driven development, Domain-Driven Design, the Lambda and Kappa names, cross-service distributed tracing and data pipelines proven at catalogue scale are absent from every source. Kubernetes stays out of the ceiling because it is open.",
+  "binding_constraint": "The job description names five delivery-and-operations practices that professional-journey.md never names: test-driven development (TDD), a CI/CD tool, Kubernetes, distributed tracing and FinOps. The work beside each is real and cited (automated regression and replay tests, with CI on the production call path; Docker Compose and Elastic Container Service; Datadog and production tracing of the model pipeline; cost-driven consolidation and vendor replacement), so each scores as a partial, not a zero. The four rows that carry them lose 5.51 of the 13.61 points lost. Kubernetes is open (his August 2026 confirmation against the interview-prep ledger) and is scored on the journey alone. Second: data architecture (8.5), where the constructs are strong but the proven volume is a ~10,000-patient platform, not a catalogue.",
+  "smallest_honest_lift": "No new claim; the application has gone, so the lift is how he names work already in the record when Nielsen talks to him. (1) Data engineering in the job description's words: the killer-query platform runs a live projection and a nightly batch lane side by side, replays nine years of history through the same projection code as the live stream ('the same projection code serves history and live'; one Kappa-like part of a hybrid design, and he should not call it Kappa himself), keeps event time apart from ingestion time with a watermark, and makes the historical load 'idempotent and resumable', quarantining rows it cannot map (kq1:289-290, 345-348, 381-400; kq4:711-713). (2) Automated testing, said as exactly that and never as TDD: golden-replay regression fixtures, CI on the production call path with a mock provider, and tenant isolation enforced by automated tests (kq4:849-851; kq1:753-754; journey 599). (3) A metadata-matching story for a metadata business: supplier hotel codes reconciled onto licensed GIATA MultiCodes, automated on AWS Lambda with the approval step kept human (journey 437-438, 446). Before the call, two things only he can settle: Kubernetes (his August 2026 confirmation against the prep ledger; the master résumé's headline names it, so it may come up), and, if message brokers come up, that his is Amazon Kinesis, since Kafka is on the prep ledger's never-claim list.",
+  "gates": {
+    "note": "Named separately and not folded into weighted_total.",
+    "levelling": {
+      "verdict": "passes on years",
+      "jd_asks": "15+ years of professional experience in software engineering; a bachelor's degree in computer science, engineering or a related field",
+      "years": "Span '19+ years, Apr 2007 → Apr 2026' (journey 38). In role: 218 months, about 18 years 2 months, after taking out the three recorded gaps (Dec 2015-Feb 2016, May-Jul 2018, Aug-Nov 2019; journey 29, 32, 34) and the one-month June 2013 move between McDonald's and innRoad (journey 26-27). Either way above 15.",
+      "level": "Principal Member of Technical Staff is a senior individual-contributor rung. His last two titles: Principal Software Architect at VoltusWave (journey 36) and Lead SDE / Sr. Staff Engineer at Deque (journey 35; the Deque title sequence is open, journey 515-517). The posting asks him to mentor senior engineers and names no reports.",
+      "degree": "The journey records an MS in Computer Science, University of Houston (Aug 2004 - Dec 2007) and a PG Diploma in AI/ML, IIIT Bangalore (Jan 2021) (journey 40). It does not record the bachelor's degree itself."
+    },
+    "legitimacy": {
+      "verdict": "left to the research tab; not scored here",
+      "known_from_intake": "Nielsen sent no job description; the LinkedIn posting is his own find, and that it is the role the recruiter called about is his reading (the note at the top of jd.md). The posting's own closing notice says Nielsen recruiters contact people only through official job boards, LinkedIn, or email from a nielsen.com address (the last paragraph of jd.md)."
+    }
+  },
+  "open_claims_not_to_touch": [
+    "Kubernetes: his August 2026 confirmation against the interview-prep ledger (never-claim; 'The record is ECS Fargate'). Not in the journey; not resolved; not scored.",
+    "Graph neural network (journey 682): not used.",
+    "The 100,000-concurrent wording and the P95 16 ms figure (journey 690-694): the Go rewrite is used, the numbers are not.",
+    "The four Rocket metrics, including the 5-engineer team (journey 490-495): not used; Rocket's evidence is the decomposition itself (journey 487-488).",
+    "The 70–80% consolidation (journey 604): not used; the ~300 figure is quoted as the journey states it (journey 530)."
+  ],
+  "not_scored_resume_only": [
+    "quick-deque 8: CI/CD 'from Jenkins to GitHub Actions'.",
+    "quick-deque 9: 'an end-to-end automated testing framework built on Puppeteer'.",
+    "quick-vp 23: 'Kubernetes, Terraform and Elastic Container Service Fargate at 70% Spot — deploys under 10 minutes, infrastructure cost down 25–30%'.",
+    "quick-skills-ee 3: 'High Availability, Multi-Availability-Zone Failover, Disaster Recovery, Load Balancing'.",
+    "quick-skills-bd 4: 'Agile / Scrum Delivery'."
+  ],
+  "measurement_notes": [
+    "Evidence is professional-journey.md ('journey N' = line N) and killer-query-case-studies/*.html ('kqN:line' = that study's main page). The master résumé (resume_blocks, doc_key='master', retired_at is null) was read by SQL for wording only.",
+    "Verified absent from the journey by grep on 2026-09-28: Domain-Driven/DDD, high availability, resilience, Kafka, batch, Kappa, Kubernetes, Fargate, Terraform, CI/CD, Jenkins, TDD, tracing, telemetry, FinOps, Spot, Scala, Rust, Agile, Scrum. REST appears only in the résumé-folded Rocket line 494 (an open metric); Docker only as 'docker compose' (539); container orchestration only as 'AWS Elastic Container Service' (468).",
+    "Verified absent from the case studies (tags stripped): Kafka, Kinesis, SQS, Lambda or Kappa architecture, Docker, Kubernetes/EKS/ECS/Fargate, Terraform, a named CI/CD tool, TDD, OpenTelemetry or distributed tracing, Datadog, REST, high availability or failover. The 'container' hits are CSS; the two 'DDD' hits in kq1-precedent-search-qa.html are the colour code #BFDDDA; 'Aggregate' appears only in its statistical sense (kq2:326, kq10:314).",
+    "All ten case studies read 'Sole owner — design through production' and 'Live in production'. Their latency and quality figures are pre-registered targets, not measurements (kq1:255-256, 935).",
+    "Journey 88 calls the retrieval work 'piloted to doctors and sales'; production status here rests on the case studies, and line 88 is not upgraded.",
+    "contribution = weight x score x 10; the twelve weights sum to 1.00 and the contributions sum to weighted_total."
+  ],
+  "scores": [
+    {
+      "criterion": "backend-java-scala-python-high-throughput-low-latency-go-rust-plus",
+      "label": "Backend expertise: Java, Scala or Python for high-throughput, low-latency work (Rust or Go a strong plus)",
+      "weight": 0.12,
+      "score_out_of_10": 8.8,
+      "contribution": 10.56,
+      "ramp_or_cap": "ramp-item (Scala and Rust never used; Java and Python meet the 'or', Go meets the strong plus); residual: the throughput and latency proof sits in Go and in design targets, not in measured Java numbers",
+      "evidence": "journey 64 'Java — ~11 years across three eras, most recently Feb 2025'; 68-70 (JSP/J2EE at El Paso 2008-12; Java + Spring Boot microservices at Rocket 2018-19; 'Spring Boot 2.x on Java 8/17' at Deque 2019-25); 678 'decision-intelligence platform in Python (FastAPI, LangChain, LangGraph)'; kq1-precedent-search.html:690 'Retrieval API FastAPI'; journey 138 'I rewrote the core service from Node.js to Go', after 648 'a single message will result in 50 external calls'; 421 'at peak, we served 2-3 million requests per day' (Teletext search); kq1:559-561 graph database kept off the serving path 'so serving latency never depends on its tail'. KQ latency figures are pre-registered targets (kq1:255-256). Not used: the 100,000-concurrent wording and the P95 16 ms figure (journey 690-694, open claims)."
+    },
+    {
+      "criterion": "distributed-systems-microservices-rest-ddd-high-availability-fault-tolerance",
+      "label": "Distributed systems: microservices, REST API design, Domain-Driven Design, high availability and fault tolerance",
+      "weight": 0.12,
+      "score_out_of_10": 8.7,
+      "contribution": 10.44,
+      "ramp_or_cap": "partial: DDD is never named anywhere; high availability as infrastructure (multi-zone failover) is his August 2026 confirmation and a résumé skills line (quick-skills-ee 3), not in the journey",
+      "evidence": "journey 488 'decomposing the existing monolith into microservices by defining the boundaries'; 570 'Roughly 10–15 services by the time you left, starting from a monolith'; 600 'a component became a microservice if it needed to scale independently or needed its own database. Each service owned its database'; 567-568 auth and billing services used by every Deque product; kq1:731 'a single authenticated retrieval endpoint, auth-resolved tenancy'; kq1:834-835 'API contract (request and response envelopes with version pins and diagnostics)'; kq9-causal-path.html:648-649 per-endpoint 'rate limits, payload limits, timeout budgets, audit retention, and degradation states'; journey 586 Aurora move 'for ALL instances without any downtime'; 567 'zero end-user disruption'; kq1:453 'circuit breaker at 1.5s'; kq1:747-748 '.with_retry() for transient failures, .with_fallbacks() to a deterministic safe output'; kq1:363 a failed index build means 'Keep serving yesterday's index'."
+    },
+    {
+      "criterion": "event-driven-async-messaging",
+      "label": "Event-driven design: asynchronous communication, messaging queues, event-driven architecture",
+      "weight": 0.08,
+      "score_out_of_10": 8.8,
+      "contribution": 7.04,
+      "ramp_or_cap": "ramp-item: the JD names no broker; his are Kinesis (designed) and SQS (inherited); Kafka is on the interview-prep ledger's never-claim list",
+      "evidence": "journey 216 'I designed a two-stream architecture on Kinesis to give us headroom'; 696 'AWS Kinesis is in production' (the chat platform); 662 limits never load-tested ('Didn't have the budget to test the limits'); 88 'event spine projected via Lambda into Amazon Neptune'; 677 'Event-sourced architecture on DynamoDB single-table'; kq1:289 'an append-only event spine (DynamoDB)' as the source of truth; kq2-outcome-correlation.html:341-342 a correction listener rebuilds only the slices that depend on it; journey 411 scatter-gather 'to parallely call the configured suppliers'; kq9:314 'async export job mode'; journey 647 SQS invoking a Lambda, in the chat platform as he found it."
+    },
+    {
+      "criterion": "data-architecture-streaming-and-batch-pipelines-cross-system-integration",
+      "label": "Data architecture: distributed data, scalable pipelines, streaming and batch (e.g. Lambda or Kappa), cross-system integration from ingestion to delivery",
+      "weight": 0.12,
+      "score_out_of_10": 8.5,
+      "contribution": 10.2,
+      "ramp_or_cap": "ramp-item (Lambda and Kappa are an e.g. and never named); residual: proven volume is 'roughly 10,000 patients, over about nine years of history' (kq1:935) and 2-3 million requests a day at Teletext's peak (journey 421), not catalogue scale",
+      "evidence": "kq1:289-290 'A projection keeps a decision graph (Neptune) current, and a nightly snapshot feeds the indexing pipeline'; kq4-early-signal-detection.html:711-713 the nightly lane: 'snapshot export, sequence build, batch scoring, the weekly retrain'; kq4:584-586 nightly batch over 'the tenant-partitioned parquet' handed to 'a SageMaker transform job'; kq1:394-395 'The same projection code serves history and live' (the Kappa idea, unnamed); kq1:381 'Event time is not ingestion time', 384-385 a hydration-mode watermark; kq1:386-387 'idempotent and resumable'; kq1:390-392 schema upconverters, unmappable rows 'quarantined with a reason, never defaulted'; kq1:397-400 zero-event-loss reconciliation and a fenced cutover with 'neither gap nor duplicate'; journey 677 'deterministic parquet snapshot exporter'; 411 supplier scatter-gather; 437-438, 446 GIATA reconciliation automated on AWS Lambda with approval kept human; 337, 340 McDonald's single view of employee records with per-field first-seen and last-updated metadata (whether it shipped is open, 346)."
+    },
+    {
+      "criterion": "datastores-sql-and-nosql",
+      "label": "Datastores: designing, scaling and optimising SQL and NoSQL",
+      "weight": 0.08,
+      "score_out_of_10": 9.2,
+      "contribution": 7.36,
+      "ramp_or_cap": "none (search work is capacity and latency, not relevance tuning, per the interview-prep ledger)",
+      "evidence": "journey 309-312 SQL Server 2000 to 2005 migration, stored-procedure optimisation and writing, database design (El Paso); 359 'Optimised stored procedures, table design, indexing' (innRoad); 586 PostgreSQL 9.6 to Aurora PostgreSQL 13.x 'without any downtime'; 597 'organisation ID on every table, with the tenant resolved from the JWT'; 600 each service owned its multi-tenant database; 677 DynamoDB single-table event sourcing; 643-644 DynamoDB writes and OpenSearch lookups on the chat path; 423 an Elasticsearch cache, 'added a 20 minute TTL'; 88 Amazon Neptune; kq1:560 'the graph database serves audit and drill-down only'; kq4:765-767 Parquet + DuckDB 'partitioned by tenant and snapshot hash'."
+    },
+    {
+      "criterion": "aws-cloud-native-and-cost-efficient-architecture-finops",
+      "label": "Cloud: AWS-native design and cost-efficient architecture (FinOps)",
+      "weight": 0.1,
+      "score_out_of_10": 8.8,
+      "contribution": 8.8,
+      "ramp_or_cap": "partial on FinOps: cost-driven architecture, but no FinOps practice (cost allocation, commitments, Spot) in the journey; the résumé's 'at 70% Spot' and 'infrastructure cost down 25–30%' (quick-vp 23) are not in the journey and not scored",
+      "evidence": "journey 526 EC2, 586 Aurora, 438 and 88 Lambda, 647 SQS and S3, 696 Kinesis, 677 DynamoDB, 644 OpenSearch, 88 Neptune; kq1:722-723 and kq4:769-770 SageMaker; kq1:689 'Client VPC · PHI never crosses this boundary'; journey 468 'AWS Elastic Container Service' (folded in from the résumé). Cost: 194 'every trial deployment was as expensive as a paying one' (the consolidation of axe Monitor's per-customer instances; 280 clients, his settled count of 27 Aug 2026, while journey 530 still says ~300); 420-422 a vendor that 'charged us for the infrastructure' by load, brought in-house to 'save a lot on money'; 382-383 a Linux deployment offered to new enterprise customers to avoid the Windows Server and SQL Server licence cost."
+    },
+    {
+      "criterion": "containers-and-orchestration-docker-kubernetes",
+      "label": "Containers and orchestration (e.g. Docker, Kubernetes)",
+      "weight": 0.06,
+      "score_out_of_10": 7.5,
+      "contribution": 4.5,
+      "ramp_or_cap": "ramp-item (an e.g.); thin record: one Docker Compose deployment, and Elastic Container Service used in 2017-18; Kubernetes open",
+      "evidence": "journey 539 'single docker compose file that had 3 node js processes, nginx, postgresql (9.6), keycloak' (axe Auditor); 468 'deployment and operations on AWS Elastic Container Service' (VoltusWave 2017-18, folded in from the résumé). Kubernetes is not in the journey. It is open: his August 2026 confirmation against the interview-prep ledger, which lists it as never-claim and says the code record shows ECS Fargate. Not resolved; scored on the journey only."
+    },
+    {
+      "criterion": "observability-tracing-telemetry-monitoring",
+      "label": "Observability and reliability: distributed tracing, telemetry, monitoring for large production systems",
+      "weight": 0.07,
+      "score_out_of_10": 8.3,
+      "contribution": 5.81,
+      "ramp_or_cap": "partial: cross-service distributed tracing and 'telemetry' are never named; the tracing in the record is of the model pipeline",
+      "evidence": "journey 216 'Observability first — Datadog, to find out what was genuinely breaking rather than what people assumed'; 589 'added Datadog & Amplitude to both Monitor & Auditor'; kq1:765-766 self-hosted LangSmith, so 'production tracing and evaluation datasets run without PHI ever leaving the network'; kq1:750-751 a PHI-safe tracer that 'logs metadata and payload hashes'; kq1:363 a failed index build pages the on-call; kq4:846-848 drift 'triggers a retrain before scores quietly decay'."
+    },
+    {
+      "criterion": "ci-cd-tdd-automated-testing",
+      "label": "Engineering excellence: CI/CD tools and practices, test-driven development, automated testing",
+      "weight": 0.06,
+      "score_out_of_10": 7.3,
+      "contribution": 4.38,
+      "ramp_or_cap": "caps the row: TDD, a named CI/CD tool and a named test framework appear nowhere in the journey or the case studies; the résumé's Jenkins to GitHub Actions move and Puppeteer suite (quick-deque 8, 9) are not in the journey and not scored",
+      "evidence": "journey 599 'Isolation was enforced by rigorous review plus automated testing'; 669 'test scaffolding, all under hands-on review'; kq1:753-754 'CI exercises the exact production call path with zero keys and zero network'; kq1:762-763 'a smoke test compiles every registered graph exactly as the platform loads it'; kq4:849-851 golden regression: pinned fixtures that 'must reproduce identical results across rebuilds'; kq2:826-828 the shared exporter replay test; kq1:347-348 a blue-green swap with shadow evaluation so 'a bad index build never reaches a clinician'."
+    },
+    {
+      "criterion": "ai-ml-foundations",
+      "label": "AI and machine-learning foundations: integrating ML models and data workflows",
+      "weight": 0.05,
+      "score_out_of_10": 9.4,
+      "contribution": 4.7,
+      "ramp_or_cap": "none",
+      "evidence": "journey 40 'PG Diploma in AI/ML, IIIT Bangalore (Jan 2021)'; kq4:856-858 'a logistic baseline, then PrefixSpan pattern mining, then a transformer', each rung earning its place; kq4:840 'Calibration Brier + reliability slices'; kq4:846-848 drift-triggered retraining; kq4:769-770 nightly batch-transform scoring and a weekly retrain through a three-way promotion gate; kq1:313-318 features rebuilt as of the decision, so nothing from the future leaks in; kq2:326 propensity matching behind a standardised-mean-difference balance gate, with bootstrap confidence intervals; kq1:261 and kq4:266 'Live in production'. Not used: the graph neural network (journey 682, open)."
+    },
+    {
+      "criterion": "architecture-ownership-standards-mentoring-hands-on",
+      "label": "Owning the architecture, setting standards, mentoring senior engineers, coding up to 60% of the time",
+      "weight": 0.12,
+      "score_out_of_10": 9.0,
+      "contribution": 10.8,
+      "ramp_or_cap": "none; not named in the journey: technology forums, Agile or Scrum (a résumé skills line only). Not used: the Rocket 5-engineer team (one of the four open Rocket metrics, journey 492)",
+      "evidence": "journey 154 'I have stayed hands-on the whole way'; 164 never 'the architect who draws diagrams without knowing the code'; 220 'first-cut implementations, all under hands-on review'; kq1:258 'Sole owner — design through production'; 218 killer queries defined with 'the client's chief executive'; 224-226 the backwards goal chain; 466 'gave the architectural roadmap for the subsequent products to work from'; 196 the tenancy decision ('We took the second'); 446 buy GIATA, build the pipeline around it; kq1:559-561 graph kept off the serving path; 678 '4 reusable archetypes'; kq2:870-872 review fixes 'promoted into shared platform components'; kq2:875-876 'canonical cache-key completeness, now standard across the analytics programme'; kq10-cross-domain.html:917 'twenty findings'; 669 Claude Code and OpenAI Codex 'across the ~20-engineer team'; 104 sub-teams for 'backend, React Native, web, AI, QA, DevOps'; 468 'mentoring freshers and seniors' (2017-18, folded in from the résumé)."
+    },
+    {
+      "criterion": "full-stack-awareness-html-css-javascript",
+      "label": "Full-stack awareness (e.g. HTML, CSS, JavaScript; preferred)",
+      "weight": 0.02,
+      "score_out_of_10": 9.0,
+      "contribution": 1.8,
+      "ramp_or_cap": "none",
+      "evidence": "journey 356-357 an ASP.NET app modernised as a single-page app (Angular here, Knockout.js per the résumé; open at 362-364); 540 'javascript, massive js, pug/jade' (axe Auditor); 556 the axe DevTools browser extension and cross-origin iframes; 339 're-designed the UI'; 104 web and React Native sub-teams."
+    }
+  ]
+}

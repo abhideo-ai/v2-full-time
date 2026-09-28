@@ -80,6 +80,9 @@ this file holds the how. Full history: `docs/CLAUDE-original-2026-09-28.md`.
   a link to another tab's file (`kim.html#posts`) is kept inside the page. It needs `serve.py`:
   opened from disk, the tabs cannot load. `serve.py`'s listen backlog is 64, not socketserver's 5,
   which reset the eighth request of a page's parallel burst.
+- **Verify a built workspace:** `node automation/check_workspace.js <Month-YYYY/DD/slug>`
+  (read-only, needs `serve.py`). FAIL breaks the page contract; WARN needs a look (a word that
+  can mean compensation).
 - Breadcrumbs: the month crumb opens the launcher with `?month=YYYY-MM`, the day crumb with
   `?date=YYYY-MM-DD`. `static/apps.js` passes these to `/api/jobs`, which filters in SQL
   (`jobs_db.applications(month, day)`; 400 if malformed), so groups, tabs and counts are that
