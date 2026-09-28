@@ -3740,3 +3740,9 @@ span.callout:empty { display: none; }
 .app-list,
 .wl-rubric,
 .date-group { max-width: none; }
+
+/* Section tabs on workspace landing pages (static/page-tabs.js): print every panel, not the tab bar. */
+@media print {
+  section[data-panel][hidden] { display: block !important; }
+  [data-page-tabs] { display: none; }
+}

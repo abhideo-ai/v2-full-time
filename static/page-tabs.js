@@ -1,0 +1,45 @@
+// Section tabs for a workspace landing page (templates/workspace-index.html).
+//
+// THE CONTRACT:
+//   - tab buttons are .status-tab[data-panel] inside [data-page-tabs]
+//   - each panel is a section[data-panel] with the same name, and id = that name
+//   - one panel shows at a time, via the `hidden` attribute
+//   - the URL hash picks the tab (index.html#open); an unknown hash shows the first
+//   - without JavaScript nothing is hidden, so every panel shows; print shows all (style.css)
+//
+// The launcher's static/tabs.js is a different thing (rows, counts, search); this
+// file only switches sections.
+(() => {
+  const tabs = [...document.querySelectorAll("[data-page-tabs] .status-tab[data-panel]")];
+  const panels = [...document.querySelectorAll("section[data-panel]")];
+  if (!tabs.length || !panels.length) return;
+  const names = tabs.map((t) => t.dataset.panel);
+
+  function show(name, focus) {
+    if (!names.includes(name)) name = names[0];
+    for (const t of tabs) {
+      const on = t.dataset.panel === name;
+      t.classList.toggle("active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    }
+    for (const p of panels) p.hidden = p.dataset.panel !== name;
+  }
+
+  function go(name, focus) {
+    history.replaceState(null, "", "#" + name);
+    show(name, focus);
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => go(t.dataset.panel));
+    t.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      const step = e.key === "ArrowRight" ? 1 : tabs.length - 1;
+      go(tabs[(i + step) % tabs.length].dataset.panel, true);
+    });
+  });
+  window.addEventListener("hashchange", () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+})();

@@ -1,0 +1,131 @@
+<!doctype html>
+<!--
+  TEMPLATE — every workspace landing page (Month-YYYY/DD/<slug>/index.html) starts from this file.
+  Replace every {{…}} placeholder and delete this comment. Rules (CLAUDE.md):
+  - Tabs: Overview · Score · Research · Open questions · Files. With no job description yet, drop
+    the Score tab (its button and its panel).
+  - Overview: key facts as a table, where it stands in two sentences, one score line.
+  - Score: the weighted rubric (criterion · weight · /10 · evidence), then "Tech mismatch & why
+    exactly": for each JD technology he lacks or only partly has — the JD's words, what his record
+    shows, why exactly it is a mismatch, and whether it caps the score.
+  - No database plumbing (event ids, status rows, NULL). Never compensation.
+  - Shared classes only (style.css), no <style>. Full width: <main class="page full">.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · {{Role}}</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb"><a href="../../../index.html">Full-time JD (job description) workspace</a> &rsaquo; {{Month-YYYY}} &rsaquo; {{DD}} &rsaquo; {{slug}}</p>
+
+<header class="wl-head">
+  <h1>{{Company}}</h1>
+  <span class="wl-role">{{Role}} &middot; {{route: posting / recruiter / referral}}</span>
+</header>
+
+<div class="wl-status">
+  <span class="pill fact">tracker: {{status}}</span>
+  <!-- more pills (good / warn / note / plain), e.g. "technical {{N}}", "résumé verified", "not sent" -->
+</div>
+
+<div class="app-controls" data-page-tabs>
+  <div class="status-tabs" role="tablist" aria-label="Sections of this page">
+    <button class="status-tab active" type="button" data-panel="overview" role="tab" aria-selected="true">Overview</button>
+    <button class="status-tab" type="button" data-panel="score" role="tab" aria-selected="false">Score</button>
+    <button class="status-tab" type="button" data-panel="research" role="tab" aria-selected="false">Research</button>
+    <button class="status-tab" type="button" data-panel="open" role="tab" aria-selected="false">Open questions</button>
+    <button class="status-tab" type="button" data-panel="files" role="tab" aria-selected="false">Files</button>
+  </div>
+</div>
+
+<section class="wl-job" id="overview" data-panel="overview" role="tabpanel" aria-label="Overview">
+<dl class="context-grid">
+  <dt>Company</dt><dd>{{Company, and what it does in one line}}</dd>
+  <dt>Role</dt><dd>{{title · level · location · work mode}}</dd>
+  <dt>Route</dt><dd>{{job posting / recruiter (named) / referral}}</dd>
+  <dt>Link</dt><dd><a href="{{posting URL}}">{{posting URL}}</a></dd>
+  <dt>Received</dt><dd>{{YYYY-MM-DD}}</dd>
+</dl>
+
+<div class="wl-donow">
+  <p class="lbl">Where this stands</p>
+  <p>{{Two sentences: what has happened, and the next action.}}</p>
+</div>
+
+<div class="callout">
+  <p><strong>Technical score: {{N}}</strong> &mdash; {{the binding constraint, in one line}}. Details in the Score tab.</p>
+</div>
+</section>
+
+<section class="wl-job" id="score" data-panel="score" role="tabpanel" aria-label="Score">
+<h2>Weighted rubric</h2>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Criterion</th><th>Weight</th><th>Score /10</th><th>Evidence</th></tr></thead>
+  <tbody>
+    <tr><td>{{criterion}}</td><td>{{weight}}</td><td>{{score}}</td><td>{{evidence, quoted from professional-journey.md}}</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Tech mismatch &amp; why exactly</h2>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>JD asks for</th><th>His record shows</th><th>Why exactly it is a mismatch</th><th>Caps the score?</th></tr></thead>
+  <tbody>
+    <tr><td>{{the JD's words}}</td><td>{{journey-document evidence, or "nothing"}}</td><td>{{never used · used long ago · a similar tool only · not in production · never-claim}}</td><td>{{core must-have / ramp item}}</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>{{The binding constraint and the smallest honest lift.}} See <a href="resume_changes_for_{{N}}pct_match.html">the résumé changes</a>.</p>
+</section>
+
+<section class="wl-job" id="research" data-panel="research" role="tabpanel" aria-label="Research">
+<h2>What the research found</h2>
+<div class="callout">
+  <p><strong>{{The verdict, quoted from research.html.}}</strong></p>
+  <p>{{The key findings in a few sentences; label every inference.}}</p>
+</div>
+<p>Read further in <a href="research.html">research.html</a>.</p>
+</section>
+
+<section class="wl-job" id="open" data-panel="open" role="tabpanel" aria-label="Open questions">
+<h2>Open questions</h2>
+<ol>
+  <li>{{What is still unknown, and who can settle it.}}</li>
+</ol>
+</section>
+
+<section id="files" data-panel="files" role="tabpanel" aria-label="Files">
+<div class="wl-files">
+<h2>Files in this workspace</h2>
+<ul>
+  <li class="primary"><a href="{{file}}">{{file}}</a><span class="note">{{what it is}}</span></li>
+</ul>
+</div>
+<div class="wl-files">
+<h2>Raw inputs, kept outside this workspace</h2>
+<ul>
+  <li><a href="../../../job-applications/{{Month-YYYY}}/{{DD}}/{{file}}">{{file}}</a><span class="note">{{what it is}}</span></li>
+</ul>
+</div>
+</section>
+
+<details class="collapsed-block">
+<summary>Glossary: every acronym and unfamiliar term on this page, expanded ({{count}})</summary>
+<ul>
+  <li><strong>{{TERM}}</strong>: {{its plain-English meaning}}</li>
+</ul>
+</details>
+
+</main>
+<script src="../../../static/page-tabs.js" defer></script>
+</body>
+</html>
