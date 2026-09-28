@@ -19,6 +19,11 @@ first, including its **Amendment** section.
 - **Every tab is its own standalone HTML file** (jd.html, research.html, resume_changes_…, kim.html,
   enhansd.html…), named in the manifest and rendered inside index.html's tab — his words: *"similarly,
   we can have other HTML files rendered in index.html? this way index.html isn't bloated"*.
+- **Overview too** — *"add overview.html, etc AND render this in index.html"*: tab files are
+  overview.html · jd.html · score.html · the résumé-changes page · research.html · questions.html
+  (+ kim.html, enhansd.html for Delta); index.html is only the shell. Rules agreed: tabs only at the
+  top (folds inside, so research.html drops its own tabs); tab files have no scripts and unique ids;
+  load all tabs at once.
 - Status and score come from the database: add `?slug=` to `/api/jobs` beside `?month=` / `?date=`.
 - Pilot on Delta only; applied seats stay frozen. No agents. Tests on their own — never `run.sh`.
 
