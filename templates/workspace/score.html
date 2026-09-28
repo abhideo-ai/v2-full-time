@@ -1,0 +1,64 @@
+<!doctype html>
+<!--
+  TEMPLATE: the Tech score gaps tab, written by agent 2 (CLAUDE.md). Replace every {{…}} and
+  delete this comment. The tab-file contract is in static/workspace.js. For this tab:
+  - The weighted rubric: criterion · weight · score /10 · evidence quoted from
+    professional-journey.md. Read "e.g. / or" generously; an unused named tool is a ramp item.
+  - "Tech mismatch & why exactly": for each JD technology he lacks or only partly has — the JD's
+    words, what his record shows, exactly why it is a mismatch (never used · used long ago · a
+    similar tool only · not in production · never-claim), and whether it caps the score (core
+    must-have / ramp item).
+  - The binding constraint and the smallest honest lift. Never compensation.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · tech score gaps</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month={{YYYY-MM}}">{{Month YYYY}}</a> · <a href="../../../index.html?date={{YYYY-MM-DD}}">{{DD}}</a> · <a href="index.html">{{slug}}</a> · tech score gaps</p>
+
+<header data-standalone>
+  <h1>{{Company}}: tech score gaps</h1>
+</header>
+
+<div class="callout">
+  <p><strong>Technical score: {{N}}</strong> &mdash; {{the binding constraint}}. {{The smallest honest lift.}} See <a href="resume_changes_for_{{N}}pct_match.html">the résumé changes</a>.</p>
+</div>
+
+<details id="rubric" open>
+<summary>Weighted rubric</summary>
+<div>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Criterion</th><th>Weight</th><th>Score /10</th><th>Evidence</th></tr></thead>
+  <tbody>
+    <tr><td>{{criterion}}</td><td>{{weight}}</td><td>{{score}}</td><td>{{evidence, quoted from professional-journey.md}}</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</details>
+
+<details id="mismatch">
+<summary>Tech mismatch &amp; why exactly</summary>
+<div>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>JD asks for</th><th>His record shows</th><th>Why exactly it is a mismatch</th><th>Caps the score?</th></tr></thead>
+  <tbody>
+    <tr><td>{{the JD's words}}</td><td>{{journey-document evidence, or "nothing"}}</td><td>{{never used · used long ago · a similar tool only · not in production · never-claim}}</td><td>{{core must-have / ramp item}}</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</details>
+
+</main>
+</body>
+</html>

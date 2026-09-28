@@ -11,7 +11,7 @@
 
 **The company is renaming itself Enhansd.** The footer of its new website, https://www.enhansd.com/,
 reads "ENHANSD [FORMERLY DELTA TECHNOLOGY AND MANAGEMENT SERVICES PVT. LTD.] - 2026". Pvt. Ltd. is
-short for private limited. See `research.html`, section 3.
+short for private limited. See `enhansd.html`, section 3.
 
 > ⚠ **There is no job description.** The role will be created for him through the referral, so no
 > requirements have been written down. Nothing can be scored until they are.

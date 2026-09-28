@@ -1,0 +1,39 @@
+<!doctype html>
+<!--
+  TEMPLATE: the Résumé changes tab, written by agent 2 (CLAUDE.md). Rename it to
+  resume_changes_for_<N>pct_match.html, N being the technical score rounded, and put that name
+  in workspace.json's "resume_changes". Replace every {{…}} and delete this comment.
+  The tab-file contract is in static/workspace.js. For this tab:
+  - One copy block per organisation, for the last five roles, in the master's order.
+  - The shared copy.js after </main> keeps the copy buttons working when this page is opened
+    on its own; inside index.html the shell loads it. Copy-block ids are unique in the workspace.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · résumé changes</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month={{YYYY-MM}}">{{Month YYYY}}</a> · <a href="../../../index.html?date={{YYYY-MM-DD}}">{{DD}}</a> · <a href="index.html">{{slug}}</a> · résumé changes</p>
+
+<header data-standalone>
+  <h1>{{Company}}: résumé changes for a {{N}}% match</h1>
+</header>
+
+<h2 id="org-1">1. {{Organisation}} &mdash; {{Title}}</h2>
+<p>{{What changed for this seat, and why.}}</p>
+<div class="copy-block copy-target" id="copy-org-1"><button class="copy-btn" data-copy-target="#copy-org-1" data-copy-html="1">Copy</button>
+<ul>
+  <li>{{A bullet, as it goes on the résumé}}</li>
+</ul>
+</div>
+
+</main>
+<script src="../../../static/copy.js" defer></script>
+</body>
+</html>

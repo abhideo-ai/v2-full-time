@@ -1,0 +1,9 @@
+{
+  "slug": "{{slug}}",
+  "company": "{{Company}}",
+  "role": "{{Role}}",
+  "route": "{{job posting / recruiter / referral}}",
+  "received": "{{YYYY-MM-DD}}",
+  "resume_changes": "resume_changes_for_{{N}}pct_match.html",
+  "tabs": []
+}

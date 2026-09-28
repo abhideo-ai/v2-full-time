@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  TEMPLATE: the Open questions tab. Replace every {{…}} and delete this comment.
+  The tab-file contract is in static/workspace.js. For this tab:
+  - What is still unknown before the seat can be scored, tailored or decided, and who can
+    settle it.
+  - The forcing questions for the interview, each with the reason it matters. These come from
+    the research; they are not interview prep, which waits until he asks for it.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · open questions</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month={{YYYY-MM}}">{{Month YYYY}}</a> · <a href="../../../index.html?date={{YYYY-MM-DD}}">{{DD}}</a> · <a href="index.html">{{slug}}</a> · open questions</p>
+
+<header data-standalone>
+  <h1>{{Company}}: open questions</h1>
+</header>
+
+<details id="open-items" open>
+<summary>Open before this can be scored or tailored</summary>
+<div>
+<ol>
+  <li>{{What is still unknown, and who can settle it.}}</li>
+</ol>
+</div>
+</details>
+
+<details id="forcing-questions">
+<summary>Forcing questions for the interview</summary>
+<div>
+<h3>{{Q1. The question, in a few words}}</h3>
+<p class="question-prompt">{{The question as he would ask it.}}</p>
+<p class="why">{{Why it matters, and what a good and a weak answer sound like.}}</p>
+</div>
+</details>
+
+</main>
+</body>
+</html>

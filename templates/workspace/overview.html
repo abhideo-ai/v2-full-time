@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  TEMPLATE: the Overview tab. Replace every {{…}} and delete this comment.
+  The tab-file contract is in static/workspace.js. For this tab:
+  - Key facts as a table; where it stands in two sentences; one score line.
+  - Folds: what the research found · Files · Glossary. The glossary expands every acronym and
+    unfamiliar term on the workspace's pages; an unfamiliar domain gets its vocabulary here.
+  - No database plumbing (event ids, status rows, NULL). Never compensation.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · overview</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month={{YYYY-MM}}">{{Month YYYY}}</a> · <a href="../../../index.html?date={{YYYY-MM-DD}}">{{DD}}</a> · <a href="index.html">{{slug}}</a> · overview</p>
+
+<header data-standalone>
+  <h1>{{Company}}</h1>
+</header>
+
+<dl class="context-grid">
+  <dt>Company</dt><dd>{{Company, and what it does in one line}}</dd>
+  <dt>Role</dt><dd>{{title · level · location · work mode}}</dd>
+  <dt>Route</dt><dd>{{job posting / recruiter (named) / referral}}</dd>
+  <dt>Link</dt><dd><a href="{{posting URL}}">{{posting URL}}</a></dd>
+  <dt>Received</dt><dd>{{YYYY-MM-DD}}</dd>
+</dl>
+
+<div class="wl-donow">
+  <p class="lbl">Where this stands</p>
+  <p>{{Two sentences: what has happened, and the next action.}}</p>
+</div>
+
+<div class="callout">
+  <p><strong>Technical score: {{N}}</strong> &mdash; {{the binding constraint, in one line}}. Details in <a href="score.html">Tech score gaps</a>.</p>
+</div>
+
+<details id="research-found" open>
+<summary>What the research found</summary>
+<div>
+<p>{{The verdict, quoted from research.html, then the key findings in a few sentences. Label every inference.}}</p>
+</div>
+</details>
+
+<details id="files">
+<summary>Files</summary>
+<div>
+<div class="wl-files">
+<h2>Files in this workspace</h2>
+<ul>
+  <li class="primary"><a href="index.html">index.html</a><span class="note">The workspace page: the same shell in every workspace, showing each tab file in its own tab.</span></li>
+  <li><a href="{{file}}">{{file}}</a><span class="note">{{what it is}}</span></li>
+</ul>
+</div>
+<div class="wl-files">
+<h2>Raw inputs, kept outside this workspace</h2>
+<ul>
+  <li><a href="../../../job-applications/{{Month-YYYY}}/{{DD}}/{{file}}">{{file}}</a><span class="note">{{what it is}}</span></li>
+</ul>
+</div>
+</div>
+</details>
+
+<details id="glossary">
+<summary>Glossary: every acronym and unfamiliar term, expanded</summary>
+<div>
+<ul>
+  <li><strong>{{TERM}}</strong>: {{its plain-English meaning}}</li>
+</ul>
+</div>
+</details>
+
+</main>
+</body>
+</html>

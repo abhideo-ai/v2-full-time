@@ -12,7 +12,8 @@ tab keeps working. What it adds:
   POST /api/ops            apply operations, return the new state
   GET  /api/history?limit  recent task events, newest first
   GET  /api/jobs           every application, its launcher tab and both scores;
-                           ?month=YYYY-MM or ?date=YYYY-MM-DD filters in SQL (400 if malformed)
+                           ?month=YYYY-MM or ?date=YYYY-MM-DD filters in SQL, and
+                           ?slug= narrows to one seat (400 if any is malformed)
 
   no-store on HTML/JSON/JS/CSS, so a pinned tab's refresh really does refresh.
 
@@ -98,7 +99,8 @@ class Handler(SimpleHTTPRequestHandler):
             q = parse_qs(url.query)
             try:
                 payload = jobs_db.launcher(month=q.get("month", [None])[0],
-                                           day=q.get("date", [None])[0])
+                                           day=q.get("date", [None])[0],
+                                           slug=q.get("slug", [None])[0])
             except ValueError as exc:
                 return self._json(400, {"error": str(exc)})
             except Exception as exc:                            # noqa: BLE001
@@ -162,11 +164,16 @@ def main() -> None:
     # Holding both means a competing server fails loudly with EADDRINUSE instead.
     # Still loopback-only: neither :: nor 0.0.0.0, because this process writes to
     # a database and must not be reachable from the network.
+    # request_queue_size: the listen backlog. socketserver's default is 5, and a
+    # workspace page loads all its tab files at once (static/workspace.js): past
+    # six simultaneous requests the kernel reset the overflow (ECONNRESET, measured
+    # 15 in 240 at eight at a time), so a tab came up empty at random.
     servers = []
     for family, host in ((socket.AF_INET, args.host), (socket.AF_INET6, "::1")):
         if family is socket.AF_INET6 and args.host != "127.0.0.1":
             continue                       # explicit --host: honour it exactly
-        klass = type("Srv", (ThreadingHTTPServer,), {"address_family": family})
+        klass = type("Srv", (ThreadingHTTPServer,), {"address_family": family,
+                                                     "request_queue_size": 64})
         try:
             servers.append(klass((host, args.port), handler))
         except OSError as exc:

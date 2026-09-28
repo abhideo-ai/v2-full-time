@@ -34,7 +34,10 @@ this file holds the how. Full history: `docs/CLAUDE-original-2026-09-28.md`.
   `set_config('mark_applied.slug',…)`), `set_status.sql`, `withdraw.sql`, `set_source_url.sql`,
   `log_event.sql`, `clone_seat_resume.sql`. For text containing quotes, put the `set_config` select
   in a scratch `.sql` file (dollar-quoted) and run `psql -f that.sql -f db/operations/<op>.sql`.
-- **Tests:** `bash automation/tests/run.sh`.
+- **Tests:** `bash automation/tests/run.sh` runs every suite but TRUNCATES `v2_daily`, the daily
+  log; run suites on their own instead. Read-only, against the running server:
+  `automation/.venv/bin/python automation/tests/test_jobs_db.py http://127.0.0.1:8006` and
+  `node automation/tests/test_workspace.js http://127.0.0.1:8006`.
 
 ## Database and launcher
 - **All SQL lives in `db/` and is re-runnable.**
@@ -64,6 +67,19 @@ this file holds the how. Full history: `docs/CLAUDE-original-2026-09-28.md`.
 
 ## Pages, paths and wording
 - No per-file `<style>`; shared classes live in `style.css` (`.page.full` is full width).
+- **Workspace page** (`templates/workspace/`, piloted on Delta): `index.html` is one shell, the same
+  file in every workspace; copy it, never edit it. `workspace.json` gives `slug`, `company`, `role`,
+  `route`, `received` (YYYY-MM-DD), `resume_changes` (the `resume_changes_for_<N>pct_match.html`
+  name, or null) and `tabs`, this job's own tabs (`{"id", "label", "src"}`, shown after Research).
+  `static/workspace.js` loads every tab file at once and shows its `<main>` in the tab, minus the
+  parts marked `data-standalone` (breadcrumb, page title); a missing file shows "Nothing here yet".
+  `static/page-tabs.js` switches tabs; a hash (`#flags`) opens its tab and the fold around it.
+  Status and score come from `/api/jobs?slug=` (`jobs_db.applications(month, day, slug)`). Tab
+  files: no `<style>`; no `<script>` except the shared `copy.js` after `</main>`; ids unique across
+  the workspace; folds are `<details><summary>…</summary><div>…</div></details>`, the first open;
+  a link to another tab's file (`kim.html#posts`) is kept inside the page. It needs `serve.py`:
+  opened from disk, the tabs cannot load. `serve.py`'s listen backlog is 64, not socketserver's 5,
+  which reset the eighth request of a page's parallel burst.
 - Breadcrumbs: the month crumb opens the launcher with `?month=YYYY-MM`, the day crumb with
   `?date=YYYY-MM-DD`. `static/apps.js` passes these to `/api/jobs`, which filters in SQL
   (`jobs_db.applications(month, day)`; 400 if malformed), so groups, tabs and counts are that

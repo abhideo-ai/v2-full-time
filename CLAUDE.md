@@ -17,23 +17,27 @@ Rules only. How-to (commands, database, automation, traps): `docs/reference.md`.
 2. Scaffold the workspace, save his paste word for word, log the arrival as an event.
 3. Tell him the plan and the rough time.
 4. **At most 3 agents for the whole job,** across all turns, including its interview prep; ask
-   before using more: (1) research and JD pages · (2) scoring and résumé edits · (3) one adversarial
-   check of every proposed claim. One agent covers every angle; batch small edits into one pass.
+   before using more: (1) research and the other tab pages · (2) scoring and résumé edits ·
+   (3) one adversarial check of every proposed claim. One agent covers every angle; batch small
+   edits into one pass.
 5. Adjudicate here and cut anything unsupported. Apply the edits in the database, generate and
-   verify the `.docx`, then resume agent 2 with SendMessage for the rubric `index.html` and
+   verify the `.docx`, then resume agent 2 with SendMessage for `score.html` (the rubric) and
    `resume_changes_for_<N>pct_match.html` (one copy block per organisation).
 6. Report in two to four plain lines: done, needs his decision, still running.
 7. When he says it went: mark it applied, log it, and suggest any JD topic the interview-prep repo
    does not cover.
 - No JD: workspace, research and a landing page; no score or résumé yet. A recruiter message: stage a
   short reply.
-- A full workspace: `jd.md`/`jd.html` · rubric `index.html` · résumé-changes page · cited
-  `research.html` (never compensation) · `score.json` · the verified `.docx`. Every workspace needs
-  an `index.html`.
-- **Every workspace `index.html` starts from `templates/workspace-index.html`** (his ask,
-  28 Sep 2026): tabs via `static/page-tabs.js` — Overview · Score · Research · Open questions ·
-  Files (no Score tab without a JD); key facts as a table; no database plumbing; full width.
-- Its Score tab carries a **"Tech mismatch & why exactly"** section (his ask, 28 Sep 2026): for each JD technology he lacks or only partly has — the JD's words, what his
+- A full workspace: `index.html` + `workspace.json` · `overview.html` · `jd.md`/`jd.html` ·
+  `score.html` (the rubric) · résumé-changes page · cited `research.html` (never compensation) ·
+  `questions.html` · `score.json` · the verified `.docx`.
+- **Every workspace starts from `templates/workspace/`** (his ask, 28 Sep 2026): `index.html` is one
+  shell, the same in every workspace and never edited; `workspace.json` names the seat and its own
+  tabs. Each tab is its own page, shown inside `index.html`: Overview · Job description · Tech score
+  gaps · Résumé changes · Research · (this job's tabs) · Open questions. Folds inside a tab, never a
+  second row of tabs. Status and score come from the database; key facts as a table; no database
+  plumbing; full width. How: `docs/reference.md`.
+- `score.html` carries a **"Tech mismatch & why exactly"** section (his ask, 28 Sep 2026): for each JD technology he lacks or only partly has — the JD's words, what his
   record shows (journey doc), exactly why it is a mismatch (never used · used long ago · a similar
   tool only · not in production · never-claim), and whether it caps the score (core must-have vs
   ramp item). Written by agent 2; no extra agent.
@@ -73,8 +77,8 @@ Rules only. How-to (commands, database, automation, traps): `docs/reference.md`.
 - Per seat: start from the master and aim for 95+%, editing only the last five roles — VoltusWave
   (Principal), Deque, Rocket, VoltusWave (Co-Founder), Teletext India. Never a copied file. New jobs
   only: sent seats are frozen.
-- Expand acronyms everywhere, chat included. An unfamiliar domain gets a glossary at the top of
-  `research.html`. Call out collisions (SOC 2 vs a SOC; RAG = Red/Amber/Green).
+- Expand acronyms everywhere, chat included. An unfamiliar domain gets a glossary, in the Glossary
+  fold of `overview.html`. Call out collisions (SOC 2 vs a SOC; RAG = Red/Amber/Green).
 
 ## Scoring and pay
 - Technical score, target 95+, honest: a weighted rubric with evidence; read "e.g. / or" generously;

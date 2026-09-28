@@ -1,0 +1,41 @@
+<!doctype html>
+<!--
+  TEMPLATE: the Job description tab. Replace every {{…}} and delete this comment.
+  The tab-file contract is in static/workspace.js. For this tab:
+  - The posting word for word, as he pasted it into jd.md, laid out for reading: its own
+    headings and lists kept, nothing reworded, nothing added. A pay band the posting states
+    stays as a neutral fact; nothing else about pay.
+  - No job description yet: say why, and show the intake record from jd.md instead.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · job description</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month={{YYYY-MM}}">{{Month YYYY}}</a> · <a href="../../../index.html?date={{YYYY-MM-DD}}">{{DD}}</a> · <a href="index.html">{{slug}}</a> · job description</p>
+
+<header data-standalone>
+  <h1>{{Company}} — {{Role}}</h1>
+</header>
+
+<dl class="context-grid">
+  <dt>URL</dt><dd><a href="{{posting URL}}">{{posting URL}}</a></dd>
+  <dt>Received</dt><dd>{{DD Month YYYY}}</dd>
+  <dt>Route</dt><dd>{{job posting / recruiter (named) / referral}}</dd>
+</dl>
+
+<h2>{{The posting's own heading}}</h2>
+<p>{{The posting's own text.}}</p>
+<ul>
+  <li>{{The posting's own list item.}}</li>
+</ul>
+
+</main>
+</body>
+</html>

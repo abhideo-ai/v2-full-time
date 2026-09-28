@@ -67,6 +67,9 @@ echo; echo "=== launcher (real server + real jobs_tracker_v2) ==="
 node automation/tests/test_launcher.js \
   http://127.0.0.1:8106 http://127.0.0.1:8107 http://127.0.0.1:8108 || FAIL=1
 
+echo; echo "=== workspace page (real server + real jobs_tracker_v2, read-only) ==="
+node automation/tests/test_workspace.js http://127.0.0.1:8106 || FAIL=1
+
 pkill -f "serve.py --port 8106"; pkill -f "http.server 8107"
 pkill -f "serve.py --port 8108"
 

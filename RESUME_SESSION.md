@@ -1,31 +1,30 @@
 # RESUME_SESSION.md
 
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
-Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-28**, after the Delta build.
+Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-28**, after the workspace-page build.
 
-## NEXT ACTION — build the approved workspace-page plan
-Plan (approved 28 Sep 2026): `~/.claude/plans/why-is-claude-md-17kb-clever-rabbit.md`. Read it
-first, including its **Amendment** section.
-- Every workspace's `index.html` becomes a thin shell: `workspace.json` (manifest) + `tabs/<id>.html`
-  (one fragment per tab, folds as `<details>`), assembled in the browser by a new
-  `static/workspace.js`; switching stays in `static/page-tabs.js`.
-- Static tabs: Overview · Job description · Tech score gaps · Résumé changes · Research · Open
-  questions (Files and Glossary are folds in Overview). Dynamic tabs from the manifest, after Research.
-  Delta's dynamic tabs: **Kim** and **Enhansd**.
-- **`research.html` stays its own file**, reformatted to be easily consumed (tabs and/or folds), and
-  the Research tab **renders it** — his words: *"can you not render research.html in index.html? This
-  way index.html is not bloated?"* Settle first: nested tabs (scope `page-tabs.js` per group, or folds
-  only in research) and whether Kim / Enhansd reuse research sections rather than duplicate them.
-- **Every tab is its own standalone HTML file** (jd.html, research.html, resume_changes_…, kim.html,
-  enhansd.html…), named in the manifest and rendered inside index.html's tab — his words: *"similarly,
-  we can have other HTML files rendered in index.html? this way index.html isn't bloated"*.
-- **Overview too** — *"add overview.html, etc AND render this in index.html"*: tab files are
-  overview.html · jd.html · score.html · the résumé-changes page · research.html · questions.html
-  (+ kim.html, enhansd.html for Delta); index.html is only the shell. Rules agreed: tabs only at the
-  top (folds inside, so research.html drops its own tabs); tab files have no scripts and unique ids;
-  load all tabs at once.
-- Status and score come from the database: add `?slug=` to `/api/jobs` beside `?month=` / `?date=`.
-- Pilot on Delta only; applied seats stay frozen. No agents. Tests on their own — never `run.sh`.
+## NEXT ACTION — wait for his go on `jd-list/sept-28-2026_1.md`
+He was writing it on 28 Sep (staged, still being edited; not ours to commit). Its goal line:
+*"creating new workspaces for the JD's mentioned in this file"*. First entry: The Nielsen Company
+(Gracenote), LinkedIn job 4466271472, found by him after a recruiter email and a call from Deepti
+Adlakha. When he says go: `CLAUDE.md`'s "When he pastes a job", building from `templates/workspace/`.
+
+## Done 28 Sep 2026 — the workspace page (plan: `~/.claude/plans/why-is-claude-md-17kb-clever-rabbit.md`)
+- Every workspace's `index.html` is one shell, the same file everywhere (`templates/workspace/`);
+  `workspace.json` names the seat and its own tabs; each tab is a standalone page shown inside it
+  by `static/workspace.js`; `static/page-tabs.js` switches. Status and score come from
+  `/api/jobs?slug=`. How-to: `docs/reference.md`.
+- His two answers: sections are **moved, never duplicated**, and the résumé-changes page **keeps**
+  `resume_changes_for_<N>pct_match.html` (named in `workspace.json`).
+- Piloted on Delta: research sections 4–5 → `kim.html`, 3 → `enhansd.html`, 9 → `questions.html`
+  (with the six open items), 1 → the Glossary fold of `overview.html`; `research.html` is folds
+  only. Text check against the old two pages: 849 of 870 text blocks carried over word for word;
+  the other 21 are navigation, file pointers that had to change, and three glossary entries that
+  research's fuller ones already cover.
+- `serve.py`'s listen backlog is 64 (socketserver's 5 reset the eighth parallel request, so a tab
+  came up empty at random). Restart `serve.py` after editing anything it imports.
+- Tests, read-only: `test_workspace.js` 113/113 and `test_jobs_db.py` 125/125. Every key check was
+  proven able to fail by planting a fault first. Applied seats keep their old pages (frozen).
 
 ## First: is the server running?
 `lsof -nP -iTCP:8006 -sTCP:LISTEN` — if nothing is listening, run
@@ -37,6 +36,9 @@ first, including its **Amendment** section.
 - **Aezion (114):** ask whether the Sravan reply went; never assume.
 
 ## Open — his call, not acted on
+- Find in page (Ctrl+F) searches only the open tab: hidden tabs are skipped. Chrome's
+  `hidden="until-found"` would search every tab and jump to the match; a small `page-tabs.js`
+  change, not made because rendering is not checked here.
 - Harshita: if a JD arrives, does an applied (frozen) seat still get a tailored résumé?
 - Before any deploy of interview-prep: the Delta prep folder would publish research about a named
   private person (it is not in `.assetsignore`).
@@ -57,4 +59,5 @@ first, including its **Amendment** section.
 - `ord` is part of `resume_blocks`' primary key: shift a section by +1000 before renumbering.
 - A `.docx` page count cannot be checked here; he checks it in Word.
 - `add_breadcrumbs.py` and `expand_acronyms.py` only scan `killer-query-case-studies/`.
-- He says "commit & push ALL" after each piece of work; the branch is `qa`.
+- He says "commit & push ALL" after each piece of work; the branch is `qa`. Commit only our own
+  paths when he has files staged mid-edit.

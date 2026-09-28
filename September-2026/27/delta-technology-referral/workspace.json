@@ -1,0 +1,12 @@
+{
+  "slug": "delta-technology-referral",
+  "company": "Delta Technology and Management Services Pvt. Ltd.",
+  "role": "Role to be created",
+  "route": "referral",
+  "received": "2026-09-27",
+  "resume_changes": null,
+  "tabs": [
+    {"id": "kim", "label": "Kim", "src": "kim.html"},
+    {"id": "enhansd", "label": "Enhansd", "src": "enhansd.html"}
+  ]
+}

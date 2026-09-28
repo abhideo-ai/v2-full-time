@@ -275,26 +275,35 @@ def _row(r: dict, paths: dict[str, str]) -> dict:
 
 MONTH_RE = re.compile(r"\d{4}-(0[1-9]|1[0-2])")
 DAY_RE = re.compile(r"\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])")
+SLUG_RE = re.compile(r"[a-z0-9]+(-[a-z0-9]+)*")
 
 
-def applications(month: str | None = None, day: str | None = None) -> list[dict]:
+def applications(month: str | None = None, day: str | None = None,
+                 slug: str | None = None) -> list[dict]:
     """Every row, newest activity first — or only the rows received in one month
     (`2026-09`) or on one day (`2026-09-27`), which the workspace breadcrumbs ask
     for. The filter runs in SQL on the same intake date `_row` reports: `scraped_at`
-    in the session's time zone. A malformed month or day raises ValueError. The page
-    tabs on `tab`."""
-    where, params = "", []
+    in the session's time zone. `slug` narrows to one seat, for the header of its
+    workspace page (static/workspace.js). A malformed month, day or slug raises
+    ValueError. The page tabs on `tab`."""
+    where, params = [], []
     if day:
         if not DAY_RE.fullmatch(day):
             raise ValueError(f"date must be YYYY-MM-DD, got {day!r}")
-        where, params = " WHERE to_char(scraped_at, 'YYYY-MM-DD') = %s", [day]
+        where, params = ["to_char(scraped_at, 'YYYY-MM-DD') = %s"], [day]
     elif month:
         if not MONTH_RE.fullmatch(month):
             raise ValueError(f"month must be YYYY-MM, got {month!r}")
-        where, params = " WHERE to_char(scraped_at, 'YYYY-MM') = %s", [month]
+        where, params = ["to_char(scraped_at, 'YYYY-MM') = %s"], [month]
+    if slug:
+        if not SLUG_RE.fullmatch(slug):
+            raise ValueError(f"slug must be lowercase words joined by hyphens, got {slug!r}")
+        where.append("slug = %s")
+        params.append(slug)
+    sql = _SELECT + (" WHERE " + " AND ".join(where) if where else "")
     paths = workspace_paths()
     with connect() as conn, conn.cursor() as cur:
-        cur.execute(_SELECT + where + " ORDER BY updated_at DESC NULLS LAST, id DESC", params)
+        cur.execute(sql + " ORDER BY updated_at DESC NULLS LAST, id DESC", params)
         return [_row(r, paths) for r in cur.fetchall()]
 
 
@@ -324,10 +333,13 @@ def groups(rows: list[dict]) -> list[dict]:
     return [{"date": d or None, "note": notes.get(d)} for d in dates]
 
 
-def launcher(month: str | None = None, day: str | None = None) -> dict:
-    rows = applications(month, day)
-    applied = {"date": day} if day else {"month": month} if month else None
-    return {"store": "postgresql", "filter": applied, "counts": counts(rows),
+def launcher(month: str | None = None, day: str | None = None,
+             slug: str | None = None) -> dict:
+    rows = applications(month, day, slug)
+    applied = {"date": day} if day else {"month": month} if month else {}
+    if slug:
+        applied["slug"] = slug
+    return {"store": "postgresql", "filter": applied or None, "counts": counts(rows),
             "groups": groups(rows), "applications": rows}
 
 

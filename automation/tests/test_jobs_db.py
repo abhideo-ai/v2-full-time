@@ -238,6 +238,22 @@ for bad in ["2026-9", "2026-13", "Sept", "2026-09'; drop table applications; --"
     except ValueError:
         ok(True, f"a malformed month is refused — {bad!r}")
 
+print("\n11b. A slug narrows to one seat, in SQL — a workspace page's header")
+one_slug = rows[0]["slug"]
+by_slug_rows = jobs_db.applications(slug=one_slug)
+ok(len(by_slug_rows) == 1 and by_slug_rows[0]["slug"] == one_slug,
+   f"slug={one_slug} returns exactly that seat")
+ok(by_slug_rows[0] == rows[0], "and the same row the unfiltered list carries")
+ok(jobs_db.applications(slug="no-such-seat-anywhere") == [], "an unknown slug returns no rows")
+ok(jobs_db.launcher(slug=one_slug)["filter"] == {"slug": one_slug}, "the payload says it was filtered")
+for bad in ["Delta", "delta_technology", "-delta", "delta-", "delta--x",
+            "x'; drop table applications; --"]:
+    try:
+        jobs_db.applications(slug=bad)
+        ok(False, f"a malformed slug is refused — {bad!r}")
+    except ValueError:
+        ok(True, f"a malformed slug is refused — {bad!r}")
+
 if API:
     print("\n12. GET /api/jobs")
     with urllib.request.urlopen(API + "/api/jobs") as r:
@@ -262,6 +278,16 @@ if API:
         ok(False, "a malformed month answers 400")
     except urllib.error.HTTPError as exc:
         ok(exc.code == 400, f"a malformed month answers 400 — got {exc.code}")
+    with urllib.request.urlopen(API + "/api/jobs?slug=" + one_slug) as r:
+        seat = json.loads(r.read())
+    ok(seat["filter"] == {"slug": one_slug} and len(seat["applications"]) == 1
+       and seat["applications"][0]["slug"] == one_slug,
+       f"?slug={one_slug} answers with exactly that seat")
+    try:
+        urllib.request.urlopen(API + "/api/jobs?slug=Not_A_Slug")
+        ok(False, "a malformed slug answers 400")
+    except urllib.error.HTTPError as exc:
+        ok(exc.code == 400, f"a malformed slug answers 400 — got {exc.code}")
 
     print("\n13. It degrades rather than breaking")
     try:

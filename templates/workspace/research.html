@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+  TEMPLATE: the Research tab: the cited research, never compensation. Replace every {{…}} and
+  delete this comment. The tab-file contract is in static/workspace.js. For this tab:
+  - One fold per numbered section, the verdict first and open. Folds only: never a second row
+    of tabs inside a tab.
+  - Label every finding: register · independent · checked by us · self-claim · inference.
+    Check the JD's claims on the company's own site.
+  - Unfamiliar vocabulary goes in overview.html's Glossary fold; forcing questions for the
+    interview go in questions.html. Material only this job needs (a named interviewer, a
+    company's history) can be a tab of its own, listed in workspace.json's "tabs".
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{Company}} · research</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month={{YYYY-MM}}">{{Month YYYY}}</a> · <a href="../../../index.html?date={{YYYY-MM-DD}}">{{DD}}</a> · <a href="index.html">{{slug}}</a> · research</p>
+
+<header data-standalone>
+  <p class="eyebrow">Company research · {{DD Mon YYYY}}</p>
+  <h1>{{Company}}: {{Role}}</h1>
+  <p class="subtitle">{{What this page establishes, and as of when.}}</p>
+</header>
+
+<div class="banner">
+  <p>{{The one or two facts that matter most.}}</p>
+</div>
+
+<details id="verdict" open>
+<summary>1. The verdict</summary>
+<div>
+<div class="tldr">
+  <strong>{{The verdict in one sentence.}}</strong>
+  <p>{{What it is, whether it is real, what is only self-claimed. Label every inference.}}</p>
+</div>
+</div>
+</details>
+
+<details id="claims">
+<summary>2. Claims against evidence</summary>
+<div>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Self-claim</th><th>Independent evidence</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>{{the claim, with its source}}</td><td>{{what someone else recorded, with its source}}</td><td>{{supported · unverifiable · contradicted}}</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</details>
+
+<details id="flags">
+<summary>3. Green flags and red flags</summary>
+<div>
+<p>{{Both lists ranked by strength of evidence, each point with its sources.}}</p>
+</div>
+</details>
+
+<details id="gaps">
+<summary>4. Gaps not closed</summary>
+<div>
+<ol>
+  <li>{{What could not be established, and why.}}</li>
+</ol>
+</div>
+</details>
+
+<details id="sources">
+<summary>5. Sources</summary>
+<div>
+<ul>
+  <li>{{Every source, linked, with the date it was read.}}</li>
+</ul>
+</div>
+</details>
+
+</main>
+</body>
+</html>
