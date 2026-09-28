@@ -26,6 +26,11 @@
   let current = DEFAULT_TAB;
   let bound = false;
   let watching = false;
+  // A link can pre-filter the list: index.html?q=2026-09-27 (the workspace
+  // breadcrumbs use this). The query fills the search box once; the first time
+  // rows exist, the list opens on the first tab that has a match.
+  const URL_Q = new URLSearchParams(location.search).get("q") || "";
+  let pickTab = URL_Q !== "";
 
   const apply = () => {
     const tabs = [...document.querySelectorAll("[data-tab]")];
@@ -37,6 +42,17 @@
     const ready = rows.filter(r => r.dataset.status === "ready").length;
     document.title = ready ? `${ready} ready · unsent · ${BASE_TITLE}` : BASE_TITLE;
 
+    const box = document.getElementById("app-search");
+    const q = box ? box.value.trim().toLowerCase() : "";
+    const hit = r => !q || (r.dataset.search || r.textContent).toLowerCase().includes(q);
+    if (pickTab && rows.length) {
+      pickTab = false;
+      if (!rows.some(r => r.dataset.status === current && hit(r))) {
+        const first = tabs.find(t => rows.some(r => r.dataset.status === t.dataset.tab && hit(r)));
+        if (first) current = first.dataset.tab;
+      }
+    }
+
     tabs.forEach(t => {
       const name = t.dataset.tab;
       const on = name === current;
@@ -46,12 +62,8 @@
       t.setAttribute("aria-selected", String(on));
     });
 
-    const box = document.getElementById("app-search");
-    const q = box ? box.value.trim().toLowerCase() : "";
     rows.forEach(r => {
-      const inTab = r.dataset.status === current;
-      const hay = r.dataset.search || r.textContent;
-      r.hidden = !(inTab && (!q || hay.toLowerCase().includes(q)));
+      r.hidden = !(r.dataset.status === current && hit(r));
     });
 
     // A group whose rows are all filtered out goes away entirely; the ones that
@@ -95,6 +107,7 @@
         apply();
       }));
       const box = document.getElementById("app-search");
+      if (box && URL_Q && !box.value) box.value = URL_Q;
       if (box) box.addEventListener("input", apply);
       bound = tabs.length > 0;
     }

@@ -18,9 +18,9 @@ let P = 0, F = 0;
 const ok = (c, l) => { c ? P++ : F++; console.log(`  ${c ? "PASS" : "FAIL"}  ${l}`); };
 const settle = (ms = 120) => new Promise(r => setTimeout(r, ms));
 
-async function boot(base) {
+async function boot(base, query = "") {
   const html = fs.readFileSync(REPO + "/index.html", "utf8");
-  const dom = new JSDOM(html, { url: base + "/", runScripts: "outside-only" });
+  const dom = new JSDOM(html, { url: base + "/" + query, runScripts: "outside-only" });
   const w = dom.window;
   w.fetch = (u, o) => fetch(u.startsWith("http") ? u : base + u, o);
   for (const f of ["/static/tabs.js", "/static/apps.js"]) w.eval(fs.readFileSync(REPO + f, "utf8"));
@@ -216,6 +216,17 @@ const type    = async (w, q) => {
   ok(d.getElementById("app-status").textContent.includes("503"), "naming the status it got");
   ok(d.querySelector("h1").textContent.includes("Full-time JD workspace"),
      "and the rest of the launcher renders regardless");
+
+  console.log("\n12. A link pre-filters the list — the workspace breadcrumbs use ?q=");
+  const day = api.applications.map(a => a.intake).find(Boolean);
+  w = await boot(API, "?q=" + day); d = w.document;
+  ok(d.getElementById("app-search").value === day, `the search box holds the link's filter — ${day}`);
+  ok(visible(d).length > 0 && visible(d).every(r => r.dataset.search.includes(day)),
+     "every row shown carries that intake date");
+  const firstTab = TABS.find(t => rows(d).some(r => r.dataset.status === t && r.dataset.search.includes(day)));
+  ok(tab(d, firstTab).classList.contains("active"), `it opens on the first tab with a match — ${firstTab}`);
+  ok(TABS.every(t => countOf(d, t) === rows(d).filter(r => r.dataset.status === t).length),
+     "tab counts still count every row, filter or not");
 
   console.log(`\n${P} passed, ${F} failed`);
   process.exit(F ? 1 : 0);

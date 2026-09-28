@@ -114,7 +114,7 @@
     node.dataset.status = a.tab;
     // One haystack for the search box, so it matches on company and role even
     // when the visible text has been wrapped or abbreviated.
-    node.dataset.search = [a.company, a.role, a.slug, a.location].filter(Boolean).join(" ");
+    node.dataset.search = [a.company, a.role, a.slug, a.location, a.intake].filter(Boolean).join(" ");
 
     const jrow = el("div", "jrow");
     const tog = el("button", "jtog", "▸");

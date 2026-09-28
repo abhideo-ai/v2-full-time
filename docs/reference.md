@@ -64,6 +64,9 @@ this file holds the how. Full history: `docs/CLAUDE-original-2026-09-28.md`.
 
 ## Pages, paths and wording
 - No per-file `<style>`; shared classes live in `style.css` (`.page.full` is full width).
+- Breadcrumbs: each crumb opens the launcher filtered with `?q=` — month `YYYY-MM`, day
+  `YYYY-MM-DD`, slug. `static/tabs.js` fills the search box from `q` and opens the first tab with
+  a match; `static/apps.js` puts the intake date in each row's `data-search`.
 - Copy buttons: `data-copy-target="#id" data-copy-html="1"` (keeps bold).
 - Workspaces are `Month-YYYY/DD/<slug>/`, three levels below the repo root; raw inputs go in
   `job-applications/Month-YYYY/DD/`. Open, his call: a flat `<repo>/<slug>/` layout instead.
