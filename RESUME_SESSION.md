@@ -12,6 +12,12 @@ exists too); settle Kubernetes before any call. Interview prep only when he asks
 - Faster scoring (28 Sep): he set `/effort high` as his default, and `score.json` is now numbers
   only (`templates/workspace/score.json`); `check_workspace.js` checks its arithmetic.
 
+## Draft, 28 Sep 2026 — the résumé as story clusters (his ask; "we're just drafting this version")
+`master/Abhisheik_Deo_Resume_story_clusters.docx` + `master/story-clusters-review.html` (evidence,
+30 "needs your words" questions, open claims). Built from doc_key `variant:story-clusters`
+(`db/operations/clone_master_variant.sql`, then `apply_story_clusters.sql`); the master's rows
+and `.docx` are unchanged. Nothing replaces the master until he says so.
+
 ## Done 28 Sep 2026 — the workspace page, then Nielsen on it
 - Nielsen built with one workflow (3 agents, run `wf_37031923-139` in `PENDING.md`); every new
   workspace is checked with `node automation/check_workspace.js <Month-YYYY/DD/slug>`.

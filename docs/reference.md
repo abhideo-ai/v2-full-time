@@ -83,6 +83,11 @@ this file holds the how. Full history: `docs/CLAUDE-original-2026-09-28.md`.
 - **Verify a built workspace:** `node automation/check_workspace.js <Month-YYYY/DD/slug>`
   (read-only, needs `serve.py`). FAIL breaks the page contract; WARN needs a look (a word that
   can mean compensation).
+- **Résumé variants:** `db/operations/clone_master_variant.sql` copies the master to
+  `variant:<name>`; edit only those rows, then `resume_docx.py generate --doc-key variant:<name>
+  --out <file>` and `verify_resume_docx.py <file> --doc-key variant:<name>`. The master is untouched.
+- **Keyword check:** `automation/.venv/bin/python automation/check_keywords.py <doc_key>` lists
+  every technical term in the master that another document (a variant or a seat) no longer carries.
 - **`score.json` is numbers only** (`templates/workspace/score.json`, from 28 Sep 2026): the total,
   target, honest ceiling, one-sentence binding constraint, and one row per criterion (weight,
   score, points). All prose goes on `score.html`. The tracker reads only `weighted_total`;

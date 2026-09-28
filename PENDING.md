@@ -54,6 +54,7 @@ by sabotage, which the corrected gate catches as `want 4, have 1`.
 | `wf_d1485491-449` | restyle to his format | 8 | 1 blocking defect (Education); fixed |
 | `wjd09im0t` | Word paste sheet | — | **killed** — superseded by .docx |
 | `wf_37031923-139` | Nielsen PMTS seat (28 Sep 2026): research + tab pages, technical score, one adversarial check | 3 (capped) | done in 69 min: 135 claims checked, 19 findings; 17 applied, 2 set aside (the route, which he corrected in chat; confirmed-but-unjourneyed items stay out of the score). Technical 86.39 |
+| `wf_3971e59d-a9c` | Résumé story clusters (28 Sep 2026): every role as problem → decisions → outcome, with evidence; one adversarial check | 3 (capped) | done in 19 min: 66 bullets checked, 19 findings, 17 applied. Draft `master/Abhisheik_Deo_Resume_story_clusters.docx` (doc_key `variant:story-clusters`): 35/35, 273 of 279 terms kept; master untouched |
 
 ---
 
