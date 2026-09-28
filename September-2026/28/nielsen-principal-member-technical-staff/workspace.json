@@ -5,5 +5,11 @@
   "route": "recruiter, using his Naukri profile",
   "received": "2026-09-28",
   "resume_changes": null,
-  "tabs": []
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    }
+  ]
 }

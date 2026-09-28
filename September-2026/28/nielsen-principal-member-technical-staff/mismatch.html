@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Nielsen Company (Gracenote) · tech mismatch</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month=2026-09">September 2026</a> · <a href="../../../index.html?date=2026-09-28">28</a> · <a href="index.html">nielsen-principal-member-technical-staff</a> · tech mismatch</p>
+
+<header data-standalone>
+  <h1>The Nielsen Company (Gracenote): tech mismatch &amp; why exactly</h1>
+</header>
+
+<p>Every technology or named practice in the job description that his record lacks, or only partly shows. &ldquo;Core must-have&rdquo; means the line is a requirement and the gap holds its row down; &ldquo;ramp item&rdquo; means it is an example or a plus, so it can be learned on the job.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>JD asks for</th><th>His record shows</th><th>Why exactly it is a mismatch</th><th>Caps the score?</th></tr></thead>
+  <tbody>
+    <tr><td>&ldquo;Advanced proficiency in Java, <strong>Scala</strong>, or Python ecosystems&rdquo;</td><td>No Scala anywhere. Java for about 11 years (journey 64&ndash;70) and Python in production (journey 678; kq1:690).</td><td><strong>Never used.</strong></td><td>No. Ramp item: Java and Python meet the &ldquo;or&rdquo;.</td></tr>
+    <tr><td>&ldquo;Familiarity with languages like <strong>Rust</strong>, Golang for performance critical components &amp; services is a strong plus&rdquo;</td><td>No Rust anywhere. The core chat service rewritten from Node.js to Go (journey 138, 216).</td><td><strong>Never used.</strong></td><td>No. Ramp item: Go meets the strong plus.</td></tr>
+    <tr><td>&ldquo;Deep expertise in &hellip; <strong>Domain-Driven Design (DDD)</strong>&rdquo;</td><td>Service boundaries set by independent scaling and data ownership (journey 600); a monolith decomposed &ldquo;by defining the boundaries&rdquo; (journey 488); decisions recorded as first-class events on an append-only spine (kq1:873).</td><td><strong>A similar practice only.</strong> DDD is never named in the journey or the case studies (the two &ldquo;DDD&rdquo; text matches in a Q&amp;A file are colour codes). He should not claim DDD by name.</td><td>Partial inside a core must-have line; it holds the distributed-systems row at 8.7.</td></tr>
+    <tr><td>&ldquo;building <strong>highly available</strong>, fault-tolerant, resilient systems&rdquo;</td><td>Zero-downtime migrations (journey 586, 567); circuit breakers, retries and fallbacks, and a failed build that keeps serving yesterday&rsquo;s index (kq1:453, 747&ndash;748, 363).</td><td><strong>A similar practice only, in the journey.</strong> It shows resilience patterns, not high-availability infrastructure such as failover across availability zones. High availability is his August 2026 confirmation and a résumé skills line (quick-skills-ee 3).</td><td>Partial inside a core must-have line; not a cap on its own.</td></tr>
+    <tr><td>&ldquo;real-time streaming and batch processing paradigms (e.g., <strong>Lambda or Kappa architectures</strong>)&rdquo;</td><td>A live projection and a nightly batch lane side by side (kq1:289&ndash;290; kq4:711&ndash;713); history replayed through the same projection code as the live stream (kq1:394); the Kinesis two-stream design on the chat platform (journey 662, 696).</td><td><strong>A similar shape only.</strong> Neither &ldquo;Lambda architecture&rdquo; nor &ldquo;Kappa&rdquo; appears; replaying history through the live code path is one Kappa-like part of a hybrid design. Name collision: AWS Lambda in his record is the function service, not this pattern.</td><td>No. Ramp item (an e.g.).</td></tr>
+    <tr><td>&ldquo;asynchronous communication, <strong>messaging queues</strong>, and event-driven architectures&rdquo;</td><td>The one queue in the journey is SQS invoking a Lambda, in the chat platform as he found it (journey 647). His own design is streams: the two-stream Kinesis design (journey 216, 662), in production (696).</td><td><strong>A similar tool only:</strong> streams he designed, and a queue he inherited. Kafka is on the interview-prep ledger&rsquo;s never-claim list; his is Kinesis.</td><td>No. Ramp item: the job description names no broker.</td></tr>
+    <tr><td>&ldquo;containerization and orchestration technologies (e.g., <strong>Docker, Kubernetes</strong>)&rdquo;</td><td>Docker Compose for axe Auditor (journey 539); ECS at VoltusWave in 2017&ndash;18 (journey 468, folded in from the résumé). Kubernetes is not in the journey.</td><td><strong>Docker:</strong> used, thinly recorded. <strong>Orchestration:</strong> a similar tool only (ECS), used long ago as far as the journey shows. <strong>Kubernetes:</strong> open. He confirmed it in August 2026; the prep ledger lists it as never-claim and says the code record shows ECS Fargate. It is not resolved here.</td><td>Ramp item (an e.g.); on the journey alone it holds the row at 7.5.</td></tr>
+    <tr><td>&ldquo;system observability, <strong>distributed tracing, telemetry</strong>&rdquo;</td><td>Datadog first (journey 216); Datadog and Amplitude on both Deque products (journey 589); production tracing of the model pipeline in self-hosted LangSmith (kq1:765&ndash;766).</td><td><strong>A similar tool only:</strong> tracing of the model pipeline and product analytics, not trace propagation across services. &ldquo;Distributed tracing&rdquo; and &ldquo;telemetry&rdquo; are never named.</td><td>Partial inside a core must-have line; it holds the observability row at 8.3.</td></tr>
+    <tr><td>&ldquo;Strong knowledge of <strong>CI/CD tools</strong> and practices&rdquo;</td><td>CI that runs the production call path on a mock provider (kq1:753&ndash;754); a smoke test over every registered graph (kq1:762&ndash;763); a blue-green index swap behind shadow evaluation (kq1:347&ndash;348). No CI/CD tool is named in the journey.</td><td><strong>A similar practice only:</strong> the practice is there, a named tool is not. The résumé&rsquo;s move &ldquo;from Jenkins to GitHub Actions&rdquo; (quick-deque 8) is not in the journey and is not scored.</td><td>Partial inside a core must-have line.</td></tr>
+    <tr><td>&ldquo;Proven experience with <strong>Test-Driven Development (TDD)</strong> and automated testing frameworks&rdquo;</td><td>Tenant isolation enforced by automated testing (journey 599); golden regression fixtures (kq4:849&ndash;851); the shared exporter replay test (kq2:826&ndash;828); test scaffolding (journey 669).</td><td><strong>A similar practice only:</strong> automated tests, not test-first development. TDD and any named test framework appear nowhere. The résumé&rsquo;s Puppeteer suite (quick-deque 9) is not in the journey. He should not claim TDD.</td><td><strong>Yes: a core must-have.</strong> It caps the engineering-excellence row at 7.3.</td></tr>
+    <tr><td>&ldquo;driving cost-efficient architecture (<strong>FinOps</strong>)&rdquo;</td><td>Architecture chosen for cost: axe Monitor&rsquo;s per-customer instances consolidated (journey 194; 280 clients, his settled count); a vendor billed by load brought in-house (journey 420&ndash;422); a Linux option offered to new enterprise customers to avoid licence cost (journey 382&ndash;383).</td><td><strong>A similar practice only:</strong> cost-driven architecture, not a FinOps practice (cost allocation, tagging, commitments, Spot capacity). The résumé&rsquo;s &ldquo;at 70% Spot&rdquo; and &ldquo;infrastructure cost down 25–30%&rdquo; (quick-vp 23) are not in the journey.</td><td>Partial inside a core must-have line; it holds the cloud row at 8.8.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p class="dim">The weighted rubric these gaps feed, and the score, are in <a href="score.html">Tech score gaps</a>.</p>
+
+</main>
+</body>
+</html>
