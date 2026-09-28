@@ -30,6 +30,11 @@ Rules only. How-to (commands, database, automation, traps): `docs/reference.md`.
 - A full workspace: `jd.md`/`jd.html` · rubric `index.html` · résumé-changes page · cited
   `research.html` (never compensation) · `score.json` · the verified `.docx`. Every workspace needs
   an `index.html`.
+- The score page (`index.html`) carries a **"Tech mismatch & why exactly"** section (his ask,
+  28 Sep 2026): for each JD technology he lacks or only partly has — the JD's words, what his
+  record shows (journey doc), exactly why it is a mismatch (never used · used long ago · a similar
+  tool only · not in production · never-claim), and whether it caps the score (core must-have vs
+  ramp item). Written by agent 2; no extra agent.
 - Delegate content to keep this CLI answerable; never poll. Main thread only: adjudication, the
   verify pass, his decisions. Deterministic checks are scripts, never agents. Outside a job: 5 per
   workflow and per turn.
