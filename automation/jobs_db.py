@@ -273,11 +273,28 @@ def _row(r: dict, paths: dict[str, str]) -> dict:
     }
 
 
-def applications() -> list[dict]:
-    """Every row, newest activity first. No filtering — the page tabs on `tab`."""
+MONTH_RE = re.compile(r"\d{4}-(0[1-9]|1[0-2])")
+DAY_RE = re.compile(r"\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])")
+
+
+def applications(month: str | None = None, day: str | None = None) -> list[dict]:
+    """Every row, newest activity first — or only the rows received in one month
+    (`2026-09`) or on one day (`2026-09-27`), which the workspace breadcrumbs ask
+    for. The filter runs in SQL on the same intake date `_row` reports: `scraped_at`
+    in the session's time zone. A malformed month or day raises ValueError. The page
+    tabs on `tab`."""
+    where, params = "", []
+    if day:
+        if not DAY_RE.fullmatch(day):
+            raise ValueError(f"date must be YYYY-MM-DD, got {day!r}")
+        where, params = " WHERE to_char(scraped_at, 'YYYY-MM-DD') = %s", [day]
+    elif month:
+        if not MONTH_RE.fullmatch(month):
+            raise ValueError(f"month must be YYYY-MM, got {month!r}")
+        where, params = " WHERE to_char(scraped_at, 'YYYY-MM') = %s", [month]
     paths = workspace_paths()
     with connect() as conn, conn.cursor() as cur:
-        cur.execute(_SELECT + " ORDER BY updated_at DESC NULLS LAST, id DESC")
+        cur.execute(_SELECT + where + " ORDER BY updated_at DESC NULLS LAST, id DESC", params)
         return [_row(r, paths) for r in cur.fetchall()]
 
 
@@ -307,9 +324,10 @@ def groups(rows: list[dict]) -> list[dict]:
     return [{"date": d or None, "note": notes.get(d)} for d in dates]
 
 
-def launcher() -> dict:
-    rows = applications()
-    return {"store": "postgresql", "counts": counts(rows),
+def launcher(month: str | None = None, day: str | None = None) -> dict:
+    rows = applications(month, day)
+    applied = {"date": day} if day else {"month": month} if month else None
+    return {"store": "postgresql", "filter": applied, "counts": counts(rows),
             "groups": groups(rows), "applications": rows}
 
 

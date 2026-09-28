@@ -228,6 +228,19 @@ const type    = async (w, q) => {
   ok(TABS.every(t => countOf(d, t) === rows(d).filter(r => r.dataset.status === t).length),
      "tab counts still count every row, filter or not");
 
+  console.log("\n13. ?month= and ?date= ask the database for one month or one day");
+  const oneMonth = day.slice(0, 7);
+  const inMonth = api.applications.filter(a => (a.intake || "").startsWith(oneMonth)).length;
+  w = await boot(API, "?month=" + oneMonth); d = w.document;
+  ok(rows(d).length === inMonth && rows(d).every(r => r.dataset.search.includes(oneMonth)),
+     `only ${oneMonth}'s rows reach the page — ${rows(d).length} of ${inMonth}`);
+  ok(TABS.reduce((n, t) => n + countOf(d, t), 0) === inMonth, "and the tab counts are that month's");
+  const cap = d.getElementById("app-filter");
+  ok(!cap.hidden && cap.textContent.includes("Show all"), `the page says so, with a way back — "${cap.textContent}"`);
+  w = await boot(API, "?date=" + day); d = w.document;
+  ok(rows(d).length === api.applications.filter(a => a.intake === day).length,
+     `?date=${day} shows that day's rows only — ${rows(d).length}`);
+
   console.log(`\n${P} passed, ${F} failed`);
   process.exit(F ? 1 : 0);
 })();

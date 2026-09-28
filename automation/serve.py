@@ -11,7 +11,8 @@ tab keeps working. What it adds:
   GET  /api/state          current task state
   POST /api/ops            apply operations, return the new state
   GET  /api/history?limit  recent task events, newest first
-  GET  /api/jobs           every application, its launcher tab and both scores
+  GET  /api/jobs           every application, its launcher tab and both scores;
+                           ?month=YYYY-MM or ?date=YYYY-MM-DD filters in SQL (400 if malformed)
 
   no-store on HTML/JSON/JS/CSS, so a pinned tab's refresh really does refresh.
 
@@ -94,10 +95,15 @@ class Handler(SimpleHTTPRequestHandler):
             except Exception as exc:                            # noqa: BLE001
                 return self._json(503, {"error": f"database unreachable: {exc}"})
         if url.path == "/api/jobs":
+            q = parse_qs(url.query)
             try:
-                return self._json(200, jobs_db.launcher())
+                payload = jobs_db.launcher(month=q.get("month", [None])[0],
+                                           day=q.get("date", [None])[0])
+            except ValueError as exc:
+                return self._json(400, {"error": str(exc)})
             except Exception as exc:                            # noqa: BLE001
                 return self._json(503, {"error": f"database unreachable: {exc}"})
+            return self._json(200, payload)
         if url.path == "/api/history":
             try:
                 limit = min(int(parse_qs(url.query).get("limit", ["100"])[0]), 1000)

@@ -187,7 +187,12 @@
     if (!list) return;
     let data;
     try {
-      const r = await fetch("/api/jobs");
+      // The workspace breadcrumbs link here with ?month=2026-09 or ?date=2026-09-27;
+      // the server filters in SQL, and everything below — groups, tabs, counts —
+      // follows from the rows it sends.
+      const page = new URLSearchParams(location.search), only = new URLSearchParams();
+      for (const k of ["month", "date"]) if (page.get(k)) only.set(k, page.get(k));
+      const r = await fetch("/api/jobs" + (String(only) ? "?" + only : ""));
       if (!r.ok) throw new Error(`the server answered ${r.status}`);
       data = await r.json();
     } catch (err) {
@@ -207,6 +212,17 @@
       by.get(k).push(a);
     });
     list.replaceChildren(...data.groups.map(g => group(g, by.get(g.date || "") || [])));
+    const cap = document.getElementById("app-filter");
+    if (cap && data.filter) {
+      const MONTHS = ["January", "February", "March", "April", "May", "June", "July",
+                      "August", "September", "October", "November", "December"];
+      const [y, m, d] = (data.filter.date || data.filter.month).split("-");
+      const when = data.filter.date ? `on ${Number(d)} ${MONTHS[m - 1]} ${y}` : `in ${MONTHS[m - 1]} ${y}`;
+      const n = data.applications.length;
+      cap.replaceChildren(`Showing the ${n} job${n === 1 ? "" : "s"} received ${when}. `,
+                          link("index.html", "Show all"));
+      cap.hidden = false;
+    }
     say("");
     window.initTabs();
   });

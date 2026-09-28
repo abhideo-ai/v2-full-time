@@ -26,11 +26,12 @@
   let current = DEFAULT_TAB;
   let bound = false;
   let watching = false;
-  // A link can pre-filter the list: index.html?q=2026-09-27 (the workspace
-  // breadcrumbs use this). The query fills the search box once; the first time
-  // rows exist, the list opens on the first tab that has a match.
-  const URL_Q = new URLSearchParams(location.search).get("q") || "";
-  let pickTab = URL_Q !== "";
+  // A link can narrow the list: ?month= / ?date= (filtered by the server — see
+  // apps.js) or ?q= (text search, filled into the box once). The first time rows
+  // exist, the list opens on the first tab that has a match.
+  const PARAMS = new URLSearchParams(location.search);
+  const URL_Q = PARAMS.get("q") || "";
+  let pickTab = ["q", "month", "date"].some(k => PARAMS.get(k));
 
   const apply = () => {
     const tabs = [...document.querySelectorAll("[data-tab]")];

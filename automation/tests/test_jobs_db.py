@@ -219,6 +219,25 @@ ok(in_markup == set(jobs_db.TABS),
 ok(markup.count('class="tab-count"') == len(jobs_db.TABS),
    "and every one of them has a count slot for tabs.js to fill")
 
+print("\n11a. A month or a day is filtered in SQL")
+day = next(r["intake"] for r in rows if r["intake"])
+month = day[:7]
+by_day = jobs_db.applications(day=day)
+by_month = jobs_db.applications(month=month)
+ok(bool(by_day) and all(r["intake"] == day for r in by_day),
+   f"date={day} returns only that day's rows — {len(by_day)}")
+ok(len(by_day) == sum(r["intake"] == day for r in rows), "and every one of that day's rows")
+ok(bool(by_month) and all((r["intake"] or "").startswith(month) for r in by_month),
+   f"month={month} returns only that month's rows — {len(by_month)}")
+ok(len(by_month) == sum((r["intake"] or "").startswith(month) for r in rows),
+   "and every one of that month's rows")
+for bad in ["2026-9", "2026-13", "Sept", "2026-09'; drop table applications; --"]:
+    try:
+        jobs_db.applications(month=bad)
+        ok(False, f"a malformed month is refused — {bad!r}")
+    except ValueError:
+        ok(True, f"a malformed month is refused — {bad!r}")
+
 if API:
     print("\n12. GET /api/jobs")
     with urllib.request.urlopen(API + "/api/jobs") as r:
@@ -232,6 +251,17 @@ if API:
        "and it serves a count for every tab and no others — no `archived`, no `all`")
     ok(len(payload["groups"]) == len(groups), "the intake groups are served too")
     ok("salary" not in json.dumps(payload), "and still no compensation")
+    ok(payload["filter"] is None, "unfiltered unless asked")
+    with urllib.request.urlopen(API + "/api/jobs?date=" + day) as r:
+        one = json.loads(r.read())
+    ok(one["filter"] == {"date": day} and all(a["intake"] == day for a in one["applications"]),
+       f"?date={day} is filtered on the server")
+    ok(one["counts"]["total"] == len(by_day), "and its counts are that day's counts")
+    try:
+        urllib.request.urlopen(API + "/api/jobs?month=bogus")
+        ok(False, "a malformed month answers 400")
+    except urllib.error.HTTPError as exc:
+        ok(exc.code == 400, f"a malformed month answers 400 — got {exc.code}")
 
     print("\n13. It degrades rather than breaking")
     try:
