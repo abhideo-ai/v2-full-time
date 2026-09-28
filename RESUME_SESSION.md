@@ -16,6 +16,9 @@ first, including its **Amendment** section.
   the Research tab **renders it** — his words: *"can you not render research.html in index.html? This
   way index.html is not bloated?"* Settle first: nested tabs (scope `page-tabs.js` per group, or folds
   only in research) and whether Kim / Enhansd reuse research sections rather than duplicate them.
+- **Every tab is its own standalone HTML file** (jd.html, research.html, resume_changes_…, kim.html,
+  enhansd.html…), named in the manifest and rendered inside index.html's tab — his words: *"similarly,
+  we can have other HTML files rendered in index.html? this way index.html isn't bloated"*.
 - Status and score come from the database: add `?slug=` to `/api/jobs` beside `?month=` / `?date=`.
 - Pilot on Delta only; applied seats stay frozen. No agents. Tests on their own — never `run.sh`.
 
