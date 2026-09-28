@@ -65,6 +65,35 @@ const read = (f) => fs.readFileSync(path.join(DIR, f), "utf8");
     }
   }
 
+  // score.json carries numbers only (templates/workspace/score.json); the tracker reads its
+  // weighted_total, so the arithmetic behind it is checked here. Older seats name the fields
+  // score_out_of_10 and contribution.
+  if (fs.existsSync(path.join(DIR, "score.json"))) {
+    console.log("\n2b. score.json's arithmetic");
+    let s;
+    try { s = JSON.parse(read("score.json")); } catch (e) { s = null; ok(false, `score.json parses — ${e.message}`); }
+    if (s) {
+      const total = s.weighted_total;
+      ok(typeof total === "number", `weighted_total is a number — ${total}`);
+      const rows = Array.isArray(s.scores) ? s.scores : [];
+      const num = (r, a, b) => (typeof r[a] === "number" ? r[a] : r[b]);
+      if (ok(rows.length && rows.every((r) => typeof r.weight === "number" &&
+               typeof num(r, "score", "score_out_of_10") === "number" && typeof num(r, "points", "contribution") === "number"),
+             `${rows.length} score rows, each with a weight, a score and points`)) {
+        const sum = (f) => rows.reduce((n, r) => n + f(r), 0);
+        const weights = sum((r) => r.weight), points = sum((r) => num(r, "points", "contribution"));
+        ok(Math.abs(weights - 1) < 0.001, `the weights add up to 1.00 — ${weights.toFixed(3)}`);
+        ok(rows.every((r) => Math.abs(r.weight * num(r, "score", "score_out_of_10") * 10 - num(r, "points", "contribution")) < 0.011),
+           "each row's points are weight × score × 10");
+        ok(Math.abs(points - total) < 0.011, `the points add up to weighted_total — ${points.toFixed(2)} vs ${total}`);
+      }
+      if (present.includes("score.html")) {
+        const page = new JSDOM(read("score.html")).window.document.querySelector("main")?.textContent || "";
+        ok(page.includes(String(total)), `score.html shows the same total, ${total}`);
+      }
+    }
+  }
+
   console.log("\n3. The assembled page, from the running server");
   const url = `${API}/${WS}/index.html`;
   const errors = [];

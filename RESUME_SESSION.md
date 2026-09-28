@@ -9,8 +9,8 @@ Mumbai; tracker `heard_back`, technical 86.39). No résumé: recruiter Deepti Ad
 Naukri profile (her call, 28 Sep 2026). His to do: check the consent email's sender domain, and
 consent within 30 days or the profile is deleted; ask her which listing it is (a Bengaluru one
 exists too); settle Kubernetes before any call. Interview prep only when he asks.
-- Offered, not answered: a slim `score.json` (the tracker reads only `weighted_total`). He set
-  `/effort high` as his default on 28 Sep, which answers the other half.
+- Faster scoring (28 Sep): he set `/effort high` as his default, and `score.json` is now numbers
+  only (`templates/workspace/score.json`); `check_workspace.js` checks its arithmetic.
 
 ## Done 28 Sep 2026 — the workspace page, then Nielsen on it
 - Nielsen built with one workflow (3 agents, run `wf_37031923-139` in `PENDING.md`); every new

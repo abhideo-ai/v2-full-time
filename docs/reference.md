@@ -83,6 +83,10 @@ this file holds the how. Full history: `docs/CLAUDE-original-2026-09-28.md`.
 - **Verify a built workspace:** `node automation/check_workspace.js <Month-YYYY/DD/slug>`
   (read-only, needs `serve.py`). FAIL breaks the page contract; WARN needs a look (a word that
   can mean compensation).
+- **`score.json` is numbers only** (`templates/workspace/score.json`, from 28 Sep 2026): the total,
+  target, honest ceiling, one-sentence binding constraint, and one row per criterion (weight,
+  score, points). All prose goes on `score.html`. The tracker reads only `weighted_total`;
+  `check_workspace.js` checks that the weights make 1.00 and the points make the total.
 - Breadcrumbs: the month crumb opens the launcher with `?month=YYYY-MM`, the day crumb with
   `?date=YYYY-MM-DD`. `static/apps.js` passes these to `/api/jobs`, which filters in SQL
   (`jobs_db.applications(month, day)`; 400 if malformed), so groups, tabs and counts are that

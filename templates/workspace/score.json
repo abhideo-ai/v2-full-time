@@ -1,0 +1,12 @@
+{
+  "slug": "{{slug}}",
+  "scored_at": "{{YYYY-MM-DD}}",
+  "rubric": "v2 weighted technical",
+  "weighted_total": "{{the total, as a number: the sum of every row's points}}",
+  "target": 95,
+  "honest_ceiling": "{{the highest total the record honestly supports, as a number}}",
+  "binding_constraint": "{{One sentence. The reasoning, evidence, gates and lift go on score.html, never here.}}",
+  "scores": [
+    {"criterion": "{{criterion, in a few words}}", "weight": "{{0.12}}", "score": "{{8.8, out of 10}}", "points": "{{weight × score × 10, e.g. 10.56}}"}
+  ]
+}
