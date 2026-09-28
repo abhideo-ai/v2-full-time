@@ -87,6 +87,8 @@ Rules only. How-to (commands, database, automation, traps): `docs/reference.md`.
   slot about 2 days out, never tomorrow.
 
 ## Interview prep
+- **Never start it until he asks** — *"DO NOT do the interview prep until I ask you for it."*
+  (28 Sep 2026). Topic suggestions (step 7) are not prep and still apply.
 - Lives in this repo, in the job's workspace. Never add anything to `~/Documents/interview-prep/` —
   reading its honesty ledger is fine, and what is there stays. For a job he applied to, suggest the
   topics that repo lacks: "just suggestions. nothing else."
