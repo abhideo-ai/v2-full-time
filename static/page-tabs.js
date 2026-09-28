@@ -4,7 +4,9 @@
 //   - tab buttons are .status-tab[data-panel] inside [data-page-tabs]
 //   - each panel is a section[data-panel] with the same name, and id = that name
 //   - one panel shows at a time, via the `hidden` attribute
-//   - the URL hash picks the tab (index.html#open); an unknown hash shows the first
+//   - the URL hash picks the tab (index.html#open). A hash naming something INSIDE a
+//     panel (research.html#questions) opens that panel and scrolls to it; an
+//     unknown hash shows the first panel
 //   - without JavaScript nothing is hidden, so every panel shows; print shows all (style.css)
 //
 // The launcher's static/tabs.js is a different thing (rows, counts, search); this
@@ -40,6 +42,17 @@
       go(tabs[(i + step) % tabs.length].dataset.panel, true);
     });
   });
-  window.addEventListener("hashchange", () => show(location.hash.slice(1)));
-  show(location.hash.slice(1));
+  // A hash can name a panel (#files) or an element inside one (#questions): either
+  // way the panel holding it opens, and an inner target is scrolled into view —
+  // the browser's own jump happened while that panel was still hidden.
+  function follow(hash) {
+    if (!hash || names.includes(hash)) return show(hash);
+    const el = document.getElementById(hash);
+    const panel = el && el.closest("section[data-panel]");
+    show(panel ? panel.dataset.panel : "");
+    if (panel) el.scrollIntoView();
+  }
+
+  window.addEventListener("hashchange", () => follow(decodeURIComponent(location.hash.slice(1))));
+  follow(decodeURIComponent(location.hash.slice(1)));
 })();
