@@ -1,0 +1,20 @@
+{
+  "slug": "zenvyra-technical-co-founder",
+  "company": "Zenvyra",
+  "role": "Technical Co-Founder",
+  "route": "job posting (LinkedIn); DM the founder",
+  "received": "2026-09-29",
+  "resume_changes": null,
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    },
+    {
+      "id": "dm",
+      "label": "DM draft",
+      "src": "dm.html"
+    }
+  ]
+}
