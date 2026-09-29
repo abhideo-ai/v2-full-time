@@ -1,16 +1,30 @@
 # RESUME_SESSION.md
 
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
-Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-28**, after the workspace-page build.
+Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-29**, when he closed the terminal.
 
-## NEXT ACTION — Nielsen is built; waiting on him
+## START HERE (29 Sep 2026)
+- **The server is STOPPED** (he asked on 29 Sep). Start it before any localhost link:
+  `automation/.venv/bin/python automation/serve.py` (port 8006). He is fine with it running in
+  Claude's shell.
+- **Nothing is running and everything is committed and pushed** (branch `qa`).
+- **Nielsen's Tech mismatch tab is key for his preparation** (his words, 28 Sep). It is its own tab,
+  `mismatch.html`, listed in that workspace's `workspace.json` (Nielsen only, his choice):
+  http://localhost:8006/September-2026/28/nielsen-principal-member-technical-staff/index.html#mismatch
+- `jd-list/sep-28-2026_2.md` holds only its goal lines so far. When he adds jobs: one workflow per
+  job, capped at 3 agents (his rule in that file), built from `templates/workspace/`.
+
+## Waiting on him — Nielsen
 `September-2026/28/nielsen-principal-member-technical-staff/` (Principal Member Technical Staff,
 Mumbai; tracker `heard_back`, technical 86.39). No résumé: recruiter Deepti Adlakha is using his
 Naukri profile (her call, 28 Sep 2026). His to do: check the consent email's sender domain, and
 consent within 30 days or the profile is deleted; ask her which listing it is (a Bengaluru one
-exists too); settle Kubernetes before any call. Interview prep only when he asks.
+exists too); settle Kubernetes before any call. Interview prep only when he asks. The only
+core gap that caps a score row is test-driven development: say "automated testing", never TDD.
 - Faster scoring (28 Sep): he set `/effort high` as his default, and `score.json` is now numbers
   only (`templates/workspace/score.json`); `check_workspace.js` checks its arithmetic.
+- ATS checkers he can use (his question, 28 Sep): Jobscan (résumé + a JD → match rate), Resume
+  Worded, Teal. No single official ATS score exists; compare both résumés against the same JD.
 
 ## Draft, 28 Sep 2026 — the résumé as story clusters (his ask; "we're just drafting this version")
 `master/Abhisheik_Deo_Resume_story_clusters.docx` + `master/story-clusters-review.html` (evidence,
