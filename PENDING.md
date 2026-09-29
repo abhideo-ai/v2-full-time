@@ -58,7 +58,7 @@ by sabotage, which the corrected gate catches as `want 4, have 1`.
 | `wf_4dd4f80c-a7a` | Eli Lilly Sr. Principal Engineer AI/ML System Integration (29 Sep 2026): research + pages, score + résumé proposals, one adversarial check | 3 (capped) | done in 31 min: 165 claims checked, 17 findings. 12 edits proposed, 9 kept (3 trimmed, 1 cut, 1 add cut); research fixes applied. Technical 87.90 (master 84.28); `.docx` 35/35 |
 | `wf_ddfddd8a-56c` | Sahaj Software Principal Engineer (29 Sep 2026): same script, run alongside Lilly (6 agents at once, his call) | 3 (capped) | done in 30 min: 150 claims checked, 13 findings. 7 edits proposed, 6 kept (vp-01 cut, vp-04 trimmed). Technical 84.90 (master 83.04), bound by TDD; `.docx` 35/35 |
 | `wf_ef303750-256` | Epiq Lead Software Engineer (29 Sep 2026): same script | 3 (capped) | done in 30 min: 138 claims checked, 13 findings. 7 edits proposed, 6 kept (vp-19 cut, vp-08 and vp-13 trimmed). Technical 85.45 (master 82.68); `.docx` 35/35 |
-| `wf_46f62f3c-9bc` | Zenvyra Technical Co-Founder (29 Sep 2026): v2 script (adds a staged DM tab); first seat built from the new master | 3 (capped) | running |
+| `wf_46f62f3c-9bc` | Zenvyra Technical Co-Founder (29 Sep 2026): v2 script (adds a staged DM tab); first seat built from the new master | 3 (capped) | done in 21 min: 96 claims checked, 12 findings (1 cut, 8 fixes, 3 notes), all applied; 5 of 5 résumé edits kept. Technical 85.88 (master 84.36); `.docx` 35/35 |
 
 ---
 

@@ -1,0 +1,59 @@
+{
+  "slug": "zenvyra-technical-co-founder",
+  "scored_at": "2026-09-29",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 85.88,
+  "target": 95,
+  "honest_ceiling": 85.88,
+  "binding_constraint": "The agency's delivery stack: no workflow-automation tool (n8n or any other) anywhere in his record, hands-on web front-end work that is mostly AngularJS-era with no modern website stack named, and React Native work that is delivery ownership rather than framework depth.",
+  "scores": [
+    {
+      "criterion": "Website and web-application development",
+      "weight": 0.16,
+      "score": 8.2,
+      "points": 13.12
+    },
+    {
+      "criterion": "Mobile app development",
+      "weight": 0.12,
+      "score": 7.8,
+      "points": 9.36
+    },
+    {
+      "criterion": "AI agents",
+      "weight": 0.16,
+      "score": 9.0,
+      "points": 14.4
+    },
+    {
+      "criterion": "Business automations",
+      "weight": 0.12,
+      "score": 7.8,
+      "points": 9.36
+    },
+    {
+      "criterion": "n8n, APIs and integrations",
+      "weight": 0.12,
+      "score": 8.6,
+      "points": 10.32
+    },
+    {
+      "criterion": "Building and launching real products",
+      "weight": 0.14,
+      "score": 9.2,
+      "points": 12.88
+    },
+    {
+      "criterion": "Strong technical skills: backend, cloud and data breadth",
+      "weight": 0.08,
+      "score": 9.3,
+      "points": 7.44
+    },
+    {
+      "criterion": "Technical founder: ownership, problem-solving, learning and experimenting",
+      "weight": 0.1,
+      "score": 9.0,
+      "points": 9.0
+    }
+  ]
+}
