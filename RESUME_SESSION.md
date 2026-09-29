@@ -4,7 +4,7 @@ Where we were, and what is next. Overwrite freely; git keeps the history. Rules:
 Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-29**, after the Lilly and Sahaj builds.
 
 ## START HERE (29 Sep 2026, afternoon)
-- **Sahaj was SENT on 29 Sep 2026** (he said "application is done"; marked applied and logged; the seat is now frozen). **Lilly is ready and unsent.** **Epiq, Lead Software Engineer - AI Solutions** (Hyderabad; Epiq's record says hybrid, Hyderabad or Pune; Workday requisition R0035231) is also ready and unsent: `September-2026/29/epiq-lead-software-engineer/`, technical 85.45 (master 82.68), bound by React and named DevOps tooling; over-levelling risk (8–12 years asked, he has about 18; a Staff/Solution Architect seat, R0035035, 12+ years, was posted the same day). Both came from `jd-list/sept-2026-29/sep-29-2026_1.md`, built
+- **Sahaj was SENT on 29 Sep 2026** (he said "application is done"; marked applied and logged; the seat is now frozen). **Lilly is ready and unsent.** **Epiq, Lead Software Engineer - AI Solutions** (Hyderabad; Epiq's record says hybrid, Hyderabad or Pune; Workday requisition R0035231) was SENT on 29 Sep 2026 (marked applied and logged; frozen): `September-2026/29/epiq-lead-software-engineer/`, technical 85.45 (master 82.68), bound by React and named DevOps tooling; over-levelling risk (8–12 years asked, he has about 18; a Staff/Solution Architect seat, R0035035, 12+ years, was posted the same day). Both came from `jd-list/sept-2026-29/sep-29-2026_1.md`, built
   with one 3-agent workflow each, run side by side (6 agents at once: his explicit call over the
   4-per-turn rule). Run IDs and outcomes in `PENDING.md`.
   - **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (Bengaluru East, on-site):
