@@ -1,0 +1,20 @@
+{
+  "slug": "gethyr-engineering-manager",
+  "company": "GetHyr (client not named)",
+  "role": "Engineering Manager / Senior Engineering Manager",
+  "route": "recruiter post (LinkedIn); apply by email",
+  "received": "2026-09-29",
+  "resume_changes": null,
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    },
+    {
+      "id": "email",
+      "label": "Email draft",
+      "src": "email.html"
+    }
+  ]
+}
