@@ -37,7 +37,17 @@ core gap that caps a score row is test-driven development: say "automated testin
 - ATS checkers he can use (his question, 28 Sep): Jobscan (résumé + a JD → match rate), Resume
   Worded, Teal. No single official ATS score exists; compare both résumés against the same JD.
 
-## Draft, 28 Sep 2026 — the résumé as story clusters (his ask; "we're just drafting this version")
+## The master is now the story-clusters résumé (29 Sep 2026, his words: "make it master")
+- He answered `master/story-clusters-questions.md`; the answers are in `professional-journey.md`
+  ("His answers, 29 September 2026") and were applied to the draft by
+  `db/operations/apply_story_clusters_answers.sql`, then promoted by
+  `db/operations/promote_variant_to_master.sql`. `master/Abhisheik_Deo_Resume.docx` is the new master (35/35).
+- The old master is kept as doc_key `variant:master-2026-09-29` and
+  `master/Abhisheik_Deo_Resume.master-2026-09-29.docx`. Sent seats keep the résumés they were sent with.
+- Kubernetes is off the résumé (ECS Fargate instead, his call). Still open: Teletext 46% and the $1.4M.
+- Lilly (ready, unsent) was tailored from the OLD master; whether to re-tailor it is his call.
+
+## Draft, 28 Sep 2026 — the résumé as story clusters (now promoted; see above) (his ask; "we're just drafting this version")
 `master/Abhisheik_Deo_Resume_story_clusters.docx` + `master/story-clusters-review.html` (evidence,
 30 "needs your words" questions, open claims). Built from doc_key `variant:story-clusters`
 (`db/operations/clone_master_variant.sql`, then `apply_story_clusters.sql`); the master's rows
