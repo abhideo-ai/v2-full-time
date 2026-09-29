@@ -37,6 +37,13 @@ core gap that caps a score row is test-driven development: say "automated testin
 - ATS checkers he can use (his question, 28 Sep): Jobscan (résumé + a JD → match rate), Resume
   Worded, Teal. No single official ATS score exists; compare both résumés against the same JD.
 
+## GetHyr, Engineering Manager / Senior EM (29 Sep 2026): ready, unsent, his call
+`September-2026/29/gethyr-engineering-manager/`: technical 92.83 (master 92.43). A people-manager
+seat from a recruiter's LinkedIn post (Raj Singh, co-founder of GetHyr, a registered agency since
+2019); the client is not named. Apply by email to raj@gethyr.com: staged in the Email draft tab,
+with a [his call: current CTC] placeholder (his current pay is never volunteered). Ask GetHyr to
+name the client and not to submit without his go-ahead (questions.html Q1, Q2).
+
 ## Zenvyra, Technical Co-Founder (29 Sep 2026): SENT 29 Sep (route not stated; marked applied, logged, frozen)
 `September-2026/29/zenvyra-technical-co-founder/`: technical 85.88 (master 84.36), bound by no
 n8n/workflow-automation tool, dated web front end, React Native as delivery only. A co-founder seat,

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GetHyr (client not named) · tech mismatch</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month=2026-09">September 2026</a> · <a href="../../../index.html?date=2026-09-29">29</a> · <a href="index.html">gethyr-engineering-manager</a> · tech mismatch</p>
+
+<header data-standalone>
+  <h1>GetHyr (client not named): tech mismatch &amp; why exactly</h1>
+</header>
+
+<p>Every technology or named practice in the post that his record lacks, or only partly shows. The post is short: it names one language (Java), two practices (system design, distributed systems), one kind of leader, and one plus (artificial intelligence, AI). It names no other tool, so this table is short too. &ldquo;Core must-have&rdquo; means the line is a requirement and the gap holds its row down; &ldquo;ramp item&rdquo; means it can be learned on the job. &ldquo;Journey 64&rdquo; means line 64 of <code>professional-journey.md</code>.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>JD asks for</th><th>His record shows</th><th>Why exactly it is a mismatch</th><th>Caps the score?</th></tr></thead>
+  <tbody>
+    <tr><td>&ldquo;Strong Backend Engineering experience (<strong>Java preferred</strong>)&rdquo;</td><td>About 11 years of Java in three eras, the last &ldquo;Spring Boot 2.x on Java 8/17&rdquo; at Deque through February 2025 (journey 64&ndash;70); the Deque authentication and billing services in Java and Spring Boot (journey 567&ndash;568). His latest role, March 2025 to April 2026, was Go and Python (journey 138, 678).</td><td><strong>Used, but not in his latest role.</strong> The Java is 19 months old at the time of this post, and the versions in the record are Java 8/17 and Spring Boot 2.x; the current Java 21 and Spring Boot 3 are not in the record. No measured Java performance figure exists.</td><td>No: the core must-have is met, and &ldquo;preferred&rdquo; lets Go and Python count. Recency holds the backend row at 9.2.</td></tr>
+    <tr><td>&ldquo;Excellent System Design &amp; <strong>Distributed Systems</strong> expertise&rdquo;, at scale</td><td>A two-stream Amazon Kinesis design, in production (journey 216, 696), which moved to about 1,200 shards in load tests (journey 869); 10&ndash;15 services, each owning its database (journey 570, 600); 2&ndash;3 million requests a day at Teletext&rsquo;s peak (journey 421).</td><td><strong>Designed and in production, but the limits were never measured.</strong> In his words: &ldquo;Didn't have the budget to test the limits of this 2 stream architecture&rdquo; (journey 662). The one headline number, 100,000 concurrent connections at P95 (95th-percentile latency) under 16 ms, he confirmed on 29 Sep 2026 (journey 866), but the only saved run shows P95 19.05 ms and CLAUDE.md still lists it as open, so it is not leaned on here.</td><td>No cap, but it holds the distributed-systems row at 9.0.</td></tr>
+    <tr><td>&ldquo;<strong>Hands-on technical leader</strong>&rdquo;, in an &ldquo;Engineering Manager / <strong>Senior Engineering Manager</strong>&rdquo; seat</td><td>Two teams built from zero: 0 to 35 at VoltusWave in 2017&ndash;18 (journey 465, 474) and 0 to 20+ across 6 sub-teams in 2025&ndash;26 (journey 104, 857); &ldquo;I ran the engineering team&rdquo; (journey 220); performance appraisals for a 5-engineer team at Rocket (journey 492; he confirmed it on 29 Sep 2026, journey 872, though CLAUDE.md still lists the Rocket metrics as open); &ldquo;tech lead&rdquo; at Deque (journey 104). Hands-on throughout (journey 154, 138).</td><td><strong>A similar role only.</strong> He led engineers as a co-founder, a VP (vice president) of Technology, a principal architect and a tech lead, never under an Engineering Manager title. Performance management is recorded only for the 5 engineers at Rocket. At Deque, his longest role, the team size is open (journey 608). Managing managers, which a Senior Engineering Manager usually does, is not recorded.</td><td>Partial inside a core must-have line; it holds the leadership row at 9.1. The track itself (a manager seat, while his search is for individual-contributor seats) is a gate, not a score; see <a href="score.html#score-gates">the gates</a>.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>No mismatch</h3>
+<ul>
+  <li><strong>System design:</strong> the tenancy decision, the service split rule, build or buy, and design for a 50-calls-per-message load are all in the record (journey 196, 600, 446, 648).</li>
+  <li><strong>Startup mindset:</strong> he co-founded VoltusWave and built its no-code platform and team from zero (journey 31, 464&ndash;468).</li>
+  <li><strong>AI product or platform (the strong plus):</strong> retrieval-augmented generation (RAG) and a multi-agent LangGraph system, both in production (journey 854; RAG: kq1-precedent-search.html:261, 603; multi-agent: kq10-cross-domain.html:262, 440, 444), with self-hosted models (kq10-cross-domain.html:984). One thing not to lean on: the graph neural network, which he confirmed on 29 Sep 2026 (journey 865) but CLAUDE.md still lists as open.</li>
+</ul>
+
+<p class="dim">The weighted rubric these gaps feed, and the score, are in <a href="score.html">Tech score gaps</a>.</p>
+
+</main>
+</body>
+</html>

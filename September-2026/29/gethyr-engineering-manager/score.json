@@ -1,0 +1,47 @@
+{
+ "slug": "gethyr-engineering-manager",
+ "scored_at": "2026-09-29",
+ "rubric": "v2 weighted technical",
+ "weighted_total": 92.83,
+ "target": 95,
+ "honest_ceiling": 92.83,
+ "binding_constraint": "This is an Engineering Manager seat, and his record shows two teams built from zero and hands-on leadership but no recorded people-management practice at Deque, his longest and most Java-heavy role, while his Java was last used in February 2025 on Java 8/17.",
+ "scores": [
+  {
+   "criterion": "Backend engineering, Java preferred",
+   "weight": 0.25,
+   "score": 9.2,
+   "points": 23.0
+  },
+  {
+   "criterion": "System design",
+   "weight": 0.15,
+   "score": 9.5,
+   "points": 14.25
+  },
+  {
+   "criterion": "Distributed systems",
+   "weight": 0.15,
+   "score": 9.0,
+   "points": 13.5
+  },
+  {
+   "criterion": "Hands-on technical leadership of engineering teams",
+   "weight": 0.2,
+   "score": 9.1,
+   "points": 18.2
+  },
+  {
+   "criterion": "Startup mindset",
+   "weight": 0.12,
+   "score": 9.5,
+   "points": 11.4
+  },
+  {
+   "criterion": "AI product or platform",
+   "weight": 0.13,
+   "score": 9.6,
+   "points": 12.48
+  }
+ ]
+}
