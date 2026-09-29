@@ -842,3 +842,52 @@ Sources:
 ## Still unresearched — because no public source can answer them
 
 These need you, not a search engine: the per-customer customisation mechanism at Deque, whether the graph neural network shipped, the Claude Code and Codex outcome measurement, and the May–July 2018 gap.
+
+---
+
+## His answers, 29 September 2026 (from `master/story-clusters-questions.md`)
+
+His confirmations, in his words where he gave them. Where one of these conflicts with an earlier line above, **this section wins**; the earlier line is left as it was, for the record. Flags are noted where another source disagrees.
+
+**Settled**
+
+- **Killer-query AI work (line 88, "piloted"):** in **production**. He has no outcome numbers, because it kept running after he left.
+- **Amazon Neptune per tenant:** a **hybrid** — "for certain tenants, we used separate Amazon Neptune but for others, we used the shared database".
+- **70% Spot, deploys under 10 minutes, infrastructure cost down 25–30%:** "I measured ALL of these myself."
+- **Sub-teams:** **6**, not 5. The master's "5 sub-teams" was wrong.
+- **React Native apps:** the same app the 10,000+ patients moved to (lines 628, 659).
+- **Statistics tests:** "across 6 production pipelines" covers the **whole set** (bootstrap, Rosenbaum γ, E-value), not only the bootstrap.
+- **Deque databases (line 606):** **two moves** — PostgreSQL 9.6 to Amazon RDS 13.x, then Amazon RDS 13.x to Aurora.
+- **Teletext suppliers (line 415):** **~30**.
+- **Teletext 8% month over month (line 452):** sustained "over my time period there". How it worked, in his words: a user searches flights and hotels for a destination; the scatter-gather calls the supplier endpoints; if a returned hotel was not mapped to Teletext's own hotel, it could not be shown, even when that supplier and hotel had the lowest or best rate; improving the mapping increased sales. It was a continuous effort, and suppliers were emailed to correct the mapping on their side too.
+- **Teletext 65% conversion lift (lines 450, 454):** belongs to the **hotel-mapping work** above (GIATA reconciliation), not to direct-contract ranking.
+- **innRoad framework (line 364):** the proof of concept was **Knockout.js**; production shipped **AngularJS**. innRoad sold the product to **motels across the US and Canada, charged per room**.
+- **Graph neural network (line 682):** **trained and served**, for patients identified as low or medium risk.
+- **Chat service latency:** **P95 under 16 ms** at 100,000 concurrent connections. ⚠ The one saved 100,000 run (`img.png`) shows P95 19.05 ms, and the interview-prep ledger says "not true of any run"; he keeps "under 16 ms".
+- **Data-layer latency:** **P95 under 16 ms for the DynamoDB write path**, replacing the master's "P95 under 30 ms" attached to PostgreSQL.
+- **Kubernetes:** he confirmed it in August 2026, **but the code shows AWS ECS Fargate**; the résumé now says ECS Fargate and not Kubernetes (his call, 29 Sep 2026).
+- **Kinesis shards:** **on-demand mode**, scaling automatically; during load tests it moved to about **1,200 shards**. He did not capture the results.
+- **LLM narrative guardrails (line 684):** in **production**. ⚠ The case-study index (`killer-query-case-studies/index.html:390`) marks the shared contract as pending.
+- **Deque 70–80% of customers onto shared axe Monitor instances (line 604):** **keep**, confirmed. ⚠ On 14 Sep 2026 the interview-prep ledger recorded him saying "No idea about this 70%-80% consolidated"; he says today's answer is right.
+- **Rocket's 5-engineer team, bugs down over 50%, sales up over 20%:** correct; keep.
+- **VoltusWave errors under 3%:** keep.
+- **HIPAA "compliance" wording, multi-availability-zone failover and disaster recovery:** keep.
+
+**Context, for the stories (not all of it goes on the résumé)**
+
+- **Claude Code and OpenAI Codex rollout:** onboarding new developers, QA and product people used to take a long time; Claude and Codex brought a common set of standards across the team through `CLAUDE.md` and `AGENTS.md` files in the repositories.
+- **Deque, per-customer customisation on the shared database:** "done in rarest of rare cases". Not 100% sure, but he recalls a `custom_fields` table with `tenant_id`, `table_name` and similar columns. (So "customer-specific front ends on one backend", line 602, is **not** confirmed as the mechanism.)
+- **Deque, billing moved from Node.js/TypeScript to Java and Spring Boot:** better debugging, more tools, and the company was more comfortable with Java and Spring Boot.
+- **Deque, why Aurora:** its scaling; he thinks AWS offered a deal for Aurora, but may be wrong.
+- **Deque, Jenkins to GitHub Actions:** Jenkins was painful as they scaled — pipelines failing, jobs pending; GitHub Actions scaled automatically. He says that scaling came when they used Claude for development. ⚠ Deque ended in February 2025; confirm this was Claude at Deque, not Claude Code at VoltusWave. Who used the Puppeteer suite: not answered.
+- **Deque, axe DevTools cross-origin iframes (line 561):** does not remember.
+- **Rocket decomposition (lines 505, 50):** does not remember the details.
+- **VoltusWave no-code aPaaS (line 472):** a no-code platform; clients built applications such as a leave management system; not much more remembered.
+- **CURA (line 389):** the Node.js piece was a **lite version** of the existing product, to increase sales.
+- **McDonald's (lines 344, 346):** while he was there, requirements came in for the EU (Germany) and China; design was ongoing and some development had started, but it did not go beyond that. Whether the field-level history shipped: not answered.
+- **El Paso (lines 324, 326):** he worked on all three modules (Nominations, Flowing Gas, Contracts), depending on the requirements.
+- **LyntonWeb (line 287):** Paymaster was the Mexican PayPal payments piece; suppliers and buyers did move onto the portal.
+
+**Still open**
+
+- **Teletext 46% and the $1.4M a year (line 431):** he asked where the $1.4M figure comes from. Lines 429 and 818 quote a third-party profile, but the link was never recorded, so the $1.4M stays off the résumé. Whether the 46% attaches to the Artirix replacement is still unconfirmed.
