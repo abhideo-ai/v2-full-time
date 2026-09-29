@@ -1,0 +1,77 @@
+{
+  "slug": "eli-lilly-sr-principal-engineer-ai-ml-integration",
+  "scored_at": "2026-09-29",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 87.9,
+  "target": 95,
+  "honest_ceiling": 88.6,
+  "binding_constraint": "The job description's data-governance and operations vocabulary (semantic layers, governed lineage, MLOps, LLMOps and DevSecOps as named practices) never appears in professional-journey.md, so those rows score as partials on the real work beside them, and Azure, Azure OpenAI and Databricks are absent (ramp items, since AWS meets the 'or').",
+  "scores": [
+    {
+      "criterion": "Enterprise integration architecture: APIs, microservices, event-driven systems, integration patterns",
+      "weight": 0.16,
+      "score": 9.2,
+      "points": 14.72
+    },
+    {
+      "criterion": "AI/ML in enterprise applications: LLMs, RAG, agents, orchestration, human-in-the-loop, model usage",
+      "weight": 0.16,
+      "score": 9.1,
+      "points": 14.56
+    },
+    {
+      "criterion": "Cloud platforms and cloud-native deployment (Azure, AWS or GCP)",
+      "weight": 0.1,
+      "score": 8.8,
+      "points": 8.8
+    },
+    {
+      "criterion": "Data flows, semantic layers, data quality, lineage and compliance",
+      "weight": 0.1,
+      "score": 8.4,
+      "points": 8.4
+    },
+    {
+      "criterion": "Testing, monitoring, observability, AI evaluation and production readiness",
+      "weight": 0.1,
+      "score": 8.9,
+      "points": 8.9
+    },
+    {
+      "criterion": "Responsible AI, security-by-design and privacy-by-design",
+      "weight": 0.08,
+      "score": 9.0,
+      "points": 7.2
+    },
+    {
+      "criterion": "MLOps, LLMOps, DevSecOps and modern delivery",
+      "weight": 0.08,
+      "score": 8.3,
+      "points": 6.64
+    },
+    {
+      "criterion": "Architecture reviews, technical governance, standards and mentoring",
+      "weight": 0.1,
+      "score": 8.9,
+      "points": 8.9
+    },
+    {
+      "criterion": "Stakeholder and vendor management",
+      "weight": 0.04,
+      "score": 8.2,
+      "points": 3.28
+    },
+    {
+      "criterion": "Domain: healthcare, life sciences, commercial analytics, CRM, engagement platforms",
+      "weight": 0.03,
+      "score": 7.5,
+      "points": 2.25
+    },
+    {
+      "criterion": "Enterprise AI platforms, semantic search, vector stores, knowledge graphs, agents",
+      "weight": 0.05,
+      "score": 8.5,
+      "points": 4.25
+    }
+  ]
+}

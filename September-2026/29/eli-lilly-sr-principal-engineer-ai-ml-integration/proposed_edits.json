@@ -1,0 +1,463 @@
+[
+  {
+    "id": "vp-01",
+    "section_id": "quick-vp",
+    "ord": 7,
+    "action": "edit",
+    "old_text": "Engineered a retrieval-augmented generation (RAG) pipeline on Elasticsearch dense_vector filtered nearest-neighbour search across 80+ chronic conditions, keeping Amazon Neptune off the serving path",
+    "new_html": "Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> semantic search across <strong>80+ chronic conditions</strong>, with <strong>LangGraph human-in-the-loop</strong> review of gate-suppressed queries",
+    "new_text": "Engineered a retrieval-augmented generation (RAG) pipeline on Elasticsearch dense_vector semantic search across 80+ chronic conditions, with LangGraph human-in-the-loop review of gate-suppressed queries",
+    "leading_verb": "Engineered",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "Integrate AI/ML capabilities, LLMs, RAG solutions",
+      "human-in-the-loop controls",
+      "semantic search"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 88,
+        "quote": "event spine projected via Lambda into Amazon Neptune, dense vectors, RAG pipeline, piloted to doctors and sales"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 269,
+        "quote": "The hard half is \"cases like this one\": similarity of symptom phrasing,"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 725,
+        "quote": "Authoritative serving index — dense_vector filtered kNN plus denormalised"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 758,
+        "quote": "LangGraph · interrupts"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 760,
+        "quote": "durable human-in-the-loop pauses (e.g. reviewing gate-suppressed queries)."
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 236,
+        "quote": "For a chronic-care platform covering 80+ conditions"
+      }
+    ],
+    "risk": "low",
+    "note": "Keeps 'pipeline' and adds no status word: journey 88 says 'piloted to doctors and sales' while kq1:261 says 'Live in production', so the bullet stays status-neutral. Drops 'filtered nearest-neighbour' and 'keeping Amazon Neptune off the serving path' for length; Neptune survives in Pioneered and Sealed. 'Semantic search' names what the dense-vector similarity over symptom phrasing does (kq1:269-272).",
+    "adjudication": "trim (main session, 29 Sep 2026): Trimmed: the human-in-the-loop review of gate-suppressed queries rests only on an e.g. in the stack table (kq1:758-760), not on a record that it ran. Cut, not softened; the Reconciled bullet carries human-in-the-loop.",
+    "applied_html": "Engineered a retrieval-augmented generation (RAG) pipeline on <strong>Elasticsearch dense_vector</strong> semantic search across <strong>80+ chronic conditions</strong>, keeping <strong>Amazon Neptune</strong> off the serving path"
+  },
+  {
+    "id": "vp-02",
+    "section_id": "quick-vp",
+    "ord": 8,
+    "action": "edit",
+    "old_text": "Tuned precedent retrieval on Elasticsearch dense_vector search with self-hosted Amazon SageMaker embedders, designed against warm-path P99 under 200 ms and 0.75 normalised discounted cumulative gain",
+    "new_html": "Tuned precedent retrieval with self-hosted <strong>Amazon SageMaker</strong> embedders, <strong>LangSmith</strong> tracing and an offline evaluation harness, designed against <strong>0.75 normalised discounted cumulative gain</strong>",
+    "new_text": "Tuned precedent retrieval with self-hosted Amazon SageMaker embedders, LangSmith tracing and an offline evaluation harness, designed against 0.75 normalised discounted cumulative gain",
+    "leading_verb": "Tuned",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "AI evaluation practices",
+      "monitoring, observability",
+      "AWS AI/ML services"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 723,
+        "quote": "Self-hosted embedding model, in-VPC; vectors cached by content hash + model version."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 765,
+        "quote": "Deployed inside the VPC, so production tracing and evaluation datasets run without PHI ever"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 783,
+        "quote": "NDCG@10≥ 0.75The top of the list is what the clinician actually reads."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 794,
+        "quote": "in the design, wired into an offline harness, and version-pinned so a score can never be quoted without the"
+      }
+    ],
+    "risk": "low",
+    "note": "'designed against' is kept: 0.75 is a pre-registered target, not a measurement (kq1:793, 935). The warm-path P99 under 200 ms target is dropped for length. The clinician-graded 100+ golden set is deliberately not claimed: kq1:776 calls it the evaluation contract the design ships with, and whether it was labelled is his to confirm.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-03",
+    "section_id": "quick-vp",
+    "ord": 10,
+    "action": "edit",
+    "old_text": "Assembled a 10-query decision-intelligence platform on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal — on Amazon Neptune",
+    "new_html": "Assembled a <strong>10-query</strong> decision-intelligence platform in <strong>Python and FastAPI</strong> on <strong>4 reusable archetypes</strong>, including a deterministic <strong>multi-agent LangGraph</strong> workflow with <strong>3 parallel finder agents</strong>",
+    "new_text": "Assembled a 10-query decision-intelligence platform in Python and FastAPI on 4 reusable archetypes, including a deterministic multi-agent LangGraph workflow with 3 parallel finder agents",
+    "leading_verb": "Assembled",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "agentic workflows",
+      "Agentic AI & Workflow Orchestration",
+      "agent-based architectures",
+      "Establish reusable integration patterns"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 678,
+        "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 238,
+        "quote": "operations — and took it to production. It is answered by a deterministic multi-agent orchestrator"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 440,
+        "quote": "is a declared, deterministic LangGraph state graph. Its edges are fixed code; the only place"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 444,
+        "quote": "Parallel blind finders — three finder agents (finance, adherence, ops) fan out from"
+      }
+    ],
+    "risk": "low",
+    "note": "Journey 678 sits in a block folded in from the résumé (journey 674); KQ10 carries the multi-agent graph itself. 'on Amazon Neptune' and the four archetype names are dropped for length. Avoids the word 'orchestrator': the stem 'orchestrat' is taken by Deque's Orchestrated bullet (docs/reference.md). No 'production' status word added.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-04",
+    "section_id": "quick-vp",
+    "ord": 11,
+    "action": "edit",
+    "old_text": "Instituted event sourcing on DynamoDB single-table design with a deterministic Parquet snapshot exporter and correction-event backbone, targeting P95 under 5 minutes for dependency-targeted slice rebuilds",
+    "new_html": "Instituted event sourcing on <strong>DynamoDB single-table</strong> design, hydrating <strong>9–10 years</strong> of patient history through quarantine-first data-quality gates with <strong>event-time provenance</strong> and deterministic Parquet snapshots",
+    "new_text": "Instituted event sourcing on DynamoDB single-table design, hydrating 9–10 years of patient history through quarantine-first data-quality gates with event-time provenance and deterministic Parquet snapshots",
+    "leading_verb": "Instituted",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Design and govern data flows",
+      "Ensure data quality, security, lineage, and compliance requirements are addressed",
+      "Data & Knowledge Integration"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 677,
+        "quote": "Event-sourced architecture on DynamoDB single-table with deterministic parquet snapshot exporter"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 378,
+        "quote": "snapshots, and the index — a quarantine-first, proof-carrying load, not a throwaway backfill."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 392,
+        "quote": "quarantined with a reason, never defaulted. A defaulted tenant would be a cross-tenant leak, the exact"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 414,
+        "quote": "SNAP --> VAL{Proof gateszero event loss · hydrate-twice identical hash ·as-of spot checks · golden replay}"
+      },
+      {
+        "file": "killer-query-case-studies/kq2-outcome-correlation.html",
+        "line": 428,
+        "quote": "Fig 4 · Event-time provenance — the two timestamps that drive every as-of number come from the record"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 935,
+        "quote": "The platform served roughly 10,000 patients, over about nine years of history hydrated into the event spine."
+      }
+    ],
+    "risk": "low",
+    "note": "'9–10 years' is CLAUDE.md's safe marker (the case studies say 'about nine'). Trade: drops the correction-event backbone and the 'P95 under 5 minutes' target to carry data quality and provenance, the JD's data-governance words. 'Provenance' is kept rather than 'lineage' because it is the record's own word.",
+    "adjudication": "trim (main session, 29 Sep 2026): Trimmed: 'event-time provenance' is the four-timestamp split, which the interview-prep ledger lists as not yet confirmed as shipped. The quarantine-first gates stand on kq1:378-414.",
+    "applied_html": "Instituted event sourcing on <strong>DynamoDB single-table</strong> design, hydrating <strong>9–10 years</strong> of patient history through quarantine-first data-quality gates and deterministic Parquet snapshots"
+  },
+  {
+    "id": "vp-05",
+    "section_id": "quick-vp",
+    "ord": 13,
+    "action": "edit",
+    "old_text": "Secured protected health information inside the client virtual private cloud by self-hosting embeddings and Llama 3.1 for every model call",
+    "new_html": "Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1 (8B workhorse, 70B escalation)</strong> for every model call",
+    "new_text": "Secured protected health information inside the client virtual private cloud by self-hosting embeddings and Llama 3.1 (8B workhorse, 70B escalation) for every model call",
+    "leading_verb": "Secured",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Guide technical decisions regarding model usage",
+      "privacy-by-design",
+      "security-by-design"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 689,
+        "quote": "subgraph VPC[Client VPC · PHI never crosses this boundary]"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 742,
+        "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC."
+      }
+    ],
+    "risk": "low",
+    "note": "Adds only the model-size routing decision from kq1:742, which is the JD's 'model usage' decision; the privacy boundary is unchanged.",
+    "adjudication": "trim (main session, 29 Sep 2026): 8B/70B written out so the short forms are expanded (24 words).",
+    "applied_html": "Secured protected health information inside the client <strong>virtual private cloud</strong> by self-hosting embeddings and <strong>Llama 3.1 (8-billion-parameter workhorse, 70-billion escalation)</strong> for every model call"
+  },
+  {
+    "id": "vp-06",
+    "section_id": "quick-vp",
+    "ord": 16,
+    "action": "edit",
+    "old_text": "Hardened ten production analytics services through structured adversarial self-review, absorbing twenty findings into one design and holding another dark until its upstream contract shipped",
+    "new_html": "Hardened <strong>10 production analytics services</strong> through structured adversarial design reviews, absorbing <strong>twenty findings</strong> into one revision and promoting cross-cutting fixes into shared platform components",
+    "new_text": "Hardened 10 production analytics services through structured adversarial design reviews, absorbing twenty findings into one revision and promoting cross-cutting fixes into shared platform components",
+    "leading_verb": "Hardened",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Lead architecture reviews",
+      "Establish reusable integration patterns, architecture standards, and technical governance practices",
+      "Drive production readiness"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 803,
+        "quote": "Before calling anything done, I run it through structured adversarial self-review — a"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 917,
+        "quote": "twenty findings across correctness, statistics, governance, and operations, with an"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 926,
+        "quote": "The twenty query-local findings were absorbed directly into this design body: the overlap-window"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 931,
+        "quote": "backbone, and the deterministic patient-chain artifact — were promoted into shared platform components"
+      }
+    ],
+    "risk": "medium",
+    "note": "'Adversarial design reviews' is how the case studies label the rounds ('Design review · rounds 1–3', kq1:807); they are self-reviews under an assigned lens (kq1:803), so he should not describe them as a review board he chaired. 'ten' becomes '10' so the row carries a digit. 'Twenty findings in a hardened v2' is a CLAUDE.md safe marker. Drops 'holding another dark until its upstream contract shipped'.",
+    "adjudication": "trim (main session, 29 Sep 2026): 'self-review' restored: the source (kq1:803, kq10:915) and score.html both say these were reviews of his own designs, not a board he chaired.",
+    "applied_html": "Hardened <strong>10 production analytics services</strong> through structured adversarial self-review, absorbing <strong>twenty findings</strong> into one revision and promoting cross-cutting fixes into shared platform components"
+  },
+  {
+    "id": "vp-07",
+    "section_id": "quick-vp",
+    "ord": 19,
+    "action": "edit",
+    "old_text": "Distilled patient event histories into a relapse early-warning model on Amazon SageMaker, gated by a 6-month maturity window never to train on immature outcome labels",
+    "new_html": "Distilled patient event histories into a relapse early-warning model on <strong>Amazon SageMaker</strong>, with nightly batch scoring, drift-triggered retraining and a <strong>6-month</strong> label-maturity gate",
+    "new_text": "Distilled patient event histories into a relapse early-warning model on Amazon SageMaker, with nightly batch scoring, drift-triggered retraining and a 6-month label-maturity gate",
+    "leading_verb": "Distilled",
+    "word_count": 23,
+    "jd_phrases_covered": [
+      "MLOps / LLMOps",
+      "AWS AI/ML services",
+      "monitoring"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 255,
+        "quote": "6 moOf matured relapse labels gate training — the model does not learn from, or score, an immature outcome window"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 769,
+        "quote": "Hosts the sequence model and runs nightly batch-transform scoring; the weekly retrain runs"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 847,
+        "quote": "Drift on the token vocabulary or its distribution triggers a retrain before scores quietly"
+      }
+    ],
+    "risk": "low",
+    "note": "Replaces 'gated by a 6-month maturity window never to train on immature outcome labels' with the operating loop (nightly batch transform, drift-triggered retrain) while keeping the 6-month gate. No outcome figure is claimed; KQ4's lift and precision numbers are targets (kq4:255-261).",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-08",
+    "section_id": "quick-vp",
+    "ord": null,
+    "action": "add",
+    "old_text": null,
+    "new_html": "Facilitated AI discovery with the <strong>client's chief executive</strong>, defining killer queries across <strong>80+ chronic conditions</strong> that separated real AI from a demo",
+    "new_text": "Facilitated AI discovery with the client's chief executive, defining killer queries across 80+ chronic conditions that separated real AI from a demo",
+    "leading_verb": "Facilitated",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "Serve as a trusted technical advisor to product, engineering, architecture, security, and business stakeholders",
+      "Strong communication, stakeholder management"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 218,
+        "quote": "We sat down with the client's chief executive and defined what we called killer queries — the questions that, if we could answer them properly, meant the AI was real rather than a demo."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 618,
+        "quote": "Embedded client engagement at Amura Health, Chennai — chronic disease reversal platform."
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 236,
+        "quote": "For a chronic-care platform covering 80+ conditions"
+      }
+    ],
+    "risk": "new-substance",
+    "note": "The only add. Suggested position: right after Assembled (ord 10). Stem 'facilitat' has zero hits in the master. 'Discovery' rather than 'workshops': the source says 'sat down with'. The 80+ conditions scope the platform, not a count of queries. Optional: CLAUDE.md's Rule 7 prefers edits in place, so drop this one if the role is already long enough at 24 bullets.",
+    "adjudication": "cut (main session, 29 Sep 2026): Cut: the source says 'We sat down with' the chief executive (journey 218); 'Facilitated' upgrades that, and the 80+ conditions scope the platform, not the killer queries. It was the only optional add."
+  },
+  {
+    "id": "deque-01",
+    "section_id": "quick-deque",
+    "ord": 3,
+    "action": "edit",
+    "old_text": "Forged central authentication in Java and Spring Boot, migrating every instance from Keycloak to Red Hat single sign-on — users, roles, client registrations, groups, zero disruption",
+    "new_html": "Forged central identity in <strong>Spring Boot</strong>, moving every instance from <strong>Keycloak</strong> to <strong>Red Hat single sign-on</strong> over <strong>OpenID Connect and OAuth 2.0</strong>, zero disruption",
+    "new_text": "Forged central identity in Spring Boot, moving every instance from Keycloak to Red Hat single sign-on over OpenID Connect and OAuth 2.0, zero disruption",
+    "leading_verb": "Forged",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "security controls",
+      "security-by-design",
+      "Enterprise Integration Architecture"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 567,
+        "quote": "migrated from isolated Keycloak to central Red Hat single sign-on with zero end-user disruption. OpenID Connect and OAuth 2.0 flows configured across realms, clients, roles and groups."
+      }
+    ],
+    "risk": "low",
+    "note": "Same edit as Tachyon's deque-01. Trade: drops 'Java and' and the 'users, roles, client registrations, groups' list to fit OpenID Connect and OAuth 2.0; Java stays on Steered and Productized in the same role.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "deque-02",
+    "section_id": "quick-deque",
+    "ord": 7,
+    "action": "edit",
+    "old_text": "Championed decomposition of a monolith into 10–15 services, splitting on independent scaling and database ownership rather than on team boundaries",
+    "new_html": "Championed decomposition of a monolith into <strong>10–15 microservices</strong>, splitting on independent scaling and database ownership rather than on team boundaries",
+    "new_text": "Championed decomposition of a monolith into 10–15 microservices, splitting on independent scaling and database ownership rather than on team boundaries",
+    "leading_verb": "Championed",
+    "word_count": 20,
+    "jd_phrases_covered": [
+      "microservices"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 570,
+        "quote": "Roughly **10–15 services** by the time you left, starting from a monolith."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 600,
+        "quote": "a component became a microservice if it needed to scale independently or needed its own database"
+      }
+    ],
+    "risk": "low",
+    "note": "One word: 'services' to 'microservices', the JD's required-qualification word.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "teletext-01",
+    "section_id": "quick-teletext",
+    "ord": 1,
+    "action": "edit",
+    "old_text": "Codified a parallel scatter-gather across 25 hotel suppliers on a MuleSoft enterprise service bus, superseding a .NET 2.0 stack a prior team could not upgrade",
+    "new_html": "Codified parallel scatter-gather integration across <strong>25 hotel supplier APIs</strong> on a <strong>MuleSoft enterprise service bus</strong>, superseding <strong>.NET 2.0</strong> a prior team could not upgrade",
+    "new_text": "Codified parallel scatter-gather integration across 25 hotel supplier APIs on a MuleSoft enterprise service bus, superseding .NET 2.0 a prior team could not upgrade",
+    "leading_verb": "Codified",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "integration patterns",
+      "APIs",
+      "Enterprise Integration Architecture",
+      "third-party services"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 411,
+        "quote": "Implemented Scatter Gather pattern to parallely call the configured suppliers and get the prices and display that to internal users."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 409,
+        "quote": "written in .NET 2.0 but the previous team failed to update this to .NET 4.0."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 423,
+        "quote": "we call the supplier's endpoint and serve it to the users & cache it."
+      }
+    ],
+    "risk": "low",
+    "note": "Same edit as Tachyon's teletext-01. '25' is the master's figure; journey 415 still has 25 against 25–30 as open, unchanged here. APIs is expanded earlier in reading order (Key Skills).",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "teletext-02",
+    "section_id": "quick-teletext",
+    "ord": 3,
+    "action": "edit",
+    "old_text": "Reconciled per-supplier hotel identifiers onto licensed GIATA MultiCodes, automating the pipeline on AWS Lambda with human approval retained, growing revenue 8% month over month",
+    "new_html": "Reconciled per-supplier hotel identifiers onto licensed <strong>GIATA MultiCodes</strong>, automating the pipeline on <strong>AWS Lambda</strong> with human-in-the-loop approval retained, growing revenue <strong>8% month over month</strong>",
+    "new_text": "Reconciled per-supplier hotel identifiers onto licensed GIATA MultiCodes, automating the pipeline on AWS Lambda with human-in-the-loop approval retained, growing revenue 8% month over month",
+    "leading_verb": "Reconciled",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "human-in-the-loop controls",
+      "workflow automation",
+      "vendor management",
+      "data quality"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 437,
+        "quote": "Use GIATA multicodes to reconcile this list which helped increase the revenue by 8% month on month."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 438,
+        "quote": "automated the same using AWS Lambda. Approval was still with me"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 446,
+        "quote": "automate the reconciliation pipeline around it on AWS Lambda, keeping the approval step yourself"
+      }
+    ],
+    "risk": "low",
+    "note": "One change: 'human approval' to 'human-in-the-loop approval'. The 8% month-over-month figure is carried unchanged; journey 452 has it open (sustained or one-time), his call.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  }
+]

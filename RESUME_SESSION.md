@@ -1,13 +1,24 @@
 # RESUME_SESSION.md
 
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
-Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-29**, when he closed the terminal.
+Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-29**, after the Lilly and Sahaj builds.
 
-## START HERE (29 Sep 2026)
-- **The server is STOPPED** (he asked on 29 Sep). Start it before any localhost link:
-  `automation/.venv/bin/python automation/serve.py` (port 8006). He is fine with it running in
-  Claude's shell.
-- **Nothing is running and everything is committed and pushed** (branch `qa`).
+## START HERE (29 Sep 2026, afternoon)
+- **Two seats are ready and unsent**, both from `jd-list/sept-2026-29/sep-29-2026_1.md`, built
+  with one 3-agent workflow each, run side by side (6 agents at once: his explicit call over the
+  4-per-turn rule). Run IDs and outcomes in `PENDING.md`.
+  - **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (Bengaluru East, on-site):
+    `September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`. Technical 87.90
+    (master 84.28). Apply through Lilly's Workday, requisition R-112121, open until 28 Oct 2026.
+  - **Sahaj Software, Principal Engineer** (Hyderabad, on-site; employees report 2–3 office days):
+    `September-2026/29/sahaj-principal-engineer/`. Technical 84.90 (master 83.04), bound by
+    test-driven development (TDD), which his record never names: "automated testing", never TDD.
+  - Each has a verified `.docx` (35/35; page count is his to check in Word), the Tech mismatch as
+    its own tab (his choice for both, 29 Sep), and a "Settle before sending" list on the résumé
+    page: the 70–80%, P95 16 ms, "Java 11 yrs", Keycloak "zero disruption", P95 30 ms/100,000.
+  - Seat résumé edits are re-runnable: `db/operations/seat_edits_<slug>.sql`.
+- **The server is running in Claude's shell** (port 8006); it stops when the session ends.
+- When he says one went: mark it applied, log it, and suggest JD topics the prep repo lacks.
 - **Nielsen's Tech mismatch tab is key for his preparation** (his words, 28 Sep). It is its own tab,
   `mismatch.html`, listed in that workspace's `workspace.json` (Nielsen only, his choice):
   http://localhost:8006/September-2026/28/nielsen-principal-member-technical-staff/index.html#mismatch

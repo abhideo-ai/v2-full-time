@@ -1,0 +1,71 @@
+{
+  "slug": "sahaj-principal-engineer",
+  "scored_at": "2026-09-29",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 84.9,
+  "target": 95,
+  "honest_ceiling": 85.5,
+  "binding_constraint": "Test-driven development (TDD), a core engineering value in this job description, is absent from every source (automated testing is real, test-first is never named), and the proven data volume is millions of requests a day, not billions of rows or messages.",
+  "scores": [
+    {
+      "criterion": "Hands-on production code, not review-only",
+      "weight": 0.14,
+      "score": 8.6,
+      "points": 12.04
+    },
+    {
+      "criterion": "Working across languages",
+      "weight": 0.1,
+      "score": 9.3,
+      "points": 9.3
+    },
+    {
+      "criterion": "Data-heavy distributed systems at scale",
+      "weight": 0.16,
+      "score": 8.0,
+      "points": 12.8
+    },
+    {
+      "criterion": "Analytical data modelling and datastores",
+      "weight": 0.08,
+      "score": 8.3,
+      "points": 6.64
+    },
+    {
+      "criterion": "Brownfield modernisation into clean systems",
+      "weight": 0.14,
+      "score": 9.6,
+      "points": 13.44
+    },
+    {
+      "criterion": "TDD, refactoring, testable change-friendly code",
+      "weight": 0.12,
+      "score": 6.8,
+      "points": 8.16
+    },
+    {
+      "criterion": "Explaining design decisions, pushing back",
+      "weight": 0.08,
+      "score": 9.0,
+      "points": 7.2
+    },
+    {
+      "criterion": "Mentoring through pairing and feedback",
+      "weight": 0.08,
+      "score": 7.8,
+      "points": 6.24
+    },
+    {
+      "criterion": "Choosing technology on merit",
+      "weight": 0.06,
+      "score": 9.4,
+      "points": 5.64
+    },
+    {
+      "criterion": "Keeping streaming systems up in production",
+      "weight": 0.04,
+      "score": 8.6,
+      "points": 3.44
+    }
+  ]
+}

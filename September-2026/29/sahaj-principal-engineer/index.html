@@ -1,0 +1,41 @@
+<!doctype html>
+<!--
+  The workspace page. This file is IDENTICAL in every workspace: copy it from
+  templates/workspace/index.html and never edit the copy. What is specific to a job
+  lives in workspace.json and in the tab files it names; static/workspace.js builds
+  the page from them (its header states the contract).
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workspace</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" id="ws-crumbs"></p>
+
+<header class="wl-head">
+  <h1 id="ws-company"></h1>
+  <span class="wl-role" id="ws-role"></span>
+</header>
+
+<div class="wl-status" id="ws-status"></div>
+
+<div class="app-controls" data-page-tabs>
+  <div class="status-tabs" role="tablist" aria-label="Sections of this page"></div>
+</div>
+
+<div id="ws-panels"></div>
+
+<p class="banner" id="ws-error" hidden></p>
+
+</main>
+<script src="../../../static/page-tabs.js" defer></script>
+<script src="../../../static/copy.js" defer></script>
+<script src="../../../static/workspace.js" defer></script>
+</body>
+</html>

@@ -55,6 +55,8 @@ by sabotage, which the corrected gate catches as `want 4, have 1`.
 | `wjd09im0t` | Word paste sheet | — | **killed** — superseded by .docx |
 | `wf_37031923-139` | Nielsen PMTS seat (28 Sep 2026): research + tab pages, technical score, one adversarial check | 3 (capped) | done in 69 min: 135 claims checked, 19 findings; 17 applied, 2 set aside (the route, which he corrected in chat; confirmed-but-unjourneyed items stay out of the score). Technical 86.39 |
 | `wf_3971e59d-a9c` | Résumé story clusters (28 Sep 2026): every role as problem → decisions → outcome, with evidence; one adversarial check | 3 (capped) | done in 19 min: 66 bullets checked, 19 findings, 17 applied. Draft `master/Abhisheik_Deo_Resume_story_clusters.docx` (doc_key `variant:story-clusters`): 35/35, 273 of 279 terms kept; master untouched |
+| `wf_4dd4f80c-a7a` | Eli Lilly Sr. Principal Engineer AI/ML System Integration (29 Sep 2026): research + pages, score + résumé proposals, one adversarial check | 3 (capped) | done in 31 min: 165 claims checked, 17 findings. 12 edits proposed, 9 kept (3 trimmed, 1 cut, 1 add cut); research fixes applied. Technical 87.90 (master 84.28); `.docx` 35/35 |
+| `wf_ddfddd8a-56c` | Sahaj Software Principal Engineer (29 Sep 2026): same script, run alongside Lilly (6 agents at once, his call) | 3 (capped) | done in 30 min: 150 claims checked, 13 findings. 7 edits proposed, 6 kept (vp-01 cut, vp-04 trimmed). Technical 84.90 (master 83.04), bound by TDD; `.docx` 35/35 |
 
 ---
 

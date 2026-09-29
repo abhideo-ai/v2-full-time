@@ -1,0 +1,15 @@
+{
+  "slug": "sahaj-principal-engineer",
+  "company": "Sahaj Software",
+  "role": "Principal Engineer",
+  "route": "job posting (LinkedIn)",
+  "received": "2026-09-29",
+  "resume_changes": "resume_changes_for_85pct_match.html",
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "id": "vp-01",
+    "section_id": "quick-vp",
+    "ord": 4,
+    "action": "edit",
+    "old_text": "Reimagined the data layer across DynamoDB, PostgreSQL and OpenSearch with partition-key and indexing design holding P95 under 30 ms at 100,000-user load",
+    "new_html": "Reimagined the data layer of <strong>8 analytics services</strong> as tenant-partitioned <strong>Parquet</strong> tables on <strong>DuckDB</strong>, pre-computed nightly so each request reads a finished cell",
+    "new_text": "Reimagined the data layer of 8 analytics services as tenant-partitioned Parquet tables on DuckDB, pre-computed nightly so each request reads a finished cell",
+    "leading_verb": "Reimagined",
+    "word_count": 23,
+    "jd_phrases_covered": [
+      "Redesign a ClickHouse schema so an ad buyer can query 85 billion rows in under two seconds",
+      "data-heavy, distributed",
+      "Choosing the right technology, not the fashionable one"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 839,
+        "quote": "Snapshot-only analytical store: cohort, matched-control, and metric tables partitioned by tenant,"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 785,
+        "quote": "reads a pre-computed cell from the"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 786,
+        "quote": "The nightly lane runs offline with"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 767,
+        "quote": "score, and dependency tables partitioned by tenant and snapshot hash."
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 259,
+        "quote": "Role Sole owner — design through production"
+      }
+    ],
+    "risk": "medium",
+    "note": "Same topic (the data layer), re-vectored to the analytical store the case studies actually describe. The count of 8 is the case studies whose stack names Parquet + DuckDB: kq2:780, kq3:740, kq4:765, kq5:802, kq6:862, kq7:778, kq8:820, kq10:838 (kq1 and kq9 do not). The master wording it replaces is not in the journey: PostgreSQL at this role, 'P95 under 30 ms' and '100,000-user load' (Tachyon's adjudication flagged the first two). The 100,000 open claim is untouched in quick-vp 2 and 3; nothing is resolved here. 'analytics services' matches Hardened's 'ten production analytics services': 8 of those ten.",
+    "adjudication": "cut (main session, 29 Sep 2026): Cut: the count of 8 is ours (from the case studies, one of which, kq4, does not read a finished cell), the journey never names DuckDB or Parquet tables, and the rewrite replaced the whole bullet. The master bullet stands; its PostgreSQL 'P95 under 30 ms' and '100,000-user' are open items for him."
+  },
+  {
+    "id": "vp-02",
+    "section_id": "quick-vp",
+    "ord": 10,
+    "action": "edit",
+    "old_text": "Assembled a 10-query decision-intelligence platform on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal — on Amazon Neptune",
+    "new_html": "Assembled a <strong>10-query</strong> decision-intelligence platform in <strong>Python (FastAPI, LangChain, LangGraph)</strong> on <strong>4 reusable archetypes</strong> — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal",
+    "new_text": "Assembled a 10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal",
+    "leading_verb": "Assembled",
+    "word_count": 21,
+    "jd_phrases_covered": [
+      "Work across languages when needed, not just your comfort zone",
+      "Python",
+      "ships_code"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 678,
+        "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 690,
+        "quote": "Retrieval API FastAPI"
+      }
+    ],
+    "risk": "low",
+    "note": "The Tachyon wording, already adjudicated on 24 Sep 2026. Python is otherwise only in the skills list; this puts it in an experience bullet next to Java, Go and Node.js/TypeScript elsewhere. 'on Amazon Neptune' trimmed for length; Neptune stays in Pioneered, Engineered and Sealed.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-03",
+    "section_id": "quick-vp",
+    "ord": 11,
+    "action": "edit",
+    "old_text": "Instituted event sourcing on DynamoDB single-table design with a deterministic Parquet snapshot exporter and correction-event backbone, targeting P95 under 5 minutes for dependency-targeted slice rebuilds",
+    "new_html": "Instituted event sourcing on <strong>DynamoDB single-table</strong> design, hydrating <strong>9–10 years of patient history</strong>, with a deterministic <strong>Parquet</strong> exporter checked by <strong>byte-for-byte</strong> golden-replay regression",
+    "new_text": "Instituted event sourcing on DynamoDB single-table design, hydrating 9–10 years of patient history, with a deterministic Parquet exporter checked by byte-for-byte golden-replay regression",
+    "leading_verb": "Instituted",
+    "word_count": 23,
+    "jd_phrases_covered": [
+      "Code that is simple, testable, and built to change",
+      "TDD, refactoring, and continuous improvement - not as rituals, but as tools",
+      "sitting on top of something that already exists"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 677,
+        "quote": "Event-sourced architecture on DynamoDB single-table with deterministic parquet snapshot exporter"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 935,
+        "quote": "The platform served roughly 10,000 patients, over about nine years of history hydrated into the event spine."
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 849,
+        "quote": "Golden regression byte-for-byte"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 850,
+        "quote": "Pinned fixtures — late arrivals, corrections, and supersede chains from the shared exporter's"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 851,
+        "quote": "golden replay — must reproduce identical results across rebuilds."
+      },
+      {
+        "file": "killer-query-case-studies/kq2-outcome-correlation.html",
+        "line": 872,
+        "quote": "exporter replay test, four-field event-time schema) so every sibling cohort query inherits the same"
+      }
+    ],
+    "risk": "medium",
+    "note": "Automated regression testing, said as exactly that; it never says test-driven development. '9–10 years of patient history' is a CLAUDE.md safe marker. Drops 'correction-event backbone' and the target 'P95 under 5 minutes' (a target, so dropping it loses no measurement). Agent 3 should check that the golden regression is part of what shipped: it sits in the case studies' acceptance tables, and each case study reads 'Live in production'.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-04",
+    "section_id": "quick-vp",
+    "ord": 24,
+    "action": "edit",
+    "old_text": "Drove a measured Claude Code and OpenAI Codex rollout across a 20-engineer team, covering daily design exploration, first-cut implementation and test scaffolding under review",
+    "new_html": "Drove <strong>Claude Code and OpenAI Codex</strong> adoption across a <strong>20-engineer</strong> team, reviewing daily design exploration, first-cut implementations and test scaffolding <strong>hands-on</strong>",
+    "new_text": "Drove Claude Code and OpenAI Codex adoption across a 20-engineer team, reviewing daily design exploration, first-cut implementations and test scaffolding hands-on",
+    "leading_verb": "Drove",
+    "word_count": 21,
+    "jd_phrases_covered": [
+      "The people around you write better code because you are there. You mentor through pairing and feedback, not hierarchy",
+      "You still build. Regularly. In production."
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 669,
+        "quote": "Embedded Claude Code + OpenAI Codex across the ~20-engineer team — daily architectural exploration, first-cut implementations, test scaffolding, all under hands-on review."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 220,
+        "quote": "daily architectural exploration and first-cut implementations, all under hands-on review"
+      }
+    ],
+    "risk": "low",
+    "note": "Drops 'a measured ... rollout': the journey has no measurement of this rollout (672, OPEN), and 'measured' can be read as one. Puts the review first, which is the feedback half of the JD's mentoring line. The journey says '~20'; the master's '20-engineer' is kept.",
+    "adjudication": "trim (main session, 29 Sep 2026): Trimmed: this JD rules out a 'review-only' architect, so reviewing is not made the main action. Only 'measured' is dropped (no measurement exists, journey 672) and 'hands-on' added (journey 669). Hands-on row held at 8.6.",
+    "applied_html": "Drove a <strong>Claude Code and OpenAI Codex</strong> rollout across a <strong>20-engineer</strong> team, covering daily design exploration, first-cut implementation and test scaffolding under <strong>hands-on review</strong>"
+  },
+  {
+    "id": "deque-01",
+    "section_id": "quick-deque",
+    "ord": 1,
+    "action": "edit",
+    "old_text": "Implemented multi-tenant isolation across 280 axe Monitor clients, adding an organisation identifier to every table and resolving tenant from the JSON Web Token (JWT)",
+    "new_html": "Implemented multi-tenant isolation for <strong>280 axe Monitor clients</strong> — organisation identifier on every table, tenant from the <strong>JSON Web Token (JWT)</strong>, guarded by <strong>automated tests</strong>",
+    "new_text": "Implemented multi-tenant isolation for 280 axe Monitor clients — organisation identifier on every table, tenant from the JSON Web Token (JWT), guarded by automated tests",
+    "leading_verb": "Implemented",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Code that is simple, testable, and built to change",
+      "sitting on top of something that already exists and isn't perfect"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 196,
+        "quote": "isolation is enforced by review plus automated tests — because a leak across organisations is a compliance failure, not a bug"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 597,
+        "quote": "Chosen: organisation ID on every table, with the tenant resolved from the JWT on every incoming request"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 599,
+        "quote": "Isolation was enforced by rigorous review plus automated testing"
+      }
+    ],
+    "risk": "low",
+    "note": "280 is his settled count (27 Aug 2026), already on the master; journey 530 still says ~300. Line 599 sits under a heading marked 'reconstructed ... confirm and correct' (594); line 196 carries the same fact in the narration, which is built only from confirmed material (110). 'guarded' avoids 'enforcing', whose root is the leading verb Enforced (quick-vp 14).",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "deque-02",
+    "section_id": "quick-deque",
+    "ord": 7,
+    "action": "edit",
+    "old_text": "Championed decomposition of a monolith into 10–15 services, splitting on independent scaling and database ownership rather than on team boundaries",
+    "new_html": "Championed decomposition of a monolith into <strong>10–15 services</strong> on one rule: a service earns its own process to scale independently or own its data",
+    "new_text": "Championed decomposition of a monolith into 10–15 services on one rule: a service earns its own process to scale independently or own its data",
+    "leading_verb": "Championed",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Engineers who can explain their design decisions clearly",
+      "Break down messy problems into clean, maintainable systems"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 198,
+        "quote": "the rule for what became a service was simple: it earns its own process if it needs to scale independently or needs to own its data"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 570,
+        "quote": "Roughly 10–15 services by the time you left, starting from a monolith."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 600,
+        "quote": "a component became a microservice if it needed to scale independently or needed its own database"
+      }
+    ],
+    "risk": "low",
+    "note": "States the design rule in his own words. Removes 'rather than on team boundaries', which is not in the journey. 'scale' mid-bullet shares a root with the leading verb Scaled (quick-vp 3), but the master already had 'independent scaling' here, so nothing new collides.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "rocket-01",
+    "section_id": "quick-rocket",
+    "ord": 1,
+    "action": "edit",
+    "old_text": "Anchored decomposition of the IBM Db2 Configuration Manager monolith into Java and Spring Boot microservices, defining boundaries across z/OS mainframe and distributed platforms",
+    "new_html": "Anchored decomposition of the <strong>IBM Db2 Configuration Manager</strong> monolith into <strong>Java and Spring Boot</strong> microservices across <strong>z/OS mainframe</strong> and distributed platforms, with no customer-visible impact",
+    "new_text": "Anchored decomposition of the IBM Db2 Configuration Manager monolith into Java and Spring Boot microservices across z/OS mainframe and distributed platforms, with no customer-visible impact",
+    "leading_verb": "Anchored",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "often sitting on top of something that already exists and isn't perfect",
+      "Break down messy problems into clean, maintainable systems",
+      "Java"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 124,
+        "quote": "A Db2 tooling monolith nobody could maintain | Java + Spring Boot microservices, customers never saw it"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 128,
+        "quote": "The Rocket decomposition shipped without customer-visible impact."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 486,
+        "quote": "Configuration Manager for DB2 on z/os & LUW"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 488,
+        "quote": "decomposing the existing monolith into microservices by defining the boundaries"
+      }
+    ],
+    "risk": "low",
+    "note": "Adds the brownfield result the journey records (124, 128). 'defining boundaries' is traded for it to stay within 25 words; 'decomposition' still carries it. None of the four open Rocket metrics is touched.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  }
+]
