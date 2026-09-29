@@ -1,0 +1,95 @@
+{
+  "slug": "epiq-lead-software-engineer",
+  "scored_at": "2026-09-29",
+  "rubric": "v2 weighted technical",
+  "weighted_total": 85.45,
+  "target": 95,
+  "honest_ceiling": 86.45,
+  "binding_constraint": "Two core requirement lines the journey cannot fully answer: modern web front ends (React is absent and his single-page-app work dates from 2013-15) and named DevOps tooling (Kubernetes is open; Infrastructure as Code, GitHub Actions and Azure DevOps are not in the journey).",
+  "scores": [
+    {
+      "criterion": "Hands-on enterprise applications, APIs and services in Python and/or Java",
+      "weight": 0.12,
+      "score": 9.3,
+      "points": 11.16
+    },
+    {
+      "criterion": "Distributed systems, microservices and cloud-native architecture",
+      "weight": 0.1,
+      "score": 9.2,
+      "points": 9.2
+    },
+    {
+      "criterion": "Integrations and enterprise integration patterns",
+      "weight": 0.06,
+      "score": 9.0,
+      "points": 5.4
+    },
+    {
+      "criterion": "Modern web front ends (React or similar)",
+      "weight": 0.07,
+      "score": 6.5,
+      "points": 4.55
+    },
+    {
+      "criterion": "Cloud: Microsoft Azure (preferred) and/or AWS",
+      "weight": 0.07,
+      "score": 8.5,
+      "points": 5.95
+    },
+    {
+      "criterion": "DevOps: CI/CD, containers, Kubernetes, Infrastructure as Code",
+      "weight": 0.08,
+      "score": 6.8,
+      "points": 5.44
+    },
+    {
+      "criterion": "Data: relational, NoSQL, enterprise data platforms",
+      "weight": 0.07,
+      "score": 8.6,
+      "points": 6.02
+    },
+    {
+      "criterion": "Technical leadership: reviews, standards, mentoring, stakeholders",
+      "weight": 0.1,
+      "score": 8.8,
+      "points": 8.8
+    },
+    {
+      "criterion": "Generative AI in production: LLM services, RAG, knowledge retrieval",
+      "weight": 0.12,
+      "score": 8.8,
+      "points": 10.56
+    },
+    {
+      "criterion": "Vector databases, embeddings and semantic search",
+      "weight": 0.05,
+      "score": 8.8,
+      "points": 4.4
+    },
+    {
+      "criterion": "AI orchestration frameworks and agent workflows",
+      "weight": 0.06,
+      "score": 9.2,
+      "points": 5.52
+    },
+    {
+      "criterion": "Prompt engineering, evaluation frameworks, AI observability",
+      "weight": 0.05,
+      "score": 8.7,
+      "points": 4.35
+    },
+    {
+      "criterion": "Responsible AI, security and data governance",
+      "weight": 0.03,
+      "score": 9.0,
+      "points": 2.7
+    },
+    {
+      "criterion": "AI platforms and MCP",
+      "weight": 0.02,
+      "score": 7.0,
+      "points": 1.4
+    }
+  ]
+}

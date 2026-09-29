@@ -1,19 +1,12 @@
-# Goal
+# Epiq — Lead Software Engineer
 
-- creating new workspaces for the JD's mentioned in this file.
-- use a workflow for each job & each workflow should cap at 3 agents
+**URL:** https://www.linkedin.com/jobs/view/4471321885
 
-# Epiq
+**Received:** 29 September 2026 · **Route:** LinkedIn job posting (he found it; not yet applied) · **Title on LinkedIn:** Lead Software Engineer (the JD's own summary says "Lead Software Engineer - AI Solutions") · **Location:** Hyderabad, Telangana, India, on-site, full-time · **Screenshot:** posted 1 day ago, 57 people clicked apply, promoted by hirer, responses managed off LinkedIn
 
-## Role
+**Raw intake files**, in `job-applications/September-2026/29/`: `epiq-lead-software-engineer-intake.md` (his paste, word for word, from `jd-list/sept-2026-29/sept-2026-2026_2.md`) and `epiq-lead-software-engineer-image-1.png` (his screenshot of the posting header).
 
-Lead Software Engineer
-
-## URL
-
-https://www.linkedin.com/jobs/view/4471321885
-
-## Job Description
+<!-- Paste the job description here verbatim, below this line. -->
 
 About the job
 At Epiq, your work contributes to complex, global legal outcomes. You’ll join a values‑driven community where integrity guides decisions, relentless service sets the bar, and we thrive on big challenges together. We invest in your growth with enterprise‑wide learning and mobility. We celebrate who you are, and we respect life beyond work with flexibility that’s recognized externally. Enabled by modern platforms and AI, you’ll do the most meaningful work of your career and see your impact at scale.
@@ -135,5 +128,3 @@ Use clear documentation and expectations
 Resolve issues quickly using data and feedback
 
 It is Epiq’s policy to comply with all applicable equal employment opportunity laws by making all employment decisions without unlawful regard or consideration of any individual’s race, religion, ethnicity, color, sex, sexual orientation, gender identity or expressions, transgender status, sexual and other reproductive health decisions, marital status, age, national origin, genetic information, ancestry, citizenship, physical or mental disability, veteran or family status or any other basis protected by applicable national, federal, state, provincial or local law. Epiq’s policy prohibits unlawful discrimination based on any of these impermissible bases, as well as any bases or grounds protected by applicable law in each jurisdiction. In addition Epiq will take affirmative action for minorities, women, covered veterans and individuals with disabilities. If you need assistance or an accommodation during the application process because of a disability, it is available upon request. Epiq is pleased to provide such assistance and no applicant will be penalized as a result of such a request. Pursuant to relevant law, where applicable, Epiq will consider for employment qualified applicants with arrest and conviction records.
-
-![img_2.png](img_2.png)

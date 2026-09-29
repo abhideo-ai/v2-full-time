@@ -1,8 +1,3 @@
-# Goal
-
-- creating new workspaces for the JD's mentioned in this file.
-- use a workflow for each job & each workflow should cap at 3 agents
-
 # Epiq
 
 ## Role

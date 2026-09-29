@@ -1,0 +1,258 @@
+[
+  {
+    "id": "vp-08",
+    "section_id": "quick-vp",
+    "ord": 8,
+    "action": "edit",
+    "old_text": "Tuned precedent retrieval on Elasticsearch dense_vector search with self-hosted Amazon SageMaker embedders, designed against warm-path P99 under 200 ms and 0.75 normalised discounted cumulative gain",
+    "new_html": "Tuned <strong>hybrid precedent retrieval</strong> — structured filters plus Elasticsearch dense_vector search on self-hosted Amazon SageMaker embeddings — designed against an evaluation contract of <strong>100+ clinician-graded golden queries</strong>",
+    "new_text": "Tuned hybrid precedent retrieval — structured filters plus Elasticsearch dense_vector search on self-hosted Amazon SageMaker embeddings — designed against an evaluation contract of 100+ clinician-graded golden queries",
+    "leading_verb": "Tuned",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "Experience with vector databases, embeddings, semantic search, knowledge retrieval systems, and AI evaluation frameworks",
+      "Guide the implementation of prompt engineering strategies, evaluation frameworks, and AI observability practices",
+      "Design scalable Retrieval-Augmented Generation (RAG) architectures and enterprise knowledge retrieval solutions"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 664,
+        "quote": "Hybrid — structured filters plus a dense-vector kNN over per-decision embeddings."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 723,
+        "quote": "Self-hosted embedding model, in-VPC; vectors cached by content hash + model version."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 725,
+        "quote": "Authoritative serving index — dense_vector filtered kNN plus denormalised"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 776,
+        "quote": "The design ships with an evaluation contract: clinician-graded golden queries (a stratified set of 100+,"
+      }
+    ],
+    "risk": "medium",
+    "note": "Keeps the verb. Swaps the two pre-registered targets (warm-path P99 under 200 ms, 0.75 NDCG) for the evaluation contract the JD asks about. 'designed against' keeps the status honest: kq1:255 and 935 say every figure is a pre-registered target and no measured results are published. 100+ is the case study's own figure (kq1:776), not a safe-list marker; agent 3 should check it. 'embedders' becomes 'embeddings'.",
+    "adjudication": "trim (main session, 29 Sep 2026): Trimmed: 'clinician-graded' read as if clinicians had graded the set; the source is a design contract, and who labels it is open (KQ1 prep notes; the Tachyon carry-over asks the same). 'specifying' makes it a specification.",
+    "applied_html": "Tuned <strong>hybrid precedent retrieval</strong> — structured filters plus Elasticsearch dense_vector search on self-hosted Amazon SageMaker embeddings — designed against an evaluation contract specifying <strong>100+ golden queries</strong>"
+  },
+  {
+    "id": "vp-10",
+    "section_id": "quick-vp",
+    "ord": 10,
+    "action": "edit",
+    "old_text": "Assembled a 10-query decision-intelligence platform on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal — on Amazon Neptune",
+    "new_html": "Assembled a <strong>10-query</strong> decision-intelligence platform in <strong>Python (FastAPI, LangChain, LangGraph)</strong> on <strong>4 reusable archetypes</strong> — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal",
+    "new_text": "Assembled a 10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) on 4 reusable archetypes — Retrieval, Cohort Aggregation, Sequence Mining, Graph Traversal",
+    "leading_verb": "Assembled",
+    "word_count": 21,
+    "jd_phrases_covered": [
+      "Strong hands-on experience developing and delivering enterprise-scale applications using Python and/or Java",
+      "Experience working with frameworks such as LangChain, Semantic Kernel, LlamaIndex, AutoGen, CrewAI, or similar technologies",
+      "Drive the adoption of reusable AI accelerators, agent workflows, and scalable AI engineering patterns"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 678,
+        "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 937,
+        "quote": "Elasticsearch dense_vector · Redis · FastAPI · LangChain + LangGraph · self-hosted LangSmith (in-VPC) ·"
+      }
+    ],
+    "risk": "low",
+    "note": "Same wording the Tachyon seat used (September-2026/24). Journey 678 sits in the block the journey marks as folded in from the résumé (journey 674); kq1:937 backs the stack. 'on Amazon Neptune' trimmed for length; Neptune survives in Engineered, Pioneered and Sealed.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-13",
+    "section_id": "quick-vp",
+    "ord": 13,
+    "action": "edit",
+    "old_text": "Secured protected health information inside the client virtual private cloud by self-hosting embeddings and Llama 3.1 for every model call",
+    "new_html": "Secured protected health information inside the client virtual private cloud, self-hosting embeddings, <strong>Llama 3.1</strong> for every model call, and <strong>LangSmith production tracing</strong>",
+    "new_text": "Secured protected health information inside the client virtual private cloud, self-hosting embeddings, Llama 3.1 for every model call, and LangSmith production tracing",
+    "leading_verb": "Secured",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "Ensure AI solutions align with security, compliance, responsible AI, and data governance requirements",
+      "Understanding of prompt engineering, model evaluation, AI observability, and performance optimization techniques"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 742,
+        "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 765,
+        "quote": "Deployed inside the VPC, so production tracing and evaluation datasets run without PHI ever"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 689,
+        "quote": "Client VPC · PHI never crosses this boundary"
+      }
+    ],
+    "risk": "low",
+    "note": "Keeps the verb and the existing claim; adds self-hosted LangSmith (AI observability), which today sits only in a skills line (quick-skills-ee 10). kq1:592 allows external embedding providers only with de-identified payloads; 'every model call' is the master's existing wording and refers to the language model.",
+    "adjudication": "trim (main session, 29 Sep 2026): Trimmed: 'production' dropped, because the journey calls this work 'piloted to doctors and sales' (journey 88).",
+    "applied_html": "Secured protected health information inside the client virtual private cloud, self-hosting embeddings, <strong>Llama 3.1</strong> for every model call, and <strong>LangSmith tracing</strong>"
+  },
+  {
+    "id": "vp-17",
+    "section_id": "quick-vp",
+    "ord": 17,
+    "action": "edit",
+    "old_text": "Extracted confounder-gated cohort comparisons behind propensity matching and standardised mean difference balance checks, making an unbalanced headline unrepresentable in the output type",
+    "new_html": "Extracted cross-domain patient cohorts through a deterministic <strong>multi-agent LangGraph</strong> state graph — <strong>3</strong> blind parallel finder agents behind a barrier that rejects hallucinated candidates",
+    "new_text": "Extracted cross-domain patient cohorts through a deterministic multi-agent LangGraph state graph — 3 blind parallel finder agents behind a barrier that rejects hallucinated candidates",
+    "leading_verb": "Extracted",
+    "word_count": 23,
+    "jd_phrases_covered": [
+      "Strong understanding of Large Language Models (LLMs), Retrieval-Augmented Generation (RAG), Agentic AI, and AI orchestration patterns",
+      "Drive the adoption of reusable AI accelerators, agent workflows, and scalable AI engineering patterns",
+      "Build and deploy AI-enabled services leveraging Large Language Models (LLMs), vector databases, and AI orchestration frameworks"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 440,
+        "quote": "is a declared, deterministic LangGraph state graph. Its edges are fixed code; the only place"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 444,
+        "quote": "Parallel blind finders — three finder agents (finance, adherence, ops) fan out from"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 446,
+        "quote": "Barrier — a fan-in node runs once, after all three finders return, and intersects"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 488,
+        "quote": "finder that hallucinates a patient cannot smuggle one into the cohort."
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 259,
+        "quote": "Sole owner — design through production"
+      }
+    ],
+    "risk": "new-substance",
+    "note": "Replaces the propensity-matching statistics bullet, which this seat does not ask for (the master keeps it). Deliberately no 'live in production' in the text: the journey never mentions KQ10, and its status rests on kq10:262 alone. 'orchestrat' is avoided because Deque's leading verb is Orchestrated. The barrier re-verifies every candidate; he should never say the agents ran unchecked (interview-prep ledger).",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-18",
+    "section_id": "quick-vp",
+    "ord": 18,
+    "action": "edit",
+    "old_text": "Strengthened statistical rigour across 6 production pipelines with B=2000 bootstrap resamples and a Rosenbaum γ plus E-value sensitivity battery, keyed by shared match_manifest_id",
+    "new_html": "Strengthened language-model access behind one <strong>LangChain provider seam</strong> over <strong>4</strong> back ends — mock, Anthropic, OpenAI, Ollama — so continuous integration exercises the exact production call path",
+    "new_text": "Strengthened language-model access behind one LangChain provider seam over 4 back ends — mock, Anthropic, OpenAI, Ollama — so continuous integration exercises the exact production call path",
+    "leading_verb": "Strengthened",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "Experience integrating solutions using Azure OpenAI, Azure AI Foundry, AWS Bedrock, Anthropic, OpenAI APIs, or equivalent AI platforms",
+      "Design integrations between AI platforms, enterprise systems, APIs, and data sources",
+      "Partner with DevOps teams to implement CI/CD pipelines, deployment automation, observability, and operational best practices"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 741,
+        "quote": "One provider door returning a BaseChatModel — mock, Anthropic, OpenAI, or Ollama."
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 753,
+        "quote": "The offline mock is a real BaseChatModel, so CI exercises the exact production"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 742,
+        "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC."
+      }
+    ],
+    "risk": "medium",
+    "note": "Replaces the bootstrap and sensitivity-battery statistics bullet (kept in the master). The bullet says the seam supports four back ends; it does not say Anthropic or OpenAI ran in production, and in the room he should say production ran self-hosted Llama 3.1 through Ollama (kq1:742). Stem 'strength' has no other hit in the master.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  },
+  {
+    "id": "vp-19",
+    "section_id": "quick-vp",
+    "ord": 19,
+    "action": "edit",
+    "old_text": "Distilled patient event histories into a relapse early-warning model on Amazon SageMaker, gated by a 6-month maturity window never to train on immature outcome labels",
+    "new_html": "Distilled the client's investment goal into killer queries agreed with its <strong>chief executive</strong> — <strong>10 questions</strong> to prove the artificial intelligence real, not a demo",
+    "new_text": "Distilled the client's investment goal into killer queries agreed with its chief executive — 10 questions to prove the artificial intelligence real, not a demo",
+    "leading_verb": "Distilled",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Collaborate with Product Owners and stakeholders to translate business requirements into scalable technical solutions",
+      "Collaborate with architects, data engineers, and business stakeholders to identify and prioritize AI use cases"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 214,
+        "quote": "The business goal was to raise investment on the strength of AI in the product."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 218,
+        "quote": "We sat down with the client's chief executive and defined what we called killer queries — the questions that, if we could answer them properly, meant the AI was real rather than a demo."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 678,
+        "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
+      }
+    ],
+    "risk": "medium",
+    "note": "Replaces the relapse early-warning model bullet (kept in the master); SageMaker still appears in Tuned. The count of 10 comes from the platform (journey 678, ten case studies); journey 218 does not say all ten were agreed in that one meeting, so agent 3 should weigh whether '10' belongs to the agreement. 'artificial intelligence' is spelled out because the ATS reads each bullet on its own.",
+    "adjudication": "cut (main session, 29 Sep 2026): Cut: the '10 questions' tie the platform's count to the meeting with the chief executive, which no source does (journey 218 gives no count); without the number the bullet has no scale marker. The relapse-model bullet stays as in the master."
+  },
+  {
+    "id": "teletext-01",
+    "section_id": "quick-teletext",
+    "ord": 1,
+    "action": "edit",
+    "old_text": "Codified a parallel scatter-gather across 25 hotel suppliers on a MuleSoft enterprise service bus, superseding a .NET 2.0 stack a prior team could not upgrade",
+    "new_html": "Codified the <strong>scatter-gather</strong> integration pattern across <strong>25 hotel suppliers</strong> on MuleSoft's enterprise service bus, superseding a .NET 2.0 stack a prior team could not upgrade",
+    "new_text": "Codified the scatter-gather integration pattern across 25 hotel suppliers on MuleSoft's enterprise service bus, superseding a .NET 2.0 stack a prior team could not upgrade",
+    "leading_verb": "Codified",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "Solid understanding of enterprise integration patterns, software architecture principles, and system design methodologies",
+      "Design and implement microservices, integrations, reusable frameworks, and cloud-native applications"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 411,
+        "quote": "I came in with my knowledge of MuleSoft's Anypoint platform. Implemented Scatter Gather pattern to parallely call the configured suppliers and get the prices and display that to internal users."
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 409,
+        "quote": "written in .NET 2.0 but the previous team failed to update this to .NET 4.0."
+      }
+    ],
+    "risk": "low",
+    "note": "Names scatter-gather as an integration pattern, which the JD asks for by name. 'parallel' dropped for length; scatter-gather is parallel by definition. The supplier count (25 on the résumé, 25-30 in the journey) is open (journey 415) and is kept as the master has it.",
+    "adjudication": "accepted as proposed (main session, 29 Sep 2026)"
+  }
+]
