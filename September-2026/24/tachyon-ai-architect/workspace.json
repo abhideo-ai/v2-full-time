@@ -15,6 +15,11 @@
       "id": "reply",
       "label": "Recruiter reply",
       "src": "reply_2026-09-30.html"
+    },
+    {
+      "id": "topics",
+      "label": "Topics to learn",
+      "src": "topics.html"
     }
   ]
 }
