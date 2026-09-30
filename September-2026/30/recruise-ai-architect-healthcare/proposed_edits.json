@@ -1,224 +1,231 @@
 [
- {
-  "id": "vp-01",
-  "section_id": "quick-vp",
-  "ord": 3,
-  "action": "edit",
-  "old_text": "Delivered 10 decision-intelligence services in Python and FastAPI on 4 query archetypes to production for ~10,000 patients, absorbing 20 review findings into one design",
-  "new_html": "Delivered <strong>10 decision-intelligence services</strong> in <strong>Python (FastAPI, LangChain, LangGraph)</strong> on 4 query archetypes for ~10,000 chronic-care patients, as sole owner from design through production",
-  "new_text": "Delivered 10 decision-intelligence services in Python (FastAPI, LangChain, LangGraph) on 4 query archetypes for ~10,000 chronic-care patients, as sole owner from design through production",
-  "leading_verb": "Delivered",
-  "word_count": 24,
-  "jd_phrases_covered": [
-   "Python & ML Libraries",
-   "End-to-End AI Product Development",
-   "AI/ML Platform Architecture",
-   "architected and built large-scale AI/ML platforms or products end-to-end"
-  ],
-  "source": [
-   {
-    "file": "professional-journey.md",
-    "line": 678,
-    "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 258,
-    "quote": "Sole owner — design through production"
-   },
-   {
-    "file": "killer-query-case-studies/kq10-cross-domain.html",
-    "line": 262,
-    "quote": "Live in production"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 935,
-    "quote": "The platform served roughly 10,000 patients"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 236,
-    "quote": "For a chronic-care platform covering 80+ conditions"
-   }
-  ],
-  "risk": "low",
-  "note": "Names LangChain and LangGraph beside Python in the lead platform bullet (they were on the skills line and in the Developed bullet only) and says the ownership out loud: all ten case studies read 'Sole owner — design through production' and 'Live in production'. 'chronic-care' added to the patient count. Dropped for length: 'absorbing 20 review findings into one design'. The master's '10 decision-intelligence services' is kept as it stands; the journey's own words are '10-query decision-intelligence platform' (line 678). For adjudication: the same role also says he recruited 20+ engineers, so 'sole owner' is the case studies' word for the design-to-production ownership of these services, not a claim that nobody else worked at the client."
- },
- {
-  "id": "vp-02",
-  "section_id": "quick-vp",
-  "ord": 7,
-  "action": "edit",
-  "old_text": "Conceived a multi-agent orchestrator showing which care decisions followed when a patient's payments, adherence and support broke inside one 90-day window",
-  "new_html": "Conceived an <strong>agentic multi-agent orchestrator</strong> showing which care decisions followed when a patient's payments, adherence and support broke inside one 90-day window",
-  "new_text": "Conceived an agentic multi-agent orchestrator showing which care decisions followed when a patient's payments, adherence and support broke inside one 90-day window",
-  "leading_verb": "Conceived",
-  "word_count": 22,
-  "jd_phrases_covered": [
-   "LLMs, RAG & Agentic AI",
-   "working with LLMs, RAG and Agentic AI",
-   "Healthcare-specific language & use cases"
-  ],
-  "source": [
-   {
-    "file": "killer-query-case-studies/kq10-cross-domain.html",
-    "line": 238,
-    "quote": "It is answered by a deterministic multi-agent orchestrator"
-   },
-   {
-    "file": "killer-query-case-studies/kq10-cross-domain.html",
-    "line": 444,
-    "quote": "three finder agents (finance, adherence, ops) fan out from the start and run concurrently"
-   },
-   {
-    "file": "killer-query-case-studies/kq10-cross-domain.html",
-    "line": 262,
-    "quote": "Live in production"
-   }
-  ],
-  "risk": "medium",
-  "note": "One word added: 'agentic', the post's own word (it says 'Agentic AI' twice). The work is unchanged. For adjudication: the case studies call this system 'multi-agent' and its parts 'finder agents'; the word 'agentic' itself never appears in them (0 hits), and in the journey it is used for his team's development practice (line 670), not for this orchestrator. The system is deterministic: code owns the joins and the statistics, and the agents are narrow finders. If the checker reads 'agentic' as more autonomy than the record shows, cut this edit; the score's LLM row moves by 0.1 of a score point at most (0.17 weighted points)."
- },
- {
-  "id": "vp-03",
-  "section_id": "quick-vp",
-  "ord": 10,
-  "action": "edit",
-  "old_text": "Secured protected health information inside the client virtual private cloud, self-hosting Llama 3.1 on Ollama, embeddings and LangSmith tracing so patient data never left",
-  "new_html": "Secured protected health information inside the client virtual private cloud, self-hosting <strong>Llama 3.1</strong> with <strong>8B-to-70B</strong> model escalation, embeddings and LangSmith tracing and evaluation datasets",
-  "new_text": "Secured protected health information inside the client virtual private cloud, self-hosting Llama 3.1 with 8B-to-70B model escalation, embeddings and LangSmith tracing and evaluation datasets",
-  "leading_verb": "Secured",
-  "word_count": 24,
-  "jd_phrases_covered": [
-   "AI/ML Platform Architecture",
-   "end-to-end AI platform supporting Large Language Models (LLMs)",
-   "Regulatory requirements and compliance considerations",
-   "production-grade AI platforms"
-  ],
-  "source": [
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 742,
-    "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 764,
-    "quote": "LangSmith · self-hosted, in-VPC"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 765,
-    "quote": "Deployed inside the VPC, so production tracing and evaluation datasets run without PHI ever leaving the network"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 723,
-    "quote": "Self-hosted embedding model, in-VPC"
-   },
-   {
-    "file": "killer-query-case-studies/kq1-precedent-search.html",
-    "line": 710,
-    "quote": "every model, store, and trace lives inside the client VPC"
-   }
-  ],
-  "risk": "low",
-  "note": "Adds the two platform facts the master bullet left out: the small model does the work and the large one takes escalations (8B and 70B are the two Llama 3.1 sizes in use), and LangSmith holds evaluation datasets as well as traces. Dropped for length: 'on Ollama' (still on the skills line, quick-skills-ee 10) and 'so patient data never left' (the bullet's opening already says the data stays inside the client's private cloud)."
- },
- {
-  "id": "vp-04",
-  "section_id": "quick-vp",
-  "ord": 15,
-  "action": "edit",
-  "old_text": "Gated the model on 6-month matured outcome labels, then rolled it out to health coaches under per-coach daily alert budgets and an owned alert lifecycle",
-  "new_html": "Gated the model on <strong>6-month</strong> matured outcome labels and a weekly challenger ladder — logistic baseline, PrefixSpan mining, transformer — alerting health coaches under per-coach daily budgets",
-  "new_text": "Gated the model on 6-month matured outcome labels and a weekly challenger ladder — logistic baseline, PrefixSpan mining, transformer — alerting health coaches under per-coach daily budgets",
-  "leading_verb": "Gated",
-  "word_count": 25,
-  "jd_phrases_covered": [
-   "AI / Machine Learning",
-   "Python & ML Libraries",
-   "AI/ML Platform Architecture",
-   "End-to-End AI Product Development"
-  ],
-  "source": [
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 255,
-    "quote": "Of matured relapse labels gate training"
-   },
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 856,
-    "quote": "Promotion is itself a gate, and the gate is a ladder rather than a bake-off. A weekly challenger is built"
-   },
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 857,
-    "quote": "as three rungs — a logistic baseline, then PrefixSpan pattern mining, then a transformer"
-   },
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 769,
-    "quote": "the weekly retrain runs"
-   },
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 661,
-    "quote": "A per-coach daily alert budget, suppression on cooldown or an open alert, and a full lifecycle"
-   },
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 266,
-    "quote": "Live in production"
-   }
-  ],
-  "risk": "medium",
-  "note": "Names the machine-learning methods the record names (a logistic baseline, PrefixSpan pattern mining, a transformer) and the weekly retrain, which the master never mentions. For adjudication: the ladder is how each weekly challenger is built, and 'The simplest model that cleared its bar becomes the candidate' (kq4:860-861), so the record does not say which rung is live. The bullet says 'challenger ladder' for that reason and must not be reworded to say a transformer is in production. Dropped for length: 'then rolled it out' and 'an owned alert lifecycle'; 'alerting health coaches' keeps the rollout."
- },
- {
-  "id": "vp-05",
-  "section_id": "quick-vp",
-  "ord": 16,
-  "action": "edit",
-  "old_text": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines — tenant-scoped traversal-source wrapper, Parquet partitioning, runtime assertions",
-  "new_html": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across <strong>10 production pipelines</strong>, with audit-first access and role-based per-patient drill-ins",
-  "new_text": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines, with audit-first access and role-based per-patient drill-ins",
-  "leading_verb": "Enforced",
-  "word_count": 24,
-  "jd_phrases_covered": [
-   "Regulatory requirements and compliance considerations",
-   "Healthcare-specific language & use cases"
-  ],
-  "source": [
-   {
-    "file": "professional-journey.md",
-    "line": 679,
-    "quote": "HIPAA framework across 10 production pipelines"
-   },
-   {
-    "file": "professional-journey.md",
-    "line": 874,
-    "quote": "multi-availability-zone failover and disaster recovery:** keep"
-   },
-   {
-    "file": "killer-query-case-studies/kq10-cross-domain.html",
-    "line": 552,
-    "quote": "Per-patient drill-in — audit first, need-to-know RBAC"
-   },
-   {
-    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
-    "line": 775,
-    "quote": "the scoring service: audit-first, tenant-asserted"
-   },
-   {
-    "file": "killer-query-case-studies/kq9-causal-path.html",
-    "line": 569,
-    "quote": "Regulator RBAC · separate role from clinician"
-   }
-  ],
-  "risk": "low",
-  "note": "Swaps three implementation details (traversal-source wrapper, Parquet partitioning, runtime assertions) for the two controls a compliance reader looks for: an audit record before access, and access by role. The number stays on the isolation and the framework, where the journey puts it (line 679). For adjudication: 'audit-first' is named in kq4 and kq10, and role-based access control in 7 of the 10 case studies (none in kq1, kq2, kq8), which is why both are attached to the per-patient drill-ins and not to all ten pipelines. 'HIPAA' appears in the journey only, never in the case studies."
- }
+  {
+    "id": "vp-01",
+    "section_id": "quick-vp",
+    "ord": 3,
+    "action": "edit",
+    "old_text": "Delivered 10 decision-intelligence services in Python and FastAPI on 4 query archetypes to production for ~10,000 patients, absorbing 20 review findings into one design",
+    "new_html": "Delivered <strong>10 decision-intelligence services</strong> in <strong>Python (FastAPI, LangChain, LangGraph)</strong> on 4 query archetypes for ~10,000 chronic-care patients, as sole owner from design through production",
+    "new_text": "Delivered 10 decision-intelligence services in Python (FastAPI, LangChain, LangGraph) on 4 query archetypes for ~10,000 chronic-care patients, as sole owner from design through production",
+    "leading_verb": "Delivered",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Python & ML Libraries",
+      "End-to-End AI Product Development",
+      "AI/ML Platform Architecture",
+      "architected and built large-scale AI/ML platforms or products end-to-end"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 678,
+        "quote": "10-query decision-intelligence platform in Python (FastAPI, LangChain, LangGraph) with 4 reusable archetypes"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 258,
+        "quote": "Sole owner — design through production"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 262,
+        "quote": "Live in production"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 935,
+        "quote": "The platform served roughly 10,000 patients"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 236,
+        "quote": "For a chronic-care platform covering 80+ conditions"
+      }
+    ],
+    "risk": "low",
+    "note": "Names LangChain and LangGraph beside Python in the lead platform bullet (they were on the skills line and in the Developed bullet only) and says the ownership out loud: all ten case studies read 'Sole owner — design through production' and 'Live in production'. 'chronic-care' added to the patient count. Dropped for length: 'absorbing 20 review findings into one design'. The master's '10 decision-intelligence services' is kept as it stands; the journey's own words are '10-query decision-intelligence platform' (line 678). For adjudication: the same role also says he recruited 20+ engineers, so 'sole owner' is the case studies' word for the design-to-production ownership of these services, not a claim that nobody else worked at the client.",
+    "adjudication": "accepted as proposed (main session, 30 Sep 2026)"
+  },
+  {
+    "id": "vp-02",
+    "section_id": "quick-vp",
+    "ord": 7,
+    "action": "edit",
+    "old_text": "Conceived a multi-agent orchestrator showing which care decisions followed when a patient's payments, adherence and support broke inside one 90-day window",
+    "new_html": "Conceived an <strong>agentic multi-agent orchestrator</strong> showing which care decisions followed when a patient's payments, adherence and support broke inside one 90-day window",
+    "new_text": "Conceived an agentic multi-agent orchestrator showing which care decisions followed when a patient's payments, adherence and support broke inside one 90-day window",
+    "leading_verb": "Conceived",
+    "word_count": 22,
+    "jd_phrases_covered": [
+      "LLMs, RAG & Agentic AI",
+      "working with LLMs, RAG and Agentic AI",
+      "Healthcare-specific language & use cases"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 238,
+        "quote": "It is answered by a deterministic multi-agent orchestrator"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 444,
+        "quote": "three finder agents (finance, adherence, ops) fan out from the start and run concurrently"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 262,
+        "quote": "Live in production"
+      }
+    ],
+    "risk": "medium",
+    "note": "One word added: 'agentic', the post's own word (it says 'Agentic AI' twice). The work is unchanged. For adjudication: the case studies call this system 'multi-agent' and its parts 'finder agents'; the word 'agentic' itself never appears in them (0 hits), and in the journey it is used for his team's development practice (line 670), not for this orchestrator. The system is deterministic: code owns the joins and the statistics, and the agents are narrow finders. If the checker reads 'agentic' as more autonomy than the record shows, cut this edit; the score's LLM row moves by 0.1 of a score point at most (0.17 weighted points).",
+    "adjudication": "cut (main session, 30 Sep 2026): Cut: 'agentic' is not supported for this system; the record calls it a deterministic multi-agent orchestrator. The master bullet stands."
+  },
+  {
+    "id": "vp-03",
+    "section_id": "quick-vp",
+    "ord": 10,
+    "action": "edit",
+    "old_text": "Secured protected health information inside the client virtual private cloud, self-hosting Llama 3.1 on Ollama, embeddings and LangSmith tracing so patient data never left",
+    "new_html": "Secured protected health information inside the client virtual private cloud, self-hosting <strong>Llama 3.1</strong> with <strong>8B-to-70B</strong> model escalation, embeddings and LangSmith tracing and evaluation datasets",
+    "new_text": "Secured protected health information inside the client virtual private cloud, self-hosting Llama 3.1 with 8B-to-70B model escalation, embeddings and LangSmith tracing and evaluation datasets",
+    "leading_verb": "Secured",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "AI/ML Platform Architecture",
+      "end-to-end AI platform supporting Large Language Models (LLMs)",
+      "Regulatory requirements and compliance considerations",
+      "production-grade AI platforms"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 742,
+        "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 764,
+        "quote": "LangSmith · self-hosted, in-VPC"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 765,
+        "quote": "Deployed inside the VPC, so production tracing and evaluation datasets run without PHI ever leaving the network"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 723,
+        "quote": "Self-hosted embedding model, in-VPC"
+      },
+      {
+        "file": "killer-query-case-studies/kq1-precedent-search.html",
+        "line": 710,
+        "quote": "every model, store, and trace lives inside the client VPC"
+      }
+    ],
+    "risk": "low",
+    "note": "Adds the two platform facts the master bullet left out: the small model does the work and the large one takes escalations (8B and 70B are the two Llama 3.1 sizes in use), and LangSmith holds evaluation datasets as well as traces. Dropped for length: 'on Ollama' (still on the skills line, quick-skills-ee 10) and 'so patient data never left' (the bullet's opening already says the data stays inside the client's private cloud).",
+    "adjudication": "trim (main session, 30 Sep 2026): 8B and 70B written out so the short forms are expanded (24 words).",
+    "applied_html": "Secured protected health information inside the client virtual private cloud, self-hosting <strong>Llama 3.1</strong> with <strong>8-billion-to-70-billion-parameter</strong> model escalation, embeddings and LangSmith tracing and evaluation datasets"
+  },
+  {
+    "id": "vp-04",
+    "section_id": "quick-vp",
+    "ord": 15,
+    "action": "edit",
+    "old_text": "Gated the model on 6-month matured outcome labels, then rolled it out to health coaches under per-coach daily alert budgets and an owned alert lifecycle",
+    "new_html": "Gated the model on <strong>6-month</strong> matured outcome labels and a weekly challenger ladder — logistic baseline, PrefixSpan mining, transformer — alerting health coaches under per-coach daily budgets",
+    "new_text": "Gated the model on 6-month matured outcome labels and a weekly challenger ladder — logistic baseline, PrefixSpan mining, transformer — alerting health coaches under per-coach daily budgets",
+    "leading_verb": "Gated",
+    "word_count": 25,
+    "jd_phrases_covered": [
+      "AI / Machine Learning",
+      "Python & ML Libraries",
+      "AI/ML Platform Architecture",
+      "End-to-End AI Product Development"
+    ],
+    "source": [
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 255,
+        "quote": "Of matured relapse labels gate training"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 856,
+        "quote": "Promotion is itself a gate, and the gate is a ladder rather than a bake-off. A weekly challenger is built"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 857,
+        "quote": "as three rungs — a logistic baseline, then PrefixSpan pattern mining, then a transformer"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 769,
+        "quote": "the weekly retrain runs"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 661,
+        "quote": "A per-coach daily alert budget, suppression on cooldown or an open alert, and a full lifecycle"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 266,
+        "quote": "Live in production"
+      }
+    ],
+    "risk": "medium",
+    "note": "Names the machine-learning methods the record names (a logistic baseline, PrefixSpan pattern mining, a transformer) and the weekly retrain, which the master never mentions. For adjudication: the ladder is how each weekly challenger is built, and 'The simplest model that cleared its bar becomes the candidate' (kq4:860-861), so the record does not say which rung is live. The bullet says 'challenger ladder' for that reason and must not be reworded to say a transformer is in production. Dropped for length: 'then rolled it out' and 'an owned alert lifecycle'; 'alerting health coaches' keeps the rollout.",
+    "adjudication": "trim (main session, 30 Sep 2026): 'transformer' shared a root with the leading verb 'Transformed' in the bullet above; the record's own 'sequence model' (kq4:769) is used, and 'Gated training' keeps it to 25 words.",
+    "applied_html": "Gated training on <strong>6-month</strong> matured outcome labels and a weekly challenger ladder — logistic baseline, PrefixSpan mining, sequence model — alerting health coaches under per-coach daily budgets"
+  },
+  {
+    "id": "vp-05",
+    "section_id": "quick-vp",
+    "ord": 16,
+    "action": "edit",
+    "old_text": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines — tenant-scoped traversal-source wrapper, Parquet partitioning, runtime assertions",
+    "new_html": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across <strong>10 production pipelines</strong>, with audit-first access and role-based per-patient drill-ins",
+    "new_text": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines, with audit-first access and role-based per-patient drill-ins",
+    "leading_verb": "Enforced",
+    "word_count": 24,
+    "jd_phrases_covered": [
+      "Regulatory requirements and compliance considerations",
+      "Healthcare-specific language & use cases"
+    ],
+    "source": [
+      {
+        "file": "professional-journey.md",
+        "line": 679,
+        "quote": "HIPAA framework across 10 production pipelines"
+      },
+      {
+        "file": "professional-journey.md",
+        "line": 874,
+        "quote": "HIPAA \"compliance\" wording, multi-availability-zone failover and disaster recovery: keep"
+      },
+      {
+        "file": "killer-query-case-studies/kq10-cross-domain.html",
+        "line": 552,
+        "quote": "Per-patient drill-in — audit first, need-to-know RBAC"
+      },
+      {
+        "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+        "line": 775,
+        "quote": "the scoring service: audit-first, tenant-asserted"
+      },
+      {
+        "file": "killer-query-case-studies/kq9-causal-path.html",
+        "line": 569,
+        "quote": "Regulator RBAC · separate role from clinician"
+      }
+    ],
+    "risk": "low",
+    "note": "Swaps three implementation details (traversal-source wrapper, Parquet partitioning, runtime assertions) for the two controls a compliance reader looks for: an audit record before access, and access by role. The number stays on the isolation and the framework, where the journey puts it (line 679). For adjudication: 'audit-first' is named in kq4 and kq10, and role-based access control in 7 of the 10 case studies (none in kq1, kq2, kq8), which is why both are attached to the per-patient drill-ins and not to all ten pipelines. 'HIPAA' appears in the journey only, never in the case studies.",
+    "adjudication": "accepted as proposed (main session, 30 Sep 2026)"
+  }
 ]

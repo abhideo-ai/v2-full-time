@@ -2,9 +2,9 @@
   "slug": "recruise-ai-architect-healthcare",
   "scored_at": "2026-09-30",
   "rubric": "v2 weighted technical",
-  "weighted_total": 89.95,
+  "weighted_total": 89.78,
   "target": 95,
-  "honest_ceiling": 89.95,
+  "honest_ceiling": 89.78,
   "binding_constraint": "The post asks for \"Python & ML Libraries\" and \"Healthcare-specific language & use cases\", and the record names no classical machine-learning library and no healthcare data standard, so those two rows lose 3.70 of the 10.05 points lost.",
   "scores": [
     {
@@ -22,8 +22,8 @@
     {
       "criterion": "LLMs, RAG and agentic AI",
       "weight": 0.17,
-      "score": 9.5,
-      "points": 16.15
+      "score": 9.4,
+      "points": 15.98
     },
     {
       "criterion": "AI/ML platform architecture",

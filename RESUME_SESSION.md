@@ -4,6 +4,7 @@ Where we were, and what is next. Overwrite freely; git keeps the history. Rules:
 Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cleared context for a new session.
 
 ## START HERE (30 Sep 2026, before the new terminal session)
+- **Plan mode trap (30 Sep):** if plan mode is on when a workflow starts, its agents can only read; check before launching.
 - **Nothing is running.** Everything is committed and pushed (branch `qa`). The server ran in the old
   session's shell and has stopped: start it with `automation/.venv/bin/python automation/serve.py`
   (port 8006) before any localhost link.
@@ -25,6 +26,7 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cl
 | **GetHyr, Engineering Manager / Sr EM** (`September-2026/29/gethyr-engineering-manager/`) | He decided to apply (30 Sep), **not yet sent** | He sends the Email draft tab's email to raj@gethyr.com with his `.docx` (he retitled the 2025–26 VoltusWave role "Vice President of Technology" himself in Word; the seat row matches; 35/35). Current CTC is a placeholder, his call. When sent: mark applied. Client unnamed; technical 92.83. |
 | **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (`September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`) | Ready, unsent | Tailored from the OLD master; send as is (87.90) or re-tailor from the new master: his call. Workday R-112121, open until 28 Oct 2026. |
 | **Tachyon, AI Architect** (`September-2026/24/tachyon-ai-architect/`) | heard_back; he **confirmed 65 LPA fixed** on 30 Sep after a call | Waiting for Bhargav to confirm "fixed" and give the next steps (interviews). Topics to learn: its own tab. Interview prep only when he asks. His pay: ₹60L fixed + ₹12L variable (memory); he is accepting offers now. |
+| **Recruise, AI Architect – Healthcare AI Platform** (`September-2026/30/recruise-ai-architect-healthcare/`) | Ready, unsent | Technical 89.78 (master 88.43). Email to shwetha@recruiseglobal.com staged in the Email draft tab (subject exactly “AI Architect – Healthcare AI”). Recruiter verified (registered company; her title matches Recruise's own site); client and city unnamed; post asks 13–16 years (he has 19+) and prefers Big Tech. |
 | Nielsen PMTS (`September-2026/28/...`) | heard_back | See "Waiting on him — Nielsen" below. |
 | Sent 29 Sep: Sahaj (84.90), Epiq (85.45), Zenvyra co-founder (85.88; route not stated) | applied, frozen | Wait to hear back. Topic suggestions already given. |
 

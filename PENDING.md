@@ -60,7 +60,8 @@ by sabotage, which the corrected gate catches as `want 4, have 1`.
 | `wf_ef303750-256` | Epiq Lead Software Engineer (29 Sep 2026): same script | 3 (capped) | done in 30 min: 138 claims checked, 13 findings. 7 edits proposed, 6 kept (vp-19 cut, vp-08 and vp-13 trimmed). Technical 85.45 (master 82.68); `.docx` 35/35 |
 | `wf_46f62f3c-9bc` | Zenvyra Technical Co-Founder (29 Sep 2026): v2 script (adds a staged DM tab); first seat built from the new master | 3 (capped) | done in 21 min: 96 claims checked, 12 findings (1 cut, 8 fixes, 3 notes), all applied; 5 of 5 résumé edits kept. Technical 85.88 (master 84.36); `.docx` 35/35 |
 | `wf_72640b73-f4d` | GetHyr Engineering Manager / Senior EM (29 Sep 2026): v2 script, email-draft tab; a recruiter post, client unnamed | 3 (capped) | done in 18 min: 74 claims checked, 13 findings (1 cut, 9 fixes, 3 notes), all acted on; 2 of 2 résumé edits kept. Technical 92.83 (master 92.43); `.docx` 35/35 |
-| `wf_0b875b50-8f7` | Recruise, AI Architect – Healthcare AI Platform (30 Sep 2026): `automation/workflows/seat-workspace.js` (now takes `dir`, `date`, `date_text`), email-draft tab; a recruiter post, client unnamed | 3 (capped) | running |
+| `wf_0b875b50-8f7` | Recruise, AI Architect – Healthcare AI Platform (30 Sep 2026): first run | 3 | **wrote nothing**: plan mode was still on and the agents inherited it (read-only); findings went to plan files; stopped |
+| `wf_08acbefb-cb7` | Recruise, second run from those findings (`automation/workflows/seat-workspace.js`, email-draft tab) | 3 (6 for this job, his approval) | done in 45 min: 285 claims checked, 14 findings; 4 of 5 résumé edits kept (the "agentic" one cut, two trimmed). Technical 89.78 (master 88.43); `.docx` 35/35 |
 
 ---
 
