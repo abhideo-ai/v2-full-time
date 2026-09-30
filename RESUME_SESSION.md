@@ -45,7 +45,7 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cl
    client and gave an early MCP preview). **Interviews only, never in writing** (his rule). His
    Tachyon years (MCP, generative AI and Python 2+; CloudFormation 6+; serverless, microservices and
    CI/CD since Teletext; REST since innRoad) are recorded in the journey, "His answers, 30 September 2026".
-5. **Page count** of the new master in Word (3 pages or fewer).
+5. ~~Page count~~ **Settled 30 Sep:** he exported `master/Abhisheik_Deo_Resume.pdf` from Word himself: 3 pages. He exports PDFs himself; never automate it (memory).
 
 ## Waiting on him — Nielsen
 `September-2026/28/nielsen-principal-member-technical-staff/` (Principal Member Technical Staff,

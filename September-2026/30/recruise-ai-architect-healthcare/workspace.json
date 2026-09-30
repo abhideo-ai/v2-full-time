@@ -1,0 +1,20 @@
+{
+  "slug": "recruise-ai-architect-healthcare",
+  "company": "Recruise (client not named)",
+  "role": "AI Architect – Healthcare AI Platform",
+  "route": "recruiter post (LinkedIn); apply by email",
+  "received": "2026-09-30",
+  "resume_changes": null,
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    },
+    {
+      "id": "email",
+      "label": "Email draft",
+      "src": "email.html"
+    }
+  ]
+}
