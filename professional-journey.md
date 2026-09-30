@@ -891,3 +891,17 @@ His confirmations, in his words where he gave them. Where one of these conflicts
 **Still open**
 
 - **Teletext 46% and the $1.4M a year (line 431):** he asked where the $1.4M figure comes from. Lines 429 and 818 quote a third-party profile, but the link was never recorded, so the $1.4M stays off the résumé. Whether the 46% attaches to the Artirix replacement is still unconfirmed.
+
+---
+
+## His answers, 30 September 2026 (the years he gave Tachyon, and their basis)
+
+In his words where he gave them. Where this conflicts with an earlier line, **this section wins**, like the 29 September one.
+
+- **Claude, MCP, generative AI and Python at Deque.** "At Deque, Anthropic was a client of ours for a11y. We traded AI tokens in return to make their CLI, Claude Desktop, etc for free. AND they gave us a preview to MCP before it was released to general public. Hence, I've been working on it a few months before it was released to general public." MCP was released publicly in late November 2024, so his MCP work runs from about mid/late 2024 at Deque through April 2026 at VoltusWave: **MCP 2+ years**. He confirmed the same Deque work grounds **Generative AI & Agentic AI 2+ years** and **Python 2+ years**.
+  - **Disclosure rule (his call):** say this in interviews only. Never on the résumé or in written messages.
+  - This settles the 29 September flag on Jenkins: "when we used Claude for our development" was Claude at Deque.
+- **CloudFormation 6+ years:** "including Deque". Deque (Dec 2019 – Feb 2025) plus VoltusWave (Mar 2025 – Apr 2026) is about 6 years 4 months.
+- **Serverless (AWS Lambda):** since Teletext Holidays (Mar 2016). To April 2026, less the 3- and 4-month gaps, that is about 9 years 6 months; he gave Tachyon "about 10 years".
+- **Microservices:** since Teletext (about 9 years 6 months). **REST:** since innRoad (Jul 2013; about 12 years less the gaps). He gave Tachyon "about 10+" for the two together.
+- **CI/CD & DevOps:** since Teletext (about 9 years 6 months); he gave Tachyon "about 8", under the record.

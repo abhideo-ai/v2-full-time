@@ -24,6 +24,7 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cl
 |---|---|---|
 | **GetHyr, Engineering Manager / Sr EM** (`September-2026/29/gethyr-engineering-manager/`) | He decided to apply (30 Sep), **not yet sent** | He sends the Email draft tab's email to raj@gethyr.com with his `.docx` (he retitled the 2025–26 VoltusWave role "Vice President of Technology" himself in Word; the seat row matches; 35/35). Current CTC is a placeholder, his call. When sent: mark applied. Client unnamed; technical 92.83. |
 | **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (`September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`) | Ready, unsent | Tailored from the OLD master; send as is (87.90) or re-tailor from the new master: his call. Workday R-112121, open until 28 Oct 2026. |
+| **Tachyon, AI Architect** (`September-2026/24/tachyon-ai-architect/`) | heard_back (30 Sep) | His reply to Bhargav is written (`job-applications/September-2026/30/tachyon-ai-architect-reply-sent.md`); when he says it went, log an `outbound` event. Topics to learn: its own tab. |
 | Nielsen PMTS (`September-2026/28/...`) | heard_back | See "Waiting on him — Nielsen" below. |
 | Sent 29 Sep: Sahaj (84.90), Epiq (85.45), Zenvyra co-founder (85.88; route not stated) | applied, frozen | Wait to hear back. Topic suggestions already given. |
 
@@ -37,8 +38,10 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cl
 3. **Teletext 46% and $1.4M a year:** the $1.4M comes from a third-party profile whose link was never
    recorded (journey 429, 818), so it stays off; whether the 46% belongs to the Artirix replacement is
    unconfirmed.
-4. **Jenkins to GitHub Actions "when we used Claude":** his Deque role ended Feb 2025; Claude at
-   Deque, or Claude Code at VoltusWave?
+4. ~~Jenkins and Claude~~ **Settled 30 Sep:** Claude at Deque (Anthropic was a Deque accessibility
+   client and gave an early MCP preview). **Interviews only, never in writing** (his rule). His
+   Tachyon years (MCP, generative AI and Python 2+; CloudFormation 6+; serverless, microservices and
+   CI/CD since Teletext; REST since innRoad) are recorded in the journey, "His answers, 30 September 2026".
 5. **Page count** of the new master in Word (3 pages or fewer).
 
 ## Waiting on him — Nielsen
