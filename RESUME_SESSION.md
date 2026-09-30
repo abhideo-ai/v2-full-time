@@ -1,29 +1,45 @@
 # RESUME_SESSION.md
 
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
-Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-29**, after the Lilly and Sahaj builds.
+Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cleared context for a new session.
 
-## START HERE (29 Sep 2026, afternoon)
-- **Sahaj was SENT on 29 Sep 2026** (he said "application is done"; marked applied and logged; the seat is now frozen). **Lilly is ready and unsent.** **Epiq, Lead Software Engineer - AI Solutions** (Hyderabad; Epiq's record says hybrid, Hyderabad or Pune; Workday requisition R0035231) was SENT on 29 Sep 2026 (marked applied and logged; frozen): `September-2026/29/epiq-lead-software-engineer/`, technical 85.45 (master 82.68), bound by React and named DevOps tooling; over-levelling risk (8–12 years asked, he has about 18; a Staff/Solution Architect seat, R0035035, 12+ years, was posted the same day). Both came from `jd-list/sept-2026-29/sep-29-2026_1.md`, built
-  with one 3-agent workflow each, run side by side (6 agents at once: his explicit call over the
-  4-per-turn rule). Run IDs and outcomes in `PENDING.md`.
-  - **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (Bengaluru East, on-site):
-    `September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`. Technical 87.90
-    (master 84.28). Apply through Lilly's Workday, requisition R-112121, open until 28 Oct 2026.
-  - **Sahaj Software, Principal Engineer** (Hyderabad, on-site; employees report 2–3 office days):
-    `September-2026/29/sahaj-principal-engineer/`. Technical 84.90 (master 83.04), bound by
-    test-driven development (TDD), which his record never names: "automated testing", never TDD.
-  - Each has a verified `.docx` (35/35; page count is his to check in Word), the Tech mismatch as
-    its own tab (his choice for both, 29 Sep), and a "Settle before sending" list on the résumé
-    page: the 70–80%, P95 16 ms, "Java 11 yrs", Keycloak "zero disruption", P95 30 ms/100,000.
-  - Seat résumé edits are re-runnable: `db/operations/seat_edits_<slug>.sql`.
-- **The server is running in Claude's shell** (port 8006); it stops when the session ends.
-- When he says one went: mark it applied, log it, and suggest JD topics the prep repo lacks.
-- **Nielsen's Tech mismatch tab is key for his preparation** (his words, 28 Sep). It is its own tab,
-  `mismatch.html`, listed in that workspace's `workspace.json` (Nielsen only, his choice):
-  http://localhost:8006/September-2026/28/nielsen-principal-member-technical-staff/index.html#mismatch
-- `jd-list/sep-28-2026_2.md` holds only its goal lines so far. When he adds jobs: one workflow per
-  job, capped at 3 agents (his rule in that file), built from `templates/workspace/`.
+## START HERE (30 Sep 2026, before the new terminal session)
+- **Nothing is running.** Everything is committed and pushed (branch `qa`). The server ran in the old
+  session's shell and has stopped: start it with `automation/.venv/bin/python automation/serve.py`
+  (port 8006) before any localhost link.
+- **New jobs:** he drops a `jd-list/<folder>/<file>.md` (goal: one workflow per job, capped at 3
+  agents). Scaffold (`resume.py new`, copy `templates/workspace/index.html`, save the paste word for
+  word to `job-applications/<Month-YYYY>/<DD>/<slug>-intake.md`, log the arrival, clone the seat
+  résumé), then run `automation/workflows/seat-workspace.js` with Workflow `scriptPath` and per-seat
+  `args` (slug, short, company, role, location, mode, url, screenshot, research, glossary, score, and
+  optional extra_tabs / extra_research / extra_score / extra_check for a DM or email tab). Worked
+  `args` examples are in the last runs (`PENDING.md`). The Tech mismatch is its own tab by default.
+  Then adjudicate here, apply edits with `db/operations/seat_edits_<slug>.sql`, generate and verify
+  the `.docx`, fix the pages, `check_workspace.js`, `jobs_sync.py`, commit and push.
+- **When he says one went:** `mark_applied.sql`, log an `outbound` event, then suggest the JD topics
+  the interview-prep repo lacks ("just suggestions").
+
+## Open applications
+| Seat | State | What is next |
+|---|---|---|
+| **GetHyr, Engineering Manager / Sr EM** (`September-2026/29/gethyr-engineering-manager/`) | He decided to apply (30 Sep), **not yet sent** | He sends the Email draft tab's email to raj@gethyr.com with his `.docx` (he retitled the 2025–26 VoltusWave role "Vice President of Technology" himself in Word; the seat row matches; 35/35). Current CTC is a placeholder, his call. When sent: mark applied. Client unnamed; technical 92.83. |
+| **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (`September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`) | Ready, unsent | Tailored from the OLD master; send as is (87.90) or re-tailor from the new master: his call. Workday R-112121, open until 28 Oct 2026. |
+| Nielsen PMTS (`September-2026/28/...`) | heard_back | See "Waiting on him — Nielsen" below. |
+| Sent 29 Sep: Sahaj (84.90), Epiq (85.45), Zenvyra co-founder (85.88; route not stated) | applied, frozen | Wait to hear back. Topic suggestions already given. |
+
+## His decisions still pending
+1. **CLAUDE.md is stale:** it still lists the GNN, the 100,000 / P95 16 ms wording, the 70–80% and the
+   four Rocket metrics as open claims, and Kubernetes among his confirmations. He settled all of these
+   on 29 Sep (end of `professional-journey.md`; Kubernetes now off the résumé). Asked twice; no answer
+   yet. Until he says, new pages mention them but do not lean on them.
+2. **"Vice President of Technology" for the 2025–26 VoltusWave role:** he used it for GetHyr only.
+   Ask whether the master should carry it too (journey 616 supports it).
+3. **Teletext 46% and $1.4M a year:** the $1.4M comes from a third-party profile whose link was never
+   recorded (journey 429, 818), so it stays off; whether the 46% belongs to the Artirix replacement is
+   unconfirmed.
+4. **Jenkins to GitHub Actions "when we used Claude":** his Deque role ended Feb 2025; Claude at
+   Deque, or Claude Code at VoltusWave?
+5. **Page count** of the new master in Word (3 pages or fewer).
 
 ## Waiting on him — Nielsen
 `September-2026/28/nielsen-principal-member-technical-staff/` (Principal Member Technical Staff,
@@ -37,30 +53,16 @@ core gap that caps a score row is test-driven development: say "automated testin
 - ATS checkers he can use (his question, 28 Sep): Jobscan (résumé + a JD → match rate), Resume
   Worded, Teal. No single official ATS score exists; compare both résumés against the same JD.
 
-## GetHyr, Engineering Manager / Senior EM (29 Sep 2026): ready, unsent, his call
-`September-2026/29/gethyr-engineering-manager/`: technical 92.83 (master 92.43). A people-manager
-seat from a recruiter's LinkedIn post (Raj Singh, co-founder of GetHyr, a registered agency since
-2019); the client is not named. Apply by email to raj@gethyr.com: staged in the Email draft tab,
-with a [his call: current CTC] placeholder (his current pay is never volunteered). Ask GetHyr to
-name the client and not to submit without his go-ahead (questions.html Q1, Q2).
-
-## Zenvyra, Technical Co-Founder (29 Sep 2026): SENT 29 Sep (route not stated; marked applied, logged, frozen)
-`September-2026/29/zenvyra-technical-co-founder/`: technical 85.88 (master 84.36), bound by no
-n8n/workflow-automation tool, dated web front end, React Native as delivery only. A co-founder seat,
-not IC. Zenvyra is unregistered, one person, website registered 19 Sep 2026, founder not visible
-logged out; its "revamped payatom.com" client claim is contradicted by PayAtom's own footer. The
-posting asks for a DM: staged in the DM draft tab (dm.html), "why co-founder" left for his words.
-Telugu is a must; only he can say. Who posted it is visible to him when signed in.
-
 ## The master is now the story-clusters résumé (29 Sep 2026, his words: "make it master")
 - He answered `master/story-clusters-questions.md`; the answers are in `professional-journey.md`
-  ("His answers, 29 September 2026") and were applied to the draft by
+  ("His answers, 29 September 2026", which wins over earlier lines) and were applied by
   `db/operations/apply_story_clusters_answers.sql`, then promoted by
   `db/operations/promote_variant_to_master.sql`. `master/Abhisheik_Deo_Resume.docx` is the new master (35/35).
 - The old master is kept as doc_key `variant:master-2026-09-29` and
   `master/Abhisheik_Deo_Resume.master-2026-09-29.docx`. Sent seats keep the résumés they were sent with.
-- Kubernetes is off the résumé (ECS Fargate instead, his call). Still open: Teletext 46% and the $1.4M.
-- Lilly (ready, unsent) was tailored from the OLD master; whether to re-tailor it is his call.
+- Three of his answers disagree with another source (flagged in the journey, kept as he said):
+  P95 16 ms vs `img.png` 19.05 ms; the 70–80% vs his 14 Sep "No idea"; guardrails in production vs
+  the case-study index's "pending".
 
 ## Draft, 28 Sep 2026 — the résumé as story clusters (now promoted; see above) (his ask; "we're just drafting this version")
 `master/Abhisheik_Deo_Resume_story_clusters.docx` + `master/story-clusters-review.html` (evidence,
