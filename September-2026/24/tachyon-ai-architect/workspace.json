@@ -1,0 +1,20 @@
+{
+  "slug": "tachyon-ai-architect",
+  "company": "Tachyon Technologies",
+  "role": "AI Architect",
+  "route": "job posting (LinkedIn)",
+  "received": "2026-09-24",
+  "resume_changes": "resume_changes_for_91pct_match.html",
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    },
+    {
+      "id": "reply",
+      "label": "Recruiter reply",
+      "src": "reply_2026-09-30.html"
+    }
+  ]
+}
