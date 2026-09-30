@@ -905,3 +905,5 @@ In his words where he gave them. Where this conflicts with an earlier line, **th
 - **Serverless (AWS Lambda):** since Teletext Holidays (Mar 2016). To April 2026, less the 3- and 4-month gaps, that is about 9 years 6 months; he gave Tachyon "about 10 years".
 - **Microservices:** since Teletext (about 9 years 6 months). **REST:** since innRoad (Jul 2013; about 12 years less the gaps). He gave Tachyon "about 10+" for the two together.
 - **CI/CD & DevOps:** since Teletext (about 9 years 6 months); he gave Tachyon "about 8", under the record.
+- **The axe MCP server at Deque** (from the interview-prep ledger, his words, 10 Sep 2026): "Our CTO envisioned it. I built it and deployed it to each enterprise customer." Never claim the idea as his. His 30 September answer dates this MCP work to 2024. It went on the master résumé on 30 Sep 2026 as the "Authored the axe Model Context Protocol (MCP) server" bullet; the Anthropic arrangement and the preview stay off it.
+- **Title for the 2025–26 VoltusWave role:** "Vice President of Technology" (line 616: "Principal Software Architect / VP of Technology"), used on the master from 30 Sep 2026 (his call).

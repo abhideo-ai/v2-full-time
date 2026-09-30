@@ -33,8 +33,11 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cl
    four Rocket metrics as open claims, and Kubernetes among his confirmations. He settled all of these
    on 29 Sep (end of `professional-journey.md`; Kubernetes now off the résumé). Asked twice; no answer
    yet. Until he says, new pages mention them but do not lean on them.
-2. **"Vice President of Technology" for the 2025–26 VoltusWave role:** he used it for GetHyr only.
-   Ask whether the master should carry it too (journey 616 supports it).
+2. ~~VP title~~ **Settled 30 Sep:** the master now says "Vice President of Technology" for 2025–26, and
+   also names Python/FastAPI, the axe MCP server at Deque (2024), CloudFormation, and microservices
+   since 2016 / REST since 2013 (`db/operations/apply_master_2026_09_30.sql`; backup
+   `variant:master-2026-09-30` and `master/Abhisheik_Deo_Resume.master-2026-09-30.docx`). About 2,180
+   words: page count still his to check in Word.
 3. **Teletext 46% and $1.4M a year:** the $1.4M comes from a third-party profile whose link was never
    recorded (journey 429, 818), so it stays off; whether the 46% belongs to the Artirix replacement is
    unconfirmed.
