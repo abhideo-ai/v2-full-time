@@ -4,3 +4,9 @@ BEGIN;
 UPDATE resume_blocks SET html = $h$Recruited engineering from <strong>0 to 20+</strong> across 6 sub-teams — backend, React Native, web, AI, quality assurance, DevOps — running them while staying hands-on in Go$h$ WHERE doc_key = 'seat:gethyr-engineering-manager' AND section_id = 'quick-vp' AND ord = 22 AND retired_at IS NULL AND text = $o$Recruited engineering from 0 to 20+ across 6 sub-teams — backend, React Native, web, artificial intelligence, quality assurance (QA), DevOps — standardised on Go and DynamoDB$o$;
 UPDATE resume_blocks SET html = $h$Mobilized an engineering organisation from <strong>0 to 35</strong> in 13 months, mentoring freshers and seniors, establishing delivery processes and the architectural roadmap later products followed$h$ WHERE doc_key = 'seat:gethyr-engineering-manager' AND section_id = 'quick-voltuswave-cofounder' AND ord = 2 AND retired_at IS NULL AND text = $o$Mobilized an engineering organisation from 0 to 35 in 13 months, mentoring freshers and seniors and setting the architectural roadmap later products followed$o$;
 COMMIT;
+
+-- 30 Sep 2026: he edited the .docx in Word himself, changing the latest VoltusWave title to
+-- "Vice President of Technology" (journey 616: "Principal Software Architect / VP of Technology").
+-- The seat's role row is made to match his file; the file itself is left as he saved it.
+UPDATE resume_roles SET role_title = 'Vice President of Technology'
+ WHERE doc_key = 'seat:gethyr-engineering-manager' AND n = 1 AND role_title = 'Principal Software Architect';
