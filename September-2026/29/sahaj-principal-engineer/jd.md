@@ -4,7 +4,7 @@
 
 **Received:** 29 September 2026 · **Route:** LinkedIn job posting (he found it; not yet applied) · **Title on LinkedIn:** Principal Engineer · **Location:** Hyderabad, Telangana, India, on-site, full-time · **Screenshot:** posted 3 days ago, over 100 applicants, promoted by hirer, actively reviewing applicants, Easy Apply
 
-**Raw intake files**, in `job-applications/September-2026/29/`: `sahaj-principal-engineer-intake.md` (his paste, word for word, from `jd-list/sept-2026-29/sep-29-2026_1.md`) and `sahaj-principal-engineer-image-1.png` (his screenshot of the posting header).
+**Raw intake files**, in `job-applications/September-2026/29/`: `sahaj-principal-engineer-intake.md` (his paste, word for word, from `../../../jd-list/sept-2026-29/sept-29-2026_1.md`) and `sahaj-principal-engineer-image-1.png` (his screenshot of the posting header).
 
 <!-- Paste the job description here verbatim, below this line. -->
 

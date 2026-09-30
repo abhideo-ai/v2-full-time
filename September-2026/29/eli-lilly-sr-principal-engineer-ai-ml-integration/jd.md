@@ -4,7 +4,7 @@
 
 **Received:** 29 September 2026 · **Route:** LinkedIn job posting (he found it; not yet applied) · **Title on LinkedIn:** Sr. Principal Engineer AI/ML System Integration · **Location:** Bengaluru East, Karnataka, India, on-site, full-time · **Screenshot:** posted 5 days ago, over 100 people clicked apply, promoted by hirer, responses managed off LinkedIn
 
-**Raw intake files**, in `job-applications/September-2026/29/`: `eli-lilly-sr-principal-engineer-ai-ml-integration-intake.md` (his paste, word for word, from `jd-list/sept-2026-29/sep-29-2026_1.md`) and `eli-lilly-sr-principal-engineer-ai-ml-integration-image-1.png` (his screenshot of the posting header).
+**Raw intake files**, in `job-applications/September-2026/29/`: `eli-lilly-sr-principal-engineer-ai-ml-integration-intake.md` (his paste, word for word, from `../../../jd-list/sept-2026-29/sept-29-2026_1.md`) and `eli-lilly-sr-principal-engineer-ai-ml-integration-image-1.png` (his screenshot of the posting header).
 
 <!-- Paste the job description here verbatim, below this line. -->
 

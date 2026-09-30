@@ -4,7 +4,7 @@
 
 **Received:** 29 September 2026 · **Route:** LinkedIn job posting (he found it; not yet applied) · **Title on LinkedIn:** Lead Software Engineer (the JD's own summary says "Lead Software Engineer - AI Solutions") · **Location:** Hyderabad, Telangana, India, on-site, full-time · **Screenshot:** posted 1 day ago, 57 people clicked apply, promoted by hirer, responses managed off LinkedIn
 
-**Raw intake files**, in `job-applications/September-2026/29/`: `epiq-lead-software-engineer-intake.md` (his paste, word for word, from `jd-list/sept-2026-29/sept-2026-2026_2.md`) and `epiq-lead-software-engineer-image-1.png` (his screenshot of the posting header).
+**Raw intake files**, in `job-applications/September-2026/29/`: `epiq-lead-software-engineer-intake.md` (his paste, word for word, from `../../../jd-list/sept-2026-29/sept-29-2026_2.md`) and `epiq-lead-software-engineer-image-1.png` (his screenshot of the posting header).
 
 <!-- Paste the job description here verbatim, below this line. -->
 
