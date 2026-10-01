@@ -4,6 +4,11 @@ Where we were, and what is next. Overwrite freely; git keeps the history. Rules:
 Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-01**, before he cleared context for a new session.
 
 ## START HERE (1 Oct 2026, before the new terminal session)
+- **Today (1 Oct 2026) he plans "a lot of applications", primarily on LinkedIn.** A full build is
+  about 20–45 minutes and 3 agents per job. At the first job, ask once how he wants volume handled:
+  the full build for each, or a faster first version (score + tailored résumé, research later), and
+  whether jobs may run side by side (6+ agents at once goes past the 4-per-turn rule; he allowed it
+  once, on 29 Sep). Ready and unsent right now: GetHyr, Lilly, Recruise (3); past about five, say so.
 - **The server is RUNNING, detached** (PID 48641, parent launchd): it survives the session and
   serves http://localhost:8006 until a reboot or `kill $(lsof -tiTCP:8006 -sTCP:LISTEN)`. Check
   with `lsof -nP -iTCP:8006 -sTCP:LISTEN`; if nothing listens, start it detached:
