@@ -1,24 +1,31 @@
 # RESUME_SESSION.md
 
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
-Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cleared context for a new session.
+Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-01**, before he cleared context for a new session.
 
-## START HERE (30 Sep 2026, before the new terminal session)
-- **Plan mode trap (30 Sep):** if plan mode is on when a workflow starts, its agents can only read; check before launching.
-- **Nothing is running.** Everything is committed and pushed (branch `qa`). The server ran in the old
-  session's shell and has stopped: start it with `automation/.venv/bin/python automation/serve.py`
-  (port 8006) before any localhost link.
-- **New jobs:** he drops a `jd-list/<folder>/<file>.md` (goal: one workflow per job, capped at 3
-  agents). Scaffold (`resume.py new`, copy `templates/workspace/index.html`, save the paste word for
-  word to `job-applications/<Month-YYYY>/<DD>/<slug>-intake.md`, log the arrival, clone the seat
-  résumé), then run `automation/workflows/seat-workspace.js` with Workflow `scriptPath` and per-seat
-  `args` (slug, short, company, role, location, mode, url, screenshot, research, glossary, score, and
-  optional extra_tabs / extra_research / extra_score / extra_check for a DM or email tab). Worked
-  `args` examples are in the last runs (`PENDING.md`). The Tech mismatch is its own tab by default.
-  Then adjudicate here, apply edits with `db/operations/seat_edits_<slug>.sql`, generate and verify
-  the `.docx`, fix the pages, `check_workspace.js`, `jobs_sync.py`, commit and push.
+## START HERE (1 Oct 2026, before the new terminal session)
+- **The server is RUNNING, detached** (PID 48641, parent launchd): it survives the session and
+  serves http://localhost:8006 until a reboot or `kill $(lsof -tiTCP:8006 -sTCP:LISTEN)`. Check
+  with `lsof -nP -iTCP:8006 -sTCP:LISTEN`; if nothing listens, start it detached:
+  `(nohup automation/.venv/bin/python automation/serve.py > /tmp/serve.log 2>&1 < /dev/null &)`.
+- **Nothing else is running.** Everything is committed and pushed (branch `qa`).
+- **Plan mode trap (30 Sep):** if plan mode is on when a workflow starts, its agents can only read
+  and write nothing. Check before launching.
+- **New jobs:** he drops a `jd-list/<folder>/<file>.md` or pastes a post (goal: one workflow per job,
+  capped at 3 agents). Scaffold (`resume.py new --url …` or `--no-url "<reason>"`, copy
+  `templates/workspace/index.html`, write `workspace.json` with the `mismatch` tab and, for a
+  DM/email route, an `email`/`dm` tab; save the paste word for word to
+  `job-applications/<Month-YYYY>/<DD>/<slug>-intake.md`; log the arrival; clone the seat résumé),
+  then run `automation/workflows/seat-workspace.js` with Workflow `scriptPath` and per-seat `args`
+  (slug, short, **dir, date, date_text**, company, role, location, mode, url, screenshot, research,
+  glossary, score, optional extra_tabs / extra_research / extra_score / extra_check). The last run's
+  args are in its journal (`PENDING.md` has the run IDs). Then adjudicate here, apply edits with
+  `db/operations/seat_edits_<slug>.sql`, generate and verify the `.docx`, fix the pages,
+  `check_workspace.js`, `jobs_sync.py`, commit and push.
 - **When he says one went:** `mark_applied.sql`, log an `outbound` event, then suggest the JD topics
   the interview-prep repo lacks ("just suggestions").
+- **He exports PDFs himself** from Word; never automate it. His last pay was ₹60L fixed + ₹12L
+  variable, he is accepting offers now, and his current pay is never volunteered (memory).
 
 ## Open applications
 | Seat | State | What is next |
@@ -33,21 +40,23 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-09-30**, before he cl
 ## His decisions still pending
 1. **CLAUDE.md is stale:** it still lists the GNN, the 100,000 / P95 16 ms wording, the 70–80% and the
    four Rocket metrics as open claims, and Kubernetes among his confirmations. He settled all of these
-   on 29 Sep (end of `professional-journey.md`; Kubernetes now off the résumé). Asked twice; no answer
-   yet. Until he says, new pages mention them but do not lean on them.
-2. ~~VP title~~ **Settled 30 Sep:** the master now says "Vice President of Technology" for 2025–26, and
-   also names Python/FastAPI, the axe MCP server at Deque (2024), CloudFormation, and microservices
-   since 2016 / REST since 2013 (`db/operations/apply_master_2026_09_30.sql`; backup
-   `variant:master-2026-09-30` and `master/Abhisheik_Deo_Resume.master-2026-09-30.docx`). About 2,180
-   words: page count still his to check in Word.
+   on 29 Sep (end of `professional-journey.md`; Kubernetes now off the résumé). Asked several times; no
+   answer yet. Until he says, new pages mention them but do not lean on them.
+2. **Master acronym fixes, offered 30 Sep, unanswered:** spell out P95 / P99 (95th- and 99th-percentile),
+   JSON (JavaScript Object Notation), and SDE / VP in job titles. A two-minute fix if he says yes.
 3. **Teletext 46% and $1.4M a year:** the $1.4M comes from a third-party profile whose link was never
    recorded (journey 429, 818), so it stays off; whether the 46% belongs to the Artirix replacement is
    unconfirmed.
-4. ~~Jenkins and Claude~~ **Settled 30 Sep:** Claude at Deque (Anthropic was a Deque accessibility
-   client and gave an early MCP preview). **Interviews only, never in writing** (his rule). His
-   Tachyon years (MCP, generative AI and Python 2+; CloudFormation 6+; serverless, microservices and
-   CI/CD since Teletext; REST since innRoad) are recorded in the journey, "His answers, 30 September 2026".
-5. ~~Page count~~ **Settled 30 Sep:** he exported `master/Abhisheik_Deo_Resume.pdf` from Word himself: 3 pages. He exports PDFs himself; never automate it (memory).
+4. **Recruise:** did he use classical ML libraries (scikit-learn, PyTorch, pandas) for the relapse
+   model? Only that would lift its score; it is not in the record.
+5. **Lilly:** send as tailored from the old master (87.90), or re-tailor from the new master.
+
+**Settled 30 Sep (for the record):** the master now says "Vice President of Technology" for 2025–26
+and names Python/FastAPI, the axe MCP server at Deque (2024), CloudFormation, microservices since 2016
+and REST since 2013 (`db/operations/apply_master_2026_09_30.sql`; backup `variant:master-2026-09-30`);
+it is 3 pages by his own PDF export. Claude at Deque came through Anthropic being a Deque accessibility
+client with an early MCP preview: **interviews only, never in writing** (his rule; journey, "His
+answers, 30 September 2026").
 
 ## Waiting on him — Nielsen
 `September-2026/28/nielsen-principal-member-technical-staff/` (Principal Member Technical Staff,
