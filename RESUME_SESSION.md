@@ -4,7 +4,7 @@ Where we were, and what is next. Overwrite freely; git keeps the history. Rules:
 Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-01**, before he cleared context for a new session.
 
 ## START HERE (1 Oct 2026, before the new terminal session)
-- **Today (1 Oct 2026) he plans "a lot of applications", primarily on LinkedIn.** A full build is
+- **Today (1 Oct 2026) he plans "a lot of applications", primarily on LinkedIn, and on Indeed as well.** A full build is
   about 20–45 minutes and 3 agents per job. At the first job, ask once how he wants volume handled:
   the full build for each, or a faster first version (score + tailored résumé, research later), and
   whether jobs may run side by side (6+ agents at once goes past the 4-per-turn rule; he allowed it
