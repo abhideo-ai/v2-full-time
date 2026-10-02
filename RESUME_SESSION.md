@@ -1,14 +1,14 @@
 # RESUME_SESSION.md
 
 Where we were, and what is next. Overwrite freely; git keeps the history. Rules: `CLAUDE.md`.
-Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-01**, before he cleared context for a new session.
+Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-02**, before he cleared context for a new session.
 
 ## START HERE (1 Oct 2026, before the new terminal session)
 - **Today (1 Oct 2026) he plans "a lot of applications", primarily on LinkedIn, and on Indeed as well.** A full build is
   about 20–45 minutes and 3 agents per job. At the first job, ask once how he wants volume handled:
   the full build for each, or a faster first version (score + tailored résumé, research later), and
   whether jobs may run side by side (6+ agents at once goes past the 4-per-turn rule; he allowed it
-  once, on 29 Sep). Ready and unsent right now: GetHyr, Lilly, Recruise (3); past about five, say so.
+  once, on 29 Sep). Ready and unsent right now: GetHyr, Lilly, Recruise, Astroum AI (4). He chose "full build" for volume days (2 Oct), jobs one after another; past about five, say so.
 - **The server is RUNNING, detached** (PID 48641, parent launchd): it survives the session and
   serves http://localhost:8006 until a reboot or `kill $(lsof -tiTCP:8006 -sTCP:LISTEN)`. Check
   with `lsof -nP -iTCP:8006 -sTCP:LISTEN`; if nothing listens, start it detached:
@@ -35,6 +35,7 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-01**, before he cl
 ## Open applications
 | Seat | State | What is next |
 |---|---|---|
+| **Astroum AI, Principal Lead Software Engineer (AI-Native)** (`October-2026/02/astroum-ai-principal-lead-software-engineer/`) | Ready, unsent | Technical 85.57 (master 82.60); binding constraint React/TypeScript. He chose **both** routes: Easy Apply (screening years: ML 1, Java 10, Python 1 or his own 2+, software 18) and the email to dinesh@astroum.ai with the three answers, which has **four [his words needed] gaps** to fill first. Company registered 10 Jul 2026, ~4 people, no funding announced; its site says hiring starts as a 3-month contract. Player-coach seat, on-site Hyderabad. |
 | **GetHyr, Engineering Manager / Sr EM** (`September-2026/29/gethyr-engineering-manager/`) | He decided to apply (30 Sep), **not yet sent** | He sends the Email draft tab's email to raj@gethyr.com with his `.docx` (he retitled the 2025–26 VoltusWave role "Vice President of Technology" himself in Word; the seat row matches; 35/35). Current CTC is a placeholder, his call. When sent: mark applied. Client unnamed; technical 92.83. |
 | **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (`September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`) | Ready, unsent | Tailored from the OLD master; send as is (87.90) or re-tailor from the new master: his call. Workday R-112121, open until 28 Oct 2026. |
 | **Tachyon, AI Architect** (`September-2026/24/tachyon-ai-architect/`) | heard_back; he **confirmed 65 LPA fixed** on 30 Sep after a call | Waiting for Bhargav to confirm "fixed" and give the next steps (interviews). Topics to learn: its own tab. Interview prep only when he asks. His pay: ₹60L fixed + ₹12L variable (memory); he is accepting offers now. |

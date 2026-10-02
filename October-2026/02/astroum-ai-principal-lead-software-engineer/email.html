@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Astroum AI · email and Easy Apply</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="../../../style.css" />
+</head>
+<body>
+<main class="page full" id="main">
+
+<p class="breadcrumb" data-standalone><a href="../../../index.html">Full-time JD (job description) workspace</a> · <a href="../../../index.html?month=2026-10">October 2026</a> · <a href="../../../index.html?date=2026-10-02">02</a> · <a href="index.html">astroum-ai-principal-lead-software-engineer</a> · email and Easy Apply</p>
+
+<header data-standalone>
+  <h1>Astroum AI: email and Easy Apply</h1>
+</header>
+
+<p>You chose both routes (2 October 2026). The first fold is the email the post asks for; the second is the four screening answers LinkedIn Easy Apply will ask; the third lists every gap only you can fill. Nothing here is sent; nothing goes out on your behalf. Every highlighted <mark>[his words needed: &hellip;]</mark> must be replaced with your own words, or deleted, before you send.</p>
+
+<details id="email-send" open>
+<summary>Email to dinesh@astroum.ai</summary>
+<div>
+<p>The post says: &ldquo;Send your résumé or LinkedIn profile to dinesh@astroum.ai, along with brief answers to these three questions.&rdquo; It gives no subject line, so this one names the role and you. The answers follow the post&rsquo;s order, each under its question.</p>
+<div class="tablewrap">
+<table>
+  <tbody>
+    <tr><th>To</th><td>dinesh@astroum.ai</td></tr>
+    <tr><th>Attach</th><td><code>Abhisheik_Deo_Resume.docx</code>, the résumé tailored for this seat. Attach it only after the Word file for this seat has been generated and verified.</td></tr>
+    <tr><th>Length</th><td>About 540 words before your additions; each answer is about 100&ndash;160 words once the highlighted gaps are filled.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Subject</h2>
+<div class="copy-block copy-target" id="email-subject"><button class="copy-btn" data-copy-target="#email-subject">Copy subject</button>
+<p>Principal Lead Software Engineer (AI-Native): Abhisheik Deo</p>
+</div>
+
+<h2>Body</h2>
+<div class="copy-block copy-target" id="email-body"><button class="copy-btn" data-copy-target="#email-body" data-copy-html="1">Copy body</button>
+<p>Hi Dinesh,</p>
+<p>Available immediately, nothing to serve. I am writing about the Principal Lead Software Engineer (AI-Native) role.</p>
+<p>Most recently, as Vice President of Technology at VoltusWave, I owned production artificial intelligence (AI) end to end for a chronic-care client: ten decision-intelligence services in Python and FastAPI on Amazon Web Services (AWS), including retrieval-augmented precedent search for clinicians and a multi-agent orchestrator, live in production, with patient data kept inside the client&rsquo;s private cloud. I verify my own work with evaluation contracts, golden regression and adversarial review, and I ran my last engineering team of about 20 on Claude Code and OpenAI Codex under hands-on review.</p>
+<p><strong>1. A production system I owned end to end</strong></p>
+<p>A clinical precedent-search service for a chronic-care platform of about 10,000 patients, which I owned from design through production. A doctor on a call asks: have we treated someone like this before, and what happened? Nine years of history were hydrated into an append-only event spine on DynamoDB. Precedent cards are indexed for dense-vector search in Elasticsearch and served by a FastAPI service with a two-tier Redis cache, and the models are self-hosted inside the client&rsquo;s private cloud, so patient data never leaves it.</p>
+<p>Three decisions mattered most. The graph database serves audit and drill-down only, so it is never on the serving path. No language-model call sits in the ranking path. And when a case lacks any of the seven required clinical fields, the panel says so and shows a plain cohort count instead of a confident-looking match.</p>
+<p>One decision I would change today: <mark>[his words needed: the one decision he would change, and why]</mark></p>
+<p><strong>2. How I verify my work</strong></p>
+<p>Before launch, I wrote an evaluation contract for that service: a stratified set of 100+ golden queries with a labelling and adjudication rule, and floors for ranking quality, recall per programme, warm-path latency and zero cross-tenant results, wired into an offline harness and version-pinned to the exact dataset, model and index behind every score. Continuous integration (CI) runs the exact production call path against a mock model, with no keys and no network, and re-running the data load over the same records must give an identical event spine and snapshot-manifest hash.</p>
+<p>On top of that I run structured adversarial reviews of the design and of the runnable prototype. One review of the prototype caught a real gap between design and code: the cold-start quality gate checked only 2 of its 7 required clinical fields. I aligned it to all 7, and the next review round confirmed the fix and approved it. On another service, review caught a real sign flip between two versions of a pipeline; it became a parity fixture that the downstream consumer must reproduce exactly.</p>
+<p><strong>3. What I recently shipped with AI-assisted development</strong></p>
+<p>At VoltusWave I ran an engineering team of about 20 on Claude Code and OpenAI Codex: daily architectural exploration, first-cut implementations and test scaffolding, all under hands-on review. We kept the standards in CLAUDE.md and AGENTS.md files in the repositories, which gave developers, quality assurance (QA) and product people one set of rules and shortened their onboarding. <mark>[his words needed: one thing shipped this way, named at the level of the résumé]</mark></p>
+<p>Where the output was wrong or incomplete: <mark>[his words needed: a concrete case where Claude Code or Codex output was wrong or incomplete, and how it was found]</mark></p>
+<p>Making it production-ready: the tools drafted, and the team and I reviewed. Every first cut went through hands-on review, with its tests scaffolded alongside it. <mark>[his words needed: the checks a change had to pass before it shipped]</mark></p>
+<p>My résumé is attached (Abhisheik_Deo_Resume.docx), and my LinkedIn profile is linkedin.com/in/abhisheikdeo.</p>
+<p>Regards,<br>Abhisheik Deo<br>+91 93640 27487</p>
+</div>
+
+<h2>Where each part comes from</h2>
+<ul>
+  <li><strong>It opens with your availability,</strong> in your usual words.</li>
+  <li><strong>The strengths paragraph</strong> answers the post&rsquo;s own lines: production AI owned end to end in healthcare, Python and FastAPI, AWS, verification discipline, AI-assisted development across a team. Your title (journey 909); ten services in Python with FastAPI (journey 678); retrieval and a multi-agent orchestrator, &ldquo;Live in production&rdquo; (kq1:261; kq10:262; journey 854); patient data inside the client&rsquo;s cloud (kq1:689, 742); Claude Code and OpenAI Codex across the ~20-engineer team, under hands-on review (journey 669).</li>
+  <li><strong>Answer 1</strong>: sole owner from design through production (kq1:258); about 10,000 patients and nine years of history (kq1:935); the doctor&rsquo;s question (journey 218); the DynamoDB event spine (kq1:289); precedent cards in the search index (kq1:560); Elasticsearch dense-vector search (kq1:937); the FastAPI service (kq1:690); the two-tier Redis cache (kq1:728); self-hosted models inside the client&rsquo;s cloud (kq1:689, 742); the graph database &ldquo;serves audit and drill-down only&rdquo; (kq1:560&ndash;561); &ldquo;0 LLM calls in the ranking path&rdquo; (kq1:251); seven required fields and &ldquo;a plain cohort count — never a confident-looking&rdquo; answer (kq1:437&ndash;439). The record holds no decision you would change.</li>
+  <li><strong>Answer 2</strong>: the evaluation contract, &ldquo;a stratified set of 100+&rdquo; golden queries with a labelling and adjudication rule, version-pinned (kq1:776&ndash;778; who graded them is still open, so the email does not say clinicians); the floors, including &ldquo;Cross-tenant assertion failures 0&rdquo; (kq1:783&ndash;789); &ldquo;wired into an offline harness&rdquo; (kq1:794); CI with &ldquo;zero keys and zero network&rdquo; (kq1:753&ndash;754); the identical spine and snapshot-manifest hash on a re-run (kq1:386&ndash;388); the review that found &ldquo;the demo&rsquo;s cold-start gate checked only 2 of the 7 required clinical fields&rdquo;, then &ldquo;gate aligned to all 7 fields, final verdict approved&rdquo; (kq1:814&ndash;816), in the runnable prototype (kq1:259, 837); the sign flip &ldquo;caught between two versions of the pipeline during review&rdquo; where &ldquo;the parity fixture began life&rdquo; and the downstream consumer &ldquo;must reproduce the exact matched cohort&rdquo; (kq3:798&ndash;800). It says the floors were set, never that they were met, because the case studies publish no measured results (kq1:935).</li>
+  <li><strong>Answer 3</strong>: journey 669 and 220 for the team, the tools and hands-on review; journey 878 for CLAUDE.md, AGENTS.md and onboarding. The record does not name what was shipped this way, where the tools were wrong, or the checks a change passed; those are the three highlights.</li>
+  <li><strong>It keeps client detail at the résumé&rsquo;s level</strong>, &ldquo;a chronic-care client&rdquo;, as the post asks (&ldquo;Anonymized examples are fine&rdquo;).</li>
+  <li><strong>It asks nothing and proposes no call.</strong> Your number is in the signature.</li>
+  <li><strong>Your LinkedIn address</strong> is built from the slug on the master résumé&rsquo;s profile, <code>abhisheikdeo</code> (not <code>abhideo</code>, which is the email domain). Check that it opens before you send.</li>
+</ul>
+<p class="dim">&ldquo;journey 678&rdquo; means line 678 of <code>professional-journey.md</code>; &ldquo;kq1:258&rdquo; means line 258 of <code>killer-query-case-studies/kq1-precedent-search.html</code>; kq3, kq4 and kq10 are the override-intelligence, early-signal and cross-domain case studies.</p>
+</div>
+</details>
+
+<details id="email-easy-apply">
+<summary>LinkedIn Easy Apply: the four screening questions</summary>
+<div>
+<p>The poster added four requirements: 6+ years each of machine learning, Java, Python and software development. LinkedIn usually asks them as &ldquo;How many years of work experience do you have with &hellip;?&rdquo; Each answer below is the honest whole number from <code>professional-journey.md</code>, with the arithmetic. Months are counted from the first month to the last, both included. If LinkedIn asks them as yes-or-no (&ldquo;Do you have 6+ years &hellip;?&rdquo;), the honest answers are no, yes, no, yes.</p>
+<p><strong>The file to upload</strong> is the tailored <code>Abhisheik_Deo_Resume.docx</code> for this seat, once it has been generated and verified, not an older PDF.</p>
+
+<h3>Machine Learning</h3>
+<div class="copy-block copy-target" id="email-ea-ml"><button class="copy-btn" data-copy-target="#email-ea-ml">Copy</button>
+<p>1</p>
+</div>
+<p>Machine-learning work in a job is the VoltusWave second stint, March 2025 to April 2026 (journey 36): 14 months. That is where the relapse early-warning model on SageMaker went &ldquo;Live in production&rdquo; (kq4:266; journey 854), with the statistics pipelines beside it (journey 859). 14 months rounds to <strong>1</strong>. The postgraduate diploma in AI/ML, January 2021 (journey 40), is education, not work experience. If you count your generative-AI work from 2024 as machine learning (journey 901), the answer is about 2. <strong>Under 6, either way.</strong></p>
+
+<h3>Java</h3>
+<div class="copy-block copy-target" id="email-ea-java"><button class="copy-btn" data-copy-target="#email-ea-java">Copy</button>
+<p>10</p>
+</div>
+<p>Three eras (journey 64&ndash;70): El Paso Corporation, April 2008 to May 2012, 50 months (journey 25); Rocket Software, August 2018 to July 2019, 12 months (journey 33); Deque Software, December 2019 to February 2025, 63 months (journey 35). 50 + 12 + 63 = 125 months, which is 10 years 5 months, so <strong>10</strong>. Clears 6. One thing to know: the journey says &ldquo;~11 years&rdquo; (journey 64) and the master résumé&rsquo;s headline says &ldquo;Java + Spring Boot (11 yrs)&rdquo;. The month count gives 10; the headline is yours to keep or align.</p>
+
+<h3>Python (Programming Language)</h3>
+<div class="copy-block copy-target" id="email-ea-python"><button class="copy-btn" data-copy-target="#email-ea-python">Copy</button>
+<p>1</p>
+</div>
+<p>VoltusWave, March 2025 to April 2026: 14 months of Python in production (journey 36, 678). Your 30 September answer adds Python at Deque from about mid or late 2024 to February 2025, roughly 5 to 8 months, and gives &ldquo;Python 2+ years&rdquo; in total (journey 901). 14 + 5 to 8 = 19 to 22 months, under 2 years, so <strong>1</strong>, rounded down like the other three. Your own answer says &ldquo;2+ years&rdquo; (journey 901), so 2 is your call to make. <strong>Under 6 either way.</strong> Your long language is Java.</p>
+
+<h3>Software Development</h3>
+<div class="copy-block copy-target" id="email-ea-swdev"><button class="copy-btn" data-copy-target="#email-ea-swdev">Copy</button>
+<p>18</p>
+</div>
+<p>The span is April 2007 to April 2026, &ldquo;19+ years&rdquo; (journey 38): 229 months. Take out the three gaps, December 2015 to February 2016 (3 months), May to July 2018 (3) and August to November 2019 (4) (journey 29, 32, 34), and the one-month move in June 2013 between McDonald&rsquo;s and innRoad (journey 26&ndash;27). 229 &minus; 11 = 218 months, which is 18 years 2 months, so <strong>18</strong>. Clears 6.</p>
+</div>
+</details>
+
+<details id="email-fill">
+<summary>What only he can fill</summary>
+<div>
+<p>Every highlighted gap in the email, with the question it belongs to. Write each in your own words, or delete the sentence it sits in; never send a highlight.</p>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Question</th><th>The gap</th><th>Why the record cannot fill it</th></tr></thead>
+  <tbody>
+    <tr><td>1. A production system you owned end to end</td><td>The one decision you would change today, and why.</td><td>No source records a decision you regret or would redo.</td></tr>
+    <tr><td>3. What you recently shipped with AI-assisted development</td><td>One thing shipped this way, named at the level of the résumé (no client detail).</td><td>Journey 669 says what the tools were used for, not which shipped piece came from them.</td></tr>
+    <tr><td>3. What you recently shipped with AI-assisted development</td><td>A concrete case where Claude Code or Codex output was wrong or incomplete, and how it was found.</td><td>Not in the record anywhere.</td></tr>
+    <tr><td>3. What you recently shipped with AI-assisted development</td><td>The checks a change had to pass before it shipped.</td><td>Journey 669 says &ldquo;hands-on review&rdquo; and &ldquo;test scaffolding&rdquo;; it does not name the gates a change passed.</td></tr>
+  </tbody>
+</table>
+</div>
+</div>
+</details>
+
+</main>
+<script src="../../../static/copy.js" defer></script>
+</body>
+</html>

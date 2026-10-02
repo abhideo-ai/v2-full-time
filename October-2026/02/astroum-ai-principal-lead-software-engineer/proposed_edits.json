@@ -1,0 +1,335 @@
+[
+ {
+  "id": "vp-01",
+  "section_id": "quick-vp",
+  "ord": 4,
+  "action": "edit",
+  "old_text": "Engineered retrieval-augmented generation (RAG) for clinical precedent search across 80+ chronic conditions, because a database filter returns a cohort, not the most analogous decisions",
+  "new_html": "Engineered retrieval-augmented generation (RAG) for clinical precedent search with <strong>0 LLM calls in ranking</strong>, a two-tier <strong>Redis</strong> cache and a <strong>1.5-second</strong> circuit breaker",
+  "new_text": "Engineered retrieval-augmented generation (RAG) for clinical precedent search with 0 LLM calls in ranking, a two-tier Redis cache and a 1.5-second circuit breaker",
+  "leading_verb": "Engineered",
+  "word_count": 23,
+  "jd_phrases_covered": [
+   "Applied AI engineering: retrieval and knowledge workflows",
+   "Know when to use a model, conventional software, deterministic validation, or human review",
+   "explain the reliability, evaluation, latency, cost, and operational trade-offs",
+   "Redis",
+   "retrieval/RAG"
+  ],
+  "source": [
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 251,
+    "quote": "0 LLM calls in the ranking path"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 728,
+    "quote": "Two-tier cache (final results + query embeddings) on canonical keys"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 453,
+    "quote": "Self-hosted embedder in-VPC circuit breaker at 1.5s — defer panel · never block warm path"
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 854,
+    "quote": "Killer-query AI work (line 88, \"piloted\"): in production."
+   }
+  ],
+  "risk": "medium",
+  "note": "Re-vectored from the why (a filter returns a cohort) to the trade-offs the JD asks him to explain: no model in the ranking path, a two-tier cache, a breaker that defers rather than blocks. kq1:251 sits in a figures strip whose latency and quality numbers are pre-registered targets (kq1:255-256); '0 LLM calls' is a design property of the shipped path, not a measurement. '80+ chronic conditions' still stands in Pioneered (ord 2). LLM is expanded in the summary."
+ },
+ {
+  "id": "vp-02",
+  "section_id": "quick-vp",
+  "ord": 5,
+  "action": "edit",
+  "old_text": "Optimised retrieval around the decision, not the patient, via tenant-filtered Elasticsearch dense_vector nearest-neighbour search, tuned to a 0.75 normalised discounted cumulative gain target",
+  "new_html": "Optimised <strong>dense_vector</strong> retrieval on Elasticsearch against an offline <strong>evaluation harness</strong> built to a <strong>100+ query</strong> clinician-graded golden-set contract, targeting <strong>0.75</strong> normalised discounted cumulative gain",
+  "new_text": "Optimised dense_vector retrieval on Elasticsearch against an offline evaluation harness built to a 100+ query clinician-graded golden-set contract, targeting 0.75 normalised discounted cumulative gain",
+  "leading_verb": "Optimised",
+  "word_count": 24,
+  "jd_phrases_covered": [
+   "AI evaluation suites",
+   "Evidence of self-verification: a test or evaluation system you built",
+   "evaluation frameworks",
+   "vector search"
+  ],
+  "source": [
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 776,
+    "quote": "The design ships with an evaluation contract: clinician-graded golden queries (a stratified set of 100+,"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 778,
+    "quote": "version-pinned to the exact dataset, feature schema, model, and index that produced each score."
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 794,
+    "quote": "in the design, wired into an offline harness, and version-pinned"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 937,
+    "quote": "Elasticsearch dense_vector"
+   }
+  ],
+  "risk": "medium",
+  "note": "The golden set is a contract and 0.75 is a target, so the bullet says 'contract' and 'targeting'; it never says the floor was met (kq1:935: no measured production metrics are published). Drops 'around the decision, not the patient' and 'tenant-filtered'; tenant isolation stays in Enforced (ord 16)."
+ },
+ {
+  "id": "vp-03",
+  "section_id": "quick-vp",
+  "ord": 6,
+  "action": "edit",
+  "old_text": "Launched the precedent panel in production for doctors, health coaches and guidance counsellors, answering cases short of 7 required fields with a plain cohort count",
+  "new_html": "Launched the precedent panel in production for clinicians after <strong>adversarial self-review</strong> caught its prototype's cold-start gate checking only <strong>2 of 7 required fields</strong>",
+  "new_text": "Launched the precedent panel in production for clinicians after adversarial self-review caught its prototype's cold-start gate checking only 2 of 7 required fields",
+  "leading_verb": "Launched",
+  "word_count": 23,
+  "jd_phrases_covered": [
+   "Reproduce failures, investigate root causes, and demonstrate fixes with evidence",
+   "the failures it caught, and how you determined that a release was ready",
+   "Failures are identified and addressed before customers or the founder become the primary testers"
+  ],
+  "source": [
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 814,
+    "quote": "Round 2 found the demo's cold-start gate checked only 2 of the 7 required clinical fields — a real"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 815,
+    "quote": "gap between design and code. Round 3 closed it (and caught a smoke-script environment defect,"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 259,
+    "quote": "Scope System design · runnable prototype · production rollout"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 261,
+    "quote": "Status Live in production"
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 233,
+    "quote": "killer queries agreed with the business, the event spine, Lambda into Amazon Neptune, dense vectors, retrieval, in front of clinicians."
+   }
+  ],
+  "risk": "medium",
+  "note": "'prototype' is kq1's own word for the runnable work sample (kq1:259; 'the demo's' at 814), so the bullet does not imply a production defect. The catch was by his structured review loop, not an automated test; the bullet says 'self-review'. Drops 'doctors, health coaches and guidance counsellors' (résumé wording; the journey says clinicians, 233) and the honest cohort-count fallback (kq1:437-439), which the email's answer 1 carries."
+ },
+ {
+  "id": "vp-04",
+  "section_id": "quick-vp",
+  "ord": 10,
+  "action": "edit",
+  "old_text": "Secured protected health information inside the client virtual private cloud, self-hosting Llama 3.1 on Ollama, embeddings and LangSmith tracing so patient data never left",
+  "new_html": "Secured <strong>protected health information</strong> inside the client virtual private cloud, self-hosting <strong>Llama 3.1 8B with 70B escalation</strong> on Ollama, embeddings and LangSmith tracing",
+  "new_text": "Secured protected health information inside the client virtual private cloud, self-hosting Llama 3.1 8B with 70B escalation on Ollama, embeddings and LangSmith tracing",
+  "leading_verb": "Secured",
+  "word_count": 23,
+  "jd_phrases_covered": [
+   "sensitive-data handling",
+   "LLM APIs",
+   "latency, cost ... trade-offs",
+   "Healthcare software ... applications handling sensitive health information"
+  ],
+  "source": [
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 742,
+    "quote": "Production runs self-hosted Llama 3.1 (8B workhorse, 70B escalation) so PHI never leaves the VPC."
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 689,
+    "quote": "Client VPC · PHI never crosses this boundary"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 765,
+    "quote": "Deployed inside the VPC, so production tracing and evaluation datasets run without PHI ever"
+   },
+   {
+    "file": "killer-query-case-studies/kq10-cross-domain.html",
+    "line": 703,
+    "quote": "gate flags as uncertain escalates to 70B, and every routing decision is auditable code."
+   }
+  ],
+  "risk": "low",
+  "note": "Adds the model-tiering decision (cheap 8B by default, 70B on escalation), which is a cost and latency trade-off. Drops the tail 'so patient data never left', which the opening clause already says."
+ },
+ {
+  "id": "vp-05",
+  "section_id": "quick-vp",
+  "ord": 13,
+  "action": "edit",
+  "old_text": "Strengthened statistical rigour across 6 production pipelines with propensity matching, B=2000 bootstrap resamples and a Rosenbaum γ plus E-value sensitivity battery, feeding governed dashboards",
+  "new_html": "Strengthened data quality over <strong>9–10 years of patient history</strong> with idempotent, resumable loads, unmappable rows quarantined with a reason, and <strong>snapshot-hash version pins</strong>",
+  "new_text": "Strengthened data quality over 9–10 years of patient history with idempotent, resumable loads, unmappable rows quarantined with a reason, and snapshot-hash version pins",
+  "leading_verb": "Strengthened",
+  "word_count": 23,
+  "jd_phrases_covered": [
+   "Turn imperfect source data into validated, traceable, versioned datasets and services",
+   "strong data foundations",
+   "inspect actual data before making assumptions"
+  ],
+  "source": [
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 386,
+    "quote": "Content-addressed event IDs and conditional writes make"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 387,
+    "quote": "the load idempotent and resumable: re-running the pipeline over the same corpus yields an identical"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 391,
+    "quote": "each gets an upconverter, and any row that cannot be mapped to a schema — or to a tenant — is"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 392,
+    "quote": "quarantined with a reason, never defaulted."
+   },
+   {
+    "file": "killer-query-case-studies/kq4-early-signal-detection.html",
+    "line": 336,
+    "quote": "downstream store is version-pinned to the same snapshot_manifest_hash so a score can always"
+   },
+   {
+    "file": "killer-query-case-studies/kq1-precedent-search.html",
+    "line": 935,
+    "quote": "The platform served roughly 10,000 patients, over about nine years of history hydrated into the event spine."
+   }
+  ],
+  "risk": "new-substance",
+  "note": "Keeps the verb, replaces the substance: the statistics battery (bootstrap, Rosenbaum γ, E-value) answers nothing this JD asks, while 'validated, traceable, versioned datasets' is one of its owned areas. '9–10 years of patient history' is a CLAUDE.md safe marker (kq1:935 says about nine). This seat only; the master keeps its statistics bullet."
+ },
+ {
+  "id": "vp-06",
+  "section_id": "quick-vp",
+  "ord": 16,
+  "action": "edit",
+  "old_text": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines — tenant-scoped traversal-source wrapper, Parquet partitioning, runtime assertions",
+  "new_html": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across <strong>10 production pipelines</strong> — role-based access control, audit trails, runtime tenant assertions",
+  "new_text": "Enforced multi-tenant isolation under a Health Insurance Portability and Accountability Act (HIPAA) framework across 10 production pipelines — role-based access control, audit trails, runtime tenant assertions",
+  "leading_verb": "Enforced",
+  "word_count": 25,
+  "jd_phrases_covered": [
+   "Build appropriate access controls, sensitive-data handling, audit trails, and safeguards",
+   "security fundamentals"
+  ],
+  "source": [
+   {
+    "file": "professional-journey.md",
+    "line": 679,
+    "quote": "HIPAA framework across 10 production pipelines"
+   },
+   {
+    "file": "killer-query-case-studies/kq10-cross-domain.html",
+    "line": 315,
+    "quote": "Analytics API · Stage B entry RBAC · audit · tenant assertion per row"
+   },
+   {
+    "file": "killer-query-case-studies/kq10-cross-domain.html",
+    "line": 798,
+    "quote": "FastAPI · RBAC · audit · tenant assertion"
+   },
+   {
+    "file": "killer-query-case-studies/kq5-decision-latency.html",
+    "line": 951,
+    "quote": "governed RBAC + audit."
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 874,
+    "quote": "HIPAA \"compliance\" wording, multi-availability-zone failover and disaster recovery: keep."
+   }
+  ],
+  "risk": "low",
+  "note": "Swaps two implementation details (the traversal-source wrapper, Parquet partitioning) for the JD's own words: access control and audit trails. Runtime assertions stay. 25 words, at the limit."
+ },
+ {
+  "id": "vp-07",
+  "section_id": "quick-vp",
+  "ord": 23,
+  "action": "edit",
+  "old_text": "Drove a Claude Code and OpenAI Codex rollout across a 20-engineer team, codifying repository standards in CLAUDE.md and AGENTS.md files to shorten onboarding",
+  "new_html": "Drove <strong>Claude Code and OpenAI Codex</strong> adoption across a <strong>20-engineer</strong> team: first-cut implementations and test scaffolding under hands-on review, CLAUDE.md and AGENTS.md standards",
+  "new_text": "Drove Claude Code and OpenAI Codex adoption across a 20-engineer team: first-cut implementations and test scaffolding under hands-on review, CLAUDE.md and AGENTS.md standards",
+  "leading_verb": "Drove",
+  "word_count": 23,
+  "jd_phrases_covered": [
+   "Practical AI-native development experience ... Claude Code or equivalent",
+   "independently reviewing, testing, and taking responsibility for the resulting code",
+   "AI-assisted coding, supported by engineering review and testing"
+  ],
+  "source": [
+   {
+    "file": "professional-journey.md",
+    "line": 669,
+    "quote": "Embedded **Claude Code + OpenAI Codex** across the ~20-engineer team — daily architectural exploration, first-cut implementations, test scaffolding, all under hands-on review."
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 220,
+    "quote": "And I ran the engineering team on Claude Code and OpenAI Codex — daily architectural exploration and first-cut implementations, all under hands-on review."
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 878,
+    "quote": "Claude and Codex brought a common set of standards across the team through CLAUDE.md and AGENTS.md files in the repositories."
+   }
+  ],
+  "risk": "low",
+  "note": "The JD's test is review and responsibility, not adoption alone, so 'under hands-on review' and 'test scaffolding' come in from journey 669. Drops 'to shorten onboarding' (journey 878), which the email's answer 3 carries. No outcome number: none exists (journey 672)."
+ },
+ {
+  "id": "cofounder-01",
+  "section_id": "quick-voltuswave-cofounder",
+  "ord": 1,
+  "action": "edit",
+  "old_text": "Co-founded VoltusWave and released its first no-code application Platform-as-a-Service (aPaaS) for web and Android on Amazon Elastic Container Service, winning 8 early enterprise clients",
+  "new_html": "Co-founded VoltusWave and delivered its first no-code application Platform-as-a-Service (aPaaS), web and Android, <strong>end to end</strong> on Amazon Elastic Container Service, winning <strong>8 enterprise clients</strong>",
+  "new_text": "Co-founded VoltusWave and delivered its first no-code application Platform-as-a-Service (aPaaS), web and Android, end to end on Amazon Elastic Container Service, winning 8 enterprise clients",
+  "leading_verb": "Co-founded",
+  "word_count": 25,
+  "jd_phrases_covered": [
+   "own multiple AI products end-to-end",
+   "Demonstrated full-stack ownership ... complete products across APIs, databases, user interfaces, integrations, and cloud infrastructure",
+   "Founding-engineer roles, small-team product ownership"
+  ],
+  "source": [
+   {
+    "file": "professional-journey.md",
+    "line": 468,
+    "quote": "built the first application Platform-as-a-Service (aPaaS) product for web and Android from the ground up; ... delivered end-to-end development, deployment and operations on AWS Elastic Container Service, winning 8 early enterprise clients."
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 464,
+    "quote": "No Code Platform"
+   },
+   {
+    "file": "professional-journey.md",
+    "line": 885,
+    "quote": "VoltusWave no-code aPaaS (line 472): a no-code platform; clients built applications such as a leave management system"
+   }
+  ],
+  "risk": "medium",
+  "note": "Journey 468 is folded in from the résumé, and journey 472 still asks what he personally built versus directed, so 'delivered ... end to end' leans on his own earlier wording. Drops 'released' and 'early'."
+ }
+]
