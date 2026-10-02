@@ -74,6 +74,8 @@ Rules only. How-to (commands, database, automation, traps): `docs/reference.md`.
   bolded fact · no trailing period · every acronym expanded on first use. See `resume-issues-to-avoid/`.
 - Rule 7: re-vector bullets per job across the current role and 2–3 prior; edit in place, keeping
   the verb; real work only.
+- The 2025–26 VoltusWave title (his rule, 2 Oct 2026): "Principal Software Architect" on individual-contributor
+  seats, "Vice President of Technology" on managerial ones. Set it on the seat's `resume_roles` row.
 - Per seat: start from the master and aim for 95+%, editing only the last five roles — VoltusWave
   (Principal), Deque, Rocket, VoltusWave (Co-Founder), Teletext India. Never a copied file. New jobs
   only: sent seats are frozen.
@@ -94,7 +96,7 @@ Rules only. How-to (commands, database, automation, traps): `docs/reference.md`.
   "compounds over a career". Outward pieces lead with strengths and never volunteer gaps.
 - Anything he will paste is staged as HTML with a working copy button.
 - Recruiter replies: answer exactly what was asked, in order, with no extra questions; lead with
-  "available immediately, nothing to serve"; give +91 93640 27487 when inviting a call; offer a
+  "available immediately, nothing to serve"; give +91 93640 27487 / +91 97049 68861 when inviting a call (both, his ask, 2 Oct 2026); offer a
   slot about 2 days out, never tomorrow.
 
 ## Interview prep

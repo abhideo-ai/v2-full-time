@@ -43,6 +43,10 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-02**, before he cl
 | Nielsen PMTS (`September-2026/28/...`) | heard_back | See "Waiting on him — Nielsen" below. |
 | Sent 29 Sep: Sahaj (84.90), Epiq (85.45), Zenvyra co-founder (85.88; route not stated) | applied, frozen | Wait to hear back. Topic suggestions already given. |
 
+## Settled 2 Oct 2026
+- **Phones:** both numbers everywhere, "+91 93640 27487 / +91 97049 68861" (he had typed 96340 in Word; he confirmed 93640). Applied to the master and the 4 unsent seats (`db/operations/phone_numbers_2026_10_02.sql`) and the GetHyr, Recruise and Astroum emails; CLAUDE.md updated.
+- **Title rule:** IC seats say "Principal Software Architect" for 2025–26 VoltusWave, managerial seats "Vice President of Technology" (CLAUDE.md, memory). Astroum, Recruise and Lilly: Principal Software Architect; GetHyr: VP; the master keeps VP.
+
 ## His decisions still pending
 1. **CLAUDE.md is stale:** it still lists the GNN, the 100,000 / P95 16 ms wording, the 70–80% and the
    four Rocket metrics as open claims, and Kubernetes among his confirmations. He settled all of these
