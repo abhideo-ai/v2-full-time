@@ -9,7 +9,7 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-02**, before he cl
   the full build for each, or a faster first version (score + tailored résumé, research later), and
   whether jobs may run side by side (6+ agents at once goes past the 4-per-turn rule; he allowed it
   once, on 29 Sep). Ready and unsent right now: GetHyr, Lilly, Recruise, Astroum AI (4). He chose "full build" for volume days (2 Oct), jobs one after another; past about five, say so.
-- **The server is RUNNING, detached** (PID 48641, parent launchd): it survives the session and
+- **The server is RUNNING, detached** (PID 23265, restarted 2 Oct 2026): it survives the session and
   serves http://localhost:8006 until a reboot or `kill $(lsof -tiTCP:8006 -sTCP:LISTEN)`. Check
   with `lsof -nP -iTCP:8006 -sTCP:LISTEN`; if nothing listens, start it detached:
   `(nohup automation/.venv/bin/python automation/serve.py > /tmp/serve.log 2>&1 < /dev/null &)`.
