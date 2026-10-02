@@ -62,6 +62,7 @@ by sabotage, which the corrected gate catches as `want 4, have 1`.
 | `wf_72640b73-f4d` | GetHyr Engineering Manager / Senior EM (29 Sep 2026): v2 script, email-draft tab; a recruiter post, client unnamed | 3 (capped) | done in 18 min: 74 claims checked, 13 findings (1 cut, 9 fixes, 3 notes), all acted on; 2 of 2 résumé edits kept. Technical 92.83 (master 92.43); `.docx` 35/35 |
 | `wf_0b875b50-8f7` | Recruise, AI Architect – Healthcare AI Platform (30 Sep 2026): first run | 3 | **wrote nothing**: plan mode was still on and the agents inherited it (read-only); findings went to plan files; stopped |
 | `wf_08acbefb-cb7` | Recruise, second run from those findings (`automation/workflows/seat-workspace.js`, email-draft tab) | 3 (6 for this job, his approval) | done in 45 min: 285 claims checked, 14 findings; 4 of 5 résumé edits kept (the "agentic" one cut, two trimmed). Technical 89.78 (master 88.43); `.docx` 35/35 |
+| `wf_3586381b-b4c` | Astroum AI, Principal Lead Software Engineer (AI-Native) (2 Oct 2026): `automation/workflows/seat-workspace.js`; email tab carries the three answers and the Easy Apply screening years (he chose both routes) | 3 | running |
 
 ---
 

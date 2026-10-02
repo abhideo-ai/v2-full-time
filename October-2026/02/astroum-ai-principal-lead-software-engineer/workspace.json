@@ -1,0 +1,20 @@
+{
+  "slug": "astroum-ai-principal-lead-software-engineer",
+  "company": "Astroum AI",
+  "role": "Principal Lead Software Engineer (AI-Native)",
+  "route": "LinkedIn job posting; Easy Apply, or email to the founder with three answers",
+  "received": "2026-10-02",
+  "resume_changes": null,
+  "tabs": [
+    {
+      "id": "mismatch",
+      "label": "Tech mismatch",
+      "src": "mismatch.html"
+    },
+    {
+      "id": "email",
+      "label": "Email & Easy Apply",
+      "src": "email.html"
+    }
+  ]
+}
