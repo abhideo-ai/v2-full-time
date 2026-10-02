@@ -2,16 +2,16 @@
   "slug": "astroum-ai-principal-lead-software-engineer",
   "scored_at": "2026-10-02",
   "rubric": "v2 weighted technical",
-  "weighted_total": 85.57,
+  "weighted_total": 88.37,
   "target": 95,
-  "honest_ceiling": 86.6,
-  "binding_constraint": "Strong React and TypeScript: the record has no React web work and TypeScript only on a Node.js back-end service, so that row scores 6.0; expert-level Python, about two years deep, is second at 7.8.",
+  "honest_ceiling": 88.7,
+  "binding_constraint": "Expert-level Python: real and in production, but under two years deep by the month count, so that row scores 7.8. React and TypeScript, the earlier constraint, is settled by his 2 October answer (9.0 on the tailored résumé).",
   "scores": [
     {
       "criterion": "end-to-end product ownership across frontend, backend, AI, data and infrastructure",
       "weight": 0.14,
-      "score": 8.5,
-      "points": 11.9
+      "score": 9.0,
+      "points": 12.6
     },
     {
       "criterion": "production AI: two or more AI/LLM products in real use, with their trade-offs",
@@ -40,8 +40,8 @@
     {
       "criterion": "strong React and TypeScript",
       "weight": 0.07,
-      "score": 6.0,
-      "points": 4.2
+      "score": 9.0,
+      "points": 6.3
     },
     {
       "criterion": "SQL and data modelling with PostgreSQL, vector search, Redis",

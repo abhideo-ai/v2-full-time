@@ -35,7 +35,7 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-02**, before he cl
 ## Open applications
 | Seat | State | What is next |
 |---|---|---|
-| **Astroum AI, Principal Lead Software Engineer (AI-Native)** (`October-2026/02/astroum-ai-principal-lead-software-engineer/`) | Ready, unsent | Technical 85.57 (master 82.60); binding constraint React/TypeScript. He chose **both** routes: Easy Apply (screening years: ML 1, Java 10, Python 1 or his own 2+, software 18) and the email to dinesh@astroum.ai with the three answers, which has **four [his words needed] gaps** to fill first. Company registered 10 Jul 2026, ~4 people, no funding announced; its site says hiring starts as a 3-month contract. Player-coach seat, on-site Hyderabad. |
+| **Astroum AI, Principal Lead Software Engineer (AI-Native)** (`October-2026/02/astroum-ai-principal-lead-software-engineer/`) | Ready, unsent | Technical 88.37 (master 82.60) after his 2 Oct answer that React and TypeScript were his own work at Deque and VoltusWave (journey, end); binding constraint now expert-level Python. He chose **both** routes: Easy Apply (screening years: ML 1, Java 10, Python 1 or his own 2+, software 18) and the email to dinesh@astroum.ai with the three answers, which has **four [his words needed] gaps** to fill first. Company registered 10 Jul 2026, ~4 people, no funding announced; its site says hiring starts as a 3-month contract. Player-coach seat, on-site Hyderabad. |
 | **GetHyr, Engineering Manager / Sr EM** (`September-2026/29/gethyr-engineering-manager/`) | He decided to apply (30 Sep), **not yet sent** | He sends the Email draft tab's email to raj@gethyr.com with his `.docx` (he retitled the 2025–26 VoltusWave role "Vice President of Technology" himself in Word; the seat row matches; 35/35). Current CTC is a placeholder, his call. When sent: mark applied. Client unnamed; technical 92.83. |
 | **Eli Lilly, Sr. Principal Engineer AI/ML System Integration** (`September-2026/29/eli-lilly-sr-principal-engineer-ai-ml-integration/`) | Ready, unsent | Tailored from the OLD master; send as is (87.90) or re-tailor from the new master: his call. Workday R-112121, open until 28 Oct 2026. |
 | **Tachyon, AI Architect** (`September-2026/24/tachyon-ai-architect/`) | heard_back; he **confirmed 65 LPA fixed** on 30 Sep after a call | Waiting for Bhargav to confirm "fixed" and give the next steps (interviews). Topics to learn: its own tab. Interview prep only when he asks. His pay: ₹60L fixed + ₹12L variable (memory); he is accepting offers now. |
@@ -55,7 +55,8 @@ Also: `PENDING.md`, `db/README.md`. **Last rewritten: 2026-10-02**, before he cl
    unconfirmed.
 4. **Recruise:** did he use classical ML libraries (scikit-learn, PyTorch, pandas) for the relapse
    model? Only that would lift its score; it is not in the record.
-5. **Lilly:** send as tailored from the old master (87.90), or re-tailor from the new master.
+5. **React and TypeScript on the master (2 Oct):** his answer is in the journey, but the master's skills lines and bullets do not say it, so every front-end post starts at 6.0 on that row. He writes the master; offer to stage the lines. Also open: line 540 says axe Auditor was JavaScript, Massive.js and Pug, while he named axe Auditor among his React and TypeScript products.
+6. **Lilly:** send as tailored from the old master (87.90), or re-tailor from the new master.
 
 **Settled 30 Sep (for the record):** the master now says "Vice President of Technology" for 2025–26
 and names Python/FastAPI, the axe MCP server at Deque (2024), CloudFormation, microservices since 2016
